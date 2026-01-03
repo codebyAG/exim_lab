@@ -1,11 +1,19 @@
 import 'package:exim_lab/features/certificates/presentation/screens/certificates_screen.dart';
+import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dart';
 import 'package:exim_lab/features/resources/presentation/screens/resource_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_list_screen.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -440,11 +448,31 @@ class DashboardScreen extends StatelessWidget {
         ),
       ),
 
-      // 🔹 BOTTOM NAV (STATIC)
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
+        currentIndex: 0, // Dashboard = Home
         selectedItemColor: const Color(0xFFFF8A00),
         unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
+
+        onTap: (index) {
+          if (index == 0) {
+            // Already on Dashboard → do nothing
+            return;
+          }
+
+          if (index == 1) {
+            AppNavigator.push(context, const CoursesListScreen());
+          }
+
+          if (index == 2) {
+            AppNavigator.push(context, const ResourcesScreen());
+          }
+
+          if (index == 3) {
+            AppNavigator.push(context, const AiChatScreen());
+          }
+        },
+
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
