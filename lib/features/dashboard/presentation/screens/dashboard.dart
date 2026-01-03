@@ -55,64 +55,94 @@ class DashboardScreen extends StatelessWidget {
                     const SizedBox(height: 4),
 
                     const Text(
-                      'Ready to master import–export?',
+                      'Master Import–Export Skills',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.2,
                       ),
+                    ),
+                    const SizedBox(height: 6),
+                    const Text(
+                      'Step-by-step courses for real-world trade',
+                      style: TextStyle(color: Colors.white70, fontSize: 14),
                     ),
 
                     const SizedBox(height: 20),
 
-                    // CTA CARD
+                    // 🔹 CTA CARD (IMPROVED)
                     Container(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(18),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(18),
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFFFF8A00), Color(0xFFFFB347)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(22),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.12),
+                            blurRadius: 16,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
                       ),
                       child: Row(
                         children: [
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
+                              children: const [
                                 Text(
-                                  'Learn Import–Export Business',
+                                  'Start Your Import–Export Journey',
                                   style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
                                   ),
                                 ),
                                 SizedBox(height: 6),
                                 Text(
-                                  'Expert-led video courses to boost your trade skills',
+                                  'Learn from industry experts • Certificates included',
                                   style: TextStyle(
                                     fontSize: 13,
-                                    color: Colors.black54,
-                                  ),
-                                ),
-                                SizedBox(height: 12),
-                                SizedBox(
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      AppNavigator.push(
-                                        context,
-                                        const CoursesListScreen(),
-                                      );
-                                    },
-                                    child: Text('Start Learning'),
+                                    color: Colors.white70,
                                   ),
                                 ),
                               ],
                             ),
                           ),
+
                           const SizedBox(width: 12),
-                          const Icon(
-                            Icons.play_circle_fill,
-                            size: 46,
-                            color: Color(0xFFFF8A00),
+
+                          ElevatedButton(
+                            onPressed: () {
+                              AppNavigator.push(
+                                context,
+                                const CoursesListScreen(),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: const Color(0xFFFF8A00),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 18,
+                                vertical: 14,
+                              ),
+                              elevation: 0,
+                            ),
+                            child: const Text(
+                              'Start',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -158,21 +188,221 @@ class DashboardScreen extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 28),
+              const SizedBox(height: 20),
+              // 🔹 CONTINUE WATCHING
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Continue Watching',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      'Pick up where you left off',
+                      style: TextStyle(fontSize: 13, color: Colors.black54),
+                    ),
+                    const SizedBox(height: 12),
 
-              // 🔹 RECOMMENDED
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(18),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 10,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            height: 60,
+                            width: 60,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            child: const Icon(
+                              Icons.play_circle_fill,
+                              size: 36,
+                              color: Color(0xFFFF8A00),
+                            ),
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: const [
+                                Text(
+                                  'Export Basics – Lesson 3',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(height: 6),
+                                LinearProgressIndicator(
+                                  value: 0.65,
+                                  minHeight: 6,
+                                  backgroundColor: Color(0xFFE5E7EB),
+                                  color: Color(0xFFFF8A00),
+                                ),
+                                SizedBox(height: 6),
+                                Text(
+                                  '65% completed',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFFF8A00),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              elevation: 0,
+                            ),
+                            child: const Text('Resume'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // 🔹 MOST POPULAR
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const [
                     Text(
-                      'Recommended for You',
+                      'Most Popular 🔥',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
+                    SizedBox(height: 4),
+                    Text(
+                      'Top courses chosen by learners',
+                      style: TextStyle(fontSize: 13, color: Colors.black54),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              SizedBox(
+                height: 210,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  children: const [
+                    _CourseCard(
+                      title: 'Export Documentation Mastery',
+                      rating: '4.9',
+                      learners: '3.2k',
+                    ),
+                    SizedBox(width: 14),
+                    _CourseCard(
+                      title: 'Global Logistics & Shipping',
+                      rating: '4.8',
+                      learners: '2.7k',
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // 🔹 BECAUSE YOU WATCHED
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      'Because You Watched',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      'Recommended based on your learning',
+                      style: TextStyle(fontSize: 13, color: Colors.black54),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 210,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  children: const [
+                    _CourseCard(
+                      title: 'Advanced Import Compliance',
+                      rating: '4.7',
+                      learners: '1.6k',
+                    ),
+                    SizedBox(width: 14),
+                    _CourseCard(
+                      title: 'HS Code & Classification',
+                      rating: '4.8',
+                      learners: '1.9k',
+                    ),
+                  ],
+                ),
+              ),
+
+              // 🔹 RECOMMENDED
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Recommended for You',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            AppNavigator.push(context, CoursesListScreen());
+                          },
+                          child: const Text('View all'),
+                        ),
+                      ],
+                    ),
+
                     SizedBox(height: 4),
                     Text(
                       'Based on your interest and progress',
@@ -182,7 +412,7 @@ class DashboardScreen extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
 
               // 🔹 COURSE CARDS
               SizedBox(
@@ -260,7 +490,15 @@ class _QuickCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 6),
+              ),
+            ],
           ),
+
           child: Column(
             children: [
               Icon(icon, size: 28, color: const Color(0xFFFF8A00)),
