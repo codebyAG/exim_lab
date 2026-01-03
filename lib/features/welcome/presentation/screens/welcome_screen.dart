@@ -1,3 +1,5 @@
+import 'package:exim_lab/core/navigation/app_navigator.dart';
+import 'package:exim_lab/features/login/presentations/screens/login_screen.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -124,6 +126,7 @@ class WelcomeScreen extends StatelessWidget {
                           child: ElevatedButton(
                             onPressed: () {
                               // TODO: Navigate to Login
+                              AppNavigator.replace(context, LoginScreen());
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFFF8A00),
@@ -148,6 +151,8 @@ class WelcomeScreen extends StatelessWidget {
                         TextButton(
                           onPressed: () {
                             // TODO: Navigate to Login
+
+                            AppNavigator.replace(context, LoginScreen());
                           },
                           child: Text(
                             t.translate('already_account'),

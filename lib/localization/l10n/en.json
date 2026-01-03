@@ -1,11 +1,24 @@
 {
-    "welcome_to": "Welcome to",
-    "app_name": "EximLab",
-    "tagline": "Learn Import–Export Business",
-    "feature_1": "Expert-led video courses",
-    "feature_2": "Practical trade skills",
-    "feature_3": "Certificates",
-    "get_started": "Get Started",
-    "already_account": "Already have an account? Login"
-  }
-  
+  "welcome_to": "Welcome to",
+  "app_name": "EximLab",
+  "tagline": "Learn Import–Export Business",
+  "feature_1": "Expert-led video courses",
+  "feature_2": "Practical trade skills",
+  "feature_3": "Certificates",
+  "get_started": "Get Started",
+  "already_account": "Already have an account? Login",
+  "login_title": "Login",
+  "login_subtitle": "Enter your mobile number",
+  "phone_hint": "Mobile Number",
+  "continue": "Continue",
+  "login_footer": "We will send you an OTP to verify your number",
+  "or": "OR",
+  "forgot_number": "Having trouble with your number?",
+  "continue_guest": "Explore as Guest",
+
+  "otp_title": "Verify OTP",
+  "otp_subtitle": "Enter the 6-digit code sent to your number",
+  "resend_otp": "Resend OTP",
+  "verify": "Verify",
+  "otp_footer": "Didn’t receive the code? Check your network or try again."
+}
