@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 ThemeData buildAppTheme(ColorScheme scheme) {
   return ThemeData(
     useMaterial3: true,
+    fontFamily: 'Poppins',
     colorScheme: scheme,
-
     scaffoldBackgroundColor: scheme.background,
     cardColor: scheme.surface,
 
@@ -16,9 +16,7 @@ ThemeData buildAppTheme(ColorScheme scheme) {
 
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         padding: const EdgeInsets.symmetric(vertical: 14),
       ),
     ),
@@ -34,14 +32,8 @@ ThemeData buildAppTheme(ColorScheme scheme) {
         fontWeight: FontWeight.w600,
         color: scheme.onBackground,
       ),
-      bodyLarge: TextStyle(
-        fontSize: 16,
-        color: scheme.onBackground,
-      ),
-      bodyMedium: TextStyle(
-        fontSize: 14,
-        color: scheme.onBackground,
-      ),
+      bodyLarge: TextStyle(fontSize: 16, color: scheme.onBackground),
+      bodyMedium: TextStyle(fontSize: 14, color: scheme.onBackground),
     ),
   );
 }

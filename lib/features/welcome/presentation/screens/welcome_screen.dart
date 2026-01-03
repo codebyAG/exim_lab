@@ -30,7 +30,7 @@ class WelcomeScreen extends StatelessWidget {
                   children: [
                     Image.asset(
                       'assets/trade_hero.png',
-                      height: screenHeight * 0.40,
+                      height: screenHeight * 0.60,
                       width: double.infinity,
                       fit: BoxFit.cover,
                     ),
@@ -40,19 +40,23 @@ class WelcomeScreen extends StatelessWidget {
                       left: 0,
                       right: 0,
                       child: Container(
-                        height: 60,
+                        height: 110, // 👈 IMPORTANT: taller blend
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [
                               Colors.transparent,
-                              Colors.black.withOpacity(0.10), // very soft
+                              Colors.white.withOpacity(0.08),
+                              Colors.white.withOpacity(0.15),
+                              Colors.white.withOpacity(0.22),
                             ],
+                            stops: const [0.0, 0.4, 0.7, 1.0],
                           ),
                         ),
                       ),
                     ),
+
                     // 🌐 LANGUAGE SWITCH
                     Positioned(
                       top: 12,
