@@ -18,6 +18,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          AppNavigator.push(context, const AiChatScreen());
+        },
+        backgroundColor: const Color(0xFFFF8A00),
+        elevation: 6,
+        tooltip: 'AI Support',
+        child: const Icon(Icons.support_agent, color: Colors.white),
+      ),
+
       backgroundColor: const Color(0xFFF6F7FB),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -467,10 +477,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           if (index == 2) {
             AppNavigator.push(context, const ResourcesScreen());
           }
-
-          if (index == 3) {
-            AppNavigator.push(context, const AiChatScreen());
-          }
         },
 
         items: const [
@@ -482,10 +488,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.folder_open),
             label: 'Resources',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble_outline),
-            label: 'Chat AI',
           ),
         ],
       ),
