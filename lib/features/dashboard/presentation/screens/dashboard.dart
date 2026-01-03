@@ -1,4 +1,5 @@
 import 'package:exim_lab/features/certificates/presentation/screens/certificates_screen.dart';
+import 'package:exim_lab/features/resources/presentation/screens/resource_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_list_screen.dart';
@@ -94,7 +95,6 @@ class DashboardScreen extends StatelessWidget {
                                 ),
                                 SizedBox(height: 12),
                                 SizedBox(
-                                  height: 36,
                                   child: ElevatedButton(
                                     onPressed: () {
                                       AppNavigator.push(
@@ -102,7 +102,6 @@ class DashboardScreen extends StatelessWidget {
                                         const CoursesListScreen(),
                                       );
                                     },
-
                                     child: Text('Start Learning'),
                                   ),
                                 ),
@@ -142,6 +141,9 @@ class DashboardScreen extends StatelessWidget {
                       icon: Icons.description_outlined,
                       title: 'Resources',
                       subtitle: 'Guides & Docs',
+                      onTap: () {
+                        AppNavigator.push(context, const ResourcesScreen());
+                      },
                     ),
                     SizedBox(width: 12),
                     _QuickCard(
