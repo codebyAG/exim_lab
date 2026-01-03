@@ -171,6 +171,50 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
               const SizedBox(height: 20),
 
+              // 🔍 GLOBAL SEARCH BAR
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                child: GestureDetector(
+                  onTap: () {
+                    // TODO: Navigate to Search Screen later
+                    // AppNavigator.push(context, const SearchScreen());
+                  },
+                  child: Container(
+                    height: 52,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.06),
+                          blurRadius: 12,
+                          offset: const Offset(0, 6),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: const [
+                        Icon(Icons.search, color: Colors.grey),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'Search videos, courses, resources...',
+                            style: TextStyle(color: Colors.grey, fontSize: 14),
+                          ),
+                        ),
+                        Icon(
+                          Icons.tune,
+                          color: Colors.grey,
+                        ), // optional filter icon
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
               // 🔹 QUICK ACTIONS
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
