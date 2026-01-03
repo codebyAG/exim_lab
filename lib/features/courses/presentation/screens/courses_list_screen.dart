@@ -1,3 +1,5 @@
+import 'package:exim_lab/core/navigation/app_navigator.dart';
+import 'package:exim_lab/features/courses/presentation/screens/courses_details_screen.dart';
 import 'package:flutter/material.dart';
 
 class CoursesListScreen extends StatefulWidget {
@@ -30,10 +32,7 @@ class _CoursesListScreenState extends State<CoursesListScreen>
         elevation: 0,
         title: const Text(
           'Courses',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
         ),
         actions: [
           IconButton(
@@ -59,11 +58,7 @@ class _CoursesListScreenState extends State<CoursesListScreen>
       // 🔹 BODY
       body: TabBarView(
         controller: _tabController,
-        children: [
-          _courseList(),
-          _myCoursesEmpty(),
-          _courseList(),
-        ],
+        children: [_courseList(), _myCoursesEmpty(), _courseList()],
       ),
     );
   }
@@ -158,10 +153,7 @@ class _CourseTile extends StatelessWidget {
                   course.subtitle,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: Colors.black54,
-                  ),
+                  style: const TextStyle(fontSize: 13, color: Colors.black54),
                 ),
                 const SizedBox(height: 8),
                 Row(
@@ -183,7 +175,7 @@ class _CourseTile extends StatelessWidget {
           // 🔹 ACTION
           ElevatedButton(
             onPressed: () {
-              // TODO: Open Course Details
+              AppNavigator.push(context, const CourseDetailsScreen());
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFFF8A00),

@@ -1,4 +1,7 @@
+import 'package:exim_lab/features/courses/presentation/screens/courses_details_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:exim_lab/core/navigation/app_navigator.dart';
+import 'package:exim_lab/features/courses/presentation/screens/courses_list_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -75,7 +78,7 @@ class DashboardScreen extends StatelessWidget {
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
+                              children: [
                                 Text(
                                   'Learn Import–Export Business',
                                   style: TextStyle(
@@ -95,7 +98,13 @@ class DashboardScreen extends StatelessWidget {
                                 SizedBox(
                                   height: 36,
                                   child: ElevatedButton(
-                                    onPressed: null,
+                                    onPressed: () {
+                                      AppNavigator.push(
+                                        context,
+                                        const CoursesListScreen(),
+                                      );
+                                    },
+
                                     child: Text('Start Learning'),
                                   ),
                                 ),
@@ -119,13 +128,16 @@ class DashboardScreen extends StatelessWidget {
 
               // 🔹 QUICK ACTIONS
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
-                  children: const [
+                  children: [
                     _QuickCard(
                       icon: Icons.video_library_outlined,
                       title: 'My Courses',
                       subtitle: '0/8 Completed',
+                      onTap: () {
+                        AppNavigator.push(context, const CoursesListScreen());
+                      },
                     ),
                     SizedBox(width: 12),
                     _QuickCard(
@@ -225,36 +237,45 @@ class _QuickCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
+  final VoidCallback? onTap;
 
   const _QuickCard({
     required this.icon,
     required this.title,
     required this.subtitle,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          children: [
-            Icon(icon, size: 28, color: const Color(0xFFFF8A00)),
-            const SizedBox(height: 8),
-            Text(
-              title,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              subtitle,
-              style: const TextStyle(fontSize: 12, color: Colors.black54),
-            ),
-          ],
+      child: GestureDetector(
+        onTap: onTap,
+
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            children: [
+              Icon(icon, size: 28, color: const Color(0xFFFF8A00)),
+              const SizedBox(height: 8),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                subtitle,
+                style: const TextStyle(fontSize: 12, color: Colors.black54),
+              ),
+            ],
+          ),
         ),
       ),
     );

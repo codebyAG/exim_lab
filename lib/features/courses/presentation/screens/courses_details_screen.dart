@@ -1,3 +1,5 @@
+import 'package:exim_lab/core/navigation/app_navigator.dart';
+import 'package:exim_lab/features/courses/presentation/screens/lesson_screen.dart';
 import 'package:flutter/material.dart';
 
 class CourseDetailsScreen extends StatelessWidget {
@@ -18,10 +20,7 @@ class CourseDetailsScreen extends StatelessWidget {
         ),
         title: const Text(
           'Course Details',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
         ),
       ),
       body: SingleChildScrollView(
@@ -132,8 +131,9 @@ class CourseDetailsScreen extends StatelessWidget {
               height: 56,
               child: ElevatedButton(
                 onPressed: () {
-                  // TODO: Enroll / Start Learning
+                  AppNavigator.push(context, const LessonsScreen());
                 },
+
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFF8A00),
                   shape: RoundedRectangleBorder(
@@ -160,10 +160,7 @@ class CourseDetailsScreen extends StatelessWidget {
   Widget _sectionTitle(String text) {
     return Text(
       text,
-      style: const TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.w600,
-      ),
+      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
     );
   }
 }
@@ -192,10 +189,7 @@ class _StatChip extends StatelessWidget {
         children: [
           Icon(icon, size: 14, color: color),
           const SizedBox(width: 4),
-          Text(
-            text,
-            style: const TextStyle(fontSize: 12),
-          ),
+          Text(text, style: const TextStyle(fontSize: 12)),
         ],
       ),
     );
@@ -214,14 +208,10 @@ class _Bullet extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Icon(Icons.check_circle, size: 18, color: Color(0xFF22C55E)),
           SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              '',
-            ),
-          ),
+          Expanded(child: Text(text)),
         ],
       ),
     );

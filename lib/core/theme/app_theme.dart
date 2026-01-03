@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 ThemeData buildAppTheme(ColorScheme scheme) {
   return ThemeData(
-    useMaterial3: true,
+    useMaterial3: false,
     fontFamily: 'Poppins',
     colorScheme: scheme,
     scaffoldBackgroundColor: scheme.background,
