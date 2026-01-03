@@ -5,11 +5,14 @@ import 'package:exim_lab/features/welcome/presentation/screens/welcome_screen.da
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:exim_lab/localization/locale_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // 🔒 LOCK ORIENTATION (PORTRAIT ONLY)
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   final themeProvider = ThemeProvider();
   await themeProvider.loadTheme();
