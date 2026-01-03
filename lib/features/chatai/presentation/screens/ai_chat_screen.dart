@@ -10,7 +10,6 @@ class AiChatScreen extends StatefulWidget {
 class _AiChatScreenState extends State<AiChatScreen> {
   final TextEditingController _controller = TextEditingController();
   final List<_Message> _messages = [];
-
   bool _isTyping = false;
 
   @override
@@ -25,13 +24,11 @@ class _AiChatScreenState extends State<AiChatScreen> {
     );
   }
 
-  void _sendMessage() async {
-    if (_controller.text.trim().isEmpty) return;
-
-    final userMessage = _controller.text.trim();
+  void _sendMessage(String text) async {
+    if (text.trim().isEmpty) return;
 
     setState(() {
-      _messages.add(_Message(text: userMessage, isUser: true));
+      _messages.add(_Message(text: text, isUser: true));
       _controller.clear();
       _isTyping = true;
     });
@@ -39,12 +36,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
     await Future.delayed(const Duration(seconds: 1));
 
     setState(() {
-      _messages.add(
-        _Message(
-          text: _getAiReply(userMessage),
-          isUser: false,
-        ),
-      );
+      _messages.add(_Message(text: _getAiReply(text), isUser: false));
       _isTyping = false;
     });
   }
@@ -53,19 +45,19 @@ class _AiChatScreenState extends State<AiChatScreen> {
     final q = question.toLowerCase();
 
     if (q.contains('iec')) {
-      return 'IEC (Import Export Code) is mandatory for anyone starting import or export business in India.';
+      return 'IEC (Import Export Code) is mandatory to start import or export business in India.';
     }
     if (q.contains('gst')) {
-      return 'GST registration is required if you are exporting goods or services under Indian law.';
+      return 'GST registration is required for exporting goods or services.';
     }
     if (q.contains('document')) {
-      return 'Key export documents include Invoice, Packing List, Bill of Lading, and Shipping Bill.';
+      return 'Key documents include Invoice, Packing List, Bill of Lading and Shipping Bill.';
     }
     if (q.contains('course')) {
-      return 'You can explore beginner to advanced import–export courses under the Courses section.';
+      return 'Start with “Import–Export Basics” before moving to advanced trade strategies.';
     }
 
-    return 'That’s a great question! 📘\nPlease explore our courses or resources for detailed guidance.';
+    return 'That’s a great question 📘\nPlease explore our courses and resources for more clarity.';
   }
 
   @override
@@ -77,15 +69,12 @@ class _AiChatScreenState extends State<AiChatScreen> {
         elevation: 0,
         title: const Text(
           'Exim AI',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
         ),
       ),
       body: Column(
         children: [
-          // 🔹 CHAT MESSAGES
+          // 🔹 CHAT LIST
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.all(16),
@@ -98,6 +87,29 @@ class _AiChatScreenState extends State<AiChatScreen> {
               },
             ),
           ),
+
+          // 🔹 SUGGESTED QUESTION CHIPS (BOTTOM)
+          if (_messages.length <= 1)
+            Container(
+              padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    _suggestedChip('What is IEC?', const Color(0xFFE0F2FE)),
+                    _suggestedChip('GST for export?', const Color(0xFFDCFCE7)),
+                    _suggestedChip(
+                      'Required documents',
+                      const Color(0xFFFFEDD5),
+                    ),
+                    _suggestedChip(
+                      'Best course to start',
+                      const Color(0xFFFCE7F3),
+                    ),
+                  ],
+                ),
+              ),
+            ),
 
           // 🔹 INPUT BAR
           Container(
@@ -118,7 +130,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
                   child: TextField(
                     controller: _controller,
                     decoration: InputDecoration(
-                      hintText: 'Ask something...',
+                      hintText: 'Ask something about import–export...',
                       filled: true,
                       fillColor: const Color(0xFFF3F4F6),
                       border: OutlineInputBorder(
@@ -126,18 +138,38 @@ class _AiChatScreenState extends State<AiChatScreen> {
                         borderSide: BorderSide.none,
                       ),
                     ),
-                    onSubmitted: (_) => _sendMessage(),
+                    onSubmitted: (val) => _sendMessage(val),
                   ),
                 ),
                 const SizedBox(width: 8),
                 IconButton(
-                  onPressed: _sendMessage,
+                  onPressed: () => _sendMessage(_controller.text),
                   icon: const Icon(Icons.send, color: Color(0xFFFF8A00)),
                 ),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _suggestedChip(String text, Color bgColor) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: GestureDetector(
+        onTap: () => _sendMessage(text),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          decoration: BoxDecoration(
+            color: bgColor,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Text(
+            text,
+            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+          ),
+        ),
       ),
     );
   }
@@ -160,16 +192,13 @@ class _ChatBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment:
-          message.isUser ? Alignment.centerRight : Alignment.centerLeft,
+      alignment: message.isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(14),
-        constraints: const BoxConstraints(maxWidth: 280),
+        constraints: const BoxConstraints(maxWidth: 300),
         decoration: BoxDecoration(
-          color: message.isUser
-              ? const Color(0xFFFF8A00)
-              : Colors.white,
+          color: message.isUser ? const Color(0xFFFF8A00) : Colors.white,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Text(
