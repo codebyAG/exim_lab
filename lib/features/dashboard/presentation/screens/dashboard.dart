@@ -1,3 +1,4 @@
+import 'package:exim_lab/features/certificates/presentation/screens/certificates_screen.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
@@ -150,6 +151,9 @@ class DashboardScreen extends StatelessWidget {
                       icon: Icons.verified_outlined,
                       title: 'Certificates',
                       subtitle: 'Track Progress',
+                      onTap: () {
+                        AppNavigator.push(context, const CertificatesScreen());
+                      },
                     ),
                   ],
                 ),

@@ -1,4 +1,5 @@
 import 'package:exim_lab/core/navigation/app_navigator.dart';
+import 'package:exim_lab/features/courses/data/course_progress_helper.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_details_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -58,7 +59,11 @@ class _CoursesListScreenState extends State<CoursesListScreen>
       // 🔹 BODY
       body: TabBarView(
         controller: _tabController,
-        children: [_courseList(), _myCoursesEmpty(), _courseList()],
+        children: [
+          _courseList(),
+          _myCoursesMockList(), // ✅ mock data
+          _courseList(),
+        ],
       ),
     );
   }
@@ -72,32 +77,6 @@ class _CoursesListScreenState extends State<CoursesListScreen>
         final course = _courses[index];
         return _CourseTile(course: course);
       },
-    );
-  }
-
-  // 🔹 EMPTY STATE (MY COURSES)
-  Widget _myCoursesEmpty() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(Icons.menu_book_outlined, size: 64, color: Colors.grey),
-            SizedBox(height: 16),
-            Text(
-              'You haven’t enrolled in any course yet.',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 6),
-            Text(
-              'Start learning to see your courses here.',
-              style: TextStyle(color: Colors.black54),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
@@ -194,36 +173,147 @@ class _CourseTile extends StatelessWidget {
 
 // 🔹 COURSE MODEL (STATIC DATA)
 class _Course {
+  final String id;
   final String title;
   final String subtitle;
   final String rating;
   final String learners;
+  final int totalLessons;
 
   const _Course({
+    required this.id,
     required this.title,
     required this.subtitle,
     required this.rating,
     required this.learners,
+    required this.totalLessons,
   });
 }
 
 const List<_Course> _courses = [
   _Course(
+    id: 'export_strategy',
     title: 'Advanced Export Strategy',
     subtitle: 'Learn how to scale exports and find global buyers',
     rating: '4.8',
     learners: '2.1k',
+    totalLessons: 10,
   ),
   _Course(
+    id: 'import_docs',
     title: 'Import Documentation Mastery',
     subtitle: 'Understand bills, invoices, HS codes & compliance',
     rating: '4.8',
     learners: '1.9k',
-  ),
-  _Course(
-    title: 'Logistics & Shipping Basics',
-    subtitle: 'Shipping methods, incoterms and freight basics',
-    rating: '4.7',
-    learners: '1.4k',
+    totalLessons: 8,
   ),
 ];
+
+class _MyCourseCard extends StatelessWidget {
+  final _MyCourse course;
+
+  const _MyCourseCard({required this.course});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            course.title,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          ),
+
+          const SizedBox(height: 6),
+
+          Text(
+            '${course.completedLessons}/${course.totalLessons} lessons completed',
+            style: const TextStyle(fontSize: 13, color: Colors.black54),
+          ),
+
+          const SizedBox(height: 12),
+
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: LinearProgressIndicator(
+              value: course.progress,
+              minHeight: 8,
+              backgroundColor: Colors.grey.shade200,
+              color: const Color(0xFFFF8A00),
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          SizedBox(
+            width: double.infinity,
+            height: 42,
+            child: ElevatedButton(
+              onPressed: () {
+                AppNavigator.push(context, const CourseDetailsScreen());
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFFF8A00),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 0,
+              ),
+              child: const Text(
+                'Resume Learning',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MyCourse {
+  final String title;
+  final int completedLessons;
+  final int totalLessons;
+
+  const _MyCourse({
+    required this.title,
+    required this.completedLessons,
+    required this.totalLessons,
+  });
+
+  double get progress => completedLessons / totalLessons;
+}
+
+const List<_MyCourse> _mockMyCourses = [
+  _MyCourse(
+    title: 'Advanced Export Strategy',
+    completedLessons: 3,
+    totalLessons: 10,
+  ),
+  _MyCourse(
+    title: 'Import Documentation Mastery',
+    completedLessons: 6,
+    totalLessons: 8,
+  ),
+];
+Widget _myCoursesMockList() {
+  return ListView.builder(
+    padding: const EdgeInsets.all(16),
+    itemCount: _mockMyCourses.length,
+    itemBuilder: (context, index) {
+      final course = _mockMyCourses[index];
+      return _MyCourseCard(course: course);
+    },
+  );
+}
