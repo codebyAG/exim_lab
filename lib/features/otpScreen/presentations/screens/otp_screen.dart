@@ -13,7 +13,7 @@ class OtpScreen extends StatelessWidget {
     final t = AppLocalizations.of(context);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.colorScheme.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -23,7 +23,10 @@ class OtpScreen extends StatelessWidget {
               // 🔹 BACK
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.arrow_back),
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: theme.colorScheme.onBackground,
+                ),
               ),
 
               const SizedBox(height: 24),
@@ -42,7 +45,7 @@ class OtpScreen extends StatelessWidget {
               Text(
                 t.translate('otp_subtitle'),
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  color: Colors.black.withOpacity(0.65),
+                  color: theme.colorScheme.onBackground.withOpacity(0.65),
                 ),
               ),
 
@@ -55,20 +58,19 @@ class OtpScreen extends StatelessWidget {
                 keyboardType: TextInputType.number,
                 autoFocus: true,
                 animationType: AnimationType.fade,
-                cursorColor: const Color(0xFFFF8A00),
-                textStyle: const TextStyle(
-                  fontSize: 20,
+                cursorColor: theme.colorScheme.primary,
+                textStyle: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
                 pinTheme: PinTheme(
                   shape: PinCodeFieldShape.underline,
                   fieldHeight: 48,
                   fieldWidth: 42,
-                  activeColor: const Color(0xFFFF8A00),
-                  selectedColor: const Color(0xFFFF8A00),
-                  inactiveColor: Colors.grey.shade300,
+                  activeColor: theme.colorScheme.primary,
+                  selectedColor: theme.colorScheme.primary,
+                  inactiveColor: theme.dividerColor,
                 ),
-                onChanged: (value) {},
+                onChanged: (_) {},
               ),
 
               const SizedBox(height: 16),
@@ -80,24 +82,23 @@ class OtpScreen extends StatelessWidget {
                   onPressed: () {},
                   child: Text(
                     t.translate('resend_otp'),
-                    style: const TextStyle(fontSize: 14),
+                    style: theme.textTheme.bodyMedium,
                   ),
                 ),
               ),
 
               const SizedBox(height: 32),
 
-              // 🔹 VERIFY
+              // 🔹 VERIFY BUTTON
               SizedBox(
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
                   onPressed: () {
-                    // TODO → Dashboard
-                    AppNavigator.push(context, OnboardingScreen());
+                    AppNavigator.push(context, const OnboardingScreen());
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF8A00),
+                    backgroundColor: theme.colorScheme.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
@@ -105,10 +106,10 @@ class OtpScreen extends StatelessWidget {
                   ),
                   child: Text(
                     t.translate('verify'),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      color: theme.colorScheme.onPrimary,
                     ),
                   ),
                 ),
@@ -122,7 +123,7 @@ class OtpScreen extends StatelessWidget {
                   t.translate('otp_footer'),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: Colors.black.withOpacity(0.5),
+                    color: theme.colorScheme.onBackground.withOpacity(0.5),
                   ),
                 ),
               ),
