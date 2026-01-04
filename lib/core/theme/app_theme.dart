@@ -4,23 +4,31 @@ ThemeData buildAppTheme(ColorScheme scheme) {
   return ThemeData(
     useMaterial3: false,
     fontFamily: 'Poppins',
+
+    // 🔹 CORE COLORS
     colorScheme: scheme,
     scaffoldBackgroundColor: scheme.background,
     cardColor: scheme.surface,
+    dividerColor: scheme.outline.withOpacity(0.3),
 
+    // 🔹 APP BAR
     appBarTheme: AppBarTheme(
       backgroundColor: scheme.surface,
       foregroundColor: scheme.onSurface,
       elevation: 0,
-    ),
-
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        padding: const EdgeInsets.symmetric(vertical: 14),
+      iconTheme: IconThemeData(color: scheme.onSurface),
+      titleTextStyle: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+        color: scheme.onSurface,
+        fontFamily: 'Poppins',
       ),
     ),
 
+    // 🔹 ICONS (GLOBAL)
+    iconTheme: IconThemeData(color: scheme.onBackground, size: 22),
+
+    // 🔹 TEXT
     textTheme: TextTheme(
       headlineMedium: TextStyle(
         fontSize: 28,
@@ -32,8 +40,87 @@ ThemeData buildAppTheme(ColorScheme scheme) {
         fontWeight: FontWeight.w600,
         color: scheme.onBackground,
       ),
+      titleMedium: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+        color: scheme.onBackground,
+      ),
       bodyLarge: TextStyle(fontSize: 16, color: scheme.onBackground),
-      bodyMedium: TextStyle(fontSize: 14, color: scheme.onBackground),
+      bodyMedium: TextStyle(
+        fontSize: 14,
+        color: scheme.onBackground.withOpacity(0.85),
+      ),
+      bodySmall: TextStyle(
+        fontSize: 12,
+        color: scheme.onBackground.withOpacity(0.65),
+      ),
+      labelLarge: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+        color: scheme.primary,
+      ),
+    ),
+
+    // 🔹 BUTTONS
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: scheme.primary,
+        foregroundColor: scheme.onPrimary,
+        elevation: 0,
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        textStyle: const TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w600,
+          fontFamily: 'Poppins',
+        ),
+      ),
+    ),
+
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: scheme.primary,
+        textStyle: const TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          fontFamily: 'Poppins',
+        ),
+      ),
+    ),
+
+    // 🔹 INPUTS
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: scheme.surface,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide.none,
+      ),
+      hintStyle: TextStyle(color: scheme.onSurface.withOpacity(0.5)),
+    ),
+
+    // 🔹 BOTTOM NAV
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: scheme.surface,
+      selectedItemColor: scheme.primary,
+      unselectedItemColor: scheme.onSurface.withOpacity(0.5),
+      selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
+      showUnselectedLabels: true,
+      elevation: 8,
+    ),
+
+    // 🔹 FLOATING ACTION BUTTON
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: scheme.primary,
+      foregroundColor: scheme.onPrimary,
+      elevation: 6,
+    ),
+
+    // 🔹 LIST TILE
+    listTileTheme: ListTileThemeData(
+      iconColor: scheme.onSurface,
+      textColor: scheme.onSurface,
     ),
   );
 }
