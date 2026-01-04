@@ -37,5 +37,8 @@
   "unlock": "Unlock",
   "chat_hint": "Ask something about import–export...",
   "ai_typing": "Exim AI is typing...",
-  "home": "Home"
+  "home": "Home",
+  "welcome_back": "Welcome back 👋",
+  "otp_info": "We’ll send a one-time code to verify your number.",
+  "verify_number": "Verify your number"
 }

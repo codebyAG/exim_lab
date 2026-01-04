@@ -30,7 +30,7 @@ class OtpScreen extends StatelessWidget {
 
               // 🔹 HEADER
               Text(
-                'Verify your number',
+                t.translate('verify_number'),
                 style: theme.textTheme.headlineMedium?.copyWith(
                   fontSize: 30,
                   fontWeight: FontWeight.w600,

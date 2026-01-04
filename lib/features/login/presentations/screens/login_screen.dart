@@ -29,7 +29,7 @@ class LoginScreen extends StatelessWidget {
 
               // 🔹 HEADER
               Text(
-                'Welcome back 👋',
+                t.translate('welcome_back'),
                 style: theme.textTheme.headlineMedium?.copyWith(
                   fontSize: 30,
                   fontWeight: FontWeight.w600,
@@ -79,7 +79,7 @@ class LoginScreen extends StatelessWidget {
 
               // 🔹 HELPER TEXT
               Text(
-                'We’ll send a one-time code to verify your number.',
+                t.translate('otp_info'),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: Colors.black.withOpacity(0.55),
                 ),
