@@ -12,7 +12,7 @@ class LoginScreen extends StatelessWidget {
     final t = AppLocalizations.of(context);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.colorScheme.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -22,7 +22,10 @@ class LoginScreen extends StatelessWidget {
               // 🔹 BACK
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.arrow_back),
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: theme.colorScheme.onBackground,
+                ),
               ),
 
               const SizedBox(height: 24),
@@ -41,7 +44,7 @@ class LoginScreen extends StatelessWidget {
               Text(
                 t.translate('login_subtitle'),
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  color: Colors.black.withOpacity(0.65),
+                  color: theme.colorScheme.onBackground.withOpacity(0.65),
                 ),
               ),
 
@@ -52,7 +55,7 @@ class LoginScreen extends StatelessWidget {
                 t.translate('phone_hint'),
                 style: theme.textTheme.bodySmall?.copyWith(
                   fontWeight: FontWeight.w500,
-                  color: Colors.black87,
+                  color: theme.colorScheme.onBackground,
                 ),
               ),
 
@@ -61,16 +64,19 @@ class LoginScreen extends StatelessWidget {
               // 🔹 INPUT
               TextField(
                 keyboardType: TextInputType.phone,
-                style: const TextStyle(fontSize: 18),
+                style: theme.textTheme.bodyLarge?.copyWith(fontSize: 18),
                 decoration: InputDecoration(
                   prefixText: '+91 ',
                   hintText: 'XXXXXXXXXX',
                   contentPadding: const EdgeInsets.symmetric(vertical: 14),
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey.shade300),
+                    borderSide: BorderSide(color: theme.dividerColor),
                   ),
-                  focusedBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFFF8A00), width: 2),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: theme.colorScheme.primary,
+                      width: 2,
+                    ),
                   ),
                 ),
               ),
@@ -81,24 +87,22 @@ class LoginScreen extends StatelessWidget {
               Text(
                 t.translate('otp_info'),
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: Colors.black.withOpacity(0.55),
+                  color: theme.colorScheme.onBackground.withOpacity(0.55),
                 ),
               ),
 
               const SizedBox(height: 32),
 
-              // 🔹 CONTINUE
+              // 🔹 CONTINUE BUTTON
               SizedBox(
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
                   onPressed: () {
-                    // TODO → OTP
-
-                    AppNavigator.push(context, OtpScreen());
+                    AppNavigator.push(context, const OtpScreen());
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF8A00),
+                    backgroundColor: theme.colorScheme.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
@@ -106,10 +110,10 @@ class LoginScreen extends StatelessWidget {
                   ),
                   child: Text(
                     t.translate('continue'),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      color: theme.colorScheme.onPrimary,
                     ),
                   ),
                 ),
@@ -120,10 +124,10 @@ class LoginScreen extends StatelessWidget {
               // 🔹 FOOTER
               Center(
                 child: Text(
-                  'By continuing, you agree to our Terms & Privacy Policy',
+                  t.translate('terms_privacy'),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: Colors.black.withOpacity(0.5),
+                    color: theme.colorScheme.onBackground.withOpacity(0.5),
                   ),
                 ),
               ),
