@@ -15,7 +15,6 @@
   "or": "OR",
   "forgot_number": "Having trouble with your number?",
   "continue_guest": "Explore as Guest",
-
   "otp_title": "Verify OTP",
   "otp_subtitle": "Enter the 6-digit code sent to your number",
   "resend_otp": "Resend OTP",
@@ -49,5 +48,20 @@
   "onboard_title_3": "Build Skills That Make Money",
   "onboard_subtitle_3": "Apply your learning to start trading, grow your business, or work confidently in import–export companies.",
   "onboard_who_for": "Perfect for students, entrepreneurs, and working professionals.",
-  "step_of": "Step {current} of {total}"
+  "step_of": "Step {current} of {total}",
+  "welcome": "Welcome 👋",
+  "dashboard_title": "Master Import–Export Skills",
+  "dashboard_subtitle": "Step-by-step courses for real-world trade",
+  "cta_title": "Start Your Import–Export Journey",
+  "cta_subtitle": "Learn from industry experts • Certificates included",
+  "completed_status": "0/8 Completed",
+  "guides_docs": "Guides & Docs",
+  "track_progress": "Track Progress",
+  "continue_subtitle": "Pick up where you left off",
+  "most_popular_subtitle": "Top courses chosen by learners",
+  "because_you_watched_subtitle": "Recommended based on your learning",
+
+  "view_all": "View all",
+  "learners": "learners",
+  "courses": "Courses"
 }
