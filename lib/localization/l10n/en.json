@@ -20,5 +20,22 @@
   "otp_subtitle": "Enter the 6-digit code sent to your number",
   "resend_otp": "Resend OTP",
   "verify": "Verify",
-  "otp_footer": "Didn’t receive the code? Check your network or try again."
+  "otp_footer": "Didn’t receive the code? Check your network or try again.",
+  "search_hint": "Search videos, courses, resources...",
+  "continue_watching": "Continue Watching",
+  "pick_up_left": "Pick up where you left off",
+  "recommended_for_you": "Recommended for You",
+  "based_on_interest": "Based on your interest and progress",
+  "most_popular": "Most Popular",
+  "top_courses": "Top courses chosen by learners",
+  "because_you_watched": "Because You Watched",
+  "my_courses": "My Courses",
+  "resources": "Resources",
+  "certificates": "Certificates",
+  "start_learning": "Start Learning",
+  "resume": "Resume",
+  "unlock": "Unlock",
+  "chat_hint": "Ask something about import–export...",
+  "ai_typing": "Exim AI is typing...",
+  "home": "Home"
 }

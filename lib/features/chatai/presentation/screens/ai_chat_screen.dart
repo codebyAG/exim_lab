@@ -1,3 +1,4 @@
+import 'package:exim_lab/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 
 class AiChatScreen extends StatefulWidget {
@@ -62,6 +63,8 @@ class _AiChatScreenState extends State<AiChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF6F7FB),
       appBar: AppBar(
@@ -130,7 +133,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
                   child: TextField(
                     controller: _controller,
                     decoration: InputDecoration(
-                      hintText: 'Ask something about import–export...',
+                      hintText: t.translate('chat_hint'),
                       filled: true,
                       fillColor: const Color(0xFFF3F4F6),
                       border: OutlineInputBorder(
@@ -219,6 +222,8 @@ class _TypingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
+
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
@@ -228,8 +233,8 @@ class _TypingIndicator extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
         ),
-        child: const Text(
-          'Exim AI is typing...',
+        child: Text(
+          t.translate('ai_typing'),
           style: TextStyle(fontSize: 13, color: Colors.black54),
         ),
       ),

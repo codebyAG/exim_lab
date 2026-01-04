@@ -1,6 +1,7 @@
 import 'package:exim_lab/features/certificates/presentation/screens/certificates_screen.dart';
 import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dart';
 import 'package:exim_lab/features/resources/presentation/screens/resource_screen.dart';
+import 'package:exim_lab/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_list_screen.dart';
@@ -17,6 +18,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -154,8 +157,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ),
                               elevation: 0,
                             ),
-                            child: const Text(
-                              'Start',
+                            child:  Text(
+                             t.translate('start_learning'),
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
@@ -200,12 +203,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
 
                     child: Row(
-                      children: const [
+                      children: [
                         Icon(Icons.search, color: Colors.grey),
                         SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            'Search videos, courses, resources...',
+                            t.translate('search_hint'),
                             style: TextStyle(color: Colors.grey, fontSize: 14),
                           ),
                         ),
@@ -456,7 +459,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Recommended for You',
+                          t.translate('recommended_for_you'),
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
@@ -529,8 +532,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
           }
         },
 
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+        items:  [
+          BottomNavigationBarItem(icon: Icon(Icons.home), 
+label: t.translate('home'),
+          
+          )
+          
+          ,
           BottomNavigationBarItem(
             icon: Icon(Icons.play_circle_outline),
             label: 'Courses',

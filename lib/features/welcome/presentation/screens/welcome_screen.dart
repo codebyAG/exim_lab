@@ -126,7 +126,7 @@ class WelcomeScreen extends StatelessWidget {
                           child: ElevatedButton(
                             onPressed: () {
                               // TODO: Navigate to Login
-                              AppNavigator.replace(context, LoginScreen());
+                              AppNavigator.push(context, LoginScreen());
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFFF8A00),
