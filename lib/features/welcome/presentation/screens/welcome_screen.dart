@@ -43,17 +43,16 @@ class WelcomeScreen extends StatelessWidget {
             right: 0,
             height: 160,
             child: Container(
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    Color(0x33FFFFFF),
-                    Color(0x66FFFFFF),
-                    Color(0x99FFFFFF),
+                    theme.colorScheme.background.withOpacity(0.15),
+                    theme.colorScheme.background.withOpacity(0.35),
+                    theme.colorScheme.background.withOpacity(0.6),
                   ],
-                  stops: [0.0, 0.35, 0.7, 1.0],
                 ),
               ),
             ),
@@ -67,7 +66,10 @@ class WelcomeScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.topRight,
                   child: IconButton(
-                    icon: const Icon(Icons.language, color: Colors.black),
+                    icon: Icon(
+                      Icons.language,
+                      color: theme.colorScheme.onSurface,
+                    ),
                     onPressed: () {
                       localeProvider.locale.languageCode == 'en'
                           ? localeProvider.setLocale('hi')
@@ -113,9 +115,9 @@ class WelcomeScreen extends StatelessWidget {
 
                         const SizedBox(height: 24),
 
-                        _feature(t.translate('feature_1')),
-                        _feature(t.translate('feature_2')),
-                        _feature(t.translate('feature_3')),
+                        _feature(t.translate('feature_1'), context),
+                        _feature(t.translate('feature_2'), context),
+                        _feature(t.translate('feature_3'), context),
 
                         const SizedBox(height: 32),
 
@@ -129,7 +131,7 @@ class WelcomeScreen extends StatelessWidget {
                               AppNavigator.push(context, LoginScreen());
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFFF8A00),
+                              backgroundColor: theme.colorScheme.primary,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(14),
                               ),
@@ -137,10 +139,10 @@ class WelcomeScreen extends StatelessWidget {
                             ),
                             child: Text(
                               t.translate('get_started'),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                color: theme.colorScheme.onPrimary,
                               ),
                             ),
                           ),
@@ -175,13 +177,20 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _feature(String text) {
+  Widget _feature(String text, BuildContext context) {
+    final theme = Theme.of(context);
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: EdgeInsets.symmetric(vertical: 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.check_circle, color: Color(0xFF22C55E), size: 20),
+          Icon(
+            Icons.check_circle,
+            color: theme.colorScheme.secondary,
+            size: 20,
+          ),
+
           const SizedBox(width: 12),
           Flexible(
             child: Text(
