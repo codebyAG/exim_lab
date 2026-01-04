@@ -40,5 +40,14 @@
   "home": "Home",
   "welcome_back": "Welcome back 👋",
   "otp_info": "We’ll send a one-time code to verify your number.",
-  "verify_number": "Verify your number"
+  "verify_number": "Verify your number",
+  "skip": "Skip",
+  "onboard_title_1": "Start Import–Export the Right Way",
+  "onboard_subtitle_1": "Learn the complete import–export process from basics to execution — even if you have zero prior experience.",
+  "onboard_title_2": "Understand Real Trade, Not Theory",
+  "onboard_subtitle_2": "Master documentation, HS codes, logistics, payments, customs and compliance with real-world examples.",
+  "onboard_title_3": "Build Skills That Make Money",
+  "onboard_subtitle_3": "Apply your learning to start trading, grow your business, or work confidently in import–export companies.",
+  "onboard_who_for": "Perfect for students, entrepreneurs, and working professionals.",
+  "step_of": "Step {current} of {total}"
 }

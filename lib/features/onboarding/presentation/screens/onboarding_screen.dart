@@ -1,5 +1,6 @@
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/dashboard/presentation/screens/dashboard.dart';
+import 'package:exim_lab/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -13,23 +14,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _controller = PageController();
   int _currentIndex = 0;
 
-  final List<_OnboardData> _pages = const [
+  final List<_OnboardData> _pages = [
     _OnboardData(
-      title: 'Start Import–Export the Right Way',
-      subtitle:
-          'Learn the complete import–export process from basics to execution — even if you have zero prior experience.',
+      titleKey: 'onboard_title_1',
+      subtitleKey: 'onboard_subtitle_1',
       icon: Icons.public_outlined,
     ),
     _OnboardData(
-      title: 'Understand Real Trade, Not Theory',
-      subtitle:
-          'Master documentation, HS codes, logistics, payments, customs and compliance with real-world examples.',
+      titleKey: 'onboard_title_2',
+      subtitleKey: 'onboard_subtitle_2',
       icon: Icons.assignment_outlined,
     ),
     _OnboardData(
-      title: 'Build Skills That Make Money',
-      subtitle:
-          'Apply your learning to start trading, grow your business, or work confidently in import–export companies.',
+      titleKey: 'onboard_title_3',
+      subtitleKey: 'onboard_subtitle_3',
       icon: Icons.trending_up_outlined,
     ),
   ];
@@ -37,6 +35,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -48,7 +47,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               alignment: Alignment.topRight,
               child: TextButton(
                 onPressed: _finishOnboarding,
-                child: const Text('Skip', style: TextStyle(fontSize: 15)),
+                child: Text(t.translate('skip')),
               ),
             ),
 
@@ -86,7 +85,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                         // 🔹 TITLE
                         Text(
-                          page.title,
+                          t.translate(page.titleKey),
                           textAlign: TextAlign.center,
                           style: theme.textTheme.headlineMedium?.copyWith(
                             fontWeight: FontWeight.w600,
@@ -98,7 +97,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                         // 🔹 SUBTITLE
                         Text(
-                          page.subtitle,
+                          t.translate(page.subtitleKey),
                           textAlign: TextAlign.center,
                           style: theme.textTheme.bodyLarge?.copyWith(
                             fontSize: 17,
@@ -111,7 +110,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                         // 🔹 WHO IS THIS FOR (VALUE ADD)
                         Text(
-                          'Perfect for students, entrepreneurs, and working professionals.',
+                          t.translate('onboard_who_for'),
                           textAlign: TextAlign.center,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: Colors.black.withOpacity(0.55),
@@ -153,9 +152,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                   // 🔹 PROGRESS TEXT
                   Text(
-                    'Step ${_currentIndex + 1} of ${_pages.length}',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: Colors.black.withOpacity(0.6),
+                    t.translate(
+                      'step_of',
+                      args: {
+                        'current': (_currentIndex + 1).toString(),
+                        'total': _pages.length.toString(),
+                      },
                     ),
                   ),
 
@@ -176,8 +178,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                       child: Text(
                         _currentIndex == _pages.length - 1
-                            ? 'Get Started'
-                            : 'Continue',
+                            ? t.translate('get_started')
+                            : t.translate('continue'),
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
@@ -214,13 +216,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
 // 🔹 DATA MODEL
 class _OnboardData {
-  final String title;
-  final String subtitle;
+  final String titleKey;
+  final String subtitleKey;
   final IconData icon;
 
   const _OnboardData({
-    required this.title,
-    required this.subtitle,
+    required this.titleKey,
+    required this.subtitleKey,
     required this.icon,
   });
 }
