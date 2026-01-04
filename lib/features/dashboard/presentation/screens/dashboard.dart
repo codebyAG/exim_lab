@@ -1,3 +1,4 @@
+import 'package:exim_lab/common/widgets/language_switch.dart';
 import 'package:exim_lab/features/certificates/presentation/screens/certificates_screen.dart';
 import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dart';
 import 'package:exim_lab/features/resources/presentation/screens/resource_screen.dart';
@@ -27,7 +28,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         },
         backgroundColor: const Color(0xFFFF8A00),
         elevation: 6,
-        tooltip: 'AI Support',
+        tooltip: t.translate('ai_support'),
+
         child: const Icon(Icons.support_agent, color: Colors.white),
       ),
 
@@ -53,30 +55,36 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     // TOP ROW
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children: [
                         Text(
-                          'EximLab',
+                          t.translate('app_name'),
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 22,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Icon(Icons.notifications_none, color: Colors.white),
+                        Row(
+                          children: [
+                            LanguageSwitch(),
+                            SizedBox(width: 10),
+                            Icon(Icons.notifications_none, color: Colors.white),
+                          ],
+                        ),
                       ],
                     ),
 
                     const SizedBox(height: 20),
 
-                    const Text(
-                      'Welcome 👋',
+                    Text(
+                      t.translate('welcome_back'),
                       style: TextStyle(color: Colors.white70, fontSize: 16),
                     ),
 
                     const SizedBox(height: 4),
 
-                    const Text(
-                      'Master Import–Export Skills',
+                    Text(
+                      t.translate('dashboard_title'),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 24,
@@ -85,8 +93,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ),
                     const SizedBox(height: 6),
-                    const Text(
-                      'Step-by-step courses for real-world trade',
+                    Text(
+                      t.translate('dashboard_subtitle'),
                       style: TextStyle(color: Colors.white70, fontSize: 14),
                     ),
 
@@ -115,9 +123,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
+                              children: [
                                 Text(
-                                  'Start Your Import–Export Journey',
+                                  t.translate('cta_title'),
                                   style: TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.w700,
@@ -126,7 +134,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ),
                                 SizedBox(height: 6),
                                 Text(
-                                  'Learn from industry experts • Certificates included',
+                                  t.translate('cta_subtitle'),
                                   style: TextStyle(
                                     fontSize: 13,
                                     color: Colors.white70,
@@ -231,8 +239,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   children: [
                     _QuickCard(
                       icon: Icons.video_library_outlined,
-                      title: 'My Courses',
-                      subtitle: '0/8 Completed',
+                      title: t.translate('my_courses'),
+                      subtitle: t.translate('completed_status'),
                       onTap: () {
                         AppNavigator.push(context, const CoursesListScreen());
                       },
@@ -240,8 +248,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     SizedBox(width: 12),
                     _QuickCard(
                       icon: Icons.description_outlined,
-                      title: 'Resources',
-                      subtitle: 'Guides & Docs',
+                      title: t.translate('resources'),
+
+                      subtitle: t.translate('guides_docs'),
+
                       onTap: () {
                         AppNavigator.push(context, const ResourcesScreen());
                       },
@@ -249,8 +259,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     SizedBox(width: 12),
                     _QuickCard(
                       icon: Icons.verified_outlined,
-                      title: 'Certificates',
-                      subtitle: 'Track Progress',
+                      title: t.translate('certificates'),
+
+                      subtitle: t.translate('track_progress'),
+
                       onTap: () {
                         AppNavigator.push(context, const CertificatesScreen());
                       },
@@ -266,16 +278,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Continue Watching',
+                    Text(
+                      t.translate('continue_watching'),
+
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
-                      'Pick up where you left off',
+                    Text(
+                      t.translate('continue_subtitle'),
+
                       style: TextStyle(fontSize: 13, color: Colors.black54),
                     ),
                     const SizedBox(height: 12),
@@ -312,7 +326,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
+                              children: [
                                 Text(
                                   'Export Basics – Lesson 3',
                                   style: TextStyle(
@@ -348,7 +362,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ),
                               elevation: 0,
                             ),
-                            child: const Text('Resume'),
+                            child: Text(t.translate('resume')),
                           ),
                         ],
                       ),
@@ -364,9 +378,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
-                      'Most Popular 🔥',
+                      t.translate('most_popular'),
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
@@ -374,7 +388,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      'Top courses chosen by learners',
+                      t.translate('most_popular_subtitle'),
                       style: TextStyle(fontSize: 13, color: Colors.black54),
                     ),
                   ],
@@ -411,9 +425,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
-                      'Because You Watched',
+                      t.translate('because_you_watched'),
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
@@ -421,7 +435,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      'Recommended based on your learning',
+                      t.translate('because_you_watched_subtitle'),
                       style: TextStyle(fontSize: 13, color: Colors.black54),
                     ),
                   ],
@@ -469,14 +483,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           onPressed: () {
                             AppNavigator.push(context, CoursesListScreen());
                           },
-                          child: const Text('View all'),
+                          child: Text(t.translate('view_all')),
                         ),
                       ],
                     ),
 
                     SizedBox(height: 4),
                     Text(
-                      'Based on your interest and progress',
+                      t.translate('based_on_interest'),
                       style: TextStyle(fontSize: 13, color: Colors.black54),
                     ),
                   ],
@@ -539,11 +553,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.play_circle_outline),
-            label: 'Courses',
+            label: t.translate('courses'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.folder_open),
-            label: 'Resources',
+            label: t.translate('resources'),
           ),
         ],
       ),
@@ -623,6 +637,8 @@ class _CourseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
+
     return Container(
       width: 220,
       padding: const EdgeInsets.all(14),
@@ -655,7 +671,7 @@ class _CourseCard extends StatelessWidget {
               const Icon(Icons.star, size: 14, color: Colors.amber),
               const SizedBox(width: 4),
               Text(
-                '$rating • $learners learners',
+                '$rating • $learners ${t.translate('learners')}',
                 style: const TextStyle(fontSize: 12),
               ),
             ],
@@ -672,7 +688,7 @@ class _CourseCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: const Text('Unlock'),
+              child: Text(t.translate('unlock')),
             ),
           ),
         ],
