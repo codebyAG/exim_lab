@@ -1,59 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:exim_lab/localization/app_localization.dart';
 
 class ResourcesScreen extends StatelessWidget {
   const ResourcesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF6F7FB),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
-          'Resources',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+        title: Text(
+          t.translate('resources'),
+          style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
       body: ListView(
         padding: const EdgeInsets.all(20),
-        children: const [
-          _SectionTitle(title: 'Export Guides'),
+        children: [
+          _SectionTitle(title: t.translate('export_guides')),
           _ResourceCard(
-            title: 'Export Business Starter Guide',
+            title: t.translate('export_business_starter_guide'),
             type: 'PDF',
             size: '2.4 MB',
           ),
           _ResourceCard(
-            title: 'Finding International Buyers',
+            title: t.translate('finding_international_buyers'),
             type: 'PDF',
             size: '1.8 MB',
           ),
 
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
 
-          _SectionTitle(title: 'Import Documentation'),
+          _SectionTitle(title: t.translate('import_documentation')),
           _ResourceCard(
-            title: 'Import Documentation Checklist',
+            title: t.translate('import_documentation_checklist'),
             type: 'PDF',
             size: '1.2 MB',
           ),
           _ResourceCard(
-            title: 'HS Code Classification Guide',
+            title: t.translate('hs_code_classification_guide'),
             type: 'PDF',
             size: '3.1 MB',
           ),
 
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
 
-          _SectionTitle(title: 'Compliance & Legal'),
+          _SectionTitle(title: t.translate('compliance_legal')),
           _ResourceCard(
-            title: 'IEC Registration Process',
+            title: t.translate('iec_registration_process'),
             type: 'DOC',
             size: '850 KB',
           ),
           _ResourceCard(
-            title: 'GST for Import Export',
+            title: t.translate('gst_for_import_export'),
             type: 'PDF',
             size: '2.0 MB',
           ),
@@ -104,7 +110,6 @@ class _ResourceCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // 🔹 FILE ICON
           Container(
             height: 44,
             width: 44,
@@ -120,7 +125,6 @@ class _ResourceCard extends StatelessWidget {
 
           const SizedBox(width: 14),
 
-          // 🔹 INFO
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,7 +145,6 @@ class _ResourceCard extends StatelessWidget {
             ),
           ),
 
-          // 🔹 ACTION
           IconButton(
             onPressed: () {
               // TODO: Open / Download resource
