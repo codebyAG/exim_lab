@@ -35,6 +35,11 @@ class WelcomeScreen extends StatelessWidget {
               alignment: Alignment.bottomCenter,
             ),
           ),
+          // 🌙 DARK MODE OVERLAY (ONLY FOR DARK THEME)
+          if (theme.brightness == Brightness.dark)
+            Positioned.fill(
+              child: Container(color: Colors.black.withOpacity(0.45)),
+            ),
 
           // 🔹 WHITE SOFT BLEND (SKY STYLE)
           Positioned(
@@ -154,7 +159,7 @@ class WelcomeScreen extends StatelessWidget {
                           onPressed: () {
                             // TODO: Navigate to Login
 
-                            AppNavigator.replace(context, LoginScreen());
+                            AppNavigator.push(context, LoginScreen());
                           },
                           child: Text(
                             t.translate('already_account'),
