@@ -25,6 +25,11 @@ class ThemeProvider extends ChangeNotifier {
     await prefs.setString('theme_mode', value);
   }
 
+  void toggleTheme() {
+    _themeMode = themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+    notifyListeners();
+  }
+
   void setLight() {
     _themeMode = ThemeMode.light;
     _save('light');

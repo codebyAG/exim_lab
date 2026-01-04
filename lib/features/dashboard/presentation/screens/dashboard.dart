@@ -1,4 +1,5 @@
 import 'package:exim_lab/common/widgets/language_switch.dart';
+import 'package:exim_lab/common/widgets/theme_switch_button.dart';
 import 'package:exim_lab/features/certificates/presentation/screens/certificates_screen.dart';
 import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dart';
 import 'package:exim_lab/features/resources/presentation/screens/resource_screen.dart';
@@ -66,7 +67,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                         Row(
                           children: [
+                            ThemeSwitchButton(),
                             LanguageSwitch(),
+
                             SizedBox(width: 10),
                             Icon(Icons.notifications_none, color: Colors.white),
                           ],
