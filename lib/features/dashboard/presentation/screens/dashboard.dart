@@ -157,8 +157,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ),
                               elevation: 0,
                             ),
-                            child:  Text(
-                             t.translate('start_learning'),
+                            child: Text(
+                              t.translate('start_learning'),
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
@@ -532,13 +532,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
           }
         },
 
-        items:  [
-          BottomNavigationBarItem(icon: Icon(Icons.home), 
-label: t.translate('home'),
-          
-          )
-          
-          ,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: t.translate('home'),
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.play_circle_outline),
             label: 'Courses',
