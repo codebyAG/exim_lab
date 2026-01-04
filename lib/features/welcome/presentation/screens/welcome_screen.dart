@@ -18,17 +18,13 @@ class WelcomeScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // 🔹 FULL PAGE SKY BACKGROUND
-          Positioned.fill(
-            child: Image.asset('assets/welcome_bg.png', fit: BoxFit.cover),
-          ),
 
           // 🔹 HERO IMAGE (TOP PART)
           Positioned(
             top: 0,
             left: 0,
             right: 0,
-            height: screenHeight * 0.72,
+            height: screenHeight,
             child: Image.asset(
               'assets/trade_hero.png',
               fit: BoxFit.cover,
@@ -36,9 +32,14 @@ class WelcomeScreen extends StatelessWidget {
             ),
           ),
           // 🌙 DARK MODE OVERLAY (ONLY FOR DARK THEME)
+          // 🌙 DARK MODE OVERLAY (ONLY IMAGE AREA)
           if (theme.brightness == Brightness.dark)
-            Positioned.fill(
-              child: Container(color: Colors.black.withOpacity(0.45)),
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: screenHeight,
+              child: Container(color: Colors.black.withOpacity(0.40)),
             ),
 
           // 🔹 WHITE SOFT BLEND (SKY STYLE)
@@ -47,20 +48,7 @@ class WelcomeScreen extends StatelessWidget {
             left: 0,
             right: 0,
             height: 160,
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    theme.colorScheme.background.withOpacity(0.15),
-                    theme.colorScheme.background.withOpacity(0.35),
-                    theme.colorScheme.background.withOpacity(0.6),
-                  ],
-                ),
-              ),
-            ),
+            child: Container(decoration: BoxDecoration()),
           ),
 
           // 🔹 CONTENT (TEXT ON TOP OF IMAGES)
@@ -201,7 +189,9 @@ class WelcomeScreen extends StatelessWidget {
             child: Text(
               text,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ],
