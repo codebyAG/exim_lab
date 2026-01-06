@@ -10,19 +10,18 @@ class CourseDetailsScreen extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F7FB),
+      backgroundColor: theme.colorScheme.surface,
+
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.colorScheme.surface,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Course Details',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
-        ),
+        title: Text('Course Details', style: theme.textTheme.titleLarge),
       ),
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -32,24 +31,33 @@ class CourseDetailsScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: theme.brightness == Brightness.light
+                        ? Colors.black.withOpacity(0.05)
+                        : Colors.black.withOpacity(0.25),
+                    blurRadius: 12,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Thumbnail placeholder
+                  // Thumbnail
                   Container(
                     height: 180,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
+                      color: theme.colorScheme.primary.withOpacity(0.15),
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: const Center(
+                    child: Center(
                       child: Icon(
                         Icons.play_circle_outline,
                         size: 54,
-                        color: Color(0xFFFF8A00),
+                        color: theme.colorScheme.primary,
                       ),
                     ),
                   ),
@@ -68,33 +76,21 @@ class CourseDetailsScreen extends StatelessWidget {
                   Text(
                     'Learn how to find global buyers, price your products, and scale exports professionally.',
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Colors.black54,
+                      color: theme.colorScheme.onSurface.withOpacity(0.65),
                       height: 1.4,
                     ),
                   ),
 
                   const SizedBox(height: 12),
 
-                  // Stats row
+                  // Stats
                   Row(
                     children: const [
-                      _StatChip(
-                        icon: Icons.star,
-                        text: '4.8',
-                        color: Colors.amber,
-                      ),
+                      _StatChip(icon: Icons.star, text: '4.8', isAccent: true),
                       SizedBox(width: 8),
-                      _StatChip(
-                        icon: Icons.people,
-                        text: '2.1k learners',
-                        color: Colors.blueGrey,
-                      ),
+                      _StatChip(icon: Icons.people, text: '2.1k learners'),
                       SizedBox(width: 8),
-                      _StatChip(
-                        icon: Icons.schedule,
-                        text: '6 hrs',
-                        color: Colors.blueGrey,
-                      ),
+                      _StatChip(icon: Icons.schedule, text: '6 hrs'),
                     ],
                   ),
                 ],
@@ -104,7 +100,7 @@ class CourseDetailsScreen extends StatelessWidget {
             const SizedBox(height: 24),
 
             // 🔹 ABOUT
-            _sectionTitle('About this course'),
+            _sectionTitle(context, 'About this course'),
             const SizedBox(height: 8),
             Text(
               'This course is designed for beginners and professionals who want to understand export business practically. '
@@ -115,7 +111,7 @@ class CourseDetailsScreen extends StatelessWidget {
             const SizedBox(height: 24),
 
             // 🔹 WHAT YOU WILL LEARN
-            _sectionTitle('What you will learn'),
+            _sectionTitle(context, 'What you will learn'),
             const SizedBox(height: 12),
             const _Bullet(text: 'How to find international buyers'),
             const _Bullet(text: 'Export pricing and profit calculation'),
@@ -133,9 +129,9 @@ class CourseDetailsScreen extends StatelessWidget {
                 onPressed: () {
                   AppNavigator.push(context, const LessonsScreen());
                 },
-
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFF8A00),
+                  backgroundColor: theme.colorScheme.primary,
+                  foregroundColor: theme.colorScheme.onPrimary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -143,11 +139,7 @@ class CourseDetailsScreen extends StatelessWidget {
                 ),
                 child: const Text(
                   'Enroll & Start Learning',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ),
             ),
@@ -157,10 +149,11 @@ class CourseDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _sectionTitle(String text) {
+  Widget _sectionTitle(BuildContext context, String text) {
+    final theme = Theme.of(context);
     return Text(
       text,
-      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+      style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
     );
   }
 }
@@ -169,27 +162,35 @@ class CourseDetailsScreen extends StatelessWidget {
 class _StatChip extends StatelessWidget {
   final IconData icon;
   final String text;
-  final Color color;
+  final bool isAccent;
 
   const _StatChip({
     required this.icon,
     required this.text,
-    required this.color,
+    this.isAccent = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
+        color: theme.colorScheme.onSurface.withOpacity(0.08),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
-          Icon(icon, size: 14, color: color),
+          Icon(
+            icon,
+            size: 14,
+            color: isAccent
+                ? Colors.amber
+                : theme.colorScheme.onSurface.withOpacity(0.7),
+          ),
           const SizedBox(width: 4),
-          Text(text, style: const TextStyle(fontSize: 12)),
+          Text(text, style: theme.textTheme.bodySmall),
         ],
       ),
     );
@@ -204,14 +205,20 @@ class _Bullet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.check_circle, size: 18, color: Color(0xFF22C55E)),
-          SizedBox(width: 10),
-          Expanded(child: Text(text)),
+          Icon(
+            Icons.check_circle,
+            size: 18,
+            color: theme.colorScheme.secondary,
+          ),
+          const SizedBox(width: 10),
+          Expanded(child: Text(text, style: theme.textTheme.bodyMedium)),
         ],
       ),
     );
