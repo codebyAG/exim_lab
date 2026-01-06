@@ -7,18 +7,16 @@ class ResourcesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F7FB),
+      backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.colorScheme.surface,
         elevation: 0,
         title: Text(
           t.translate('resources'),
-          style: const TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-          ),
+          style: theme.textTheme.titleLarge,
         ),
       ),
       body: ListView(
@@ -77,12 +75,11 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: Text(
-        title,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-      ),
+      child: Text(title, style: theme.textTheme.titleLarge),
     );
   }
 }
@@ -101,56 +98,71 @@ class _ResourceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: theme.brightness == Brightness.light
+                ? Colors.black.withOpacity(0.05)
+                : Colors.black.withOpacity(0.25),
+            blurRadius: 10,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       child: Row(
         children: [
+          // FILE ICON
           Container(
             height: 44,
             width: 44,
             decoration: BoxDecoration(
-              color: const Color(0xFFFF8A00).withOpacity(0.15),
+              color: theme.colorScheme.primary.withOpacity(0.15),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.insert_drive_file,
-              color: Color(0xFFFF8A00),
+              color: theme.colorScheme.primary,
             ),
           ),
 
           const SizedBox(width: 14),
 
+          // INFO
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 15,
+                  style: theme.textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '$type • $size',
-                  style: const TextStyle(fontSize: 12, color: Colors.black54),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  ),
                 ),
               ],
             ),
           ),
 
+          // ACTION
           IconButton(
             onPressed: () {
               // TODO: Open / Download resource
             },
             icon: const Icon(Icons.download),
-            color: Colors.grey,
+            color: theme.colorScheme.onSurface.withOpacity(0.6),
           ),
         ],
       ),
