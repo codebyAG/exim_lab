@@ -1,3 +1,4 @@
+import 'package:exim_lab/common/widgets/theme_switch_button.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/login/presentations/screens/login_screen.dart';
 import 'package:exim_lab/localization/app_localization.dart';
@@ -32,9 +33,8 @@ class WelcomeScreen extends StatelessWidget {
                   colors: theme.brightness == Brightness.dark
                       ? [
                           Colors.black.withOpacity(0.65),
-                          Colors.black.withOpacity(0.45),
-                          Colors.black.withOpacity(0.25),
-                          Colors.transparent,
+                          Colors.black.withOpacity(0.65),
+                          Colors.black.withOpacity(0.65),
                         ]
                       : [
                           Colors.black.withOpacity(0.35),
@@ -51,20 +51,22 @@ class WelcomeScreen extends StatelessWidget {
             child: Column(
               children: [
                 // 🌐 LANGUAGE SWITCH
-                Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    icon: const Icon(Icons.language, color: Colors.white),
-                    onPressed: () {
-                      localeProvider.locale.languageCode == 'en'
-                          ? localeProvider.setLocale('hi')
-                          : localeProvider.setLocale('en');
-                    },
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const ThemeSwitchButton(),
+                    const SizedBox(width: 8),
+                    IconButton(
+                      icon: const Icon(Icons.language, color: Colors.white),
+                      onPressed: () {
+                        localeProvider.locale.languageCode == 'en'
+                            ? localeProvider.setLocale('hi')
+                            : localeProvider.setLocale('en');
+                      },
+                    ),
+                  ],
                 ),
-
                 const Spacer(),
-
                 // 🔹 CONTENT
                 Expanded(
                   child: SingleChildScrollView(
