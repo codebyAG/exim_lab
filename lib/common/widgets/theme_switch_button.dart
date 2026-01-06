@@ -7,7 +7,6 @@ class ThemeSwitchButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final themeProvider = context.watch<ThemeProvider>();
 
     // 🔹 Resolve actual brightness (important for system mode)

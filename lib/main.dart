@@ -39,28 +39,26 @@ class EximLabApp extends StatelessWidget {
     final themeProvider = context.watch<ThemeProvider>();
     final localeProvider = context.watch<LocaleProvider>();
 
-    return SafeArea(
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'EximLab',
-      
-        // 🌗 THEME
-        theme: lightTheme,
-        darkTheme: darkTheme,
-        themeMode: themeProvider.themeMode,
-      
-        // 🌍 LOCALIZATION
-        locale: localeProvider.locale,
-        supportedLocales: const [Locale('en'), Locale('hi')],
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-      
-        home: const WelcomeScreen(),
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'EximLab',
+    
+      // 🌗 THEME
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: themeProvider.themeMode,
+    
+      // 🌍 LOCALIZATION
+      locale: localeProvider.locale,
+      supportedLocales: const [Locale('en'), Locale('hi')],
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+    
+      home: const WelcomeScreen(),
     );
   }
 }

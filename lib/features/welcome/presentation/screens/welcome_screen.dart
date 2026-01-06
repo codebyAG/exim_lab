@@ -28,8 +28,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final t = AppLocalizations.of(context);
-    final localeProvider = context.watch<LocaleProvider>();
-
     return Scaffold(
       body: Stack(
         children: [
