@@ -101,6 +101,7 @@ class DashboardScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: cs.surface,
                         borderRadius: BorderRadius.circular(22),
+
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.15),
@@ -157,6 +158,7 @@ class DashboardScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: cs.surface,
                     borderRadius: BorderRadius.circular(16),
+                    boxShadow: appCardShadow(context),
                   ),
                   child: Row(
                     children: [
@@ -312,7 +314,7 @@ class _SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20,),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -356,6 +358,7 @@ class _QuickCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: cs.surface,
             borderRadius: BorderRadius.circular(16),
+            boxShadow: appCardShadow(context),
           ),
           child: Column(
             children: [
@@ -378,6 +381,20 @@ class _QuickCard extends StatelessWidget {
   }
 }
 
+List<BoxShadow> appCardShadow(BuildContext context) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+
+  return [
+    BoxShadow(
+      color: isDark
+          ? Colors.black.withOpacity(0.4)
+          : Colors.black.withOpacity(0.08),
+      blurRadius: 16,
+      offset: const Offset(0, 8),
+    ),
+  ];
+}
+
 class _ContinueCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -390,6 +407,7 @@ class _ContinueCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: cs.surface,
           borderRadius: BorderRadius.circular(18),
+          boxShadow: appCardShadow(context),
         ),
         child: Row(
           children: [
@@ -470,38 +488,42 @@ class _CourseCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
 
-    return Container(
-      width: 220,
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: cs.surface,
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: cs.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: const Center(
-                child: Icon(Icons.play_circle_outline, size: 40),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Container(
+        width: 220,
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: cs.surface,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: appCardShadow(context),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: cs.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Center(
+                  child: Icon(Icons.play_circle_outline, size: 40),
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 10),
-          Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-          const SizedBox(height: 6),
-          Text(
-            '$rating • $learners',
-            style: TextStyle(
-              fontSize: 12,
-              color: cs.onSurface.withOpacity(0.6),
+            const SizedBox(height: 10),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+            const SizedBox(height: 6),
+            Text(
+              '$rating • $learners',
+              style: TextStyle(
+                fontSize: 12,
+                color: cs.onSurface.withOpacity(0.6),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
