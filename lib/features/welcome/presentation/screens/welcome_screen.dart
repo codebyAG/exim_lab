@@ -18,7 +18,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    precacheImage(const AssetImage('assets/welcome_bg.jpg'), context);
+    precacheImage(const AssetImage('assets/welcome_bg.png'), context);
   }
 
   @override
