@@ -13,7 +13,6 @@ class AppColorSchemes {
     onSecondary: Color(0xFFFFFFFF),
     onBackground: Color(0xFF0F172A),
     onSurface: Color(0xFF0F172A),
-
     // 🔹 EXTRA IMPORTANT COLORS
     error: Color(0xFFDC2626),
     onError: Color(0xFFFFFFFF),
