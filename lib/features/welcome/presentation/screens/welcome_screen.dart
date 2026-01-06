@@ -30,8 +30,6 @@ class WelcomeScreen extends StatelessWidget {
               alignment: Alignment.bottomCenter,
             ),
           ),
-          // 🌙 DARK MODE OVERLAY (ONLY FOR DARK THEME)
-          // 🌙 DARK MODE OVERLAY (ONLY IMAGE AREA)
           if (theme.brightness == Brightness.dark)
             Positioned(
               top: 0,
@@ -41,7 +39,6 @@ class WelcomeScreen extends StatelessWidget {
               child: Container(color: Colors.black.withOpacity(0.60)),
             ),
 
-          // 🔹 CONTENT (TEXT ON TOP OF IMAGES)
           SafeArea(
             child: Column(
               children: [
