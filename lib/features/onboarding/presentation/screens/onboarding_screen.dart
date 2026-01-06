@@ -38,7 +38,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     final t = AppLocalizations.of(context);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.colorScheme.surface,
       body: SafeArea(
         child: Column(
           children: [
@@ -47,7 +47,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               alignment: Alignment.topRight,
               child: TextButton(
                 onPressed: _finishOnboarding,
-                child: Text(t.translate('skip')),
+                child: Text(
+                  t.translate('skip'),
+                  style: theme.textTheme.bodyMedium,
+                ),
               ),
             ),
 
@@ -71,13 +74,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           height: 120,
                           width: 120,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFF8A00).withOpacity(0.12),
+                            color: theme.colorScheme.primary.withOpacity(0.12),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
                             page.icon,
                             size: 60,
-                            color: const Color(0xFFFF8A00),
+                            color: theme.colorScheme.primary,
                           ),
                         ),
 
@@ -102,18 +105,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           style: theme.textTheme.bodyLarge?.copyWith(
                             fontSize: 17,
                             height: 1.4,
-                            color: Colors.black.withOpacity(0.7),
+                            color: theme.colorScheme.onSurface.withOpacity(
+                              0.7,
+                            ),
                           ),
                         ),
 
                         const SizedBox(height: 12),
 
-                        // 🔹 WHO IS THIS FOR (VALUE ADD)
+                        // 🔹 WHO IS THIS FOR
                         Text(
                           t.translate('onboard_who_for'),
                           textAlign: TextAlign.center,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: Colors.black.withOpacity(0.55),
+                            color: theme.colorScheme.onSurface.withOpacity(
+                              0.55,
+                            ),
                           ),
                         ),
                       ],
@@ -140,8 +147,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         width: _currentIndex == index ? 22 : 8,
                         decoration: BoxDecoration(
                           color: _currentIndex == index
-                              ? const Color(0xFFFF8A00)
-                              : Colors.grey.shade300,
+                              ? theme.colorScheme.primary
+                              : theme.dividerColor,
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -159,18 +166,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         'total': _pages.length.toString(),
                       },
                     ),
+                    style: theme.textTheme.bodySmall,
                   ),
 
                   const SizedBox(height: 20),
 
-                  // 🔹 FULL WIDTH CTA BUTTON
+                  // 🔹 CTA BUTTON
                   SizedBox(
                     width: double.infinity,
                     height: 56,
                     child: ElevatedButton(
                       onPressed: _nextPage,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFFF8A00),
+                        backgroundColor: theme.colorScheme.primary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -180,10 +188,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         _currentIndex == _pages.length - 1
                             ? t.translate('get_started')
                             : t.translate('continue'),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                          color: theme.colorScheme.onPrimary,
                         ),
                       ),
                     ),
@@ -209,8 +217,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _finishOnboarding() {
-    // TODO: Navigate to Dashboard
-    AppNavigator.push(context, DashboardScreen());
+    AppNavigator.push(context, const DashboardScreen());
   }
 }
 
