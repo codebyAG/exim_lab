@@ -1,3 +1,4 @@
+import 'package:exim_lab/common/widgets/language_switch.dart';
 import 'package:exim_lab/common/widgets/theme_switch_button.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/login/presentations/screens/login_screen.dart';
@@ -70,14 +71,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   children: [
                     const ThemeSwitchButton(),
                     const SizedBox(width: 8),
-                    IconButton(
-                      icon: const Icon(Icons.language, color: Colors.white),
-                      onPressed: () {
-                        localeProvider.locale.languageCode == 'en'
-                            ? localeProvider.setLocale('hi')
-                            : localeProvider.setLocale('en');
-                      },
-                    ),
+                    LanguageSwitch(),
                   ],
                 ),
                 Spacer(),
