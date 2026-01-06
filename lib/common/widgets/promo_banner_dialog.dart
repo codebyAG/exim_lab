@@ -1,28 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:exim_lab/core/navigation/app_navigator.dart';
+import 'package:exim_lab/features/courses/presentation/screens/courses_list_screen.dart';
 
 class PromoBannerDialog extends StatelessWidget {
   const PromoBannerDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Dialog(
       elevation: 0,
       backgroundColor: Colors.transparent,
       insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: Stack(
         children: [
-          // 🔹 BANNER CARD
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Image.asset(
-              'assets/discount_banner.png',
-              fit: BoxFit.cover,
+          // 🔹 CLICKABLE BANNER
+          GestureDetector(
+            onTap: () {
+              Navigator.pop(context); // close dialog
+              AppNavigator.push(context, const CoursesListScreen());
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.asset(
+                'assets/discount_banner.png',
+                fit: BoxFit.cover,
+                width: double.infinity,
+              ),
             ),
           ),
-
-       
 
           // ❌ CLOSE BUTTON
           Positioned(
@@ -36,11 +41,7 @@ class PromoBannerDialog extends StatelessWidget {
                   color: Colors.black.withOpacity(0.6),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
-                  Icons.close,
-                  size: 18,
-                  color: Colors.white,
-                ),
+                child: const Icon(Icons.close, size: 18, color: Colors.white),
               ),
             ),
           ),

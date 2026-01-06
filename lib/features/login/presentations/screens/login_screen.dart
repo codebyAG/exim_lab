@@ -12,7 +12,7 @@ class LoginScreen extends StatelessWidget {
     final t = AppLocalizations.of(context);
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.background,
+      backgroundColor: theme.colorScheme.surface,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -24,7 +24,7 @@ class LoginScreen extends StatelessWidget {
                 onPressed: () => Navigator.pop(context),
                 icon: Icon(
                   Icons.arrow_back,
-                  color: theme.colorScheme.onBackground,
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
 
@@ -44,7 +44,7 @@ class LoginScreen extends StatelessWidget {
               Text(
                 t.translate('login_subtitle'),
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onBackground.withOpacity(0.65),
+                  color: theme.colorScheme.onSurface.withOpacity(0.65),
                 ),
               ),
 
@@ -55,7 +55,7 @@ class LoginScreen extends StatelessWidget {
                 t.translate('phone_hint'),
                 style: theme.textTheme.bodySmall?.copyWith(
                   fontWeight: FontWeight.w500,
-                  color: theme.colorScheme.onBackground,
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
 
@@ -87,7 +87,7 @@ class LoginScreen extends StatelessWidget {
               Text(
                 t.translate('otp_info'),
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onBackground.withOpacity(0.55),
+                  color: theme.colorScheme.onSurface.withOpacity(0.55),
                 ),
               ),
 
@@ -127,7 +127,7 @@ class LoginScreen extends StatelessWidget {
                   t.translate('terms_privacy'),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onBackground.withOpacity(0.5),
+                    color: theme.colorScheme.onSurface.withOpacity(0.5),
                   ),
                 ),
               ),
