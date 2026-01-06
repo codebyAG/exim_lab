@@ -18,7 +18,6 @@ class WelcomeScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-
           // 🔹 HERO IMAGE (TOP PART)
           Positioned(
             top: 0,
@@ -26,7 +25,7 @@ class WelcomeScreen extends StatelessWidget {
             right: 0,
             height: screenHeight,
             child: Image.asset(
-              'assets/trade_hero.png',
+              'assets/welcome_bg.jpg',
               fit: BoxFit.cover,
               alignment: Alignment.bottomCenter,
             ),
@@ -39,17 +38,8 @@ class WelcomeScreen extends StatelessWidget {
               left: 0,
               right: 0,
               height: screenHeight,
-              child: Container(color: Colors.black.withOpacity(0.40)),
+              child: Container(color: Colors.black.withOpacity(0.60)),
             ),
-
-          // 🔹 WHITE SOFT BLEND (SKY STYLE)
-          Positioned(
-            top: screenHeight * 0.55,
-            left: 0,
-            right: 0,
-            height: 160,
-            child: Container(decoration: BoxDecoration()),
-          ),
 
           // 🔹 CONTENT (TEXT ON TOP OF IMAGES)
           SafeArea(
