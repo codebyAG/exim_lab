@@ -6,19 +6,20 @@ class CertificatesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F7FB),
+      backgroundColor: theme.colorScheme.surface,
+
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.colorScheme.surface,
         elevation: 0,
-        title: const Text(
-          'Certificates',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
-        ),
+        title: Text('Certificates', style: theme.textTheme.titleLarge),
       ),
+
       body: ListView(
         padding: const EdgeInsets.all(20),
-        children: [
+        children: const [
           _CertificateTile(
             title: 'Advanced Export Strategy',
             issuedDate: '12 Jan 2026',
@@ -48,6 +49,8 @@ class _CertificateTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Opacity(
       opacity: isUnlocked ? 1 : 0.55,
       child: GestureDetector(
@@ -66,48 +69,62 @@ class _CertificateTile extends StatelessWidget {
                 );
               }
             : null,
+
         child: Container(
           margin: const EdgeInsets.only(bottom: 18),
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: theme.colorScheme.surface,
             borderRadius: BorderRadius.circular(18),
+            boxShadow: [
+              BoxShadow(
+                color: theme.brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.05)
+                    : Colors.black.withOpacity(0.25),
+                blurRadius: 12,
+                offset: const Offset(0, 8),
+              ),
+            ],
           ),
+
           child: Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.workspace_premium,
                 size: 40,
-                color: Color(0xFFFF8A00),
+                color: theme.colorScheme.primary,
               ),
+
               const SizedBox(width: 14),
+
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
-                        fontSize: 16,
+                      style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
+
                     const SizedBox(height: 4),
+
                     Text(
                       isUnlocked
                           ? 'Issued on $issuedDate'
                           : 'Complete course to unlock',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Colors.black54,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.65),
                       ),
                     ),
                   ],
                 ),
               ),
+
               Icon(
                 isUnlocked ? Icons.chevron_right : Icons.lock_outline,
-                color: Colors.grey,
+                color: theme.colorScheme.onSurface.withOpacity(0.6),
               ),
             ],
           ),

@@ -16,17 +16,21 @@ class CertificatePreviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F7FB),
+      backgroundColor: theme.colorScheme.surface,
+
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.colorScheme.surface,
         elevation: 0,
-        title: const Text('Certificate', style: TextStyle(color: Colors.black)),
+        title: Text('Certificate', style: theme.textTheme.titleLarge),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
       ),
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -35,55 +39,61 @@ class CertificatePreviewScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(24),
+                border: Border.all(
+                  color: theme.colorScheme.primary,
+                  width: 1.4,
+                ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.08),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
+                    color: theme.brightness == Brightness.light
+                        ? Colors.black.withOpacity(0.08)
+                        : Colors.black.withOpacity(0.35),
+                    blurRadius: 22,
+                    offset: const Offset(0, 12),
                   ),
                 ],
-                border: Border.all(color: const Color(0xFFFF8A00), width: 1.5),
               ),
               child: Column(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.workspace_premium,
                     size: 60,
-                    color: Color(0xFFFF8A00),
+                    color: theme.colorScheme.primary,
                   ),
 
                   const SizedBox(height: 16),
 
-                  const Text(
+                  Text(
                     'Certificate of Completion',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
 
                   const SizedBox(height: 10),
 
-                  const Text(
+                  Text(
                     'This is proudly presented to',
-                    style: TextStyle(fontSize: 14),
+                    style: theme.textTheme.bodyMedium,
                   ),
 
                   const SizedBox(height: 8),
 
                   Text(
                     userName,
-                    style: const TextStyle(
-                      fontSize: 22,
+                    style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.w700,
                     ),
                   ),
 
                   const SizedBox(height: 16),
 
-                  const Text(
+                  Text(
                     'For successfully completing the course',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14),
+                    style: theme.textTheme.bodyMedium,
                   ),
 
                   const SizedBox(height: 8),
@@ -91,15 +101,14 @@ class CertificatePreviewScreen extends StatelessWidget {
                   Text(
                     courseName,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 18,
+                    style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
 
                   const SizedBox(height: 20),
 
-                  Divider(color: Colors.grey.shade300),
+                  Divider(color: theme.colorScheme.onSurface.withOpacity(0.15)),
 
                   const SizedBox(height: 12),
 
@@ -126,15 +135,14 @@ class CertificatePreviewScreen extends StatelessWidget {
                     label: const Text('Download'),
                   ),
                 ),
+
                 const SizedBox(width: 14),
+
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: () {},
                     icon: const Icon(Icons.share),
                     label: const Text('Share'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFF8A00),
-                    ),
                   ),
                 ),
               ],
@@ -154,15 +162,24 @@ class _Info extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: const TextStyle(fontSize: 12, color: Colors.black54),
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurface.withOpacity(0.6),
+          ),
         ),
         const SizedBox(height: 4),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.w600)),
+        Text(
+          value,
+          style: theme.textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ],
     );
   }
