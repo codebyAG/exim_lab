@@ -1,5 +1,4 @@
 import 'package:exim_lab/core/navigation/app_navigator.dart';
-import 'package:exim_lab/features/courses/data/course_progress_helper.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_details_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -25,29 +24,24 @@ class _CoursesListScreenState extends State<CoursesListScreen>
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F7FB),
+      backgroundColor: theme.colorScheme.surface,
 
       // 🔹 APP BAR
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.colorScheme.surface,
         elevation: 0,
-        title: const Text(
-          'Courses',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
-        ),
+        title: Text('Courses', style: theme.textTheme.titleLarge),
         actions: [
           IconButton(
-            onPressed: () {
-              // TODO: Search
-            },
-            icon: const Icon(Icons.search, color: Colors.black),
+            onPressed: () {},
+            icon: Icon(Icons.search, color: theme.colorScheme.onSurface),
           ),
         ],
         bottom: TabBar(
           controller: _tabController,
-          labelColor: const Color(0xFFFF8A00),
-          unselectedLabelColor: Colors.grey,
-          indicatorColor: const Color(0xFFFF8A00),
+          labelColor: theme.colorScheme.primary,
+          unselectedLabelColor: theme.colorScheme.onSurface.withOpacity(0.6),
+          indicatorColor: theme.colorScheme.primary,
           tabs: const [
             Tab(text: 'All'),
             Tab(text: 'My Courses'),
@@ -60,16 +54,16 @@ class _CoursesListScreenState extends State<CoursesListScreen>
       body: TabBarView(
         controller: _tabController,
         children: [
-          _courseList(),
-          _myCoursesMockList(), // ✅ mock data
-          _courseList(),
+          _courseList(context),
+          _myCoursesMockList(context),
+          _courseList(context),
         ],
       ),
     );
   }
 
   // 🔹 ALL COURSES LIST
-  Widget _courseList() {
+  Widget _courseList(BuildContext context) {
     return ListView.builder(
       padding: const EdgeInsets.all(16),
       itemCount: _courses.length,
@@ -89,41 +83,51 @@ class _CourseTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: theme.brightness == Brightness.light
+                ? Colors.black.withOpacity(0.05)
+                : Colors.black.withOpacity(0.25),
+            blurRadius: 10,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       child: Row(
         children: [
-          // 🔹 THUMBNAIL PLACEHOLDER
+          // THUMBNAIL
           Container(
             height: 80,
             width: 80,
             decoration: BoxDecoration(
-              color: Colors.grey.shade200,
+              color: theme.colorScheme.primary.withOpacity(0.15),
               borderRadius: BorderRadius.circular(14),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.play_circle_fill,
               size: 36,
-              color: Color(0xFFFF8A00),
+              color: theme.colorScheme.primary,
             ),
           ),
 
           const SizedBox(width: 14),
 
-          // 🔹 DETAILS
+          // DETAILS
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   course.title,
-                  style: const TextStyle(
-                    fontSize: 15,
+                  style: theme.textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -132,7 +136,9 @@ class _CourseTile extends StatelessWidget {
                   course.subtitle,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 13, color: Colors.black54),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withOpacity(0.65),
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Row(
@@ -141,7 +147,7 @@ class _CourseTile extends StatelessWidget {
                     const SizedBox(width: 4),
                     Text(
                       '${course.rating} • ${course.learners} learners',
-                      style: const TextStyle(fontSize: 12),
+                      style: theme.textTheme.bodySmall,
                     ),
                   ],
                 ),
@@ -151,13 +157,14 @@ class _CourseTile extends StatelessWidget {
 
           const SizedBox(width: 8),
 
-          // 🔹 ACTION
+          // ACTION
           ElevatedButton(
             onPressed: () {
               AppNavigator.push(context, const CourseDetailsScreen());
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFFF8A00),
+              backgroundColor: theme.colorScheme.primary,
+              foregroundColor: theme.colorScheme.onPrimary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -171,7 +178,7 @@ class _CourseTile extends StatelessWidget {
   }
 }
 
-// 🔹 COURSE MODEL (STATIC DATA)
+// 🔹 COURSE MODEL
 class _Course {
   final String id;
   final String title;
@@ -209,6 +216,7 @@ const List<_Course> _courses = [
   ),
 ];
 
+// 🔹 MY COURSES CARD
 class _MyCourseCard extends StatelessWidget {
   final _MyCourse course;
 
@@ -216,26 +224,39 @@ class _MyCourseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: theme.brightness == Brightness.light
+                ? Colors.black.withOpacity(0.05)
+                : Colors.black.withOpacity(0.25),
+            blurRadius: 10,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             course.title,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            style: theme.textTheme.bodyLarge?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
           ),
 
           const SizedBox(height: 6),
 
           Text(
             '${course.completedLessons}/${course.totalLessons} lessons completed',
-            style: const TextStyle(fontSize: 13, color: Colors.black54),
+            style: theme.textTheme.bodySmall,
           ),
 
           const SizedBox(height: 12),
@@ -245,8 +266,8 @@ class _MyCourseCard extends StatelessWidget {
             child: LinearProgressIndicator(
               value: course.progress,
               minHeight: 8,
-              backgroundColor: Colors.grey.shade200,
-              color: const Color(0xFFFF8A00),
+              backgroundColor: theme.colorScheme.onSurface.withOpacity(0.15),
+              color: theme.colorScheme.primary,
             ),
           ),
 
@@ -260,19 +281,14 @@ class _MyCourseCard extends StatelessWidget {
                 AppNavigator.push(context, const CourseDetailsScreen());
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFF8A00),
+                backgroundColor: theme.colorScheme.primary,
+                foregroundColor: theme.colorScheme.onPrimary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 elevation: 0,
               ),
-              child: const Text(
-                'Resume Learning',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
+              child: const Text('Resume Learning'),
             ),
           ),
         ],
@@ -307,7 +323,8 @@ const List<_MyCourse> _mockMyCourses = [
     totalLessons: 8,
   ),
 ];
-Widget _myCoursesMockList() {
+
+Widget _myCoursesMockList(BuildContext context) {
   return ListView.builder(
     padding: const EdgeInsets.all(16),
     itemCount: _mockMyCourses.length,
