@@ -14,11 +14,13 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+  late final ImageProvider _bgImage;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
-    precacheImage(const AssetImage('assets/welcome_bg.png'), context);
+    _bgImage = const AssetImage('assets/welcome_bg.png');
+    precacheImage(_bgImage, context);
   }
 
   @override
@@ -32,7 +34,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         children: [
           // 🔹 BACKGROUND IMAGE
           Positioned.fill(
-            child: Image.asset('assets/welcome_bg.jpg', fit: BoxFit.cover),
+            child: Image(image: _bgImage, fit: BoxFit.cover),
           ),
 
           // 🔹 UNIVERSAL GRADIENT OVERLAY (FIXES BOTH MODES)
