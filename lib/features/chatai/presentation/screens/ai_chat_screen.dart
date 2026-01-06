@@ -64,15 +64,17 @@ class _AiChatScreenState extends State<AiChatScreen> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F7FB),
+      backgroundColor: cs.surface,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: cs.surface,
         elevation: 0,
-        title: const Text(
+        title: Text(
           'Exim AI',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+          style: TextStyle(color: cs.onSurface, fontWeight: FontWeight.w600),
         ),
       ),
       body: Column(
@@ -91,7 +93,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
             ),
           ),
 
-          // 🔹 SUGGESTED QUESTION CHIPS (BOTTOM)
+          // 🔹 SUGGESTED QUESTION CHIPS
           if (_messages.length <= 1)
             Container(
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
@@ -99,16 +101,10 @@ class _AiChatScreenState extends State<AiChatScreen> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    _suggestedChip('What is IEC?', const Color(0xFFE0F2FE)),
-                    _suggestedChip('GST for export?', const Color(0xFFDCFCE7)),
-                    _suggestedChip(
-                      'Required documents',
-                      const Color(0xFFFFEDD5),
-                    ),
-                    _suggestedChip(
-                      'Best course to start',
-                      const Color(0xFFFCE7F3),
-                    ),
+                    _suggestedChip(context, 'What is IEC?'),
+                    _suggestedChip(context, 'GST for export?'),
+                    _suggestedChip(context, 'Required documents'),
+                    _suggestedChip(context, 'Best course to start'),
                   ],
                 ),
               ),
@@ -117,13 +113,13 @@ class _AiChatScreenState extends State<AiChatScreen> {
           // 🔹 INPUT BAR
           Container(
             padding: const EdgeInsets.all(12),
-            decoration: const BoxDecoration(
-              color: Colors.white,
+            decoration: BoxDecoration(
+              color: cs.surface,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black12,
+                  color: Colors.black.withOpacity(0.1),
                   blurRadius: 10,
-                  offset: Offset(0, -2),
+                  offset: const Offset(0, -2),
                 ),
               ],
             ),
@@ -132,22 +128,26 @@ class _AiChatScreenState extends State<AiChatScreen> {
                 Expanded(
                   child: TextField(
                     controller: _controller,
+                    style: TextStyle(color: cs.onSurface),
                     decoration: InputDecoration(
                       hintText: t.translate('chat_hint'),
+                      hintStyle: TextStyle(
+                        color: cs.onSurface.withOpacity(0.5),
+                      ),
                       filled: true,
-                      fillColor: const Color(0xFFF3F4F6),
+                      fillColor: cs.surfaceContainerHighest,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
                         borderSide: BorderSide.none,
                       ),
                     ),
-                    onSubmitted: (val) => _sendMessage(val),
+                    onSubmitted: _sendMessage,
                   ),
                 ),
                 const SizedBox(width: 8),
                 IconButton(
                   onPressed: () => _sendMessage(_controller.text),
-                  icon: const Icon(Icons.send, color: Color(0xFFFF8A00)),
+                  icon: Icon(Icons.send, color: cs.primary),
                 ),
               ],
             ),
@@ -157,7 +157,9 @@ class _AiChatScreenState extends State<AiChatScreen> {
     );
   }
 
-  Widget _suggestedChip(String text, Color bgColor) {
+  Widget _suggestedChip(BuildContext context, String text) {
+    final cs = Theme.of(context).colorScheme;
+
     return Padding(
       padding: const EdgeInsets.only(right: 8),
       child: GestureDetector(
@@ -165,12 +167,16 @@ class _AiChatScreenState extends State<AiChatScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           decoration: BoxDecoration(
-            color: bgColor,
+            color: cs.primary.withOpacity(0.12),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Text(
             text,
-            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: cs.primary,
+            ),
           ),
         ),
       ),
@@ -194,6 +200,8 @@ class _ChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
     return Align(
       alignment: message.isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
@@ -201,13 +209,13 @@ class _ChatBubble extends StatelessWidget {
         padding: const EdgeInsets.all(14),
         constraints: const BoxConstraints(maxWidth: 300),
         decoration: BoxDecoration(
-          color: message.isUser ? const Color(0xFFFF8A00) : Colors.white,
+          color: message.isUser ? cs.primary : cs.surface,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Text(
           message.text,
           style: TextStyle(
-            color: message.isUser ? Colors.white : Colors.black,
+            color: message.isUser ? cs.onPrimary : cs.onSurface,
             fontSize: 14,
           ),
         ),
@@ -223,6 +231,7 @@ class _TypingIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
+    final cs = Theme.of(context).colorScheme;
 
     return Align(
       alignment: Alignment.centerLeft,
@@ -230,12 +239,12 @@ class _TypingIndicator extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         margin: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: cs.surface,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Text(
           t.translate('ai_typing'),
-          style: TextStyle(fontSize: 13, color: Colors.black54),
+          style: TextStyle(fontSize: 13, color: cs.onSurface.withOpacity(0.6)),
         ),
       ),
     );
