@@ -275,7 +275,7 @@ class _MyCourseCard extends StatelessWidget {
 
           SizedBox(
             width: double.infinity,
-            height: 42,
+            height: 50,
             child: ElevatedButton(
               onPressed: () {
                 AppNavigator.push(context, const CourseDetailsScreen());
