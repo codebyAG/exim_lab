@@ -63,16 +63,14 @@
   "view_all": "सभी देखें",
   "learners": "सीखने वाले",
   "courses": "कोर्स",
-
   "export_guides": "निर्यात गाइड",
   "export_business_starter_guide": "निर्यात व्यवसाय प्रारंभ गाइड",
   "finding_international_buyers": "अंतरराष्ट्रीय खरीदार कैसे खोजें",
-
   "import_documentation": "आयात दस्तावेज़",
   "import_documentation_checklist": "आयात दस्तावेज़ चेकलिस्ट",
   "hs_code_classification_guide": "HS कोड वर्गीकरण गाइड",
-
   "compliance_legal": "अनुपालन और कानूनी",
   "iec_registration_process": "IEC पंजीकरण प्रक्रिया",
-  "gst_for_import_export": "आयात निर्यात के लिए GST"
+  "gst_for_import_export": "आयात निर्यात के लिए GST",
+  "terms_privacy": "आगे बढ़ने पर आप हमारी सेवा की शर्तों और गोपनीयता नीति से सहमत होते हैं।"
 }

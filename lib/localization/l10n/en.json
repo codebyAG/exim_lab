@@ -63,16 +63,14 @@
   "view_all": "View all",
   "learners": "learners",
   "courses": "Courses",
-
   "export_guides": "Export Guides",
   "export_business_starter_guide": "Export Business Starter Guide",
   "finding_international_buyers": "Finding International Buyers",
-
   "import_documentation": "Import Documentation",
   "import_documentation_checklist": "Import Documentation Checklist",
   "hs_code_classification_guide": "HS Code Classification Guide",
-
   "compliance_legal": "Compliance & Legal",
   "iec_registration_process": "IEC Registration Process",
-  "gst_for_import_export": "GST for Import Export"
+  "gst_for_import_export": "GST for Import Export",
+  "terms_privacy": "By continuing, you agree to our Terms of Service and Privacy Policy."
 }
