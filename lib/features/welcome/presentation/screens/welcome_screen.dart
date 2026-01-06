@@ -13,39 +13,39 @@ class WelcomeScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final t = AppLocalizations.of(context);
     final localeProvider = context.watch<LocaleProvider>();
-    final screenHeight = MediaQuery.of(context).size.height;
-
-    // 🔑 IMPORTANT: Hero text color (fixes dark mode issue)
-    final heroTextColor = theme.brightness == Brightness.dark
-        ? Colors.white
-        : theme.colorScheme.onSurface;
 
     return Scaffold(
       body: Stack(
         children: [
-          // 🔹 FULL BACKGROUND IMAGE
+          // 🔹 BACKGROUND IMAGE
           Positioned.fill(
             child: Image.asset('assets/welcome_bg.jpg', fit: BoxFit.cover),
           ),
 
-          // 🌙 DARK MODE GRADIENT OVERLAY (CORRECT WAY)
-          if (theme.brightness == Brightness.dark)
-            Positioned.fill(
-              child: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0xAA000000),
-                      Color(0x66000000),
-                      Color(0x33000000),
-                      Colors.transparent,
-                    ],
-                  ),
+          // 🔹 UNIVERSAL GRADIENT OVERLAY (FIXES BOTH MODES)
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: theme.brightness == Brightness.dark
+                      ? [
+                          Colors.black.withOpacity(0.65),
+                          Colors.black.withOpacity(0.45),
+                          Colors.black.withOpacity(0.25),
+                          Colors.transparent,
+                        ]
+                      : [
+                          Colors.black.withOpacity(0.35),
+                          Colors.black.withOpacity(0.25),
+                          Colors.black.withOpacity(0.15),
+                          Colors.transparent,
+                        ],
                 ),
               ),
             ),
+          ),
 
           SafeArea(
             child: Column(
@@ -54,7 +54,7 @@ class WelcomeScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.topRight,
                   child: IconButton(
-                    icon: Icon(Icons.language, color: heroTextColor),
+                    icon: const Icon(Icons.language, color: Colors.white),
                     onPressed: () {
                       localeProvider.locale.languageCode == 'en'
                           ? localeProvider.setLocale('hi')
@@ -73,9 +73,9 @@ class WelcomeScreen extends StatelessWidget {
                       children: [
                         Text(
                           t.translate('welcome_to'),
-                          style: theme.textTheme.bodyLarge?.copyWith(
+                          style: const TextStyle(
                             fontSize: 17,
-                            color: heroTextColor,
+                            color: Colors.white,
                           ),
                         ),
 
@@ -83,10 +83,10 @@ class WelcomeScreen extends StatelessWidget {
 
                         Text(
                           t.translate('app_name'),
-                          style: theme.textTheme.headlineMedium?.copyWith(
+                          style: const TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.w600,
-                            color: heroTextColor,
+                            color: Colors.white,
                           ),
                         ),
 
@@ -95,29 +95,17 @@ class WelcomeScreen extends StatelessWidget {
                         Text(
                           t.translate('tagline'),
                           textAlign: TextAlign.center,
-                          style: theme.textTheme.bodyLarge?.copyWith(
+                          style: const TextStyle(
                             fontSize: 17,
-                            color: heroTextColor.withOpacity(0.95),
+                            color: Colors.white,
                           ),
                         ),
 
                         const SizedBox(height: 24),
 
-                        _feature(
-                          t.translate('feature_1'),
-                          context,
-                          heroTextColor,
-                        ),
-                        _feature(
-                          t.translate('feature_2'),
-                          context,
-                          heroTextColor,
-                        ),
-                        _feature(
-                          t.translate('feature_3'),
-                          context,
-                          heroTextColor,
-                        ),
+                        _feature(t.translate('feature_1')),
+                        _feature(t.translate('feature_2')),
+                        _feature(t.translate('feature_3')),
 
                         const SizedBox(height: 32),
 
@@ -155,8 +143,8 @@ class WelcomeScreen extends StatelessWidget {
                           },
                           child: Text(
                             t.translate('already_account'),
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: heroTextColor,
+                            style: const TextStyle(
+                              color: Colors.white,
                               decoration: TextDecoration.underline,
                             ),
                           ),
@@ -175,34 +163,41 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _feature(String text, BuildContext context, Color heroTextColor) {
-    final theme = Theme.of(context);
-
+  Widget _feature(String text) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.check_circle,
-            color: theme.brightness == Brightness.dark
-                ? Colors.white
-                : theme.colorScheme.secondary,
-            size: 20,
-          ),
-          const SizedBox(width: 12),
-          Flexible(
-            child: Text(
-              text,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-                color: heroTextColor,
-              ),
-            ),
-          ),
+        children: const [
+          Icon(Icons.check_circle, color: Colors.white, size: 20),
+          SizedBox(width: 12),
+          Expanded(child: Text('', textAlign: TextAlign.center)),
         ],
       ),
+    ).copyWithText(text);
+  }
+}
+
+// 🔹 CLEAN EXTENSION FOR FEATURE TEXT
+extension _FeatureText on Widget {
+  Widget copyWithText(String text) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Icon(Icons.check_circle, color: Colors.white, size: 20),
+        const SizedBox(width: 12),
+        Flexible(
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
