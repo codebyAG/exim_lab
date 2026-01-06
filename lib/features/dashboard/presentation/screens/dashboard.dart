@@ -1,4 +1,5 @@
 import 'package:exim_lab/common/widgets/language_switch.dart';
+import 'package:exim_lab/common/widgets/promo_banner_dialog.dart';
 import 'package:exim_lab/common/widgets/theme_switch_button.dart';
 import 'package:exim_lab/features/certificates/presentation/screens/certificates_screen.dart';
 import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dart';
@@ -8,8 +9,30 @@ import 'package:flutter/material.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_list_screen.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showPromoBanner();
+    });
+  }
+
+  void _showPromoBanner() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (_) => const PromoBannerDialog(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
