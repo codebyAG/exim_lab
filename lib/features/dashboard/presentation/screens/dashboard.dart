@@ -121,54 +121,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                     const SizedBox(height: 20),
 
-                    // CTA CARD
-                    Container(
-                      padding: const EdgeInsets.all(18),
-                      decoration: BoxDecoration(
-                        color: cs.surface,
-                        borderRadius: BorderRadius.circular(22),
-
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.15),
-                            blurRadius: 16,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  t.translate('cta_title'),
-                                  style: theme.textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                const SizedBox(height: 6),
-                                Text(
-                                  t.translate('cta_subtitle'),
-                                  style: theme.textTheme.bodySmall,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          ElevatedButton(
-                            onPressed: () {
-                              AppNavigator.push(
-                                context,
-                                const CoursesListScreen(),
-                              );
-                            },
-                            child: Text(t.translate('start_learning')),
-                          ),
-                        ],
-                      ),
-                    ),
+                    _CtaCarousel(),
                   ],
                 ),
               ),
@@ -575,4 +528,127 @@ class _CourseCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class _CtaCarousel extends StatefulWidget {
+  const _CtaCarousel();
+
+  @override
+  State<_CtaCarousel> createState() => _CtaCarouselState();
+}
+
+class _CtaCarouselState extends State<_CtaCarousel> {
+  final PageController _controller = PageController();
+  int _currentIndex = 0;
+
+  final List<_CtaData> _ctas = [
+    _CtaData(
+      title: 'Start Your Export Journey',
+      subtitle: 'Learn trade basics step-by-step',
+      buttonText: 'Start Learning',
+    ),
+    _CtaData(
+      title: 'New Trade Policies',
+      subtitle: 'Stay updated with law changes',
+      buttonText: 'Read News',
+    ),
+    _CtaData(
+      title: 'Free Export Guides',
+      subtitle: 'Documents & checklists',
+      buttonText: 'View Resources',
+    ),
+    _CtaData(
+      title: 'Earn Certificates',
+      subtitle: 'Complete courses & get certified',
+      buttonText: 'View Certificates',
+    ),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    // 🔁 Auto scroll
+    Future.delayed(const Duration(seconds: 3), _autoScroll);
+  }
+
+  void _autoScroll() {
+    if (!mounted) return;
+
+    _currentIndex = (_currentIndex + 1) % _ctas.length;
+    _controller.animateToPage(
+      _currentIndex,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+
+    Future.delayed(const Duration(seconds: 4), _autoScroll);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
+    return SizedBox(
+      height: 130,
+      child: PageView.builder(
+        controller: _controller,
+        itemCount: _ctas.length,
+        itemBuilder: (context, index) {
+          final cta = _ctas[index];
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: Container(
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: cs.surface,
+                borderRadius: BorderRadius.circular(22),
+                boxShadow: appCardShadow(context),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          cta.title,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(cta.subtitle, style: theme.textTheme.bodySmall),
+                      ],
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      // you can route based on index later
+                    },
+                    child: Text(cta.buttonText),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _CtaData {
+  final String title;
+  final String subtitle;
+  final String buttonText;
+
+  const _CtaData({
+    required this.title,
+    required this.subtitle,
+    required this.buttonText,
+  });
 }
