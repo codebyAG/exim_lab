@@ -4,6 +4,7 @@ import 'package:exim_lab/common/widgets/theme_switch_button.dart';
 import 'package:exim_lab/features/certificates/presentation/screens/certificates_screen.dart';
 import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/course_of_the_day.dart';
+import 'package:exim_lab/features/news/presentation/screens/news_list_screen.dart';
 import 'package:exim_lab/features/resources/presentation/screens/resource_screen.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:flutter/material.dart';
@@ -305,14 +306,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
         backgroundColor: cs.surface,
         selectedItemColor: cs.primary,
         unselectedItemColor: cs.onSurface.withOpacity(0.5),
-        currentIndex: 0,
+        currentIndex: 0, // Home/Dashboard
+        type: BottomNavigationBarType.fixed,
+
         onTap: (index) {
-          if (index == 1) {
+          if (index == 0) {
+            // Home → already here
+            return;
+          } else if (index == 1) {
             AppNavigator.push(context, const CoursesListScreen());
           } else if (index == 2) {
+            AppNavigator.push(context, const NewsListScreen());
+          } else if (index == 3) {
             AppNavigator.push(context, const ResourcesScreen());
           }
         },
+
         items: [
           BottomNavigationBarItem(
             icon: const Icon(Icons.home),
@@ -321,6 +330,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           BottomNavigationBarItem(
             icon: const Icon(Icons.play_circle_outline),
             label: t.translate('courses'),
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.newspaper_outlined),
+            label: t.translate('news'),
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.folder_open),
