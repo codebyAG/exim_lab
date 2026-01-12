@@ -567,22 +567,22 @@ class _CtaCarouselState extends State<_CtaCarousel> {
   @override
   void initState() {
     super.initState();
-
-    // 🔁 Auto scroll
-    Future.delayed(const Duration(seconds: 3), _autoScroll);
+    _startAutoScroll();
   }
 
-  void _autoScroll() {
-    if (!mounted) return;
+  void _startAutoScroll() async {
+    while (mounted) {
+      await Future.delayed(const Duration(seconds: 4));
+      if (!mounted) return;
 
-    _currentIndex = (_currentIndex + 1) % _ctas.length;
-    _controller.animateToPage(
-      _currentIndex,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-    );
-
-    Future.delayed(const Duration(seconds: 4), _autoScroll);
+      _currentIndex = (_currentIndex + 1) % _ctas.length;
+      _controller.animateToPage(
+        _currentIndex,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+      setState(() {});
+    }
   }
 
   @override
@@ -597,6 +597,9 @@ class _CtaCarouselState extends State<_CtaCarousel> {
           child: PageView.builder(
             controller: _controller,
             itemCount: _ctas.length,
+            onPageChanged: (index) {
+              setState(() => _currentIndex = index);
+            },
             itemBuilder: (context, index) {
               final cta = _ctas[index];
 
@@ -631,9 +634,7 @@ class _CtaCarouselState extends State<_CtaCarousel> {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () {
-                          // you can route based on index later
-                        },
+                        onPressed: () {},
                         child: Text(cta.buttonText),
                       ),
                     ],
@@ -643,7 +644,8 @@ class _CtaCarouselState extends State<_CtaCarousel> {
             },
           ),
         ),
-        const SizedBox(height: 8),
+
+        const SizedBox(height: 10),
 
         _DotsIndicator(count: _ctas.length, currentIndex: _currentIndex),
       ],
@@ -659,25 +661,31 @@ class _DotsIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(
-        count,
-        (index) => AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
-          margin: const EdgeInsets.symmetric(horizontal: 4),
-          height: 6,
-          width: currentIndex == index ? 14 : 6,
+      children: List.generate(count, (index) {
+        final bool isActive = index == currentIndex;
+
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+          margin: const EdgeInsets.symmetric(horizontal: 6),
+          height: 7,
+          width: 7,
           decoration: BoxDecoration(
-            color: currentIndex == index
-                ? cs.primary
-                : cs.onSurface.withOpacity(0.3),
-            borderRadius: BorderRadius.circular(6),
+            shape: BoxShape.circle,
+            color: isActive
+                ? Colors
+                      .white // ✅ ACTIVE ALWAYS WHITE
+                : isDark
+                ? Colors.white.withOpacity(0.35)
+                : Colors.black.withOpacity(0.3),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }
