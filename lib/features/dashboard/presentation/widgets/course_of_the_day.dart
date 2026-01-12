@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class CourseOfTheDayCard extends StatelessWidget {
-  final String title;        // e.g. "Import Export Basics"
-  final String subtitle;     // e.g. "Start your trade journey"
-  final String priceText;    // e.g. "₹999"
-  final String badgeText;    // e.g. "Course of the Day"
-  final String imagePath;    // e.g. assets/course_banner.png
+  final String title;
+  final String subtitle;
+  final String priceText;
+  final String badgeText;
+  final String imagePath;
   final VoidCallback onTap;
 
   const CourseOfTheDayCard({
@@ -26,10 +26,10 @@ class CourseOfTheDayCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        height: 220,
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        height: 500, // 🔥 TALL POSTER STYLE
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(22),
+          borderRadius: BorderRadius.circular(26),
           gradient: const LinearGradient(
             colors: [
               Color(0xFF0F2027),
@@ -49,98 +49,101 @@ class CourseOfTheDayCard extends StatelessWidget {
             if (isDark)
               BoxShadow(
                 color: Colors.white.withOpacity(0.18),
-                blurRadius: 24,
+                blurRadius: 26,
               ),
             BoxShadow(
               color: Colors.black.withOpacity(0.35),
-              blurRadius: 22,
-              offset: const Offset(0, 12),
+              blurRadius: 26,
+              offset: const Offset(0, 14),
             ),
           ],
         ),
-        child: Stack(
-          children: [
-            // 🔹 BACKGROUND IMAGE
-            Positioned(
-              right: -20,
-              bottom: -10,
-              child: Opacity(
-                opacity: 0.9,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(26),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 🔥 TOP CONTENT AREA (TEXT ONLY)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 22, 20, 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CurvedGradientText(text: 'COURSE'),
+                    CurvedGradientText(text: 'OF THE DAY'),
+
+                    const SizedBox(height: 24),
+
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 21,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                      ),
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white.withOpacity(0.85),
+                        height: 1.35,
+                      ),
+                    ),
+
+                    const SizedBox(height: 14),
+
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          child: Text(
+                            priceText,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          badgeText,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.white.withOpacity(0.8),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              const Spacer(),
+
+              // 🖼 IMAGE AREA (SEPARATE – NO OVERLAP)
+              Container(
+                height: 150,
+                alignment: Alignment.center,
                 child: Image.asset(
                   imagePath,
-                  height: 150,
+                  height: 140,
                   fit: BoxFit.contain,
                 ),
               ),
-            ),
-
-            // 🔹 CONTENT
-            Padding(
-              padding: const EdgeInsets.all(18),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // 🔥 CURVED PROMO TEXT
-                  const SizedBox(height: 6),
-                  CurvedGradientText(text: 'COURSE'),
-                  CurvedGradientText(text: 'OF THE DAY'),
-
-                  const Spacer(),
-
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
-                  ),
-
-                  const SizedBox(height: 6),
-
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.white.withOpacity(0.85),
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        child: Text(
-                          priceText,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Text(
-                        badgeText,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white.withOpacity(0.8),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -148,7 +151,7 @@ class CourseOfTheDayCard extends StatelessWidget {
 }
 
 //
-// 🔥 FAKE CURVED TEXT (STABLE – NO PACKAGE)
+// 🔥 CURVED PROMO TEXT
 //
 class CurvedGradientText extends StatelessWidget {
   final String text;
@@ -160,8 +163,8 @@ class CurvedGradientText extends StatelessWidget {
     return Transform(
       alignment: Alignment.centerLeft,
       transform: Matrix4.identity()
-        ..rotateZ(-0.04)
-        ..scale(1.0, 1.15),
+        ..rotateZ(-0.045)
+        ..scale(1.05, 1.2),
       child: ShaderMask(
         shaderCallback: (bounds) {
           return const LinearGradient(
@@ -176,9 +179,9 @@ class CurvedGradientText extends StatelessWidget {
         child: Text(
           text,
           style: const TextStyle(
-            fontSize: 24,
+            fontSize: 26,
             fontWeight: FontWeight.w900,
-            letterSpacing: 1.6,
+            letterSpacing: 1.8,
             color: Colors.white,
           ),
         ),
