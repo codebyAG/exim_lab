@@ -3,6 +3,7 @@ import 'package:exim_lab/common/widgets/promo_banner_dialog.dart';
 import 'package:exim_lab/common/widgets/theme_switch_button.dart';
 import 'package:exim_lab/features/certificates/presentation/screens/certificates_screen.dart';
 import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/course_of_the_day.dart';
 import 'package:exim_lab/features/resources/presentation/screens/resource_screen.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:flutter/material.dart';
@@ -260,6 +261,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
               _HorizontalCourses(),
 
               const SizedBox(height: 24),
+              CourseOfTheDayCard(
+                title: 'Import Export Basics',
+                subtitle: 'Learn trade from scratch',
+                priceText: '₹999',
+                badgeText: 'Limited time',
+                imagePath: 'assets/discount_banner.png',
+                onTap: () {
+                  // navigate to course details
+                },
+              ),
 
               // ================= BECAUSE YOU WATCHED =================
               _SectionHeader(
