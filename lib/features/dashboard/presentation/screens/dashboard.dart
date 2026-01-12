@@ -266,7 +266,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 subtitle: 'Learn trade from scratch',
                 priceText: '₹999',
                 badgeText: 'Limited time',
-                imagePath: 'assets/discount_banner.png',
+                imagePath: 'assets/coursegirl.png',
                 onTap: () {
                   // navigate to course details
                 },
