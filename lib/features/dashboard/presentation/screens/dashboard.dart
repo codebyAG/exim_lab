@@ -590,52 +590,93 @@ class _CtaCarouselState extends State<_CtaCarousel> {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
 
-    return SizedBox(
-      height: 130,
-      child: PageView.builder(
-        controller: _controller,
-        itemCount: _ctas.length,
-        itemBuilder: (context, index) {
-          final cta = _ctas[index];
+    return Column(
+      children: [
+        SizedBox(
+          height: 130,
+          child: PageView.builder(
+            controller: _controller,
+            itemCount: _ctas.length,
+            itemBuilder: (context, index) {
+              final cta = _ctas[index];
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: Container(
-              padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                color: cs.surface,
-                borderRadius: BorderRadius.circular(22),
-                boxShadow: appCardShadow(context),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          cta.title,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                          ),
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: Container(
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    color: cs.surface,
+                    borderRadius: BorderRadius.circular(22),
+                    boxShadow: appCardShadow(context),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              cta.title,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              cta.subtitle,
+                              style: theme.textTheme.bodySmall,
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 6),
-                        Text(cta.subtitle, style: theme.textTheme.bodySmall),
-                      ],
-                    ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          // you can route based on index later
+                        },
+                        child: Text(cta.buttonText),
+                      ),
+                    ],
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      // you can route based on index later
-                    },
-                    child: Text(cta.buttonText),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 8),
+
+        _DotsIndicator(count: _ctas.length, currentIndex: _currentIndex),
+      ],
+    );
+  }
+}
+
+class _DotsIndicator extends StatelessWidget {
+  final int count;
+  final int currentIndex;
+
+  const _DotsIndicator({required this.count, required this.currentIndex});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(
+        count,
+        (index) => AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          height: 6,
+          width: currentIndex == index ? 14 : 6,
+          decoration: BoxDecoration(
+            color: currentIndex == index
+                ? cs.primary
+                : cs.onSurface.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(6),
+          ),
+        ),
       ),
     );
   }
