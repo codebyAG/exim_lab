@@ -26,133 +26,141 @@ class CourseOfTheDayCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        height: 500, // 🔥 TALL POSTER STYLE
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        height: 260, // 🎯 dashboard-friendly height
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(26),
           gradient: const LinearGradient(
-            colors: [
-              Color(0xFF0F2027),
-              Color(0xFF203A43),
-              Color(0xFF2C5364),
-            ],
+            colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           border: isDark
-              ? Border.all(
-                  color: Colors.white.withOpacity(0.35),
-                  width: 1.2,
-                )
+              ? Border.all(color: Colors.white.withOpacity(0.25), width: 1.1)
               : null,
           boxShadow: [
-            if (isDark)
-              BoxShadow(
-                color: Colors.white.withOpacity(0.18),
-                blurRadius: 26,
-              ),
             BoxShadow(
               color: Colors.black.withOpacity(0.35),
-              blurRadius: 26,
+              blurRadius: 24,
               offset: const Offset(0, 14),
             ),
+            if (isDark)
+              BoxShadow(color: Colors.white.withOpacity(0.12), blurRadius: 22),
           ],
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(26),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 🔥 TOP CONTENT AREA (TEXT ONLY)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 22, 20, 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CurvedGradientText(text: 'COURSE'),
-                    CurvedGradientText(text: 'OF THE DAY'),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            // 👧 GIRL IMAGE – LEFT, BLEEDING OUT
+            Positioned(
+              left: -10,
+              bottom: -20,
+              top: -20,
+              child: Image.asset(imagePath, width: 170, fit: BoxFit.contain),
+            ),
 
-                    const SizedBox(height: 24),
+            // ✨ SOFT GLOW BEHIND IMAGE
+            Positioned(
+              left: 10,
+              bottom: 30,
+              child: Container(
+                width: 140,
+                height: 140,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      Colors.white.withOpacity(0.18),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+              ),
+            ),
 
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 21,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white,
-                      ),
+            // 📄 CONTENT – RIGHT SIDE
+            Padding(
+              padding: const EdgeInsets.fromLTRB(160, 22, 20, 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CurvedGradientText(text: 'COURSE'),
+                  CurvedGradientText(text: 'OF THE DAY'),
+
+                  const SizedBox(height: 14),
+
+                  Text(
+                    title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                      height: 1.2,
                     ),
+                  ),
 
-                    const SizedBox(height: 8),
+                  const SizedBox(height: 8),
 
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.white.withOpacity(0.85),
-                        height: 1.35,
-                      ),
+                  Text(
+                    subtitle,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white.withOpacity(0.85),
+                      height: 1.4,
                     ),
+                  ),
 
-                    const SizedBox(height: 14),
+                  const Spacer(),
 
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                          child: Text(
-                            priceText,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.black,
-                            ),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 7,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Text(
+                          priceText,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.black,
                           ),
                         ),
-                        const SizedBox(width: 12),
-                        Text(
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
                           badgeText,
                           style: TextStyle(
-                            fontSize: 13,
+                            fontSize: 12,
                             color: Colors.white.withOpacity(0.8),
                           ),
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-
-              const Spacer(),
-
-              // 🖼 IMAGE AREA (SEPARATE – NO OVERLAP)
-              Container(
-                height: 150,
-                alignment: Alignment.center,
-                child: Image.asset(
-                  imagePath,
-                  height: 140,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-//
-// 🔥 CURVED PROMO TEXT
-//
+///
+/// 🔥 CURVED PROMO TEXT (No package – stable)
+///
 class CurvedGradientText extends StatelessWidget {
   final String text;
 
@@ -164,14 +172,11 @@ class CurvedGradientText extends StatelessWidget {
       alignment: Alignment.centerLeft,
       transform: Matrix4.identity()
         ..rotateZ(-0.045)
-        ..scale(1.05, 1.2),
+        ..scale(1.05, 1.18),
       child: ShaderMask(
         shaderCallback: (bounds) {
           return const LinearGradient(
-            colors: [
-              Color(0xFF22F3A6),
-              Color(0xFF00E676),
-            ],
+            colors: [Color(0xFF22F3A6), Color(0xFF00E676)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ).createShader(bounds);
@@ -179,9 +184,9 @@ class CurvedGradientText extends StatelessWidget {
         child: Text(
           text,
           style: const TextStyle(
-            fontSize: 26,
+            fontSize: 24,
             fontWeight: FontWeight.w900,
-            letterSpacing: 1.8,
+            letterSpacing: 1.6,
             color: Colors.white,
           ),
         ),
