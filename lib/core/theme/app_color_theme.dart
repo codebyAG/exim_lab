@@ -1,63 +1,63 @@
 import 'package:flutter/material.dart';
 
 class AppColorSchemes {
-  // 🌞 LIGHT THEME — Metallic & Premium
+  // 🌞 LIGHT THEME — Bright Orange & Soft White
   static const ColorScheme light = ColorScheme.light(
-    // 🔷 PRIMARY — Metallic Blue Steel
-    primary: Color(0xFF1E3A8A), // Deep steel blue
+    // 🟧 PRIMARY — Bright Clean Orange
+    primary: Color(0xFFFF8A00), // vivid orange
     onPrimary: Color(0xFFFFFFFF),
 
-    // 🟢 SECONDARY — Emerald Metal
-    secondary: Color(0xFF059669),
-    onSecondary: Color(0xFFFFFFFF),
+    // 🟨 SECONDARY — Soft Peach Accent
+    secondary: Color(0xFFFFB703),
+    onSecondary: Color(0xFF3B1D00),
 
-    // 🧱 SURFACE — Polished White Steel
-    surface: Color(0xFFF8FAFC), // slightly metallic white
-    onSurface: Color(0xFF0F172A),
+    // 🧱 SURFACE — Clean White
+    surface: Color(0xFFFFFFFF),
+    onSurface: Color(0xFF1F2937),
 
     // ❌ ERROR
-    error: Color(0xFFB91C1C),
+    error: Color(0xFFEF4444),
     onError: Color(0xFFFFFFFF),
 
-    // 🧩 OUTLINES / DIVIDERS
-    outline: Color(0xFFCBD5E1), // silver border
-    outlineVariant: Color(0xFFE2E8F0),
-
-    // 🌫 SHADOWS
-    shadow: Color(0xFF020617),
-    scrim: Color(0xFF020617),
-
-    // ✨ MATERIAL OVERLAY (used in M3 elevation)
-    surfaceTint: Color(0xFF1E3A8A),
-  );
-
-  // 🌙 DARK THEME — Metallic Night Steel
-  static const ColorScheme dark = ColorScheme.dark(
-    // 🔷 PRIMARY — Metallic Ice Blue
-    primary: Color(0xFF93C5FD), // frosted steel blue
-    onPrimary: Color(0xFF020617),
-
-    // 🟢 SECONDARY — Soft Emerald Glow
-    secondary: Color(0xFF34D399),
-    onSecondary: Color(0xFF020617),
-
-    // 🧱 SURFACE — Graphite Metal
-    surface: Color(0xFF020617), // true dark steel
-    onSurface: Color(0xFFE5E7EB),
-
-    // ❌ ERROR
-    error: Color(0xFFF87171),
-    onError: Color(0xFF020617),
-
-    // 🧩 OUTLINES / DIVIDERS
-    outline: Color(0xFF334155), // steel grey
-    outlineVariant: Color(0xFF1E293B),
+    // 🧩 OUTLINES
+    outline: Color(0xFFE5E7EB),
+    outlineVariant: Color(0xFFF3F4F6),
 
     // 🌫 SHADOWS
     shadow: Color(0xFF000000),
     scrim: Color(0xFF000000),
 
     // ✨ MATERIAL OVERLAY
-    surfaceTint: Color(0xFF93C5FD),
+    surfaceTint: Color(0xFFFF8A00),
+  );
+
+  // 🌙 DARK THEME — Bright Orange on Soft Charcoal
+  static const ColorScheme dark = ColorScheme.dark(
+    // 🟧 PRIMARY — Bright Orange (same identity)
+    primary: Color(0xFFFF9F1C),
+    onPrimary: Color(0xFF1F2937),
+
+    // 🟨 SECONDARY — Warm Gold
+    secondary: Color(0xFFFFC857),
+    onSecondary: Color(0xFF1F2937),
+
+    // 🧱 SURFACE — Soft Dark Grey (NOT black)
+    surface: Color(0xFF1E1E1E),
+    onSurface: Color(0xFFE5E7EB),
+
+    // ❌ ERROR
+    error: Color(0xFFF87171),
+    onError: Color(0xFF1F2937),
+
+    // 🧩 OUTLINES
+    outline: Color(0xFF374151),
+    outlineVariant: Color(0xFF2D2D2D),
+
+    // 🌫 SHADOWS
+    shadow: Color(0xFF000000),
+    scrim: Color(0xFF000000),
+
+    // ✨ MATERIAL OVERLAY
+    surfaceTint: Color(0xFFFF9F1C),
   );
 }
