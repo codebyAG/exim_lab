@@ -18,6 +18,7 @@ import 'package:exim_lab/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_list_screen.dart';
+import 'package:sizer/sizer.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -30,7 +31,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await Future.delayed(const Duration(seconds: 2));
       _showPromoBanner();
@@ -54,7 +54,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       backgroundColor: cs.surface,
 
-      // 🔹 AI CHAT FAB
       floatingActionButton: FloatingActionButton(
         backgroundColor: cs.primary,
         tooltip: t.translate('ai_support'),
@@ -66,13 +65,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.only(bottom: 20),
+          padding: EdgeInsets.only(bottom: 10.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // ================= HEADER =================
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.5.h),
                 decoration: BoxDecoration(
                   color: cs.primary,
                   borderRadius: const BorderRadius.vertical(
@@ -82,7 +81,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // TOP ROW
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -93,8 +91,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Row(
-                          children: const [
+                        const Row(
+                          children: [
                             ThemeSwitchButton(),
                             SizedBox(width: 8),
                             LanguageSwitch(),
@@ -103,14 +101,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ],
                     ),
 
-                    const SizedBox(height: 20),
+                    SizedBox(height: 2.h),
 
                     Text(
                       t.translate('welcome_back'),
                       style: TextStyle(color: cs.onPrimary.withOpacity(0.75)),
                     ),
 
-                    const SizedBox(height: 4),
+                    SizedBox(height: 0.5.h),
 
                     Text(
                       t.translate('dashboard_title'),
@@ -120,25 +118,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ),
 
-                    const SizedBox(height: 6),
+                    SizedBox(height: 0.5.h),
 
                     Text(
                       t.translate('dashboard_subtitle'),
                       style: TextStyle(color: cs.onPrimary.withOpacity(0.75)),
                     ),
 
-                    const SizedBox(height: 20),
+                    SizedBox(height: 2.h),
 
-                    CtaCarousel(),
+                    const CtaCarousel(),
                   ],
                 ),
               ),
 
-              const SizedBox(height: 20),
+              SizedBox(height: 2.h),
 
               // ================= SEARCH =================
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: EdgeInsets.symmetric(horizontal: 5.w),
                 child: AnimatedSearchBar(
                   hints: [
                     t.translate('search_hint'),
@@ -147,74 +145,78 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     'Read trade policy updates',
                     'Check required documents',
                   ],
-                  onTap: () {
-                    // TODO: Navigate to search screen later
-                  },
+                  onTap: () {},
                 ),
               ),
 
-              const SizedBox(height: 20),
+              SizedBox(height: 2.h),
 
               // ================= QUICK ACTIONS =================
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: EdgeInsets.symmetric(horizontal: 5.w),
                 child: Row(
                   children: [
-                    QuickCard(
-                      icon: Icons.video_library_outlined,
-                      title: t.translate('my_courses'),
-                      subtitle: t.translate('completed_status'),
-                      onTap: () {
-                        AppNavigator.push(context, const CoursesListScreen());
-                      },
+                    Expanded(
+                      child: QuickCard(
+                        icon: Icons.video_library_outlined,
+                        title: t.translate('my_courses'),
+                        subtitle: t.translate('completed_status'),
+                        onTap: () {
+                          AppNavigator.push(context, const CoursesListScreen());
+                        },
+                      ),
                     ),
-                    const SizedBox(width: 12),
-                    QuickCard(
-                      icon: Icons.folder_open,
-                      title: t.translate('resources'),
-                      subtitle: t.translate('guides_docs'),
-                      onTap: () {
-                        AppNavigator.push(context, const ResourcesScreen());
-                      },
+                    SizedBox(width: 3.w),
+                    Expanded(
+                      child: QuickCard(
+                        icon: Icons.folder_open,
+                        title: t.translate('resources'),
+                        subtitle: t.translate('guides_docs'),
+                        onTap: () {
+                          AppNavigator.push(context, const ResourcesScreen());
+                        },
+                      ),
                     ),
-                    const SizedBox(width: 12),
-                    QuickCard(
-                      icon: Icons.workspace_premium,
-                      title: t.translate('certificates'),
-                      subtitle: t.translate('track_progress'),
-                      onTap: () {
-                        AppNavigator.push(context, const CertificatesScreen());
-                      },
+                    SizedBox(width: 3.w),
+                    Expanded(
+                      child: QuickCard(
+                        icon: Icons.workspace_premium,
+                        title: t.translate('certificates'),
+                        subtitle: t.translate('track_progress'),
+                        onTap: () {
+                          AppNavigator.push(
+                            context,
+                            const CertificatesScreen(),
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),
               ),
 
-              const SizedBox(height: 24),
+              SizedBox(height: 3.h),
 
               LiveSeminarCard(
                 title: 'Export Compliance & Documentation',
                 subtitle: 'Live with Trade Expert',
                 dateTime: '20 Jan • 6:00 PM',
-                onTap: () {
-                  // navigate to seminar details / registration
-                },
+                onTap: () {},
               ),
 
-              const SizedBox(height: 24),
+              SizedBox(height: 3.h),
 
-              SectionHeader(
+              const SectionHeader(
                 title: 'Tools',
                 subtitle: 'Everything you need in one place',
               ),
 
-              const SizedBox(height: 12),
+              SizedBox(height: 1.5.h),
 
               const ToolsSection(),
 
-              const SizedBox(height: 28),
+              SizedBox(height: 3.h),
 
-              // ================= CONTINUE WATCHING =================
               SectionHeader(
                 title: t.translate('continue_watching'),
                 subtitle: t.translate('continue_subtitle'),
@@ -222,26 +224,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
               ContinueCard(),
 
-              const SizedBox(height: 24),
+              SizedBox(height: 3.h),
 
-              // ================= MOST POPULAR =================
               SectionHeader(
                 title: t.translate('most_popular'),
                 subtitle: t.translate('most_popular_subtitle'),
               ),
 
-              HorizontalCourses(),
+              const HorizontalCourses(),
 
-              const SizedBox(height: 24),
+              SizedBox(height: 3.h),
+
               CourseOfTheDayCard(
                 title: 'Import Export Basics',
                 subtitle: 'Learn trade from scratch',
                 priceText: '₹999',
                 badgeText: 'Limited time',
                 imagePath: 'assets/coursegirl.png',
-                onTap: () {
-                  // navigate to course details
-                },
+                onTap: () {},
               ),
 
               // ================= BECAUSE YOU WATCHED =================
@@ -252,9 +252,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
               HorizontalCourses(),
 
-              const SizedBox(height: 24),
+              SizedBox(height: 3.h),
 
-              // ================= RECOMMENDED =================
               SectionHeader(
                 title: t.translate('recommended_for_you'),
                 subtitle: t.translate('based_on_interest'),
@@ -266,25 +265,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
 
-              HorizontalCourses(),
+              const HorizontalCourses(),
             ],
           ),
         ),
       ),
 
-      // ================= BOTTOM NAV =================
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: cs.surface,
         selectedItemColor: cs.primary,
         unselectedItemColor: cs.onSurface.withOpacity(0.5),
-        currentIndex: 0, // Home/Dashboard
+        currentIndex: 0,
         type: BottomNavigationBarType.fixed,
-
         onTap: (index) {
-          if (index == 0) {
-            // Home → already here
-            return;
-          } else if (index == 1) {
+          if (index == 1) {
             AppNavigator.push(context, const CoursesListScreen());
           } else if (index == 2) {
             AppNavigator.push(context, const NewsListScreen());
@@ -292,7 +286,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             AppNavigator.push(context, const ResourcesScreen());
           }
         },
-
         items: [
           BottomNavigationBarItem(
             icon: const Icon(Icons.home),
