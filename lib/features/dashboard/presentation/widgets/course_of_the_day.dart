@@ -32,21 +32,16 @@ class CourseOfTheDayCard extends StatelessWidget {
         height: 30.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(26),
-          gradient: const LinearGradient(
-            colors: [
-              Color(0xFF0F2027),
-              Color(0xFF203A43),
-              Color(0xFF2C5364),
-            ],
+          gradient: LinearGradient(
+            colors: isDark
+                ? [cs.surface.withOpacity(0.95), cs.surface.withOpacity(0.85)]
+                : [cs.primary.withOpacity(0.95), cs.primary.withOpacity(0.75)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          border: isDark
-              ? Border.all(color: Colors.white.withOpacity(0.25))
-              : null,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.35),
+              color: Colors.black.withOpacity(isDark ? 0.6 : 0.35),
               blurRadius: 22,
               offset: const Offset(0, 14),
             ),
@@ -54,25 +49,21 @@ class CourseOfTheDayCard extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            // 🔹 IMAGE (SAFE – NO OVERFLOW)
+            // IMAGE
             Positioned(
               left: -3.w,
               bottom: 0,
-              child: Image.asset(
-                imagePath,
-                width: 44.w,
-                fit: BoxFit.contain,
-              ),
+              child: Image.asset(imagePath, width: 44.w, fit: BoxFit.contain),
             ),
 
-            // 🔹 CONTENT
+            // CONTENT
             Padding(
               padding: EdgeInsets.fromLTRB(42.w, 3.h, 4.w, 3.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _PromoText('COURSE'),
-                  _PromoText('OF THE DAY'),
+                  _PromoText('COURSE', color: cs.secondary),
+                  _PromoText('OF THE DAY', color: cs.secondary),
 
                   SizedBox(height: 1.6.h),
 
@@ -81,7 +72,7 @@ class CourseOfTheDayCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.titleLarge?.copyWith(
-                      color: Colors.white,
+                      color: isDark ? cs.onSurface : cs.onPrimary,
                       fontWeight: FontWeight.w800,
                       fontSize: 17.sp,
                       height: 1.2,
@@ -95,7 +86,9 @@ class CourseOfTheDayCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Colors.white.withOpacity(0.85),
+                      color: (isDark ? cs.onSurface : cs.onPrimary).withOpacity(
+                        0.85,
+                      ),
                       fontSize: 15.sp,
                       height: 1.4,
                     ),
@@ -111,14 +104,14 @@ class CourseOfTheDayCard extends StatelessWidget {
                           vertical: 0.8.h,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: isDark ? cs.secondary : Colors.white,
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Text(
                           priceText,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.w800,
-                            color: Colors.black,
+                            color: isDark ? cs.onSecondary : cs.primary,
                           ),
                         ),
                       ),
@@ -129,7 +122,8 @@ class CourseOfTheDayCard extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: Colors.white.withOpacity(0.8),
+                            color: (isDark ? cs.onSurface : cs.onPrimary)
+                                .withOpacity(0.8),
                           ),
                         ),
                       ),
@@ -145,30 +139,24 @@ class CourseOfTheDayCard extends StatelessWidget {
   }
 }
 
-/// 🔹 PROMO TEXT (STABLE – NO OVERFLOW)
+/// PROMO TEXT
 class _PromoText extends StatelessWidget {
   final String text;
+  final Color color;
 
-  const _PromoText(this.text);
+  const _PromoText(this.text, {required this.color});
 
   @override
   Widget build(BuildContext context) {
     return Transform.rotate(
       angle: -0.04,
-      child: ShaderMask(
-        shaderCallback: (bounds) {
-          return const LinearGradient(
-            colors: [Color(0xFF22F3A6), Color(0xFF00E676)],
-          ).createShader(bounds);
-        },
-        child: Text(
-          text,
-          style: TextStyle(
-            fontSize: 18.sp,
-            fontWeight: FontWeight.w900,
-            letterSpacing: 1.4,
-            color: Colors.white,
-          ),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 18.sp,
+          fontWeight: FontWeight.w900,
+          letterSpacing: 1.4,
+          color: color,
         ),
       ),
     );
