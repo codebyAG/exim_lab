@@ -1,6 +1,8 @@
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_details_screen.dart';
+import 'package:exim_lab/features/courses/presentation/states/course_state.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CoursesListScreen extends StatefulWidget {
   const CoursesListScreen({super.key});
@@ -17,11 +19,17 @@ class _CoursesListScreenState extends State<CoursesListScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+
+    /// 🔹 API CALL
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CoursesState>().fetchCourses();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final state = context.watch<CoursesState>();
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
@@ -54,32 +62,45 @@ class _CoursesListScreenState extends State<CoursesListScreen>
       body: TabBarView(
         controller: _tabController,
         children: [
-          _courseList(context),
+          _allCourses(context, state),
           _myCoursesMockList(context),
-          _courseList(context),
+          _allCourses(context, state),
         ],
       ),
     );
   }
 
-  // 🔹 ALL COURSES LIST
-  Widget _courseList(BuildContext context) {
+  // 🔹 ALL COURSES (API)
+  Widget _allCourses(BuildContext context, CoursesState state) {
+    if (state.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (state.errorMessage != null) {
+      return Center(child: Text(state.errorMessage!));
+    }
+
+    if (state.courses.isEmpty) {
+      return const Center(child: Text('No courses available'));
+    }
+
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: _courses.length,
+      itemCount: state.courses.length,
       itemBuilder: (context, index) {
-        final course = _courses[index];
-        return _CourseTile(course: course);
+        final course = state.courses[index];
+        return _CourseTile(title: course.title, subtitle: course.description);
       },
     );
   }
 }
 
-// 🔹 COURSE TILE
+// 🔹 COURSE TILE (API READY)
 class _CourseTile extends StatelessWidget {
-  final _Course course;
+  final String title;
+  final String subtitle;
 
-  const _CourseTile({required this.course});
+  const _CourseTile({required this.title, required this.subtitle});
 
   @override
   Widget build(BuildContext context) {
@@ -126,30 +147,19 @@ class _CourseTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  course.title,
+                  title,
                   style: theme.textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  course.subtitle,
+                  subtitle,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurface.withOpacity(0.65),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    const Icon(Icons.star, size: 14, color: Colors.amber),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${course.rating} • ${course.learners} learners',
-                      style: theme.textTheme.bodySmall,
-                    ),
-                  ],
                 ),
               ],
             ),
@@ -157,19 +167,10 @@ class _CourseTile extends StatelessWidget {
 
           const SizedBox(width: 8),
 
-          // ACTION
           ElevatedButton(
             onPressed: () {
               AppNavigator.push(context, const CourseDetailsScreen());
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: theme.colorScheme.primary,
-              foregroundColor: theme.colorScheme.onPrimary,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              elevation: 0,
-            ),
             child: const Text('View'),
           ),
         ],
@@ -178,124 +179,7 @@ class _CourseTile extends StatelessWidget {
   }
 }
 
-// 🔹 COURSE MODEL
-class _Course {
-  final String id;
-  final String title;
-  final String subtitle;
-  final String rating;
-  final String learners;
-  final int totalLessons;
-
-  const _Course({
-    required this.id,
-    required this.title,
-    required this.subtitle,
-    required this.rating,
-    required this.learners,
-    required this.totalLessons,
-  });
-}
-
-const List<_Course> _courses = [
-  _Course(
-    id: 'export_strategy',
-    title: 'Advanced Export Strategy',
-    subtitle: 'Learn how to scale exports and find global buyers',
-    rating: '4.8',
-    learners: '2.1k',
-    totalLessons: 10,
-  ),
-  _Course(
-    id: 'import_docs',
-    title: 'Import Documentation Mastery',
-    subtitle: 'Understand bills, invoices, HS codes & compliance',
-    rating: '4.8',
-    learners: '1.9k',
-    totalLessons: 8,
-  ),
-];
-
-// 🔹 MY COURSES CARD
-class _MyCourseCard extends StatelessWidget {
-  final _MyCourse course;
-
-  const _MyCourseCard({required this.course});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: theme.brightness == Brightness.light
-                ? Colors.black.withOpacity(0.05)
-                : Colors.black.withOpacity(0.25),
-            blurRadius: 10,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            course.title,
-            style: theme.textTheme.bodyLarge?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-
-          const SizedBox(height: 6),
-
-          Text(
-            '${course.completedLessons}/${course.totalLessons} lessons completed',
-            style: theme.textTheme.bodySmall,
-          ),
-
-          const SizedBox(height: 12),
-
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: LinearProgressIndicator(
-              value: course.progress,
-              minHeight: 8,
-              backgroundColor: theme.colorScheme.onSurface.withOpacity(0.15),
-              color: theme.colorScheme.primary,
-            ),
-          ),
-
-          const SizedBox(height: 16),
-
-          SizedBox(
-            width: double.infinity,
-            height: 50,
-            child: ElevatedButton(
-              onPressed: () {
-                AppNavigator.push(context, const CourseDetailsScreen());
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: theme.colorScheme.primary,
-                foregroundColor: theme.colorScheme.onPrimary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                elevation: 0,
-              ),
-              child: const Text('Resume Learning'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+// ================= MOCK: MY COURSES =================
 
 class _MyCourse {
   final String title;
@@ -333,4 +217,51 @@ Widget _myCoursesMockList(BuildContext context) {
       return _MyCourseCard(course: course);
     },
   );
+}
+
+class _MyCourseCard extends StatelessWidget {
+  final _MyCourse course;
+
+  const _MyCourseCard({required this.course});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: theme.brightness == Brightness.light
+                ? Colors.black.withOpacity(0.05)
+                : Colors.black.withOpacity(0.25),
+            blurRadius: 10,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            course.title,
+            style: theme.textTheme.bodyLarge?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 12),
+          LinearProgressIndicator(
+            value: course.progress,
+            minHeight: 8,
+            backgroundColor: theme.colorScheme.onSurface.withOpacity(0.15),
+            color: theme.colorScheme.primary,
+          ),
+        ],
+      ),
+    );
+  }
 }
