@@ -1,10 +1,13 @@
-import 'dart:convert';
-import 'package:exim_lab/core/constants/api_constants.dart';
-import 'package:exim_lab/features/courses/data/models/course_details_model.dart';
+import 'package:exim_lab/features/courses/data/data_sources/course_details_remote_data_sources.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import '../../data/models/course_details_model.dart';
 
 class CourseDetailsState extends ChangeNotifier {
+  final CourseDetailsRemoteDataSource _remoteDataSource;
+
+  CourseDetailsState({CourseDetailsRemoteDataSource? remoteDataSource})
+    : _remoteDataSource = remoteDataSource ?? CourseDetailsRemoteDataSource();
+
   bool isLoading = false;
   String? errorMessage;
   CourseDetailsModel? course;
@@ -15,16 +18,7 @@ class CourseDetailsState extends ChangeNotifier {
       errorMessage = null;
       notifyListeners();
 
-      final response = await http.get(
-        Uri.parse('${ApiConstants.courses}/$courseId'),
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        course = CourseDetailsModel.fromJson(data);
-      } else {
-        errorMessage = 'Failed to load course details';
-      }
+      course = await _remoteDataSource.getCourseDetails(courseId);
     } catch (e) {
       errorMessage = e.toString();
     } finally {
