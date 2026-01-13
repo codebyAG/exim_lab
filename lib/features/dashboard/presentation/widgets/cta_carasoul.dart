@@ -1,9 +1,10 @@
 import 'package:exim_lab/core/constants/appcardshadow.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/dots_iniidcator.dart';
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class CtaCarousel extends StatefulWidget {
-  const CtaCarousel();
+  const CtaCarousel({super.key});
 
   @override
   State<CtaCarousel> createState() => CtaCarouselState();
@@ -13,7 +14,7 @@ class CtaCarouselState extends State<CtaCarousel> {
   final PageController _controller = PageController();
   int _currentIndex = 0;
 
-  final List<CtaData> _ctas = [
+  final List<CtaData> _ctas = const [
     CtaData(
       title: 'Start Your Export Journey',
       subtitle: 'Learn trade basics step-by-step',
@@ -65,7 +66,7 @@ class CtaCarouselState extends State<CtaCarousel> {
     return Column(
       children: [
         SizedBox(
-          height: 150,
+          height: 17.h, // ✅ responsive height
           child: PageView.builder(
             controller: _controller,
             itemCount: _ctas.length,
@@ -76,9 +77,9 @@ class CtaCarouselState extends State<CtaCarousel> {
               final cta = _ctas[index];
 
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
+                padding: EdgeInsets.symmetric(horizontal: 2.w),
                 child: Container(
-                  padding: const EdgeInsets.all(18),
+                  padding: EdgeInsets.all(2.h),
                   decoration: BoxDecoration(
                     color: cs.surface,
                     borderRadius: BorderRadius.circular(22),
@@ -86,28 +87,51 @@ class CtaCarouselState extends State<CtaCarousel> {
                   ),
                   child: Row(
                     children: [
+                      // TEXT
                       Expanded(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               cta.title,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                               style: theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
-                            const SizedBox(height: 6),
+                            SizedBox(height: 0.8.h),
                             Text(
                               cta.subtitle,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                               style: theme.textTheme.bodySmall,
                             ),
                           ],
                         ),
                       ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: Text(cta.buttonText),
+
+                      SizedBox(width: 2.w),
+
+                      // CTA BUTTON
+                      SizedBox(
+                        height: 4.6.h,
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(horizontal: 4.w),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                          child: Text(
+                            cta.buttonText,
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              color: cs.onPrimary,
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -117,7 +141,7 @@ class CtaCarouselState extends State<CtaCarousel> {
           ),
         ),
 
-        const SizedBox(height: 10),
+        SizedBox(height: 1.2.h),
 
         DotsIndicator(count: _ctas.length, currentIndex: _currentIndex),
       ],
