@@ -405,11 +405,14 @@ class _ContinueCard extends StatelessWidget {
               height: 60,
               width: 60,
               decoration: BoxDecoration(
-                color: cs.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(14),
+                image: const DecorationImage(
+                  image: AssetImage('assets/course1.png'),
+                  fit: BoxFit.cover,
+                ),
               ),
-              child: Icon(Icons.play_circle_fill, color: cs.primary, size: 36),
             ),
+
             const SizedBox(width: 14),
             Expanded(
               child: Column(
@@ -445,17 +448,26 @@ class _HorizontalCourses extends StatelessWidget {
       child: ListView(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        children: const [
-          _CourseCard(
+        children: [
+          const _CourseCard(
             title: 'Advanced Export Strategy',
             rating: '4.8',
             learners: '2.1k',
+            image: 'assets/course1.png',
           ),
-          SizedBox(width: 14),
-          _CourseCard(
+          const SizedBox(width: 14),
+          const _CourseCard(
             title: 'Import Documentation Mastery',
             rating: '4.8',
             learners: '1.9k',
+            image: 'assets/course2.png',
+          ),
+          const SizedBox(width: 14),
+          const _CourseCard(
+            title: 'Export Business Basics',
+            rating: '4.7',
+            learners: '1.4k',
+            image: 'assets/course3.jpg',
           ),
         ],
       ),
@@ -467,11 +479,13 @@ class _CourseCard extends StatelessWidget {
   final String title;
   final String rating;
   final String learners;
+  final String image;
 
   const _CourseCard({
     required this.title,
     required this.rating,
     required this.learners,
+    required this.image,
   });
 
   @override
@@ -494,14 +508,15 @@ class _CourseCard extends StatelessWidget {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: cs.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(14),
-                ),
-                child: const Center(
-                  child: Icon(Icons.play_circle_outline, size: 40),
+                  image: DecorationImage(
+                    image: AssetImage(image),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
+
             const SizedBox(height: 10),
             Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
             const SizedBox(height: 6),
