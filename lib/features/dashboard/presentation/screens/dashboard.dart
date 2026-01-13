@@ -3,6 +3,7 @@ import 'package:exim_lab/common/widgets/promo_banner_dialog.dart';
 import 'package:exim_lab/common/widgets/theme_switch_button.dart';
 import 'package:exim_lab/features/certificates/presentation/screens/certificates_screen.dart';
 import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/animated_search_bar.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/course_of_the_day.dart';
 import 'package:exim_lab/features/news/presentation/screens/news_list_screen.dart';
 import 'package:exim_lab/features/resources/presentation/screens/resource_screen.dart';
@@ -131,29 +132,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
               // ================= SEARCH =================
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
-                  height: 52,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  decoration: BoxDecoration(
-                    color: cs.surface,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: appCardShadow(context),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.search, color: cs.onSurface.withOpacity(0.5)),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          t.translate('search_hint'),
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: cs.onSurface.withOpacity(0.6),
-                          ),
-                        ),
-                      ),
-                      Icon(Icons.tune, color: cs.onSurface.withOpacity(0.4)),
-                    ],
-                  ),
+                child: AnimatedSearchBar(
+                  hints: [
+                    t.translate('search_hint'),
+                    'Search IEC, GST, HS Code',
+                    'Find import–export courses',
+                    'Read trade policy updates',
+                    'Check required documents',
+                  ],
+                  onTap: () {
+                    // TODO: Navigate to search screen later
+                  },
                 ),
               ),
 
