@@ -1,37 +1,70 @@
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/courses/presentation/screens/lesson_screen.dart';
+import 'package:exim_lab/features/courses/presentation/states/course_details_state.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class CourseDetailsScreen extends StatelessWidget {
-  const CourseDetailsScreen({super.key});
+class CourseDetailsScreen extends StatefulWidget {
+  final String courseId;
+
+  const CourseDetailsScreen({super.key, required this.courseId});
+
+  @override
+  State<CourseDetailsScreen> createState() => _CourseDetailsScreenState();
+}
+
+class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    /// 🔹 Fetch course details once
+    Future.microtask(() {
+      context.read<CourseDetailsState>().fetchCourseDetails(widget.courseId);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final state = context.watch<CourseDetailsState>();
+
+    if (state.isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (state.errorMessage != null) {
+      return Scaffold(body: Center(child: Text(state.errorMessage!)));
+    }
+
+    final course = state.course!;
+    final cs = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
+      backgroundColor: cs.surface,
 
+      // ================= APP BAR =================
       appBar: AppBar(
-        backgroundColor: theme.colorScheme.surface,
+        backgroundColor: cs.surface,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface),
+          icon: Icon(Icons.arrow_back, color: cs.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text('Course Details', style: theme.textTheme.titleLarge),
+        title: Text(course.title, style: theme.textTheme.titleLarge),
       ),
 
+      // ================= BODY =================
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 🔹 HERO CARD
+            // ================= HERO CARD =================
             Container(
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surface,
+                color: cs.surface,
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
@@ -50,14 +83,14 @@ class CourseDetailsScreen extends StatelessWidget {
                   Container(
                     height: 180,
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withOpacity(0.15),
+                      color: cs.primary.withOpacity(0.15),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Center(
                       child: Icon(
                         Icons.play_circle_outline,
                         size: 54,
-                        color: theme.colorScheme.primary,
+                        color: cs.primary,
                       ),
                     ),
                   ),
@@ -65,7 +98,7 @@ class CourseDetailsScreen extends StatelessWidget {
                   const SizedBox(height: 16),
 
                   Text(
-                    'Advanced Export Strategy',
+                    course.title,
                     style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -74,23 +107,35 @@ class CourseDetailsScreen extends StatelessWidget {
                   const SizedBox(height: 6),
 
                   Text(
-                    'Learn how to find global buyers, price your products, and scale exports professionally.',
+                    course.description,
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.65),
+                      color: cs.onSurface.withOpacity(0.65),
                       height: 1.4,
                     ),
                   ),
 
                   const SizedBox(height: 12),
 
-                  // Stats
+                  // ================= STATS =================
                   Row(
-                    children: const [
-                      _StatChip(icon: Icons.star, text: '4.8', isAccent: true),
-                      SizedBox(width: 8),
-                      _StatChip(icon: Icons.people, text: '2.1k learners'),
-                      SizedBox(width: 8),
-                      _StatChip(icon: Icons.schedule, text: '6 hrs'),
+                    children: [
+                      _StatChip(
+                        icon: Icons.play_circle,
+                        text: 'Video Lessons',
+                        isAccent: true,
+                      ),
+                      const SizedBox(width: 8),
+                      _StatChip(
+                        icon: Icons.menu_book,
+                        text: '${course.lessons.length} lessons',
+                      ),
+                      const SizedBox(width: 8),
+                      _StatChip(
+                        icon: Icons.currency_rupee,
+                        text: course.basePrice == 0
+                            ? 'Free'
+                            : '₹${course.basePrice}',
+                      ),
                     ],
                   ),
                 ],
@@ -99,46 +144,40 @@ class CourseDetailsScreen extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            // 🔹 ABOUT
+            // ================= ABOUT =================
             _sectionTitle(context, 'About this course'),
             const SizedBox(height: 8),
             Text(
-              'This course is designed for beginners and professionals who want to understand export business practically. '
-              'You will learn real processes, documentation, pricing strategies, and compliance requirements.',
+              course.description,
               style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
             ),
 
-            const SizedBox(height: 24),
-
-            // 🔹 WHAT YOU WILL LEARN
-            _sectionTitle(context, 'What you will learn'),
-            const SizedBox(height: 12),
-            const _Bullet(text: 'How to find international buyers'),
-            const _Bullet(text: 'Export pricing and profit calculation'),
-            const _Bullet(text: 'Documents required for export'),
-            const _Bullet(text: 'Shipping, logistics, and incoterms'),
-            const _Bullet(text: 'Payment methods and risk management'),
-
             const SizedBox(height: 32),
 
-            // 🔹 CTA
+            // ================= CTA =================
             SizedBox(
               width: double.infinity,
               height: 56,
               child: ElevatedButton(
                 onPressed: () {
-                  AppNavigator.push(context, const LessonsScreen());
+                  AppNavigator.push(
+                    context,
+                    LessonsScreen(
+                      lessons: course.lessons,
+                      courseTitle: course.title,
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.primary,
-                  foregroundColor: theme.colorScheme.onPrimary,
+                  backgroundColor: cs.primary,
+                  foregroundColor: cs.onPrimary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
                   elevation: 0,
                 ),
                 child: const Text(
-                  'Enroll & Start Learning',
+                  'Start Learning',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ),
@@ -158,7 +197,7 @@ class CourseDetailsScreen extends StatelessWidget {
   }
 }
 
-// 🔹 STAT CHIP
+// ================= STAT CHIP =================
 class _StatChip extends StatelessWidget {
   final IconData icon;
   final String text;
@@ -186,39 +225,11 @@ class _StatChip extends StatelessWidget {
             icon,
             size: 14,
             color: isAccent
-                ? Colors.amber
+                ? theme.colorScheme.primary
                 : theme.colorScheme.onSurface.withOpacity(0.7),
           ),
           const SizedBox(width: 4),
           Text(text, style: theme.textTheme.bodySmall),
-        ],
-      ),
-    );
-  }
-}
-
-// 🔹 BULLET
-class _Bullet extends StatelessWidget {
-  final String text;
-
-  const _Bullet({required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            Icons.check_circle,
-            size: 18,
-            color: theme.colorScheme.secondary,
-          ),
-          const SizedBox(width: 10),
-          Expanded(child: Text(text, style: theme.textTheme.bodyMedium)),
         ],
       ),
     );

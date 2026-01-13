@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class VideoLessonScreen extends StatefulWidget {
-  const VideoLessonScreen({super.key});
+  final String videoUrl;
+  final String title;
+
+  const VideoLessonScreen({
+    super.key,
+    required this.videoUrl,
+    required this.title,
+  });
 
   @override
   State<VideoLessonScreen> createState() => _VideoLessonScreenState();
@@ -12,27 +19,22 @@ class _VideoLessonScreenState extends State<VideoLessonScreen> {
   late YoutubePlayerController _controller;
   final TextEditingController _questionController = TextEditingController();
 
-  final List<_Question> _questions = [
-    _Question(
-      user: 'Amit',
-      question: 'Is IEC mandatory before starting export?',
-      answer: 'Yes, IEC is mandatory for almost all export activities.',
-    ),
-    _Question(
-      user: 'Rohit',
-      question: 'Can an individual do export without a company?',
-      answer: 'Yes, individuals can export as proprietors after registration.',
-    ),
-  ];
+  final List<_Question> _questions = [];
 
   @override
   void initState() {
     super.initState();
+
+    final videoId = YoutubePlayer.convertUrlToId(widget.videoUrl);
+
     _controller = YoutubePlayerController(
-      initialVideoId: YoutubePlayer.convertUrlToId(
-        'https://www.youtube.com/watch?v=DeRSvxYpA00&list=PL1V2X_hj0A0JmXVTsXLaL5tJf1KWF65l9',
-      )!,
-      flags: const YoutubePlayerFlags(autoPlay: false, mute: false),
+      initialVideoId: videoId ?? '',
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+        enableCaption: true,
+        isLive: false,
+      ),
     );
   }
 
@@ -45,25 +47,27 @@ class _VideoLessonScreenState extends State<VideoLessonScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F7FB),
+      backgroundColor: cs.surface,
+
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: cs.surface,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: cs.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Introduction to Export Business',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
-        ),
+        title: Text(widget.title, style: theme.textTheme.titleMedium),
       ),
+
       body: YoutubePlayerBuilder(
         player: YoutubePlayer(
           controller: _controller,
           showVideoProgressIndicator: true,
-          progressIndicatorColor: const Color(0xFFFF8A00),
+          progressIndicatorColor: cs.primary,
         ),
         builder: (context, player) {
           return SingleChildScrollView(
@@ -77,45 +81,30 @@ class _VideoLessonScreenState extends State<VideoLessonScreen> {
                   child: player,
                 ),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
 
-                // 🔹 DESCRIPTION
-                const Text(
-                  'About this lesson',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                ),
-
-                const SizedBox(height: 6),
-
-                const Text(
-                  'In this lesson, you will understand what export business is, '
-                  'who can start exporting, and the overall flow of export activities.',
-                  style: TextStyle(height: 1.5),
+                // 🔹 ABOUT
+                _sectionTitle(context, 'About this lesson'),
+                const SizedBox(height: 8),
+                Text(
+                  'This lesson explains the topic in a clear and practical way to help you understand real-world import export scenarios.',
+                  style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
                 ),
 
                 const SizedBox(height: 24),
 
                 // 🔹 WHAT YOU WILL LEARN
-                const Text(
-                  'What you will learn',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                ),
-
+                _sectionTitle(context, 'What you will learn'),
                 const SizedBox(height: 12),
+                const _Bullet(text: 'Practical business understanding'),
+                const _Bullet(text: 'Real trade examples'),
+                const _Bullet(text: 'Implementation guidance'),
 
-                const _Bullet(text: 'Meaning of export business'),
-                const _Bullet(text: 'Who can start exporting'),
-                const _Bullet(text: 'Basic export workflow'),
-
-                const SizedBox(height: 32),
+                const SizedBox(height: 28),
 
                 // 🔹 ASK QUESTION
-                const Text(
-                  'Ask a question',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                ),
-
-                const SizedBox(height: 8),
+                _sectionTitle(context, 'Ask a question'),
+                const SizedBox(height: 10),
 
                 TextField(
                   controller: _questionController,
@@ -123,7 +112,7 @@ class _VideoLessonScreenState extends State<VideoLessonScreen> {
                   decoration: InputDecoration(
                     hintText: 'Type your question here...',
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: cs.surfaceContainerHighest,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
                       borderSide: BorderSide.none,
@@ -135,24 +124,12 @@ class _VideoLessonScreenState extends State<VideoLessonScreen> {
 
                 SizedBox(
                   width: double.infinity,
-                  height: 48,
+                  height: 50,
                   child: ElevatedButton(
-                    onPressed: () {
-                      if (_questionController.text.isNotEmpty) {
-                        setState(() {
-                          _questions.insert(
-                            0,
-                            _Question(
-                              user: 'You',
-                              question: _questionController.text,
-                            ),
-                          );
-                          _questionController.clear();
-                        });
-                      }
-                    },
+                    onPressed: _submitQuestion,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFF8A00),
+                      backgroundColor: cs.primary,
+                      foregroundColor: cs.onPrimary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(14),
                       ),
@@ -163,27 +140,23 @@ class _VideoLessonScreenState extends State<VideoLessonScreen> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: Colors.white,
                       ),
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 32),
+                if (_questions.isNotEmpty) ...[
+                  const SizedBox(height: 32),
 
-                // 🔹 QUESTIONS LIST
-                const Text(
-                  'Questions & Answers',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                ),
+                  _sectionTitle(context, 'Questions & Answers'),
+                  const SizedBox(height: 12),
 
-                const SizedBox(height: 12),
-
-                Column(
-                  children: _questions
-                      .map((q) => _QuestionCard(question: q))
-                      .toList(),
-                ),
+                  Column(
+                    children: _questions
+                        .map((q) => _QuestionCard(question: q))
+                        .toList(),
+                  ),
+                ],
               ],
             ),
           );
@@ -191,9 +164,30 @@ class _VideoLessonScreenState extends State<VideoLessonScreen> {
       ),
     );
   }
+
+  void _submitQuestion() {
+    if (_questionController.text.trim().isEmpty) return;
+
+    setState(() {
+      _questions.insert(
+        0,
+        _Question(user: 'You', question: _questionController.text.trim()),
+      );
+      _questionController.clear();
+    });
+  }
+
+  Widget _sectionTitle(BuildContext context, String text) {
+    final theme = Theme.of(context);
+    return Text(
+      text,
+      style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+    );
+  }
 }
 
-// 🔹 BULLET
+// ================= BULLET =================
+
 class _Bullet extends StatelessWidget {
   final String text;
 
@@ -201,11 +195,13 @@ class _Bullet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
-          const Icon(Icons.check_circle, size: 18, color: Color(0xFF22C55E)),
+          Icon(Icons.check_circle, size: 18, color: cs.secondary),
           const SizedBox(width: 10),
           Expanded(child: Text(text)),
         ],
@@ -214,7 +210,8 @@ class _Bullet extends StatelessWidget {
   }
 }
 
-// 🔹 QUESTION MODEL
+// ================= QUESTION MODEL =================
+
 class _Question {
   final String user;
   final String question;
@@ -223,7 +220,8 @@ class _Question {
   _Question({required this.user, required this.question, this.answer});
 }
 
-// 🔹 QUESTION CARD
+// ================= QUESTION CARD =================
+
 class _QuestionCard extends StatelessWidget {
   final _Question question;
 
@@ -231,12 +229,23 @@ class _QuestionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cs.surface,
         borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).brightness == Brightness.light
+                ? Colors.black.withOpacity(0.05)
+                : Colors.black.withOpacity(0.25),
+            blurRadius: 10,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

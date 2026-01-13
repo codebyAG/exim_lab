@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_details_screen.dart';
+import 'package:exim_lab/features/courses/presentation/states/course_details_state.dart';
 import 'package:exim_lab/features/courses/presentation/states/course_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -89,7 +92,11 @@ class _CoursesListScreenState extends State<CoursesListScreen>
       itemCount: state.courses.length,
       itemBuilder: (context, index) {
         final course = state.courses[index];
-        return _CourseTile(title: course.title, subtitle: course.description);
+        return _CourseTile(
+          title: course.title,
+          subtitle: course.description,
+          courseId: course.id,
+        );
       },
     );
   }
@@ -99,8 +106,13 @@ class _CoursesListScreenState extends State<CoursesListScreen>
 class _CourseTile extends StatelessWidget {
   final String title;
   final String subtitle;
+  final String courseId;
 
-  const _CourseTile({required this.title, required this.subtitle});
+  const _CourseTile({
+    required this.title,
+    required this.subtitle,
+    required this.courseId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +181,11 @@ class _CourseTile extends StatelessWidget {
 
           ElevatedButton(
             onPressed: () {
-              AppNavigator.push(context, const CourseDetailsScreen());
+              log(courseId.toString());
+              AppNavigator.push(
+                context,
+                CourseDetailsScreen(courseId: courseId),
+              );
             },
             child: const Text('View'),
           ),
