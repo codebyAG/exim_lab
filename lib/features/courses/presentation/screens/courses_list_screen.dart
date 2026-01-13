@@ -225,39 +225,53 @@ const List<_MyCourse> _mockMyCourses = [
 ];
 
 Widget _myCoursesMockList(BuildContext context) {
-  return ListView.builder(
+  return GridView.builder(
     padding: const EdgeInsets.all(16),
+    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 2, // ✅ 2 cards per row
+      mainAxisSpacing: 16,
+      crossAxisSpacing: 16,
+      childAspectRatio: 0.78,
+    ),
     itemCount: _mockMyCourses.length,
     itemBuilder: (context, index) {
       final course = _mockMyCourses[index];
-      return _MyCourseCard(course: course);
+      return _MyCourseCard(course: course, colorIndex: index);
     },
   );
 }
 
 class _MyCourseCard extends StatelessWidget {
   final _MyCourse course;
+  final int colorIndex;
 
-  const _MyCourseCard({required this.course});
+  const _MyCourseCard({required this.course, required this.colorIndex});
+
+  static const List<Color> _cardColors = [
+    Color(0xFFFFE4EC), // pink
+    Color(0xFFE6F0FF), // blue
+    Color(0xFFE6F7F2), // green
+    Color(0xFFFFF3E0), // orange
+  ];
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final bgColor = _cardColors[colorIndex % _cardColors.length];
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: cs.primary.withOpacity(0.12), // 🎨 soft color card
-        borderRadius: BorderRadius.circular(20),
+        color: bgColor, // ✅ dynamic color
+        borderRadius: BorderRadius.circular(22),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // TITLE
           Text(
-            course.title,
+            course.title ,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: theme.textTheme.bodyLarge?.copyWith(
@@ -277,7 +291,7 @@ class _MyCourseCard extends StatelessWidget {
 
           const SizedBox(height: 8),
 
-          // PROGRESS BAR
+          // PROGRESS
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: LinearProgressIndicator(
@@ -288,19 +302,28 @@ class _MyCourseCard extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 14),
+          const Spacer(),
 
-          // PLAY BUTTON
+          // ▶ RESUME BUTTON
           Align(
-            alignment: Alignment.centerRight,
-            child: Container(
-              height: 36,
-              width: 36,
-              decoration: BoxDecoration(
-                color: cs.primary,
-                shape: BoxShape.circle,
+            alignment: Alignment.bottomRight,
+            child: GestureDetector(
+              onTap: () {
+                // ✅ Resume last lesson (ready for API)
+                AppNavigator.push(
+                  context,
+                  const CourseDetailsScreen(courseId: 'resume-course-id'),
+                );
+              },
+              child: Container(
+                height: 40,
+                width: 40,
+                decoration: BoxDecoration(
+                  color: cs.primary,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.play_arrow, color: cs.onPrimary),
               ),
-              child: Icon(Icons.play_arrow, color: cs.onPrimary),
             ),
           ),
         ],
