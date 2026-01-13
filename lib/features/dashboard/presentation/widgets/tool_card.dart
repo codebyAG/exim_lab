@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class ToolCard extends StatelessWidget {
   final IconData icon;
@@ -20,15 +21,15 @@ class ToolCard extends StatelessWidget {
     final cs = theme.colorScheme;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: EdgeInsets.symmetric(horizontal: 2.w),
       child: SizedBox(
-        width: 200, // ⬅ slightly wider
-        height: 150, // ⬅ fixed height to avoid overflow
+        width: 55.w, // ✅ responsive width
+        height: 20.h, // ✅ responsive height
         child: InkWell(
           borderRadius: BorderRadius.circular(18),
           onTap: onTap,
           child: Container(
-            padding: const EdgeInsets.all(14),
+            padding: EdgeInsets.all(2.h),
             decoration: BoxDecoration(
               color: cs.surface,
               borderRadius: BorderRadius.circular(18),
@@ -47,17 +48,17 @@ class ToolCard extends StatelessWidget {
               children: [
                 // ICON
                 Container(
-                  height: 42,
-                  width: 42,
+                  height: 5.h,
+                  width: 5.h,
                   decoration: BoxDecoration(
                     color: cs.primary.withOpacity(0.12),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(icon, color: cs.primary, size: 22),
+                  child: Icon(icon, color: cs.primary, size: 2.4.h),
                 ),
-      
-                const SizedBox(height: 10),
-      
+
+                SizedBox(height: 1.2.h),
+
                 // TEXT AREA (SAFE)
                 Expanded(
                   child: Column(
@@ -71,7 +72,7 @@ class ToolCard extends StatelessWidget {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 0.6.h),
                       Text(
                         subtitle,
                         maxLines: 2,
