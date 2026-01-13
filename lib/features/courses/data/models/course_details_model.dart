@@ -2,6 +2,7 @@ class CourseDetailsModel {
   final String id;
   final String title;
   final String description;
+  final String? imageUrl;
   final int basePrice;
   final List<LessonModel> lessons;
 
@@ -11,6 +12,7 @@ class CourseDetailsModel {
     required this.description,
     required this.basePrice,
     required this.lessons,
+    this.imageUrl,
   });
 
   factory CourseDetailsModel.fromJson(Map<String, dynamic> json) {
@@ -18,6 +20,7 @@ class CourseDetailsModel {
       id: json['_id'],
       title: json['title'],
       description: json['description'],
+      imageUrl: json["imageUrl"],
       basePrice: json['basePrice'] ?? 0,
       lessons: (json['lessons'] as List)
           .map((e) => LessonModel.fromJson(e))

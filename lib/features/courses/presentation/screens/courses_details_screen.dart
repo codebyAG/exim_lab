@@ -93,17 +93,29 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                 children: [
                   Container(
                     height: 180,
+                    width: double.infinity,
                     decoration: BoxDecoration(
-                      color: cs.primary.withOpacity(0.15),
                       borderRadius: BorderRadius.circular(16),
+                      color: cs.surfaceContainerHighest,
                     ),
-                    child: Center(
-                      child: Icon(
-                        Icons.play_circle_outline,
-                        size: 54,
-                        color: cs.primary,
-                      ),
-                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child:
+                        course.imageUrl != null && course.imageUrl!.isNotEmpty
+                        ? Image.network(
+                            course.imageUrl!,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) {
+                              return Image.asset(
+                                'assets/course1.png', // 🔁 fallback asset
+                                fit: BoxFit.cover,
+                              );
+                            },
+                          )
+                        : Image.asset(
+                            'assets/course1.png', // 🔁 fallback asset
+                            fit: BoxFit.cover,
+                          ),
                   ),
 
                   const SizedBox(height: 16),
