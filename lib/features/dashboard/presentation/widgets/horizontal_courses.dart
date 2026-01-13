@@ -1,32 +1,37 @@
 import 'package:exim_lab/features/dashboard/presentation/widgets/course_card.dart';
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class HorizontalCourses extends StatelessWidget {
-  const HorizontalCourses();
+  const HorizontalCourses({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 210,
+      height: 25.h, // 🔹 responsive height
       child: ListView(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: 5.w),
         children: [
-          const CourseCard(
+          CourseCard(
             title: 'Advanced Export Strategy',
             rating: '4.8',
             learners: '2.1k',
             image: 'assets/course1.png',
           ),
-          const SizedBox(width: 14),
-          const CourseCard(
+
+          SizedBox(width: 2.w),
+
+          CourseCard(
             title: 'Import Documentation Mastery',
             rating: '4.8',
             learners: '1.9k',
             image: 'assets/course2.png',
           ),
-          const SizedBox(width: 14),
-          const CourseCard(
+
+          SizedBox(width: 2.w),
+
+          CourseCard(
             title: 'Export Business Basics',
             rating: '4.7',
             learners: '1.4k',
