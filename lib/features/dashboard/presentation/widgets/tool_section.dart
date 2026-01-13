@@ -12,7 +12,7 @@ class ToolsSection extends StatelessWidget {
       height: 170,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric( vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         children: [
           ToolCard(
             icon: Icons.calculate,
