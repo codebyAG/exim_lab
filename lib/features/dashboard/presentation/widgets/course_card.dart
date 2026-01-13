@@ -1,5 +1,6 @@
 import 'package:exim_lab/core/constants/appcardshadow.dart';
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class CourseCard extends StatelessWidget {
   final String title;
@@ -8,6 +9,7 @@ class CourseCard extends StatelessWidget {
   final String image;
 
   const CourseCard({
+    super.key,
     required this.title,
     required this.rating,
     required this.learners,
@@ -16,13 +18,14 @@ class CourseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: EdgeInsets.only(bottom: 1.5.h),
       child: Container(
-        width: 220,
-        padding: const EdgeInsets.all(14),
+        width: 58.w, // 🔹 responsive width
+        padding: EdgeInsets.all(3.w),
         decoration: BoxDecoration(
           color: cs.surface,
           borderRadius: BorderRadius.circular(18),
@@ -31,25 +34,38 @@ class CourseCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(14),
-                  image: DecorationImage(
-                    image: AssetImage(image),
-                    fit: BoxFit.cover,
-                  ),
+            // 🔹 IMAGE
+            Container(
+              height: 13.h, // 🔹 fixed responsive height (no Expanded overflow)
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                  image: AssetImage(image),
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
 
-            const SizedBox(height: 10),
-            Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-            const SizedBox(height: 6),
+            SizedBox(height: 1.h),
+
+            // 🔹 TITLE
+            Text(
+              title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: cs.onSurface,
+              ),
+            ),
+
+            SizedBox(height: 0.8.h),
+
+            // 🔹 META
             Text(
               '$rating • $learners',
-              style: TextStyle(
-                fontSize: 12,
+              style: theme.textTheme.bodySmall?.copyWith(
+                fontSize: 14.sp,
                 color: cs.onSurface.withOpacity(0.6),
               ),
             ),
