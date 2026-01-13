@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class CourseOfTheDayCard extends StatelessWidget {
   final String title;
@@ -21,95 +22,81 @@ class CourseOfTheDayCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final cs = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-        height: 260, // 🎯 dashboard-friendly height
+        margin: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+        height: 30.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(26),
           gradient: const LinearGradient(
-            colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
+            colors: [
+              Color(0xFF0F2027),
+              Color(0xFF203A43),
+              Color(0xFF2C5364),
+            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           border: isDark
-              ? Border.all(color: Colors.white.withOpacity(0.25), width: 1.1)
+              ? Border.all(color: Colors.white.withOpacity(0.25))
               : null,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.35),
-              blurRadius: 24,
+              blurRadius: 22,
               offset: const Offset(0, 14),
             ),
-            if (isDark)
-              BoxShadow(color: Colors.white.withOpacity(0.12), blurRadius: 22),
           ],
         ),
         child: Stack(
-          clipBehavior: Clip.none,
           children: [
-            // 👧 GIRL IMAGE – LEFT, BLEEDING OUT
+            // 🔹 IMAGE (SAFE – NO OVERFLOW)
             Positioned(
-              left: -10,
-              bottom: -20,
-              top: -20,
-              child: Image.asset(imagePath, width: 170, fit: BoxFit.contain),
-            ),
-
-            // ✨ SOFT GLOW BEHIND IMAGE
-            Positioned(
-              left: 10,
-              bottom: 30,
-              child: Container(
-                width: 140,
-                height: 140,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [
-                      Colors.white.withOpacity(0.18),
-                      Colors.transparent,
-                    ],
-                  ),
-                ),
+              left: -3.w,
+              bottom: 0,
+              child: Image.asset(
+                imagePath,
+                width: 44.w,
+                fit: BoxFit.contain,
               ),
             ),
 
-            // 📄 CONTENT – RIGHT SIDE
+            // 🔹 CONTENT
             Padding(
-              padding: const EdgeInsets.fromLTRB(160, 22, 20, 20),
+              padding: EdgeInsets.fromLTRB(42.w, 3.h, 4.w, 3.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CurvedGradientText(text: 'COURSE'),
-                  CurvedGradientText(text: 'OF THE DAY'),
+                  _PromoText('COURSE'),
+                  _PromoText('OF THE DAY'),
 
-                  const SizedBox(height: 14),
+                  SizedBox(height: 1.6.h),
 
                   Text(
                     title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800,
+                    style: theme.textTheme.titleLarge?.copyWith(
                       color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 17.sp,
                       height: 1.2,
                     ),
                   ),
 
-                  const SizedBox(height: 8),
+                  SizedBox(height: 1.h),
 
                   Text(
                     subtitle,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 14,
+                    style: theme.textTheme.bodyMedium?.copyWith(
                       color: Colors.white.withOpacity(0.85),
+                      fontSize: 15.sp,
                       height: 1.4,
                     ),
                   ),
@@ -119,9 +106,9 @@ class CourseOfTheDayCard extends StatelessWidget {
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 7,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 4.w,
+                          vertical: 0.8.h,
                         ),
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -130,18 +117,18 @@ class CourseOfTheDayCard extends StatelessWidget {
                         child: Text(
                           priceText,
                           style: const TextStyle(
-                            fontSize: 14,
                             fontWeight: FontWeight.w800,
                             color: Colors.black,
                           ),
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      SizedBox(width: 3.w),
                       Expanded(
                         child: Text(
                           badgeText,
-                          style: TextStyle(
-                            fontSize: 12,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodySmall?.copyWith(
                             color: Colors.white.withOpacity(0.8),
                           ),
                         ),
@@ -158,35 +145,28 @@ class CourseOfTheDayCard extends StatelessWidget {
   }
 }
 
-///
-/// 🔥 CURVED PROMO TEXT (No package – stable)
-///
-class CurvedGradientText extends StatelessWidget {
+/// 🔹 PROMO TEXT (STABLE – NO OVERFLOW)
+class _PromoText extends StatelessWidget {
   final String text;
 
-  const CurvedGradientText({super.key, required this.text});
+  const _PromoText(this.text);
 
   @override
   Widget build(BuildContext context) {
-    return Transform(
-      alignment: Alignment.centerLeft,
-      transform: Matrix4.identity()
-        ..rotateZ(-0.045)
-        ..scale(1.05, 1.18),
+    return Transform.rotate(
+      angle: -0.04,
       child: ShaderMask(
         shaderCallback: (bounds) {
           return const LinearGradient(
             colors: [Color(0xFF22F3A6), Color(0xFF00E676)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
           ).createShader(bounds);
         },
         child: Text(
           text,
-          style: const TextStyle(
-            fontSize: 24,
+          style: TextStyle(
+            fontSize: 18.sp,
             fontWeight: FontWeight.w900,
-            letterSpacing: 1.6,
+            letterSpacing: 1.4,
             color: Colors.white,
           ),
         ),
