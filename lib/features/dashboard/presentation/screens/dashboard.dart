@@ -338,29 +338,81 @@ class _QuickCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
 
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.all(14),
+          height: 130,
           decoration: BoxDecoration(
             color: cs.surface,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(18),
             boxShadow: appCardShadow(context),
           ),
-          child: Column(
+          child: Stack(
+            clipBehavior: Clip.none,
             children: [
-              Icon(icon, size: 28, color: cs.primary),
-              const SizedBox(height: 8),
-              Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-              const SizedBox(height: 4),
-              Text(
-                subtitle,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: cs.onSurface.withOpacity(0.6),
+              // 🔹 TOP CURVED HALF
+              Container(
+                height: 48,
+                decoration: BoxDecoration(
+                  color: cs.primary.withOpacity(0.90),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(18),
+                  ),
+                ),
+              ),
+
+              // 🔹 ICON ON CURVE LINE
+              Positioned(
+                top: 24,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Container(
+                    height: 42,
+                    width: 42,
+                    decoration: BoxDecoration(
+                      color: cs.surface,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: cs.primary.withOpacity(0.3),
+                        width: 2,
+                      ),
+                    ),
+                    child: Icon(icon, size: 22, color: cs.primary),
+                  ),
+                ),
+              ),
+
+              // 🔹 CONTENT
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 72, 12, 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: cs.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: cs.onSurface.withOpacity(0.6),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
