@@ -18,8 +18,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   void initState() {
     super.initState();
 
-    /// 🔹 Fetch course details once
-    Future.microtask(() {
+    /// ✅ Correct way to call provider API from initState
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<CourseDetailsState>().fetchCourseDetails(widget.courseId);
     });
   }
@@ -27,23 +27,36 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final cs = theme.colorScheme;
     final state = context.watch<CourseDetailsState>();
 
+    // ================= LOADING =================
     if (state.isLoading) {
+      return Scaffold(
+        backgroundColor: cs.surface,
+        appBar: AppBar(backgroundColor: cs.surface, elevation: 0),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    // ================= ERROR =================
+    if (state.errorMessage != null) {
+      return Scaffold(
+        backgroundColor: cs.surface,
+        body: Center(child: Text(state.errorMessage!)),
+      );
+    }
+
+    // ================= SAFE NULL CHECK =================
+    final course = state.course;
+    if (course == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    if (state.errorMessage != null) {
-      return Scaffold(body: Center(child: Text(state.errorMessage!)));
-    }
-
-    final course = state.course!;
-    final cs = theme.colorScheme;
-
+    // ================= UI =================
     return Scaffold(
       backgroundColor: cs.surface,
 
-      // ================= APP BAR =================
       appBar: AppBar(
         backgroundColor: cs.surface,
         elevation: 0,
@@ -54,7 +67,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
         title: Text(course.title, style: theme.textTheme.titleLarge),
       ),
 
-      // ================= BODY =================
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -79,7 +91,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Thumbnail
                   Container(
                     height: 180,
                     decoration: BoxDecoration(
@@ -116,15 +127,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
 
                   const SizedBox(height: 12),
 
-                  // ================= STATS =================
                   Row(
                     children: [
-                      _StatChip(
-                        icon: Icons.play_circle,
-                        text: 'Video Lessons',
-                        isAccent: true,
-                      ),
-                      const SizedBox(width: 8),
                       _StatChip(
                         icon: Icons.menu_book,
                         text: '${course.lessons.length} lessons',
@@ -140,16 +144,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                   ),
                 ],
               ),
-            ),
-
-            const SizedBox(height: 24),
-
-            // ================= ABOUT =================
-            _sectionTitle(context, 'About this course'),
-            const SizedBox(height: 8),
-            Text(
-              course.description,
-              style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
             ),
 
             const SizedBox(height: 32),
@@ -174,7 +168,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  elevation: 0,
                 ),
                 child: const Text(
                   'Start Learning',
