@@ -243,38 +243,65 @@ class _MyCourseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final cs = theme.colorScheme;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: theme.brightness == Brightness.light
-                ? Colors.black.withOpacity(0.05)
-                : Colors.black.withOpacity(0.25),
-            blurRadius: 10,
-            offset: const Offset(0, 6),
-          ),
-        ],
+        color: cs.primary.withOpacity(0.12), // 🎨 soft color card
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // TITLE
           Text(
             course.title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: theme.textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 12),
-          LinearProgressIndicator(
-            value: course.progress,
-            minHeight: 8,
-            backgroundColor: theme.colorScheme.onSurface.withOpacity(0.15),
-            color: theme.colorScheme.primary,
+
+          const SizedBox(height: 10),
+
+          // COMPLETED TEXT
+          Text(
+            'Completed ${course.completedLessons}/${course.totalLessons}',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: cs.onSurface.withOpacity(0.6),
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          // PROGRESS BAR
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: LinearProgressIndicator(
+              value: course.progress,
+              minHeight: 6,
+              backgroundColor: cs.onSurface.withOpacity(0.15),
+              color: cs.primary,
+            ),
+          ),
+
+          const SizedBox(height: 14),
+
+          // PLAY BUTTON
+          Align(
+            alignment: Alignment.centerRight,
+            child: Container(
+              height: 36,
+              width: 36,
+              decoration: BoxDecoration(
+                color: cs.primary,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.play_arrow, color: cs.onPrimary),
+            ),
           ),
         ],
       ),
