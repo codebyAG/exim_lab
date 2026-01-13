@@ -64,7 +64,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             children: [
               // ================= HEADER =================
               Container(
-                padding: const EdgeInsets.all(20),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 decoration: BoxDecoration(
                   color: cs.primary,
                   borderRadius: const BorderRadius.vertical(
@@ -593,7 +593,7 @@ class _CtaCarouselState extends State<_CtaCarousel> {
     return Column(
       children: [
         SizedBox(
-          height: 130,
+          height: 150,
           child: PageView.builder(
             controller: _controller,
             itemCount: _ctas.length,
