@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,26 +44,29 @@ class EximLabApp extends StatelessWidget {
     final themeProvider = context.watch<ThemeProvider>();
     final localeProvider = context.watch<LocaleProvider>();
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'EximLab',
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'EximLab',
+          // 🌗 THEME
+          theme: lightTheme,
+          darkTheme: darkTheme,
+          themeMode: themeProvider.themeMode,
 
-      // 🌗 THEME
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: themeProvider.themeMode,
+          // 🌍 LOCALIZATION
+          locale: localeProvider.locale,
+          supportedLocales: const [Locale('en'), Locale('hi')],
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
 
-      // 🌍 LOCALIZATION
-      locale: localeProvider.locale,
-      supportedLocales: const [Locale('en'), Locale('hi')],
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-
-      home: const WelcomeScreen(),
+          home: const WelcomeScreen(),
+        );
+      },
     );
   }
 }
