@@ -1,22 +1,16 @@
+import 'package:exim_lab/features/freevideos/data/models/free_videos_model.dart';
+import 'package:exim_lab/features/freevideos/presentation/screens/free_videos_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:exim_lab/core/navigation/app_navigator.dart';
 
 class FreeVideoCard extends StatelessWidget {
-  final String title;
-  final String thumbnail;
-  final int duration;
-  final VoidCallback onTap;
+  final FreeVideoModel video;
 
-  const FreeVideoCard({
-    super.key,
-    required this.title,
-    required this.thumbnail,
-    required this.duration,
-    required this.onTap,
-  });
+  const FreeVideoCard({super.key, required this.video});
 
   String get time =>
-      '${duration ~/ 60}:${(duration % 60).toString().padLeft(2, '0')}';
+      '${video.durationSeconds ~/ 60}:${(video.durationSeconds % 60).toString().padLeft(2, '0')}';
 
   @override
   Widget build(BuildContext context) {
@@ -25,28 +19,46 @@ class FreeVideoCard extends StatelessWidget {
     return SizedBox(
       width: 65.w,
       child: GestureDetector(
-        onTap: onTap,
+        onTap: () => _openDetails(context),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Thumbnail
+            // 🎥 THUMBNAIL WITH PLAY BUTTON
             ClipRRect(
               borderRadius: BorderRadius.circular(2.w),
               child: Stack(
+                alignment: Alignment.center,
                 children: [
                   Image.network(
-                    thumbnail,
+                    video.thumbnailUrl,
                     height: 18.h,
                     width: double.infinity,
-                    fit: BoxFit.contain,
+                    fit: BoxFit.cover,
                   ),
+
+                  // ▶ PLAY BUTTON
+                  Container(
+                    height: 7.h,
+                    width: 7.h,
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.6),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.play_arrow_rounded,
+                      size: 25.sp,
+                      color: Colors.white,
+                    ),
+                  ),
+
+                  // ⏱ DURATION
                   Positioned(
                     bottom: 1.h,
                     right: 2.w,
                     child: Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 2.w,
-                        vertical: .5.h,
+                        vertical: .4.h,
                       ),
                       decoration: BoxDecoration(
                         color: Colors.black87,
@@ -54,7 +66,11 @@ class FreeVideoCard extends StatelessWidget {
                       ),
                       child: Text(
                         time,
-                        style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
@@ -64,20 +80,26 @@ class FreeVideoCard extends StatelessWidget {
 
             SizedBox(height: 1.h),
 
+            // 📌 TITLE
             Text(
-              title,
+              video.title,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                fontSize: 13.5.sp,
+                fontWeight: FontWeight.w600,
+                color: cs.onSurface,
+              ),
             ),
 
             SizedBox(height: .5.h),
 
+            // 🆓 FREE TAG
             Text(
               'FREE',
               style: TextStyle(
                 color: cs.primary,
-                fontSize: 14.sp,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -85,5 +107,9 @@ class FreeVideoCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _openDetails(BuildContext context) {
+    AppNavigator.push(context, FreeVideoDetailsScreen(video: video));
   }
 }

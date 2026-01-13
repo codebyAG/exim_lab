@@ -19,10 +19,7 @@ class FreeVideosSection extends StatelessWidget {
     }
 
     if (state.error != null) {
-      return Padding(
-        padding: EdgeInsets.all(4.w),
-        child: Text(state.error!),
-      );
+      return Padding(padding: EdgeInsets.all(4.w), child: Text(state.error!));
     }
 
     if (state.videos.isEmpty) return const SizedBox();
@@ -36,14 +33,7 @@ class FreeVideosSection extends StatelessWidget {
         separatorBuilder: (_, __) => SizedBox(width: 4.w),
         itemBuilder: (context, index) {
           final v = state.videos[index];
-          return FreeVideoCard(
-            title: v.title,
-            thumbnail: v.thumbnailUrl,
-            duration: v.durationSeconds,
-            onTap: () {
-              // open video screen
-            },
-          );
+          return FreeVideoCard(video: v);
         },
       ),
     );
