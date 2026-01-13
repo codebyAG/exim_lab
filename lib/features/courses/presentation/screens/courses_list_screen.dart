@@ -247,23 +247,26 @@ class _MyCourseCard extends StatelessWidget {
 
   const _MyCourseCard({required this.course, required this.colorIndex});
 
-  static const List<Color> _cardColors = [
-    Color(0xFFFFE4EC), // pink
-    Color(0xFFE6F0FF), // blue
-    Color(0xFFE6F7F2), // green
-    Color(0xFFFFF3E0), // orange
-  ];
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
-    final bgColor = _cardColors[colorIndex % _cardColors.length];
+    final isDark = theme.brightness == Brightness.dark;
+
+    // 🎨 Adaptive background colors
+    final List<Color> bgColors = [
+      isDark ? cs.primaryContainer : const Color(0xFFFFE4EC),
+      isDark ? cs.secondaryContainer : const Color(0xFFE6F0FF),
+      isDark ? cs.tertiaryContainer : const Color(0xFFE6F7F2),
+      isDark ? cs.surfaceContainerHighest : const Color(0xFFFFF3E0),
+    ];
+
+    final bgColor = bgColors[colorIndex % bgColors.length];
 
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: bgColor, // ✅ dynamic color
+        color: bgColor,
         borderRadius: BorderRadius.circular(22),
       ),
       child: Column(
@@ -271,11 +274,12 @@ class _MyCourseCard extends StatelessWidget {
         children: [
           // TITLE
           Text(
-            course.title ,
+            course.title,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: theme.textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.w600,
+              color: cs.onSurface, // ✅ FIXED FOR DARK MODE
             ),
           ),
 
@@ -285,7 +289,7 @@ class _MyCourseCard extends StatelessWidget {
           Text(
             'Completed ${course.completedLessons}/${course.totalLessons}',
             style: theme.textTheme.bodySmall?.copyWith(
-              color: cs.onSurface.withOpacity(0.6),
+              color: cs.onSurface.withOpacity(0.7), // ✅ FIXED
             ),
           ),
 
@@ -309,7 +313,6 @@ class _MyCourseCard extends StatelessWidget {
             alignment: Alignment.bottomRight,
             child: GestureDetector(
               onTap: () {
-                // ✅ Resume last lesson (ready for API)
                 AppNavigator.push(
                   context,
                   const CourseDetailsScreen(courseId: 'resume-course-id'),
