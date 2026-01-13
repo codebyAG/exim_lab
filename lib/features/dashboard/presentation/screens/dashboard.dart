@@ -8,8 +8,10 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/continue_card.d
 import 'package:exim_lab/features/dashboard/presentation/widgets/course_of_the_day.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/cta_carasoul.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/horizontal_courses.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/live_seminar_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/quick_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/section_header.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/tool_section.dart';
 import 'package:exim_lab/features/news/presentation/screens/news_list_screen.dart';
 import 'package:exim_lab/features/resources/presentation/screens/resource_screen.dart';
 import 'package:exim_lab/localization/app_localization.dart';
@@ -189,6 +191,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
 
               const SizedBox(height: 24),
+
+              LiveSeminarCard(
+                title: 'Export Compliance & Documentation',
+                subtitle: 'Live with Trade Expert',
+                dateTime: '20 Jan • 6:00 PM',
+                onTap: () {
+                  // navigate to seminar details / registration
+                },
+              ),
+
+              const SizedBox(height: 24),
+
+              SectionHeader(
+                title: 'Tools',
+                subtitle: 'Everything you need in one place',
+              ),
+
+              const SizedBox(height: 12),
+
+              const ToolsSection(),
+
+              const SizedBox(height: 28),
 
               // ================= CONTINUE WATCHING =================
               SectionHeader(
