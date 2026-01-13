@@ -12,6 +12,7 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/live_seminar_ca
 import 'package:exim_lab/features/dashboard/presentation/widgets/quick_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/section_header.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/tool_section.dart';
+import 'package:exim_lab/features/freevideos/presentation/widgets/free_video_section.dart';
 import 'package:exim_lab/features/news/presentation/screens/news_list_screen.dart';
 import 'package:exim_lab/features/resources/presentation/screens/resource_screen.dart';
 import 'package:exim_lab/localization/app_localization.dart';
@@ -205,6 +206,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
 
               SizedBox(height: 3.h),
+              SectionHeader(
+                title: 'Free Videos',
+                subtitle: 'Watch & learn instantly',
+              ),
+
+              SizedBox(height: 1.5.h),
+
+              const FreeVideosSection(),
 
               const SectionHeader(
                 title: 'Tools',

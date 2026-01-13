@@ -3,6 +3,7 @@ import 'package:exim_lab/core/theme/dark_theme.dart';
 import 'package:exim_lab/core/theme/theme_provider.dart';
 import 'package:exim_lab/features/courses/presentation/states/course_details_state.dart';
 import 'package:exim_lab/features/courses/presentation/states/course_state.dart';
+import 'package:exim_lab/features/freevideos/presentation/states/free_video_state.dart';
 import 'package:exim_lab/features/welcome/presentation/screens/welcome_screen.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:exim_lab/localization/locale_provider.dart';
@@ -30,6 +31,9 @@ void main() async {
         ChangeNotifierProvider(create: (_) => localeProvider),
         ChangeNotifierProvider(create: (_) => CoursesState()),
         ChangeNotifierProvider(create: (_) => CourseDetailsState()),
+ChangeNotifierProvider(
+  create: (_) => FreeVideosState()..load(),
+),
       ],
       child: const EximLabApp(),
     ),

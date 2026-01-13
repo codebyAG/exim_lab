@@ -6,6 +6,7 @@ class ApiConstants {
 
   // 📌 ENDPOINTS
   static const String courses = '/api/courses';
+  static const String freeVideos = '/api/free-videos';
 
   // ⏱ TIMEOUTS
   static const int connectTimeout = 15000;
