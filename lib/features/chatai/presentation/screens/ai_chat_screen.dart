@@ -1,3 +1,5 @@
+import 'package:exim_lab/features/chatai/data/datasources/ai_chat_data_remote.dart';
+import 'package:exim_lab/features/chatai/domain/ai_chat_repository.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -10,62 +12,62 @@ class AiChatScreen extends StatefulWidget {
 
 class _AiChatScreenState extends State<AiChatScreen> {
   final TextEditingController _controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+
   final List<_Message> _messages = [];
   bool _isTyping = false;
+
+  late final AiChatRepository _repo;
 
   @override
   void initState() {
     super.initState();
+
+    _repo = AiChatRepository(AiChatRemote());
+
     _messages.add(
       _Message(
         text:
-            'Hi 👋 I’m Exim AI.\nAsk me anything about import–export, documents, or courses.',
+            'Hi 👋 I’m Exim AI.\nAsk me anything about import–export, prices, documents or courses.',
         isUser: false,
       ),
     );
   }
 
-  void _sendMessage(String text) async {
+  Future<void> _sendMessage(String text) async {
     if (text.trim().isEmpty) return;
 
     setState(() {
-      _messages.add(_Message(text: text, isUser: true));
+      _messages.insert(0, _Message(text: text, isUser: true));
       _controller.clear();
       _isTyping = true;
     });
 
-    await Future.delayed(const Duration(seconds: 1));
+    try {
+      final reply = await _repo.askAi(text);
 
-    setState(() {
-      _messages.add(_Message(text: _getAiReply(text), isUser: false));
-      _isTyping = false;
-    });
-  }
-
-  String _getAiReply(String question) {
-    final q = question.toLowerCase();
-
-    if (q.contains('iec')) {
-      return 'IEC (Import Export Code) is mandatory to start import or export business in India.';
+      setState(() {
+        _messages.insert(0, _Message(text: reply, isUser: false));
+        _isTyping = false;
+      });
+    } catch (e) {
+      setState(() {
+        _messages.insert(
+          0,
+          _Message(
+            text: '⚠️ Something went wrong. Please try again.',
+            isUser: false,
+          ),
+        );
+        _isTyping = false;
+      });
     }
-    if (q.contains('gst')) {
-      return 'GST registration is required for exporting goods or services.';
-    }
-    if (q.contains('document')) {
-      return 'Key documents include Invoice, Packing List, Bill of Lading and Shipping Bill.';
-    }
-    if (q.contains('course')) {
-      return 'Start with “Import–Export Basics” before moving to advanced trade strategies.';
-    }
-
-    return 'That’s a great question 📘\nPlease explore our courses and resources for more clarity.';
   }
 
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
+    final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
       backgroundColor: cs.surface,
@@ -79,36 +81,27 @@ class _AiChatScreenState extends State<AiChatScreen> {
       ),
       body: Column(
         children: [
-          // 🔹 CHAT LIST
+          // 🔹 CHAT LIST (BOTTOM → TOP)
           Expanded(
             child: ListView.builder(
+              reverse: false,
               padding: const EdgeInsets.all(16),
               itemCount: _messages.length + (_isTyping ? 1 : 0),
               itemBuilder: (context, index) {
-                if (_isTyping && index == _messages.length) {
+                // 🔹 Typing indicator always on top
+                if (_isTyping && index == 0) {
                   return const _TypingIndicator();
                 }
-                return _ChatBubble(message: _messages[index]);
+
+                // 🔹 Correct message index mapping
+                final messageIndex = _isTyping ? index - 1 : index;
+
+                final message = _messages[_messages.length - 1 - messageIndex];
+
+                return _ChatBubble(message: message);
               },
             ),
           ),
-
-          // 🔹 SUGGESTED QUESTION CHIPS
-          if (_messages.length <= 1)
-            Container(
-              padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    _suggestedChip(context, 'What is IEC?'),
-                    _suggestedChip(context, 'GST for export?'),
-                    _suggestedChip(context, 'Required documents'),
-                    _suggestedChip(context, 'Best course to start'),
-                  ],
-                ),
-              ),
-            ),
 
           // 🔹 INPUT BAR
           Container(
@@ -128,12 +121,8 @@ class _AiChatScreenState extends State<AiChatScreen> {
                 Expanded(
                   child: TextField(
                     controller: _controller,
-                    style: TextStyle(color: cs.onSurface),
                     decoration: InputDecoration(
                       hintText: t.translate('chat_hint'),
-                      hintStyle: TextStyle(
-                        color: cs.onSurface.withOpacity(0.5),
-                      ),
                       filled: true,
                       fillColor: cs.surfaceContainerHighest,
                       border: OutlineInputBorder(
@@ -156,35 +145,10 @@ class _AiChatScreenState extends State<AiChatScreen> {
       ),
     );
   }
-
-  Widget _suggestedChip(BuildContext context, String text) {
-    final cs = Theme.of(context).colorScheme;
-
-    return Padding(
-      padding: const EdgeInsets.only(right: 8),
-      child: GestureDetector(
-        onTap: () => _sendMessage(text),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-          decoration: BoxDecoration(
-            color: cs.primary.withOpacity(0.12),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Text(
-            text,
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-              color: cs.primary,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }
 
-// 🔹 MESSAGE MODEL
+// ================= MODELS =================
+
 class _Message {
   final String text;
   final bool isUser;
@@ -192,7 +156,8 @@ class _Message {
   _Message({required this.text, required this.isUser});
 }
 
-// 🔹 CHAT BUBBLE
+// ================= UI =================
+
 class _ChatBubble extends StatelessWidget {
   final _Message message;
 
@@ -200,23 +165,31 @@ class _ChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
 
     return Align(
       alignment: message.isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 10),
+        margin: const EdgeInsets.symmetric(vertical: 6),
         padding: const EdgeInsets.all(14),
-        constraints: const BoxConstraints(maxWidth: 300),
+        constraints: const BoxConstraints(maxWidth: 320),
         decoration: BoxDecoration(
           color: message.isUser ? cs.primary : cs.surface,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Text(
           message.text,
-          style: TextStyle(
+          style: theme.textTheme.bodyMedium?.copyWith(
             color: message.isUser ? cs.onPrimary : cs.onSurface,
-            fontSize: 14,
+            height: 1.4,
           ),
         ),
       ),
@@ -224,26 +197,31 @@ class _ChatBubble extends StatelessWidget {
   }
 }
 
-// 🔹 TYPING INDICATOR
 class _TypingIndicator extends StatelessWidget {
   const _TypingIndicator();
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context);
     final cs = Theme.of(context).colorScheme;
 
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 6),
         padding: const EdgeInsets.all(12),
-        margin: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
           color: cs.surface,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.06),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Text(
-          t.translate('ai_typing'),
+          'Exim AI is typing...',
           style: TextStyle(fontSize: 13, color: cs.onSurface.withOpacity(0.6)),
         ),
       ),
