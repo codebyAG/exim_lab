@@ -94,8 +94,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                         const Row(
                           children: [
-                            ThemeSwitchButton(),
-                            SizedBox(width: 8),
+                            // ThemeSwitchButton(),
+                            // SizedBox(width: 8),
                             LanguageSwitch(),
                           ],
                         ),
