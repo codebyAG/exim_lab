@@ -1,8 +1,8 @@
 import 'package:exim_lab/core/navigation/app_navigator.dart';
-import 'package:exim_lab/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:exim_lab/features/dashboard/presentation/screens/dashboard.dart';
 
 class OtpScreen extends StatelessWidget {
   const OtpScreen({super.key});
@@ -19,13 +19,10 @@ class OtpScreen extends StatelessWidget {
         child: LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(
-              keyboardDismissBehavior:
-                  ScrollViewKeyboardDismissBehavior.onDrag,
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight,
-                ),
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
                 child: IntrinsicHeight(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,8 +75,8 @@ class OtpScreen extends StatelessWidget {
                           fieldWidth: 42,
                           activeColor: theme.colorScheme.primary,
                           selectedColor: theme.colorScheme.primary,
-                          inactiveColor:
-                              theme.colorScheme.onSurface.withOpacity(0.3),
+                          inactiveColor: theme.colorScheme.onSurface
+                              .withOpacity(0.3),
                         ),
                         onChanged: (_) {},
                       ),
@@ -106,10 +103,7 @@ class OtpScreen extends StatelessWidget {
                         height: 56,
                         child: ElevatedButton(
                           onPressed: () {
-                            AppNavigator.push(
-                              context,
-                              const OnboardingScreen(),
-                            );
+                            AppNavigator.push(context, DashboardScreen());
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: theme.colorScheme.primary,
@@ -139,8 +133,9 @@ class OtpScreen extends StatelessWidget {
                             t.translate('otp_footer'),
                             textAlign: TextAlign.center,
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurface
-                                  .withOpacity(0.5),
+                              color: theme.colorScheme.onSurface.withOpacity(
+                                0.5,
+                              ),
                             ),
                           ),
                         ),
