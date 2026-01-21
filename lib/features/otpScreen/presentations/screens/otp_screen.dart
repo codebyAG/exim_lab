@@ -61,7 +61,7 @@ class OtpScreen extends StatelessWidget {
                       // 🔹 OTP FIELD
                       PinCodeTextField(
                         appContext: context,
-                        length: 6,
+                        length: 4,
                         keyboardType: TextInputType.number,
                         autoFocus: true,
                         animationType: AnimationType.fade,
