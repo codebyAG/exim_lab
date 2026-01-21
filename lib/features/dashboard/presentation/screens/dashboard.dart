@@ -3,6 +3,7 @@ import 'package:exim_lab/common/widgets/promo_banner_dialog.dart';
 import 'package:exim_lab/common/widgets/theme_switch_button.dart';
 import 'package:exim_lab/features/certificates/presentation/screens/certificates_screen.dart';
 import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dart';
+import 'package:exim_lab/features/cto_banners/presentations/screens/random_cto_banner.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/animated_search_bar.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/continue_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/course_of_the_day.dart';
@@ -232,8 +233,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
 
               ContinueCard(),
-
-              SizedBox(height: 3.h),
+              const RandomCtoBanner(), // 🔥 HERE
 
               SectionHeader(
                 title: t.translate('most_popular'),
@@ -262,6 +262,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               HorizontalCourses(),
 
               SizedBox(height: 3.h),
+              const RandomCtoBanner(), // 🔥 HERE
 
               SectionHeader(
                 title: t.translate('recommended_for_you'),
