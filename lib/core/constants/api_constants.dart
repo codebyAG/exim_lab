@@ -13,6 +13,10 @@ class ApiConstants {
 
   static const String freeVideos = '/api/free-videos';
 
+  // 🧠 QUIZ API
+  static const String quizTopics = '$baseUrl/api/quizzes/topics';
+  static const String quizAttempts = '$baseUrl/api/quizzes/attempts';
+
   // ⏱ TIMEOUTS
   static const int connectTimeout = 15000;
   static const int receiveTimeout = 15000;

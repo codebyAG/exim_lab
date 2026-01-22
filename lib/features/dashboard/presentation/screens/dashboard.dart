@@ -20,6 +20,7 @@ import 'package:exim_lab/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_list_screen.dart';
+import 'package:exim_lab/features/quiz/presentation/screens/quiz_topics_screen.dart';
 import 'package:sizer/sizer.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -175,6 +176,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             AppNavigator.push(
                               context,
                               const CertificatesScreen(),
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(width: 3.w),
+                      Expanded(
+                        child: QuickCard(
+                          icon: Icons.quiz_rounded,
+                          title: 'Quizzes',
+                          subtitle: 'Test skills',
+                          onTap: () {
+                            AppNavigator.push(
+                              context,
+                              const QuizTopicsScreen(),
                             );
                           },
                         ),
