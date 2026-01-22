@@ -10,6 +10,7 @@ import 'package:exim_lab/localization/locale_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:exim_lab/features/quiz/presentation/states/quiz_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -31,9 +32,8 @@ void main() async {
         ChangeNotifierProvider(create: (_) => localeProvider),
         ChangeNotifierProvider(create: (_) => CoursesState()),
         ChangeNotifierProvider(create: (_) => CourseDetailsState()),
-ChangeNotifierProvider(
-  create: (_) => FreeVideosState()..load(),
-),
+        ChangeNotifierProvider(create: (_) => FreeVideosState()..load()),
+        ChangeNotifierProvider(create: (_) => QuizProvider()),
       ],
       child: const EximLabApp(),
     ),
