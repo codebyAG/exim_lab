@@ -1,10 +1,48 @@
 import 'package:exim_lab/core/navigation/app_navigator.dart';
+import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:exim_lab/features/otpScreen/presentations/screens/otp_screen.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _phoneController = TextEditingController();
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    super.dispose();
+  }
+
+  void _handleContinue() async {
+    final phone = _phoneController.text.trim();
+    if (phone.length != 10) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter a valid 10-digit phone number'),
+        ),
+      );
+      return;
+    }
+
+    final authProvider = context.read<AuthProvider>();
+    final success = await authProvider.sendOtp(phone);
+
+    if (success && mounted) {
+      AppNavigator.push(context, const OtpScreen());
+    } else if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(authProvider.error ?? 'Something went wrong')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +101,7 @@ class LoginScreen extends StatelessWidget {
 
               // 🔹 INPUT
               TextField(
+                controller: _phoneController,
                 keyboardType: TextInputType.phone,
                 style: theme.textTheme.bodyLarge?.copyWith(fontSize: 18),
                 decoration: InputDecoration(
@@ -94,29 +133,33 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 32),
 
               // 🔹 CONTINUE BUTTON
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: () {
-                    AppNavigator.push(context, const OtpScreen());
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: theme.colorScheme.primary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+              Consumer<AuthProvider>(
+                builder: (context, provider, child) {
+                  return SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: ElevatedButton(
+                      onPressed: provider.isLoading ? null : _handleContinue,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: theme.colorScheme.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: provider.isLoading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : Text(
+                              t.translate('continue'),
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: theme.colorScheme.onPrimary,
+                              ),
+                            ),
                     ),
-                    elevation: 0,
-                  ),
-                  child: Text(
-                    t.translate('continue'),
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.onPrimary,
-                    ),
-                  ),
-                ),
+                  );
+                },
               ),
 
               const Spacer(),

@@ -17,6 +17,10 @@ class ApiConstants {
   static const String quizTopics = '$baseUrl/api/quizzes/topics';
   static const String quizAttempts = '$baseUrl/api/quizzes/attempts';
 
+  // 🔑 AUTH API
+  static const String auth = '$baseUrl/api/auth';
+  static const String verifyOtp = '$baseUrl/api/auth/verify-otp';
+
   // ⏱ TIMEOUTS
   static const int connectTimeout = 15000;
   static const int receiveTimeout = 15000;

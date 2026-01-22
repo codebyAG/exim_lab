@@ -17,6 +17,8 @@ class QuizQuestionScreen extends StatefulWidget {
 }
 
 class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
+  int? selectedIndex;
+
   @override
   void initState() {
     super.initState();
@@ -27,6 +29,24 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
         widget.topicId,
       );
     });
+  }
+
+  void _handleOptionTap(int index, String questionId, int correctIndex) async {
+    if (selectedIndex != null) return; // Prevent multiple taps
+
+    setState(() {
+      selectedIndex = index;
+    });
+
+    // Wait for 1 second to show feedback
+    await Future.delayed(const Duration(milliseconds: 1000));
+
+    if (mounted) {
+      await context.read<QuizProvider>().submitAnswer(questionId, index);
+      setState(() {
+        selectedIndex = null;
+      });
+    }
   }
 
   @override
@@ -53,7 +73,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
         ),
         child: Consumer<QuizProvider>(
           builder: (context, provider, child) {
-            if (provider.isLoading) {
+            if (provider.isLoading && provider.currentAttempt == null) {
               return const Center(child: CircularProgressIndicator());
             }
 
@@ -163,22 +183,50 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
 
                   // Options
                   ...List.generate(currentQuestion.options.length, (index) {
+                    final bool isSelected = selectedIndex == index;
+                    final bool isCorrect =
+                        index == currentQuestion.correctOptionIndex;
+
+                    Color tileColor = cs.surface;
+                    Color borderColor = cs.outlineVariant.withOpacity(0.5);
+                    Color dotColor = cs.surfaceContainerHighest.withOpacity(
+                      0.5,
+                    );
+                    Color charColor = cs.primary;
+
+                    if (selectedIndex != null) {
+                      if (isSelected) {
+                        tileColor = isCorrect
+                            ? Colors.green.withOpacity(0.12)
+                            : Colors.red.withOpacity(0.12);
+                        borderColor = isCorrect ? Colors.green : Colors.red;
+                        dotColor = isCorrect ? Colors.green : Colors.red;
+                        charColor = Colors.white;
+                      } else if (isCorrect) {
+                        tileColor = Colors.green.withOpacity(0.05);
+                        borderColor = Colors.green.withOpacity(0.5);
+                      }
+                    }
+
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       child: Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          onTap: () {
-                            provider.submitAnswer(currentQuestion.id, index);
-                          },
+                          onTap: () => _handleOptionTap(
+                            index,
+                            currentQuestion.id,
+                            currentQuestion.correctOptionIndex,
+                          ),
                           borderRadius: BorderRadius.circular(16),
                           child: Ink(
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
-                              color: cs.surface,
+                              color: tileColor,
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: cs.outlineVariant.withOpacity(0.5),
+                                color: borderColor,
+                                width: isSelected ? 2 : 1,
                               ),
                               boxShadow: [
                                 BoxShadow(
@@ -194,8 +242,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                                   width: 40,
                                   height: 40,
                                   decoration: BoxDecoration(
-                                    color: cs.surfaceContainerHighest
-                                        .withOpacity(0.5),
+                                    color: dotColor,
                                     shape: BoxShape.circle,
                                   ),
                                   alignment: Alignment.center,
@@ -204,7 +251,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                                     style: theme.textTheme.titleMedium
                                         ?.copyWith(
                                           fontWeight: FontWeight.bold,
-                                          color: cs.primary,
+                                          color: charColor,
                                         ),
                                   ),
                                 ),
@@ -214,9 +261,21 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                                     currentQuestion.options[index],
                                     style: theme.textTheme.bodyLarge?.copyWith(
                                       color: cs.onSurface,
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
                                     ),
                                   ),
                                 ),
+                                if (selectedIndex != null && isSelected)
+                                  Icon(
+                                    isCorrect
+                                        ? Icons.check_circle
+                                        : Icons.cancel,
+                                    color: isCorrect
+                                        ? Colors.green
+                                        : Colors.red,
+                                  ),
                               ],
                             ),
                           ),
