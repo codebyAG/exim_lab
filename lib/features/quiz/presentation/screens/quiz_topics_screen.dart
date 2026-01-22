@@ -2,6 +2,7 @@ import 'package:exim_lab/features/quiz/presentation/screens/quiz_question_screen
 import 'package:exim_lab/features/quiz/presentation/states/quiz_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 
 class QuizTopicsScreen extends StatefulWidget {
   const QuizTopicsScreen({super.key});
@@ -14,9 +15,10 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
   @override
   void initState() {
     super.initState();
-    // TODO: Replace with actual user ID from auth provider
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<QuizProvider>().fetchTopics("64f0cccc3333333333333333");
+      final user = context.read<AuthProvider>().user;
+      final userId = user?.id ?? "64f0cccc3333333333333333"; // Fallback for dev
+      context.read<QuizProvider>().fetchTopics(userId);
     });
   }
 

@@ -1,3 +1,4 @@
+import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:exim_lab/features/quiz/presentation/states/quiz_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,12 +23,11 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
   @override
   void initState() {
     super.initState();
-    // TODO: Get actual user ID
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<QuizProvider>().startQuiz(
-        "64f0cccc3333333333333333",
-        widget.topicId,
-      );
+      final user = context.read<AuthProvider>().user;
+      final userId = user?.id ?? "64f0cccc3333333333333333"; // Fallback
+
+      context.read<QuizProvider>().startQuiz(userId, widget.topicId);
     });
   }
 
