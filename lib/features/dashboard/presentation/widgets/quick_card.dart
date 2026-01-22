@@ -1,4 +1,3 @@
-import 'package:exim_lab/core/constants/appcardshadow.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -20,84 +19,67 @@ class QuickCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 15.h, // ✅ responsive height
-        decoration: BoxDecoration(
-          color: cs.surface,
-          borderRadius: BorderRadius.circular(18),
-          boxShadow: appCardShadow(context),
-        ),
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            // 🔹 TOP CURVED HALF
-            Container(
-              height: 7.h,
-              decoration: BoxDecoration(
-                color: cs.primary.withOpacity(0.9),
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(18),
-                ),
-              ),
-            ),
-
-            // 🔹 ICON ON CURVE LINE
-            Positioned(
-              top: 3.h,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Container(
-                  height: 6.h,
-                  width: 6.h,
+    return Container(
+      height: 16.h,
+      decoration: BoxDecoration(
+        color: cs.surface,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: cs.shadow.withOpacity(isDark ? 0.3 : 0.08),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+        border: Border.all(color: cs.outlineVariant.withOpacity(0.3), width: 1),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(20),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(20),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.5.h),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(1.2.h),
                   decoration: BoxDecoration(
-                    color: cs.surface,
+                    color: cs.primaryContainer.withOpacity(0.4),
                     shape: BoxShape.circle,
-                    border: Border.all(
-                      color: cs.primary.withOpacity(0.35),
-                      width: 2,
-                    ),
                   ),
-                  child: Icon(icon, size: 2.6.h, color: cs.primary),
+                  child: Icon(icon, size: 3.h, color: cs.primary),
                 ),
-              ),
-            ),
-
-            // 🔹 CONTENT
-            Padding(
-              padding: EdgeInsets.fromLTRB(2.w, 9.h, 2.w, 1.2.h),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14.sp,
-                      color: cs.onSurface,
-                    ),
+                SizedBox(height: 1.5.h),
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 11.sp,
+                    color: cs.onSurface,
                   ),
-                  SizedBox(height: 0.6.h),
-                  Text(
-                    subtitle,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      fontSize: 14.sp,
-                      color: cs.onSurface.withOpacity(0.65),
-                    ),
+                ),
+                SizedBox(height: 0.5.h),
+                Text(
+                  subtitle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    fontSize: 9.sp,
+                    color: cs.onSurfaceVariant,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
