@@ -75,7 +75,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             // ================= HEADER =================
             SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(5.w, 2.h, 5.w, 1.h),
+                padding: EdgeInsets.fromLTRB(3.w, 2.h, 3.w, 1.h),
                 child: Column(
                   children: [
                     Row(
@@ -131,7 +131,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
             // ================= CONTENT BODY =================
             SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+              padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2.h),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
                   // CTA Carousel

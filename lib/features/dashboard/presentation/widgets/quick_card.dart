@@ -28,12 +28,15 @@ class QuickCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: cs.shadow.withOpacity(isDark ? 0.3 : 0.08),
-            blurRadius: 15,
+            color: cs.shadow.withOpacity(isDark ? 0.3 : 0.12),
+            blurRadius: 18,
             offset: const Offset(0, 8),
           ),
         ],
-        border: Border.all(color: cs.outlineVariant.withOpacity(0.3), width: 1),
+        border: Border.all(
+          color: cs.outlineVariant.withOpacity(0.15),
+          width: 1.5,
+        ),
       ),
       child: Material(
         color: Colors.transparent,

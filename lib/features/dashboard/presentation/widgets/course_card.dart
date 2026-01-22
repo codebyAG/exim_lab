@@ -1,4 +1,3 @@
-import 'package:exim_lab/core/constants/appcardshadow.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -29,7 +28,17 @@ class CourseCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: cs.surface,
           borderRadius: BorderRadius.circular(18),
-          boxShadow: appCardShadow(context),
+          boxShadow: [
+            BoxShadow(
+              color: cs.shadow.withOpacity(0.12),
+              blurRadius: 14,
+              offset: const Offset(0, 6),
+            ),
+          ],
+          border: Border.all(
+            color: cs.outlineVariant.withOpacity(0.15),
+            width: 1.5,
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

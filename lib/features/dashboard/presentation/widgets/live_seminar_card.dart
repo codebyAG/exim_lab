@@ -33,11 +33,15 @@ class LiveSeminarCard extends StatelessWidget {
               BoxShadow(
                 color: theme.brightness == Brightness.dark
                     ? Colors.black.withOpacity(0.4)
-                    : Colors.black.withOpacity(0.08),
+                    : Colors.black.withOpacity(0.12),
                 blurRadius: 16,
                 offset: const Offset(0, 8),
               ),
             ],
+            border: Border.all(
+              color: cs.outlineVariant.withOpacity(0.15),
+              width: 1.5,
+            ),
           ),
           child: Row(
             children: [
