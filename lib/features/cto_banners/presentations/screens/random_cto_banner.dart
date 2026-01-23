@@ -12,6 +12,7 @@ class RandomCtoBanner extends StatefulWidget {
 }
 
 class _RandomCtoBannerState extends State<RandomCtoBanner> {
+  static final Set<String> _shownBannerIds = {};
   final _remote = CtoBannerRemote();
   bool _loading = true;
   late dynamic _banner;
@@ -25,9 +26,29 @@ class _RandomCtoBannerState extends State<RandomCtoBanner> {
   Future<void> _load() async {
     final list = await _remote.fetchBanners();
     if (list.isNotEmpty) {
-      _banner = list[Random().nextInt(list.length)];
+      // Filter out already shown banners
+      var candidates = list
+          .where((b) => !_shownBannerIds.contains(b.id))
+          .toList();
+
+      // If all shown, reset and reuse all
+      if (candidates.isEmpty) {
+        _shownBannerIds.clear();
+        candidates = list;
+      }
+
+      final randomBanner = candidates[Random().nextInt(candidates.length)];
+      _shownBannerIds.add(randomBanner.id);
+
+      if (mounted) {
+        setState(() {
+          _banner = randomBanner;
+          _loading = false;
+        });
+      }
+    } else {
+      if (mounted) setState(() => _loading = false);
     }
-    setState(() => _loading = false);
   }
 
   @override
