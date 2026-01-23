@@ -1,4 +1,4 @@
-import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
+import 'package:exim_lab/core/services/shared_pref_service.dart';
 import 'package:exim_lab/features/quiz/presentation/states/quiz_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,11 +23,13 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final user = context.read<AuthProvider>().user;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final user = await SharedPrefService().getUser();
       final userId = user?.id ?? "64f0cccc3333333333333333"; // Fallback
 
-      context.read<QuizProvider>().startQuiz(userId, widget.topicId);
+      if (mounted) {
+        context.read<QuizProvider>().startQuiz(userId, widget.topicId);
+      }
     });
   }
 
@@ -84,11 +86,11 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
             final questions = provider.questions;
             final attempt = provider.currentAttempt;
 
-            if (questions.isEmpty || attempt == null) {
+            if (questions.isEmpty) {
               return const Center(child: Text("No questions found"));
             }
 
-            if (attempt.isCompleted) {
+            if (attempt != null && attempt.isCompleted) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -127,7 +129,8 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
               );
             }
 
-            final currentQuestion = questions[attempt.currentQuestionIndex];
+            final currentQuestionIndex = attempt?.currentQuestionIndex ?? 0;
+            final currentQuestion = questions[currentQuestionIndex];
 
             return SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(20, 100, 20, 20),
@@ -138,8 +141,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: LinearProgressIndicator(
-                      value:
-                          (attempt.currentQuestionIndex + 1) / questions.length,
+                      value: (currentQuestionIndex + 1) / questions.length,
                       color: cs.primary,
                       backgroundColor: cs.surfaceContainerHighest,
                       minHeight: 8,
@@ -147,7 +149,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    "Question ${attempt.currentQuestionIndex + 1}/${questions.length}",
+                    "Question ${currentQuestionIndex + 1}/${questions.length}",
                     style: theme.textTheme.labelLarge?.copyWith(
                       color: cs.onSurfaceVariant,
                     ),

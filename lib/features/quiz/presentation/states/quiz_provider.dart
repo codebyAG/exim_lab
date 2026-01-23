@@ -31,11 +31,16 @@ class QuizProvider extends ChangeNotifier {
     }
   }
 
+  String? _currentUserId;
+  String? _currentTopicId;
+
   Future<void> startQuiz(String userId, String topicId) async {
     _setLoading(true);
+    _currentUserId = userId;
+    _currentTopicId = topicId;
+    _currentAttempt = null; // Reset attempt
     try {
       _questions = await _dataSource.getQuestions(topicId);
-      _currentAttempt = await _dataSource.startAttempt(userId, topicId);
       _error = null;
     } catch (e) {
       _error = e.toString();
@@ -45,10 +50,19 @@ class QuizProvider extends ChangeNotifier {
   }
 
   Future<void> submitAnswer(String questionId, int optionIndex) async {
-    if (_currentAttempt == null) return;
-
     _setLoading(true);
     try {
+      // Lazy create attempt if not exists
+      if (_currentAttempt == null) {
+        if (_currentUserId == null || _currentTopicId == null) {
+          throw Exception("Session invalid");
+        }
+        _currentAttempt = await _dataSource.startAttempt(
+          _currentUserId!,
+          _currentTopicId!,
+        );
+      }
+
       _currentAttempt = await _dataSource.submitAnswer(
         _currentAttempt!.attemptId,
         questionId,

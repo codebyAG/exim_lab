@@ -15,6 +15,8 @@ class ApiConstants {
 
   // 🧠 QUIZ API
   static const String quizTopics = '$baseUrl/api/quizzes/topics';
+  static const String getAllQuestions =
+      '$baseUrl/api/quizzes/topics/getAllQuestions';
   static const String quizAttempts = '$baseUrl/api/quizzes/attempts';
 
   // 🔑 AUTH API

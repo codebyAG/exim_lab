@@ -2,7 +2,7 @@ import 'package:exim_lab/features/quiz/presentation/screens/quiz_question_screen
 import 'package:exim_lab/features/quiz/presentation/states/quiz_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
+import 'package:exim_lab/core/services/shared_pref_service.dart';
 
 class QuizTopicsScreen extends StatefulWidget {
   const QuizTopicsScreen({super.key});
@@ -15,10 +15,12 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final user = context.read<AuthProvider>().user;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final user = await SharedPrefService().getUser();
       final userId = user?.id ?? "64f0cccc3333333333333333"; // Fallback for dev
-      context.read<QuizProvider>().fetchTopics(userId);
+      if (mounted) {
+        context.read<QuizProvider>().fetchTopics(userId);
+      }
     });
   }
 

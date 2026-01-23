@@ -19,7 +19,7 @@ class QuizDataSource {
 
   Future<List<QuestionModel>> getQuestions(String topicId) async {
     return await callApi(
-      "${ApiConstants.quizTopics}/$topicId",
+      "${ApiConstants.getAllQuestions}/$topicId",
       parser: (json) {
         return (json['questions'] as List)
             .map((e) => QuestionModel.fromJson(e))
