@@ -25,10 +25,14 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final user = await SharedPrefService().getUser();
-      final userId = user?.id ?? "64f0cccc3333333333333333"; // Fallback
 
-      if (mounted) {
-        context.read<QuizProvider>().startQuiz(userId, widget.topicId);
+      if (!mounted) return;
+
+      if (user?.id != null) {
+        context.read<QuizProvider>().startQuiz(user!.id, widget.topicId);
+      } else {
+        // Handle case where user is not found (e.g. logout or error)
+        Navigator.pop(context);
       }
     });
   }
@@ -165,11 +169,15 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                       borderRadius: BorderRadius.circular(24),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 20,
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 30,
                           offset: const Offset(0, 10),
                         ),
                       ],
+                      border: Border.all(
+                        color: cs.outlineVariant.withOpacity(0.5),
+                        width: 1,
+                      ),
                     ),
                     child: Text(
                       currentQuestion.prompt,
@@ -190,7 +198,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                         index == currentQuestion.correctOptionIndex;
 
                     Color tileColor = cs.surface;
-                    Color borderColor = cs.outlineVariant.withOpacity(0.5);
+                    Color borderColor = cs.outlineVariant;
                     Color dotColor = cs.surfaceContainerHighest.withOpacity(
                       0.5,
                     );
@@ -228,13 +236,13 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
                                 color: borderColor,
-                                width: isSelected ? 2 : 1,
+                                width: isSelected ? 2.5 : 1.5,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.02),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
+                                  color: Colors.black.withOpacity(0.08),
+                                  blurRadius: 15,
+                                  offset: const Offset(0, 6),
                                 ),
                               ],
                             ),
