@@ -20,6 +20,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:exim_lab/features/quiz/presentation/states/quiz_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:sizer/sizer.dart';
 import 'dart:developer';
 
@@ -31,6 +32,7 @@ void main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+    FirebaseAnalytics.instance;
     FirebaseInAppMessaging.instance.setAutomaticDataCollectionEnabled(true);
   } catch (e) {
     log(
