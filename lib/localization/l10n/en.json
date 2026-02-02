@@ -16,7 +16,7 @@
   "forgot_number": "Having trouble with your number?",
   "continue_guest": "Explore as Guest",
   "otp_title": "Verify OTP",
-  "otp_subtitle": "Enter the 6-digit code sent to your number",
+  "otp_subtitle": "Enter the 4-digit code sent to your number",
   "resend_otp": "Resend OTP",
   "verify": "Verify",
   "otp_footer": "Didn’t receive the code? Check your network or try again.",
