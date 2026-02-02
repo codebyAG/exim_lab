@@ -5,6 +5,37 @@ import 'dart:developer';
 
 class SharedPrefService {
   static const String _userKey = 'user_data';
+  static const String _tokenKey = 'auth_token';
+
+  Future<void> saveToken(String token) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_tokenKey, token);
+      log("✅ Token saved to SharedPreferences");
+    } catch (e) {
+      log("❌ Error saving token: $e");
+    }
+  }
+
+  Future<String?> getToken() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getString(_tokenKey);
+    } catch (e) {
+      log("❌ Error getting token: $e");
+      return null;
+    }
+  }
+
+  Future<void> clearToken() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_tokenKey);
+      log("✅ Token cleared from SharedPreferences");
+    } catch (e) {
+      log("❌ Error clearing token: $e");
+    }
+  }
 
   Future<void> saveUser(UserModel user) async {
     try {

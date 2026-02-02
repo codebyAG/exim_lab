@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:exim_lab/core/services/shared_pref_service.dart';
 
 Future<T> callApi<T>(
   String url, {
@@ -18,8 +19,17 @@ Future<T> callApi<T>(
     log("➡️ REQUEST DATA: $requestData");
   }
 
+  // 🛡️ Add Bearer Token if available
+  final sharedPref = SharedPrefService();
+  final authToken = await sharedPref.getToken();
+
+  final Map<String, dynamic> finalHeaders = headers ?? {};
+  if (authToken != null && authToken.isNotEmpty) {
+    finalHeaders['Authorization'] = 'Bearer $authToken';
+  }
+
   final options = Options(
-    headers: headers,
+    headers: finalHeaders,
     contentType: contentType,
     followRedirects: true,
     receiveTimeout: const Duration(seconds: 60),

@@ -75,6 +75,10 @@ class AuthProvider extends ChangeNotifier {
         await _sharedPrefService.saveUser(_user!);
       }
 
+      if (response['token'] != null) {
+        await _sharedPrefService.saveToken(response['token']);
+      }
+
       _isLoading = false;
       notifyListeners();
       return true;
@@ -88,6 +92,7 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> logout() async {
     await _sharedPrefService.clearUser();
+    await _sharedPrefService.clearToken();
     _user = null;
     notifyListeners();
   }
