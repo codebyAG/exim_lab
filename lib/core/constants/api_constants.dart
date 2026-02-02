@@ -2,7 +2,7 @@ class ApiConstants {
   ApiConstants._();
 
   // 🌐 BASE URL
-  static const String baseUrl = 'http://52.35.230.229:3002';
+  static const String baseUrl = 'http://52.35.230.229:3006';
   static const String aiChathost = 'http://52.35.230.229:3004';
 
   // 📌 ENDPOINTS
