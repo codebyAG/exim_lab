@@ -32,6 +32,17 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> checkLoginStatus() async {
+    final token = await _sharedPrefService.getToken();
+    if (token != null && token.isNotEmpty) {
+      if (_user == null) {
+        await _loadUser();
+      }
+      return true;
+    }
+    return false;
+  }
+
   Future<bool> sendOtp(String mobile) async {
     _isLoading = true;
     _error = null;

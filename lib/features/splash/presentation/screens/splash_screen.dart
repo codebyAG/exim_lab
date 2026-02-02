@@ -1,11 +1,12 @@
 import 'dart:io';
 
 import 'package:exim_lab/core/navigation/app_navigator.dart';
-import 'package:exim_lab/core/services/shared_pref_service.dart';
 import 'package:exim_lab/features/dashboard/presentation/screens/dashboard.dart';
+import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:exim_lab/features/welcome/presentation/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -50,10 +51,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (!mounted) return;
 
-    final sharedPref = SharedPrefService();
-    final token = await sharedPref.getToken();
+    final isLoggedIn = await context.read<AuthProvider>().checkLoginStatus();
 
-    if (token != null && token.isNotEmpty) {
+    if (isLoggedIn) {
       AppNavigator.replace(context, const DashboardScreen());
     } else {
       AppNavigator.replace(context, const WelcomeScreen());

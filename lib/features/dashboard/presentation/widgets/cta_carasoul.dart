@@ -66,7 +66,7 @@ class CtaCarouselState extends State<CtaCarousel> {
     return Column(
       children: [
         SizedBox(
-          height: 17.h, // ✅ responsive height
+          height: 18.h, // ✅ responsive height
           child: PageView.builder(
             controller: _controller,
             itemCount: _ctas.length,
@@ -77,7 +77,7 @@ class CtaCarouselState extends State<CtaCarousel> {
               final cta = _ctas[index];
 
               return Padding(
-                padding: EdgeInsets.symmetric(horizontal: 2.w),
+                padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
                 child: Container(
                   padding: EdgeInsets.all(2.h),
                   decoration: BoxDecoration(
