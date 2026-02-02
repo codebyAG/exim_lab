@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "580433967343",
+    "project_id": "importexport-645ff",
+    "storage_bucket": "importexport-645ff.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:580433967343:android:9308e4efcb1a7a230d031a",
+        "android_client_info": {
+          "package_name": "com.startimportexport.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtnu07HAM_Wq2FRMhyjAI0_NpI0gpuIsQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

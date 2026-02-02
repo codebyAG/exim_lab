@@ -1,3 +1,9 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:exim_lab/core/services/firebase_messaging_service.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:exim_lab/firebase_options.dart'; // User needs to generate this
 import 'package:exim_lab/core/theme/light_theme.dart';
 import 'package:exim_lab/core/theme/dark_theme.dart';
 import 'package:exim_lab/core/theme/theme_provider.dart';
@@ -15,9 +21,50 @@ import 'package:exim_lab/features/login/presentations/states/auth_provider.dart'
 import 'package:exim_lab/features/quiz/presentation/states/quiz_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'dart:developer';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // 🔥 Firebase Init
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    FirebaseInAppMessaging.instance.setAutomaticDataCollectionEnabled(true);
+  } catch (e) {
+    log(
+      "⚠️ Firebase initialization failed (Missing firebase_options.dart?): $e",
+    );
+  }
+
+  // 🔔 Awesome Notifications Init
+  AwesomeNotifications().initialize(
+    null, // icon: null uses default app icon
+    [
+      NotificationChannel(
+        channelGroupKey: 'basic_test',
+        channelKey: 'basic',
+        channelName: 'Basic notifications',
+        channelDescription: 'Notification channel for basic tests',
+        channelShowBadge: true,
+        importance: NotificationImportance.High,
+      ),
+    ],
+  );
+
+  // 📨 Firebase Messaging Setup
+  FirebaseMessagingService firebaseMessagingService =
+      FirebaseMessagingService();
+  await firebaseMessagingService.setupFirebase();
+
+  FirebaseMessaging.onBackgroundMessage(
+    FirebaseMessagingService.firebaseBackgroundMessage,
+  );
+
+  await firebaseMessagingService.getFirebaseToken(); // Just to log it
+  await firebaseMessagingService.subsScribetoAlltopic();
+
   // 🔒 LOCK ORIENTATION (PORTRAIT ONLY)
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
