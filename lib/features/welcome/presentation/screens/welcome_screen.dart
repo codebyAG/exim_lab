@@ -63,11 +63,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     LanguageSwitch(),
                   ],
                 ),
-                Spacer(),
                 Expanded(
-                  child: SingleChildScrollView(
+                  child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
                           t.translate('welcome_to'),
