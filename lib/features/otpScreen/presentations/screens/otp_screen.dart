@@ -48,148 +48,145 @@ class _OtpScreenState extends State<OtpScreen> {
       resizeToAvoidBottomInset: true, // ✅ IMPORTANT
       backgroundColor: theme.colorScheme.surface,
       body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: IntrinsicHeight(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // 🔹 BACK
-                      IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color: theme.colorScheme.onSurface,
+        child: CustomScrollView(
+          physics: const ClampingScrollPhysics(),
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // 🔹 BACK
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // 🔹 HEADER
+                    Text(
+                      t.translate('verify_number'),
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    Text(
+                      t.translate('otp_subtitle'),
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.65),
+                      ),
+                    ),
+
+                    const SizedBox(height: 40),
+
+                    // 🔹 OTP FIELD
+                    PinCodeTextField(
+                      appContext: context,
+                      length: 4,
+                      keyboardType: TextInputType.number,
+                      autoFocus: true,
+                      animationType: AnimationType.fade,
+                      cursorColor: theme.colorScheme.primary,
+                      textStyle: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                      pinTheme: PinTheme(
+                        shape: PinCodeFieldShape.underline,
+                        fieldHeight: 48,
+                        fieldWidth: 42,
+                        activeColor: theme.colorScheme.primary,
+                        selectedColor: theme.colorScheme.primary,
+                        inactiveColor: theme.colorScheme.onSurface.withOpacity(
+                          0.3,
                         ),
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                          _otp = value;
+                        });
+                      },
+                    ),
 
-                      const SizedBox(height: 24),
+                    const SizedBox(height: 16),
 
-                      // 🔹 HEADER
-                      Text(
-                        t.translate('verify_number'),
-                        style: theme.textTheme.headlineMedium?.copyWith(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w600,
+                    // 🔹 RESEND
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          t.translate('resend_otp'),
+                          style: theme.textTheme.bodyMedium,
                         ),
                       ),
+                    ),
 
-                      const SizedBox(height: 8),
+                    const SizedBox(height: 32),
 
-                      Text(
-                        t.translate('otp_subtitle'),
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.65),
-                        ),
-                      ),
-
-                      const SizedBox(height: 40),
-
-                      // 🔹 OTP FIELD
-                      PinCodeTextField(
-                        appContext: context,
-                        length: 4,
-                        keyboardType: TextInputType.number,
-                        autoFocus: true,
-                        animationType: AnimationType.fade,
-                        cursorColor: theme.colorScheme.primary,
-                        textStyle: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                        pinTheme: PinTheme(
-                          shape: PinCodeFieldShape.underline,
-                          fieldHeight: 48,
-                          fieldWidth: 42,
-                          activeColor: theme.colorScheme.primary,
-                          selectedColor: theme.colorScheme.primary,
-                          inactiveColor: theme.colorScheme.onSurface
-                              .withOpacity(0.3),
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            _otp = value;
-                          });
-                        },
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // 🔹 RESEND
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            t.translate('resend_otp'),
-                            style: theme.textTheme.bodyMedium,
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 32),
-
-                      // 🔹 VERIFY BUTTON
-                      Consumer<AuthProvider>(
-                        builder: (context, provider, child) {
-                          return SizedBox(
-                            width: double.infinity,
-                            height: 56,
-                            child: ElevatedButton(
-                              onPressed: provider.isLoading
-                                  ? null
-                                  : _handleVerify,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: theme.colorScheme.primary,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                ),
-                                elevation: 0,
+                    // 🔹 VERIFY BUTTON
+                    Consumer<AuthProvider>(
+                      builder: (context, provider, child) {
+                        return SizedBox(
+                          width: double.infinity,
+                          height: 56,
+                          child: ElevatedButton(
+                            onPressed: provider.isLoading
+                                ? null
+                                : _handleVerify,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: theme.colorScheme.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
                               ),
-                              child: provider.isLoading
-                                  ? const CircularProgressIndicator(
-                                      color: Colors.white,
-                                    )
-                                  : Text(
-                                      t.translate('verify'),
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                        color: theme.colorScheme.onPrimary,
-                                      ),
+                              elevation: 0,
+                            ),
+                            child: provider.isLoading
+                                ? const CircularProgressIndicator(
+                                    color: Colors.white,
+                                  )
+                                : Text(
+                                    t.translate('verify'),
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: theme.colorScheme.onPrimary,
                                     ),
-                            ),
-                          );
-                        },
-                      ),
+                                  ),
+                          ),
+                        );
+                      },
+                    ),
 
-                      const Spacer(),
+                    const Spacer(),
 
-                      // 🔹 FOOTER
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: Center(
-                          child: Text(
-                            t.translate('otp_footer'),
-                            textAlign: TextAlign.center,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurface.withOpacity(
-                                0.5,
-                              ),
-                            ),
+                    // 🔹 FOOTER
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: Center(
+                        child: Text(
+                          t.translate('otp_footer'),
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurface.withOpacity(0.5),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            );
-          },
+            ),
+          ],
         ),
       ),
     );
