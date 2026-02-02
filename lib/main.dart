@@ -8,6 +8,7 @@ import 'package:exim_lab/features/welcome/presentation/screens/welcome_screen.da
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:exim_lab/localization/locale_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:exim_lab/features/splash/presentation/screens/splash_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
@@ -70,7 +71,7 @@ class EximLabApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
 
-          home: const WelcomeScreen(),
+          home: const SplashScreen(),
         );
       },
     );
