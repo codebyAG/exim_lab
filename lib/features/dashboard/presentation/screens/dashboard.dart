@@ -288,8 +288,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ),
                   const HorizontalCourses(),
-
-                  SizedBox(height: 10.h), // Bottom Spacing
                 ]),
               ),
             ),
