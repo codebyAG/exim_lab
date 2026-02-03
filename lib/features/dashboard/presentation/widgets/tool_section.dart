@@ -1,5 +1,8 @@
 import 'package:exim_lab/core/navigation/app_navigator.dart';
+import 'package:exim_lab/features/tools/presentation/screens/cbm_calculator.dart';
 import 'package:exim_lab/features/tools/presentation/screens/export_price_calculator.dart';
+import 'package:exim_lab/features/tools/presentation/screens/gst_calculator.dart';
+import 'package:exim_lab/features/tools/presentation/screens/incoterms_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'tool_card.dart';
@@ -20,47 +23,41 @@ class ToolsSection extends StatelessWidget {
             title: 'Export Price Calculator',
             subtitle: 'Calculate selling price & profit',
             onTap: () {
-              AppNavigator.push(
-                context,
-                const ExportPriceCalculatorScreen(),
-              );
+              AppNavigator.push(context, const ExportPriceCalculatorScreen());
             },
           ),
 
           SizedBox(width: 3.w),
 
           ToolCard(
-            icon: Icons.search,
-            title: 'HS Code Finder',
-            subtitle: 'Find correct HS codes',
-            onTap: () {},
+            icon: Icons.aspect_ratio_rounded,
+            title: 'CBM Calculator',
+            subtitle: 'Calculate shipment volume',
+            onTap: () {
+              AppNavigator.push(context, const CbmCalculatorScreen());
+            },
           ),
 
           SizedBox(width: 3.w),
 
           ToolCard(
-            icon: Icons.receipt_long,
-            title: 'Duty Calculator',
-            subtitle: 'Estimate customs duty',
-            onTap: () {},
+            icon: Icons.percent_rounded,
+            title: 'GST Calculator',
+            subtitle: 'Tax & Total Amount',
+            onTap: () {
+              AppNavigator.push(context, const GstCalculatorScreen());
+            },
           ),
 
           SizedBox(width: 3.w),
 
           ToolCard(
-            icon: Icons.description,
-            title: 'Document Checklist',
-            subtitle: 'Required export docs',
-            onTap: () {},
-          ),
-
-          SizedBox(width: 3.w),
-
-          ToolCard(
-            icon: Icons.badge,
-            title: 'IEC Validator',
-            subtitle: 'Verify IEC instantly',
-            onTap: () {},
+            icon: Icons.menu_book_rounded,
+            title: 'Incoterms 2020',
+            subtitle: 'Shipping Terms Guide',
+            onTap: () {
+              AppNavigator.push(context, const IncotermsScreen());
+            },
           ),
         ],
       ),
