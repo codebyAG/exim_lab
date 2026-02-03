@@ -65,7 +65,7 @@ class QuickCard extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: theme.textTheme.labelLarge?.copyWith(
                     fontWeight: FontWeight.w700,
-                    fontSize: 11.sp,
+                    fontSize: 13.sp,
                     color: cs.onSurface,
                   ),
                 ),
@@ -76,7 +76,7 @@ class QuickCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    fontSize: 9.sp,
+                    fontSize: 11.sp,
                     color: cs.onSurfaceVariant,
                   ),
                 ),
