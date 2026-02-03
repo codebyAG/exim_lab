@@ -25,16 +25,11 @@ class DotsIndicator extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: isActive
-                ? Colors
-                      .white // ✅ ACTIVE ALWAYS WHITE
-                : isDark
-                ? Colors.white.withOpacity(0.35)
-                : Colors.black.withOpacity(0.3),
+                ? (isDark ? Colors.white : theme.colorScheme.primary)
+                : theme.colorScheme.onSurfaceVariant.withOpacity(0.3),
           ),
         );
       }),
     );
   }
 }
-
-
