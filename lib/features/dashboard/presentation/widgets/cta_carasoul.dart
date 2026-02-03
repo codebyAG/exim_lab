@@ -84,6 +84,11 @@ class CtaCarouselState extends State<CtaCarousel> {
                     color: cs.surface,
                     borderRadius: BorderRadius.circular(22),
                     boxShadow: appCardShadow(context),
+                    image: const DecorationImage(
+                      image: AssetImage('assets/cta_card_bg.png'),
+                      fit: BoxFit.cover,
+                      opacity: 0.4, // Lowered opacity for subtle effect
+                    ),
                   ),
                   child: Row(
                     children: [

@@ -46,6 +46,11 @@ class ToolCard extends StatelessWidget {
                 color: cs.outlineVariant.withOpacity(0.15),
                 width: 1.5,
               ),
+              image: const DecorationImage(
+                image: AssetImage('assets/tool_card_bg.png'),
+                fit: BoxFit.cover,
+                opacity: 0.4, // Lowered opacity
+              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
