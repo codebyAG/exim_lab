@@ -217,7 +217,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   SizedBox(height: 1.5.h),
                   const FreeVideosSection(),
 
-                  SizedBox(height: 4.h),
+                  SizedBox(height: 2.h),
 
                   // Tools
                   const SectionHeader(
@@ -237,10 +237,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   SizedBox(height: 1.5.h),
                   ContinueCard(),
 
-                  SizedBox(height: 3.h),
+                  SizedBox(height: 2.h),
                   const RandomCtoBanner(),
 
-                  SizedBox(height: 3.h),
+                  SizedBox(height: 2.h),
 
                   // Most Popular
                   SectionHeader(
@@ -250,7 +250,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   SizedBox(height: 1.5.h),
                   const HorizontalCourses(),
 
-                  SizedBox(height: 4.h),
+                  SizedBox(height: 2.h),
 
                   // Course of the Day
                   CourseOfTheDayCard(
@@ -262,7 +262,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     onTap: () {},
                   ),
 
-                  SizedBox(height: 4.h),
+                  SizedBox(height: 2.h),
 
                   // Because You Watched
                   SectionHeader(
@@ -271,10 +271,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   const HorizontalCourses(),
 
-                  SizedBox(height: 3.h),
+                  SizedBox(height: 2.h),
                   const RandomCtoBanner(),
 
-                  SizedBox(height: 3.h),
+                  SizedBox(height: 2.h),
 
                   // Recommended
                   SectionHeader(
@@ -314,11 +314,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
           unselectedItemColor: cs.onSurfaceVariant.withOpacity(0.6),
           selectedLabelStyle: TextStyle(
             fontWeight: FontWeight.w600,
-            fontSize: 10.sp,
+            fontSize: 13.sp,
           ),
           unselectedLabelStyle: TextStyle(
             fontWeight: FontWeight.w500,
-            fontSize: 10.sp,
+            fontSize: 13.sp,
           ),
           currentIndex: 0,
           type: BottomNavigationBarType.fixed,
