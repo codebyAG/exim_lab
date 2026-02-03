@@ -79,6 +79,9 @@ class ToolCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w700,
+                          shadows: [
+                            const Shadow(color: Colors.white, blurRadius: 8),
+                          ],
                         ),
                       ),
                       SizedBox(height: 0.6.h),
@@ -87,7 +90,13 @@ class ToolCard extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: cs.onSurface.withOpacity(0.6),
+                          color: cs.onSurface.withOpacity(
+                            0.85,
+                          ), // Darker for readability
+                          fontWeight: FontWeight.w500,
+                          shadows: [
+                            const Shadow(color: Colors.white, blurRadius: 8),
+                          ],
                         ),
                       ),
                     ],
