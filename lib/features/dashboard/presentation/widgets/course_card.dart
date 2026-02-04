@@ -54,8 +54,13 @@ class CourseCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
-                    image: AssetImage(image),
+                    image: image.startsWith('http')
+                        ? NetworkImage(image)
+                        : AssetImage(image) as ImageProvider,
                     fit: BoxFit.cover,
+                    onError: (_, __) {
+                      // Fallback if network fails, or could be handled by image provider error builder context not available here easily for DecorationImage
+                    },
                   ),
                 ),
               ),

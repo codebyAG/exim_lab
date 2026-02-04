@@ -53,7 +53,9 @@ class CourseOfTheDayCard extends StatelessWidget {
             Positioned(
               left: -3.w,
               bottom: 0,
-              child: Image.asset(imagePath, width: 44.w, fit: BoxFit.contain),
+              child: imagePath.startsWith('http')
+                  ? Image.network(imagePath, width: 44.w, fit: BoxFit.contain)
+                  : Image.asset(imagePath, width: 44.w, fit: BoxFit.contain),
             ),
 
             // CONTENT
