@@ -1,4 +1,6 @@
+import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/courses/data/models/course_model.dart';
+import 'package:exim_lab/features/courses/presentation/screens/courses_details_screen.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/course_card.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
@@ -31,6 +33,12 @@ class HorizontalCourses extends StatelessWidget {
             rating: (course.rating ?? 4.5).toString(),
             learners: '${course.learnersCount ?? 0} Learners',
             image: course.imageUrl ?? 'assets/course1.png',
+            onTap: () {
+              AppNavigator.push(
+                context,
+                CourseDetailsScreen(courseId: course.id),
+              );
+            },
           );
         },
       ),
