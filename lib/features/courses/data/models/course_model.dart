@@ -5,6 +5,11 @@ class CourseModel {
   final double basePrice;
   final bool isPublished;
   final DateTime createdAt;
+  final String? imageUrl;
+  final int? completionPercentage;
+  final DateTime? progressUpdatedAt;
+  final double? rating;
+  final int? learnersCount;
 
   CourseModel({
     required this.id,
@@ -13,6 +18,11 @@ class CourseModel {
     required this.basePrice,
     required this.isPublished,
     required this.createdAt,
+    this.imageUrl,
+    this.completionPercentage,
+    this.progressUpdatedAt,
+    this.rating,
+    this.learnersCount,
   });
 
   factory CourseModel.fromJson(Map<String, dynamic> json) {
@@ -23,6 +33,13 @@ class CourseModel {
       basePrice: (json['basePrice'] ?? 0).toDouble(),
       isPublished: json['isPublished'] ?? false,
       createdAt: DateTime.parse(json['createdAt']),
+      imageUrl: json['imageUrl'],
+      completionPercentage: (json['completionPercentage'] ?? 0).toInt(),
+      progressUpdatedAt: json['progressUpdatedAt'] != null
+          ? DateTime.parse(json['progressUpdatedAt'])
+          : null,
+      rating: (json['rating'] as num?)?.toDouble(),
+      learnersCount: (json['learnersCount'] as num?)?.toInt(),
     );
   }
 }

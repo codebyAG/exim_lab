@@ -1,14 +1,14 @@
 import 'package:exim_lab/common/widgets/language_switch.dart';
 import 'package:exim_lab/common/widgets/promo_banner_dialog.dart';
-
 import 'package:exim_lab/features/certificates/presentation/screens/certificates_screen.dart';
 import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dart';
-import 'package:exim_lab/features/cto_banners/presentations/screens/random_cto_banner.dart';
+import 'package:exim_lab/features/dashboard/presentation/providers/dashboard_provider.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/animated_search_bar.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/continue_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/course_of_the_day.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/cta_carasoul.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/horizontal_courses.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/inline_banner.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/live_seminar_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/quick_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/section_header.dart';
@@ -18,6 +18,7 @@ import 'package:exim_lab/features/news/presentation/screens/news_list_screen.dar
 import 'package:exim_lab/features/resources/presentation/screens/resource_screen.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_list_screen.dart';
 import 'package:exim_lab/features/quiz/presentation/screens/quiz_topics_screen.dart';
@@ -36,6 +37,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await Future.delayed(const Duration(seconds: 2));
+
+      // Fetch Dashboard Data
+      if (mounted) {
+        context.read<DashboardProvider>().fetchDashboardData();
+      }
+
+      // Show Promo Banner
       _showPromoBanner();
     });
   }
@@ -135,159 +143,195 @@ class _DashboardScreenState extends State<DashboardScreen> {
               padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2.h),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
-                  // CTA Carousel
-                  const CtaCarousel(),
-                  SizedBox(height: 3.h),
+                  Consumer<DashboardProvider>(
+                    builder: (context, dashboard, child) {
+                      if (dashboard.isLoading) {
+                        return SizedBox(
+                          height: 50.h,
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      }
 
-                  // Quick Actions
-                  Row(
-                    children: [
-                      Expanded(
-                        child: QuickCard(
-                          icon: Icons.video_library_rounded,
-                          title: t.translate('my_courses'),
-                          subtitle: t.translate('completed_status'),
-                          onTap: () {
-                            AppNavigator.push(
-                              context,
-                              const CoursesListScreen(),
-                            );
-                          },
-                        ),
-                      ),
-                      SizedBox(width: 3.w),
-                      Expanded(
-                        child: QuickCard(
-                          icon: Icons.folder_copy_rounded,
-                          title: t.translate('resources'),
-                          subtitle: t.translate('guides_docs'),
-                          onTap: () {
-                            AppNavigator.push(context, const ResourcesScreen());
-                          },
-                        ),
-                      ),
-                      SizedBox(width: 3.w),
-                      Expanded(
-                        child: QuickCard(
-                          icon: Icons.workspace_premium_rounded,
-                          title: t.translate('certificates'),
-                          subtitle: t.translate('track_progress'),
-                          onTap: () {
-                            AppNavigator.push(
-                              context,
-                              const CertificatesScreen(),
-                            );
-                          },
-                        ),
-                      ),
-                      SizedBox(width: 3.w),
-                      Expanded(
-                        child: QuickCard(
-                          icon: Icons.quiz_rounded,
-                          title: 'Quizzes',
-                          subtitle: 'Test skills',
-                          onTap: () {
-                            AppNavigator.push(
-                              context,
-                              const QuizTopicsScreen(),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
+                      if (dashboard.error != null) {
+                        return Center(
+                          child: Text(
+                            'Failed to load dashboard: ${dashboard.error}',
+                          ),
+                        );
+                      }
+
+                      final data = dashboard.data;
+                      if (data == null) return const SizedBox();
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // CTA Carousel
+                          CtaCarousel(banners: data.banners.carousel),
+                          SizedBox(height: 3.h),
+
+                          // Quick Actions (Static)
+                          Row(
+                            children: [
+                              Expanded(
+                                child: QuickCard(
+                                  icon: Icons.video_library_rounded,
+                                  title: t.translate('my_courses'),
+                                  subtitle: t.translate('completed_status'),
+                                  onTap: () {
+                                    AppNavigator.push(
+                                      context,
+                                      const CoursesListScreen(),
+                                    );
+                                  },
+                                ),
+                              ),
+                              SizedBox(width: 3.w),
+                              Expanded(
+                                child: QuickCard(
+                                  icon: Icons.folder_copy_rounded,
+                                  title: t.translate('resources'),
+                                  subtitle: t.translate('guides_docs'),
+                                  onTap: () {
+                                    AppNavigator.push(
+                                      context,
+                                      const ResourcesScreen(),
+                                    );
+                                  },
+                                ),
+                              ),
+                              SizedBox(width: 3.w),
+                              Expanded(
+                                child: QuickCard(
+                                  icon: Icons.workspace_premium_rounded,
+                                  title: t.translate('certificates'),
+                                  subtitle: t.translate('track_progress'),
+                                  onTap: () {
+                                    AppNavigator.push(
+                                      context,
+                                      const CertificatesScreen(),
+                                    );
+                                  },
+                                ),
+                              ),
+                              SizedBox(width: 3.w),
+                              Expanded(
+                                child: QuickCard(
+                                  icon: Icons.quiz_rounded,
+                                  title: 'Quizzes',
+                                  subtitle: 'Test skills',
+                                  onTap: () {
+                                    AppNavigator.push(
+                                      context,
+                                      const QuizTopicsScreen(),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          SizedBox(height: 4.h),
+
+                          // Live Seminar (Dynamic)
+                          if (data.liveSeminar != null)
+                            LiveSeminarCard(
+                              title: data.liveSeminar!.title,
+                              subtitle: data.liveSeminar!.subtitle,
+                              dateTime: data.liveSeminar!.dateTime,
+                              onTap: () {
+                                if (data.liveSeminar!.meetingUrl.isNotEmpty) {
+                                  // UrlLauncher logic here if needed
+                                }
+                              },
+                            ),
+
+                          if (data.liveSeminar != null) SizedBox(height: 4.h),
+
+                          // Free Videos
+                          if (data.freeVideos.isNotEmpty) ...[
+                            SectionHeader(
+                              title: 'Free Videos',
+                              subtitle: 'Watch & learn instantly',
+                            ),
+                            SizedBox(height: 1.5.h),
+                            FreeVideosSection(videos: data.freeVideos),
+                            SizedBox(height: 2.h),
+                          ],
+
+                          // Tools (Static)
+                          const SectionHeader(
+                            title: 'Tools',
+                            subtitle: 'Everything you need in one place',
+                          ),
+                          SizedBox(height: 1.5.h),
+                          const ToolsSection(),
+
+                          SizedBox(height: 4.h),
+
+                          // Continue Watching
+                          if (data.continueCourses.isNotEmpty) ...[
+                            SectionHeader(
+                              title: t.translate('continue_watching'),
+                              subtitle: t.translate('continue_subtitle'),
+                            ),
+                            SizedBox(height: 1.5.h),
+                            ContinueCard(),
+                            SizedBox(height: 2.h),
+                          ],
+
+                          // Inline Banner 1
+                          InlineBanner(banners: data.banners.inline),
+                          SizedBox(height: 2.h),
+
+                          // Most Popular
+                          if (data.mostPopularCourses.isNotEmpty) ...[
+                            SectionHeader(
+                              title: t.translate('most_popular'),
+                              subtitle: t.translate('most_popular_subtitle'),
+                            ),
+                            SizedBox(height: 1.5.h),
+                            HorizontalCourses(courses: data.mostPopularCourses),
+                            SizedBox(height: 2.h),
+                          ],
+
+                          // Course of the Day (Dynamic)
+                          if (data.courseOfTheDay != null) ...[
+                            CourseOfTheDayCard(
+                              title: data.courseOfTheDay!.title,
+                              subtitle: data.courseOfTheDay!.subtitle,
+                              priceText: data.courseOfTheDay!.priceText,
+                              badgeText: data.courseOfTheDay!.badgeText,
+                              imagePath:
+                                  'assets/coursegirl.png', // Or use network image if URL provided
+                              onTap: () {},
+                            ),
+                            SizedBox(height: 2.h),
+                          ],
+
+                          // Recommended
+                          if (data.recommendedCourses.isNotEmpty) ...[
+                            SectionHeader(
+                              title: t.translate('recommended_for_you'),
+                              subtitle: t.translate('based_on_interest'),
+                              trailing: TextButton(
+                                onPressed: () {
+                                  AppNavigator.push(
+                                    context,
+                                    const CoursesListScreen(),
+                                  );
+                                },
+                                child: Text(t.translate('view_all')),
+                              ),
+                            ),
+                            HorizontalCourses(courses: data.recommendedCourses),
+                          ],
+                        ],
+                      );
+                    },
                   ),
-
-                  SizedBox(height: 4.h),
-
-                  // Seminar Card
-                  LiveSeminarCard(
-                    title: 'Export Compliance & Documentation',
-                    subtitle: 'Live with Trade Expert',
-                    dateTime: '20 Jan • 6:00 PM',
-                    onTap: () {},
-                  ),
-
-                  SizedBox(height: 4.h),
-
-                  // Free Videos
-                  SectionHeader(
-                    title: 'Free Videos',
-                    subtitle: 'Watch & learn instantly',
-                  ),
-                  SizedBox(height: 1.5.h),
-                  const FreeVideosSection(),
-
-                  SizedBox(height: 2.h),
-
-                  // Tools
-                  const SectionHeader(
-                    title: 'Tools',
-                    subtitle: 'Everything you need in one place',
-                  ),
-                  SizedBox(height: 1.5.h),
-                  const ToolsSection(),
-
-                  SizedBox(height: 4.h),
-
-                  // Continue Watching
-                  SectionHeader(
-                    title: t.translate('continue_watching'),
-                    subtitle: t.translate('continue_subtitle'),
-                  ),
-                  SizedBox(height: 1.5.h),
-                  ContinueCard(),
-
-                  SizedBox(height: 2.h),
-                  const RandomCtoBanner(),
-
-                  SizedBox(height: 2.h),
-
-                  // Most Popular
-                  SectionHeader(
-                    title: t.translate('most_popular'),
-                    subtitle: t.translate('most_popular_subtitle'),
-                  ),
-                  SizedBox(height: 1.5.h),
-                  const HorizontalCourses(),
-
-                  SizedBox(height: 2.h),
-
-                  // Course of the Day
-                  CourseOfTheDayCard(
-                    title: 'Import Export Basics',
-                    subtitle: 'Learn trade from scratch',
-                    priceText: '₹999',
-                    badgeText: 'Limited time',
-                    imagePath: 'assets/coursegirl.png',
-                    onTap: () {},
-                  ),
-
-                  SizedBox(height: 2.h),
-
-                  // Because You Watched
-                  SectionHeader(
-                    title: t.translate('because_you_watched'),
-                    subtitle: t.translate('because_you_watched_subtitle'),
-                  ),
-                  const HorizontalCourses(),
-
-                  SizedBox(height: 2.h),
-                  const RandomCtoBanner(),
-
-                  SizedBox(height: 2.h),
-
-                  // Recommended
-                  SectionHeader(
-                    title: t.translate('recommended_for_you'),
-                    subtitle: t.translate('based_on_interest'),
-                    trailing: TextButton(
-                      onPressed: () {
-                        AppNavigator.push(context, const CoursesListScreen());
-                      },
-                      child: Text(t.translate('view_all')),
-                    ),
-                  ),
-                  const HorizontalCourses(),
                 ]),
               ),
             ),

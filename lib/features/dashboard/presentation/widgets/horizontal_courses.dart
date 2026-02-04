@@ -1,43 +1,38 @@
+import 'package:exim_lab/features/courses/data/models/course_model.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/course_card.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 class HorizontalCourses extends StatelessWidget {
-  const HorizontalCourses({super.key});
+  final List<CourseModel> courses;
+  const HorizontalCourses({super.key, required this.courses});
 
   @override
   Widget build(BuildContext context) {
+    if (courses.isEmpty) return const SizedBox();
+
     return SizedBox(
       height: 25.h, // 🔹 responsive height
-      child: ListView(
+      child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: 5.w),
-        children: [
-          CourseCard(
-            title: 'Advanced Export Strategy',
-            rating: '4.8',
-            learners: '2.1k',
-            image: 'assets/course1.png',
-          ),
+        itemCount: courses.length,
+        separatorBuilder: (_, __) => SizedBox(width: 2.w),
+        itemBuilder: (context, index) {
+          final course = courses[index];
+          // Determine learners count (mock logic if missing or assume 0)
+          // CourseCard expects title, rating, learners, image.
+          // Note: CourseModel has basePrice but not rating/learners.
+          // We'll use mock/default for now or update CourseCard to take CourseModel.
+          // Using CourseCard primitive args for now.
 
-          SizedBox(width: 2.w),
-
-          CourseCard(
-            title: 'Import Documentation Mastery',
-            rating: '4.8',
-            learners: '1.9k',
-            image: 'assets/course2.png',
-          ),
-
-          SizedBox(width: 2.w),
-
-          CourseCard(
-            title: 'Export Business Basics',
-            rating: '4.7',
-            learners: '1.4k',
-            image: 'assets/course3.jpg',
-          ),
-        ],
+          return CourseCard(
+            title: course.title,
+            rating: (course.rating ?? 4.5).toString(),
+            learners: '${course.learnersCount ?? 0} Learners',
+            image: course.imageUrl ?? 'assets/course1.png',
+          );
+        },
       ),
     );
   }

@@ -22,6 +22,7 @@ class ApiConstants {
   // 🔑 AUTH API
   static const String auth = '$baseUrl/api/auth';
   static const String verifyOtp = '$baseUrl/api/auth/verify-otp';
+  static const String dashboard = '$baseUrl/api/dashboard';
 
   // ⏱ TIMEOUTS
   static const int connectTimeout = 15000;

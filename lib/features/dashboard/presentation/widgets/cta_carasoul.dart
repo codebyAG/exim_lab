@@ -1,10 +1,13 @@
 import 'package:exim_lab/core/constants/appcardshadow.dart';
+import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/dots_iniidcator.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class CtaCarousel extends StatefulWidget {
-  const CtaCarousel({super.key});
+  final List<BannerModel> banners;
+  const CtaCarousel({super.key, required this.banners});
 
   @override
   State<CtaCarousel> createState() => CtaCarouselState();
@@ -14,52 +17,36 @@ class CtaCarouselState extends State<CtaCarousel> {
   final PageController _controller = PageController();
   int _currentIndex = 0;
 
-  final List<CtaData> _ctas = const [
-    CtaData(
-      title: 'Start Your Export Journey',
-      subtitle: 'Learn trade basics step-by-step',
-      buttonText: 'Start Learning',
-    ),
-    CtaData(
-      title: 'New Trade Policies',
-      subtitle: 'Stay updated with law changes',
-      buttonText: 'Read News',
-    ),
-    CtaData(
-      title: 'Free Export Guides',
-      subtitle: 'Documents & checklists',
-      buttonText: 'View Resources',
-    ),
-    CtaData(
-      title: 'Earn Certificates',
-      subtitle: 'Complete courses & get certified',
-      buttonText: 'View Certificates',
-    ),
-  ];
-
   @override
   void initState() {
     super.initState();
-    _startAutoScroll();
+    if (widget.banners.isNotEmpty) {
+      _startAutoScroll();
+    }
   }
 
   void _startAutoScroll() async {
     while (mounted) {
       await Future.delayed(const Duration(seconds: 4));
       if (!mounted) return;
+      if (widget.banners.isEmpty) return;
 
-      _currentIndex = (_currentIndex + 1) % _ctas.length;
-      _controller.animateToPage(
-        _currentIndex,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
+      _currentIndex = (_currentIndex + 1) % widget.banners.length;
+      if (_controller.hasClients) {
+        _controller.animateToPage(
+          _currentIndex,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      }
       setState(() {});
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.banners.isEmpty) return const SizedBox();
+
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
 
@@ -69,12 +56,12 @@ class CtaCarouselState extends State<CtaCarousel> {
           height: 18.h, // ✅ responsive height
           child: PageView.builder(
             controller: _controller,
-            itemCount: _ctas.length,
+            itemCount: widget.banners.length,
             onPageChanged: (index) {
               setState(() => _currentIndex = index);
             },
             itemBuilder: (context, index) {
-              final cta = _ctas[index];
+              final banner = widget.banners[index];
 
               return Padding(
                 padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
@@ -87,7 +74,7 @@ class CtaCarouselState extends State<CtaCarousel> {
                     image: const DecorationImage(
                       image: AssetImage('assets/cta_card_bg.png'),
                       fit: BoxFit.cover,
-                      opacity: 0.4, // Lowered opacity for subtle effect
+                      opacity: 0.4,
                     ),
                   ),
                   child: Row(
@@ -99,7 +86,7 @@ class CtaCarouselState extends State<CtaCarousel> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              cta.title,
+                              banner.title,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: theme.textTheme.titleMedium?.copyWith(
@@ -108,7 +95,7 @@ class CtaCarouselState extends State<CtaCarousel> {
                             ),
                             SizedBox(height: 0.8.h),
                             Text(
-                              cta.subtitle,
+                              banner.description,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: theme.textTheme.bodySmall,
@@ -120,24 +107,29 @@ class CtaCarouselState extends State<CtaCarousel> {
                       SizedBox(width: 2.w),
 
                       // CTA BUTTON
-                      SizedBox(
-                        height: 4.6.h,
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(horizontal: 4.w),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
+                      if (banner.ctaText.isNotEmpty)
+                        SizedBox(
+                          height: 4.6.h,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (banner.ctaUrl.isNotEmpty) {
+                                launchUrlString(banner.ctaUrl);
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(horizontal: 4.w),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            cta.buttonText,
-                            style: theme.textTheme.labelLarge?.copyWith(
-                              color: cs.onPrimary,
+                            child: Text(
+                              banner.ctaText,
+                              style: theme.textTheme.labelLarge?.copyWith(
+                                color: cs.onPrimary,
+                              ),
                             ),
                           ),
                         ),
-                      ),
                     ],
                   ),
                 ),
@@ -148,20 +140,11 @@ class CtaCarouselState extends State<CtaCarousel> {
 
         SizedBox(height: 1.2.h),
 
-        DotsIndicator(count: _ctas.length, currentIndex: _currentIndex),
+        DotsIndicator(
+          count: widget.banners.length,
+          currentIndex: _currentIndex,
+        ),
       ],
     );
   }
-}
-
-class CtaData {
-  final String title;
-  final String subtitle;
-  final String buttonText;
-
-  const CtaData({
-    required this.title,
-    required this.subtitle,
-    required this.buttonText,
-  });
 }
