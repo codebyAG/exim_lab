@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:exim_lab/core/navigation/app_navigator.dart';
-import 'package:exim_lab/features/courses/presentation/screens/courses_list_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PromoBannerDialog extends StatelessWidget {
-  const PromoBannerDialog({super.key});
+  final String imageUrl;
+  final String? link;
+
+  const PromoBannerDialog({super.key, required this.imageUrl, this.link});
 
   @override
   Widget build(BuildContext context) {
@@ -12,19 +14,26 @@ class PromoBannerDialog extends StatelessWidget {
       backgroundColor: Colors.transparent,
       insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: Stack(
+        alignment: Alignment.center,
         children: [
           // 🔹 CLICKABLE BANNER
           GestureDetector(
-            onTap: () {
+            onTap: () async {
               Navigator.pop(context); // close dialog
-              AppNavigator.push(context, const CoursesListScreen());
+              if (link != null && link!.isNotEmpty) {
+                final uri = Uri.parse(link!);
+                if (await canLaunchUrl(uri)) {
+                  await launchUrl(uri);
+                }
+              }
             },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.asset(
-                'assets/discount_banner.png',
-                fit: BoxFit.cover,
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.contain, // Contain ensures aspect ratio is kept
                 width: double.infinity,
+                errorBuilder: (_, __, ___) => const SizedBox.shrink(),
               ),
             ),
           ),

@@ -116,7 +116,7 @@ class BannerModel {
       description: json['description'] ?? '',
       imageUrl: json['imageUrl'] ?? '',
       ctaText: json['ctaText'] ?? '',
-      ctaUrl: json['ctaUrl'] ?? '',
+      ctaUrl: json['ctaUrl'] ?? json['link'] ?? '',
       isActive: json['isActive'] ?? false,
     );
   }

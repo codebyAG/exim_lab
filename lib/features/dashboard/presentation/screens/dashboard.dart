@@ -44,19 +44,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       // Fetch Dashboard Data
       if (mounted) {
-        context.read<DashboardProvider>().fetchDashboardData();
-      }
+        await context.read<DashboardProvider>().fetchDashboardData();
 
-      // Show Promo Banner
-      _showPromoBanner();
+        // Show Promo Banner if available
+        if (mounted) {
+          final data = context.read<DashboardProvider>().data;
+          if (data?.addons.popup != null) {
+            _showPromoBanner(data!.addons.popup!);
+          }
+        }
+      }
     });
   }
 
-  void _showPromoBanner() {
+  void _showPromoBanner(BannerModel popup) {
     showDialog(
       context: context,
       barrierDismissible: true,
-      builder: (_) => const PromoBannerDialog(),
+      builder: (_) => PromoBannerDialog(
+        imageUrl: popup.imageUrl,
+        link: popup.ctaUrl, // mapped from 'link' in json
+      ),
     );
   }
 
