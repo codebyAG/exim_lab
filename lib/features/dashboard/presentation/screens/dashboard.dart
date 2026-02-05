@@ -24,6 +24,7 @@ import 'package:exim_lab/features/news/presentation/screens/news_list_screen.dar
 import 'package:exim_lab/features/quiz/presentation/screens/quiz_topics_screen.dart';
 import 'package:exim_lab/features/resources/presentation/screens/resource_screen.dart';
 import 'package:exim_lab/localization/app_localization.dart';
+import 'package:exim_lab/features/profile/presentation/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -128,7 +129,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     InkWell(
                       onTap: () {
-                        // Navigate to Profile
+                        AppNavigator.push(context, const ProfileScreen());
                       },
                       child: CircleAvatar(
                         radius: 22,
