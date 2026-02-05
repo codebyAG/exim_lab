@@ -50,7 +50,7 @@ class DashboardSection {
   });
 
   factory DashboardSection.fromJson(Map<String, dynamic> json) {
-    String key = json['key'] ?? '';
+    String key = (json['key'] ?? '').toString().trim();
     List rawData = (json['data'] as List?) ?? [];
     List parsedData = [];
 
