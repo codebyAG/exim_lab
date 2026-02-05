@@ -2,45 +2,25 @@ import 'package:exim_lab/features/courses/data/models/course_model.dart';
 import 'package:exim_lab/features/freevideos/data/models/free_videos_model.dart';
 
 class DashboardResponse {
-  final BannersData banners;
-  final List<CourseModel> mostPopularCourses;
-  final List<CourseModel> recommendedCourses;
-  final List<CourseModel> continueCourses;
-  final List<FreeVideoModel> freeVideos;
-  final LiveSeminarModel? liveSeminar;
-  final CourseOfTheDayModel? courseOfTheDay;
+  final AddonsData addons;
+  final List<DashboardSection> sections;
+  final LiveSeminarModel?
+  liveSeminar; // Optional, might come separately or not at all
+  final CourseOfTheDayModel? courseOfTheDay; // optional
 
   DashboardResponse({
-    required this.banners,
-    required this.mostPopularCourses,
-    required this.recommendedCourses,
-    required this.continueCourses,
-    required this.freeVideos,
+    required this.addons,
+    required this.sections,
     this.liveSeminar,
     this.courseOfTheDay,
   });
 
   factory DashboardResponse.fromJson(Map<String, dynamic> json) {
     return DashboardResponse(
-      banners: BannersData.fromJson(json['banners'] ?? {}),
-      mostPopularCourses:
-          (json['mostPopularCourses'] as List?)
-              ?.map((e) => CourseModel.fromJson(e))
-              .toList() ??
-          [],
-      recommendedCourses:
-          (json['recommendedCourses'] as List?)
-              ?.map((e) => CourseModel.fromJson(e))
-              .toList() ??
-          [],
-      continueCourses:
-          (json['continueCourses'] as List?)
-              ?.map((e) => CourseModel.fromJson(e))
-              .toList() ??
-          [],
-      freeVideos:
-          (json['freeVideos'] as List?)
-              ?.map((e) => FreeVideoModel.fromJson(e))
+      addons: AddonsData.fromJson(json['addons'] ?? {}),
+      sections:
+          (json['sections'] as List?)
+              ?.map((e) => DashboardSection.fromJson(e))
               .toList() ??
           [],
       liveSeminar: json['liveSeminar'] != null
@@ -53,22 +33,58 @@ class DashboardResponse {
   }
 }
 
-class BannersData {
+class DashboardSection {
+  final String key;
+  final String title;
+  final String subtitle;
+  final int order;
+  final List<dynamic>
+  data; // Can be List<CourseModel> or List<BannerModel> etc.
+
+  DashboardSection({
+    required this.key,
+    required this.title,
+    required this.subtitle,
+    required this.order,
+    required this.data,
+  });
+
+  factory DashboardSection.fromJson(Map<String, dynamic> json) {
+    String key = json['key'] ?? '';
+    List rawData = (json['data'] as List?) ?? [];
+    List parsedData = [];
+
+    if (key == 'course' ||
+        key.contains('Popular') ||
+        key.contains('Recommended') ||
+        key == 'continue') {
+      parsedData = rawData.map((e) => CourseModel.fromJson(e)).toList();
+    } else if (key == 'freeVideos') {
+      parsedData = rawData.map((e) => FreeVideoModel.fromJson(e)).toList();
+    } else if (key == 'banner') {
+      parsedData = rawData.map((e) => BannerModel.fromJson(e)).toList();
+    }
+
+    return DashboardSection(
+      key: key,
+      title: json['title'] ?? '',
+      subtitle: json['subtitle'] ?? '',
+      order: json['order'] ?? 0,
+      data: parsedData,
+    );
+  }
+}
+
+class AddonsData {
   final List<BannerModel> carousel;
-  final List<BannerModel> inline;
   final BannerModel? popup;
 
-  BannersData({required this.carousel, required this.inline, this.popup});
+  AddonsData({required this.carousel, this.popup});
 
-  factory BannersData.fromJson(Map<String, dynamic> json) {
-    return BannersData(
+  factory AddonsData.fromJson(Map<String, dynamic> json) {
+    return AddonsData(
       carousel:
           (json['carousel'] as List?)
-              ?.map((e) => BannerModel.fromJson(e))
-              .toList() ??
-          [],
-      inline:
-          (json['inline'] as List?)
               ?.map((e) => BannerModel.fromJson(e))
               .toList() ??
           [],

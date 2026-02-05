@@ -9,9 +9,6 @@ class ApiConstants {
   static const String courses = '/api/courses';
 
   static const String aiChat = "$aiChathost/api/chat";
-  static const String ctoBanners = '$baseUrl/api/cto-banners';
-
-  static const String freeVideos = '/api/free-videos';
 
   // 🧠 QUIZ API
   static const String quizTopics = '$baseUrl/api/quizzes/topics';
