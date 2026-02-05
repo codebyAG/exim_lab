@@ -1,6 +1,9 @@
 import 'package:exim_lab/core/navigation/app_navigator.dart';
+import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:exim_lab/features/profile/presentation/screens/settings_screen.dart';
+import 'package:exim_lab/features/welcome/presentation/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -101,12 +104,40 @@ class ProfileScreen extends StatelessWidget {
               icon: Icons.logout_rounded,
               title: 'Logout',
               isDestructive: true,
-              onTap: () {
-                // Show confirmation dialog
-              },
+              onTap: () => _handleLogout(context),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _handleLogout(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Logout'),
+        content: const Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(ctx); // Close dialog
+
+              // Clear session
+              await context.read<AuthProvider>().logout();
+
+              // Navigate to Welcome Screen (Clear stack)
+              if (context.mounted) {
+                AppNavigator.replace(context, const WelcomeScreen());
+              }
+            },
+            child: const Text('Logout', style: TextStyle(color: Colors.red)),
+          ),
+        ],
       ),
     );
   }
