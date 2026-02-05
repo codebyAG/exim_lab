@@ -33,7 +33,9 @@ class PromoBannerDialog extends StatelessWidget {
                 imageUrl,
                 fit: BoxFit.contain, // Contain ensures aspect ratio is kept
                 width: double.infinity,
-                errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                errorBuilder: (_, __, ___) => const Center(
+                  child: Icon(Icons.broken_image, size: 50, color: Colors.grey),
+                ),
               ),
             ),
           ),

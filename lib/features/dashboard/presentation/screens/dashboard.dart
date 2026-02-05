@@ -58,11 +58,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void _showPromoBanner(BannerModel popup) {
+    String imgUrl = popup.imageUrl.trim();
+    if (imgUrl.isNotEmpty &&
+        (imgUrl.startsWith("'") || imgUrl.startsWith('"'))) {
+      imgUrl = imgUrl.substring(1, imgUrl.length - 1);
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (_) => PromoBannerDialog(
-        imageUrl: popup.imageUrl,
+        imageUrl: imgUrl,
         link: popup.ctaUrl, // mapped from 'link' in json
       ),
     );

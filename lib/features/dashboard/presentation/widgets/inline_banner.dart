@@ -30,66 +30,93 @@ class _InlineBannerState extends State<InlineBanner> {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
 
+    // Sanitize URL
+    String imgUrl = _banner!.imageUrl.trim();
+    if (imgUrl.isNotEmpty &&
+        (imgUrl.startsWith("'") || imgUrl.startsWith('"'))) {
+      imgUrl = imgUrl.substring(1, imgUrl.length - 1);
+    }
+
     return Container(
       width: 100.w,
       margin: EdgeInsets.only(bottom: 2.h, left: 5.w, right: 5.w),
-      padding: EdgeInsets.all(2.h),
       decoration: BoxDecoration(
         color: cs.primaryContainer,
         borderRadius: BorderRadius.circular(16),
-        image: _banner!.imageUrl.isNotEmpty
-            ? DecorationImage(
-                image: NetworkImage(_banner!.imageUrl),
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.4),
-                  BlendMode.darken,
-                ),
-              )
-            : null,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      clipBehavior: Clip.antiAlias,
+      child: Stack(
         children: [
-          Text(
-            _banner!.title,
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+          // 1. BACKGROUND IMAGE
+          if (imgUrl.isNotEmpty)
+            Positioned.fill(
+              child: Image.network(
+                imgUrl,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(color: cs.surfaceVariant);
+                },
+              ),
             ),
-          ),
-          if (_banner!.description.isNotEmpty) ...[
-            SizedBox(height: 1.h),
-            Text(
-              _banner!.description,
-              style: theme.textTheme.bodySmall?.copyWith(color: Colors.white70),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+
+          // 2. DARK OVERLAY
+          if (imgUrl.isNotEmpty)
+            Positioned.fill(
+              child: Container(color: Colors.black.withOpacity(0.4)),
             ),
-          ],
-          SizedBox(height: 2.h),
-          SizedBox(
-            height: 4.5.h,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: cs.primary,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+
+          // 3. CONTENT
+          Padding(
+            padding: EdgeInsets.all(2.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _banner!.title,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              onPressed: () async {
-                if (_banner!.ctaUrl.isNotEmpty) {
-                  final uri = Uri.parse(_banner!.ctaUrl);
-                  if (await canLaunchUrl(uri)) {
-                    await launchUrl(uri);
-                  }
-                }
-              },
-              child: Text(
-                _banner!.ctaText.isEmpty ? 'Learn More' : _banner!.ctaText,
-              ),
+                if (_banner!.description.isNotEmpty) ...[
+                  SizedBox(height: 1.h),
+                  Text(
+                    _banner!.description,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: Colors.white70,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+                SizedBox(height: 2.h),
+                SizedBox(
+                  height: 4.5.h,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: cs.primary,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () async {
+                      if (_banner!.ctaUrl.isNotEmpty) {
+                        final uri = Uri.parse(_banner!.ctaUrl);
+                        if (await canLaunchUrl(uri)) {
+                          await launchUrl(uri);
+                        }
+                      }
+                    },
+                    child: Text(
+                      _banner!.ctaText.isEmpty
+                          ? 'Learn More'
+                          : _banner!.ctaText,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
