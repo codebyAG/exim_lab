@@ -31,11 +31,8 @@ class PromoBannerDialog extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               child: Image.network(
                 imageUrl,
-                fit: BoxFit.contain, // Contain ensures aspect ratio is kept
+                fit: BoxFit.cover,
                 width: double.infinity,
-                errorBuilder: (_, __, ___) => const Center(
-                  child: Icon(Icons.broken_image, size: 50, color: Colors.grey),
-                ),
               ),
             ),
           ),
