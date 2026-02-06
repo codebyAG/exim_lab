@@ -104,21 +104,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   _StatsCard(
                     label: 'Active',
-                    value: '${user!.stats!.activeCourses}',
+                    value: '${user?.stats?.activeCourses ?? 0}',
                     icon: Icons.play_circle_outline_rounded,
                     color: Colors.blue,
                   ),
                   SizedBox(width: 3.w),
                   _StatsCard(
                     label: 'Completed',
-                    value: '${user!.stats!.completedCourses}',
+                    value: '${user?.stats?.completedCourses ?? 0}',
                     icon: Icons.check_circle_outline_rounded,
                     color: Colors.green,
                   ),
                   SizedBox(width: 3.w),
                   _StatsCard(
                     label: 'Quizzes',
-                    value: '${user!.stats!.quizzesTaken}',
+                    value: '${user?.stats?.quizzesTaken ?? 0}',
                     icon: Icons.quiz_outlined,
                     color: Colors.orange,
                   ),

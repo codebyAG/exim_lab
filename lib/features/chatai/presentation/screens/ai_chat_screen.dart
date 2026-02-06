@@ -84,11 +84,12 @@ class _AiChatScreenState extends State<AiChatScreen> {
           // 🔹 CHAT LIST (BOTTOM → TOP)
           Expanded(
             child: ListView.builder(
-              reverse: false,
+              controller: _scrollController,
+              reverse: true,
               padding: const EdgeInsets.all(16),
               itemCount: _messages.length + (_isTyping ? 1 : 0),
               itemBuilder: (context, index) {
-                // 🔹 Typing indicator always on top
+                // 🔹 Typing indicator always on top (which is index 0 in reverse)
                 if (_isTyping && index == 0) {
                   return const _TypingIndicator();
                 }
@@ -96,7 +97,9 @@ class _AiChatScreenState extends State<AiChatScreen> {
                 // 🔹 Correct message index mapping
                 final messageIndex = _isTyping ? index - 1 : index;
 
-                final message = _messages[_messages.length - 1 - messageIndex];
+                // With reverse: true, index 0 is at bottom (newest).
+                // Our internal list has newest at 0. So we can just use index.
+                final message = _messages[messageIndex];
 
                 return _ChatBubble(message: message);
               },
@@ -110,7 +113,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
               color: cs.surface,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 10,
                   offset: const Offset(0, -2),
                 ),
@@ -179,7 +182,7 @@ class _ChatBubble extends StatelessWidget {
           borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
+              color: Colors.black.withValues(alpha: 0.08),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -214,7 +217,7 @@ class _TypingIndicator extends StatelessWidget {
           borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
+              color: Colors.black.withValues(alpha: 0.06),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -222,7 +225,10 @@ class _TypingIndicator extends StatelessWidget {
         ),
         child: Text(
           'Exim AI is typing...',
-          style: TextStyle(fontSize: 13, color: cs.onSurface.withOpacity(0.6)),
+          style: TextStyle(
+            fontSize: 13,
+            color: cs.onSurface.withValues(alpha: 0.6),
+          ),
         ),
       ),
     );

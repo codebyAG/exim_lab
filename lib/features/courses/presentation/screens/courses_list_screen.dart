@@ -4,7 +4,6 @@ import 'package:exim_lab/features/courses/data/models/course_model.dart';
 
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_details_screen.dart';
-import 'package:exim_lab/features/courses/presentation/states/course_details_state.dart';
 import 'package:exim_lab/features/courses/presentation/states/course_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
