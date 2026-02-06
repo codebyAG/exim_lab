@@ -20,22 +20,23 @@ class _AiChatScreenState extends State<AiChatScreen> {
   late final AiChatRepository _repo;
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_messages.isEmpty) {
+      final t = AppLocalizations.of(context);
+      _messages.add(_Message(text: t.translate('ai_welcome'), isUser: false));
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
-
     _repo = AiChatRepository(AiChatRemote());
-
-    _messages.add(
-      _Message(
-        text:
-            'Hi 👋 I’m Exim AI.\nAsk me anything about import–export, prices, documents or courses.',
-        isUser: false,
-      ),
-    );
   }
 
   Future<void> _sendMessage(String text) async {
     if (text.trim().isEmpty) return;
+    final t = AppLocalizations.of(context);
 
     setState(() {
       _messages.insert(0, _Message(text: text, isUser: true));
@@ -54,10 +55,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
       setState(() {
         _messages.insert(
           0,
-          _Message(
-            text: '⚠️ Something went wrong. Please try again.',
-            isUser: false,
-          ),
+          _Message(text: t.translate('ai_error'), isUser: false),
         );
         _isTyping = false;
       });
@@ -75,7 +73,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
         backgroundColor: cs.surface,
         elevation: 0,
         title: Text(
-          'Exim AI',
+          t.translate('ai_title'),
           style: TextStyle(color: cs.onSurface, fontWeight: FontWeight.w600),
         ),
       ),
@@ -206,6 +204,7 @@ class _TypingIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+    final t = AppLocalizations.of(context);
 
     return Align(
       alignment: Alignment.centerLeft,
@@ -224,7 +223,7 @@ class _TypingIndicator extends StatelessWidget {
           ],
         ),
         child: Text(
-          'Exim AI is typing...',
+          t.translate('ai_typing'),
           style: TextStyle(
             fontSize: 13,
             color: cs.onSurface.withValues(alpha: 0.6),
