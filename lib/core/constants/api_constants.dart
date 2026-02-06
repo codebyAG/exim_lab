@@ -23,6 +23,7 @@ class ApiConstants {
   static const String userProfile = '$baseUrl/api/user/profile';
   static const String dashboard = '$baseUrl/api/dashboard';
   static const String news = '$baseUrl/api/news';
+  static const String notifications = '$baseUrl/api/notifications';
 
   // ⏱ TIMEOUTS
   static const int connectTimeout = 15000;

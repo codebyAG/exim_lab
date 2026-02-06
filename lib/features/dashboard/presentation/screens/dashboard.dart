@@ -1,6 +1,8 @@
 import 'package:exim_lab/common/widgets/promo_banner_dialog.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/certificates/presentation/screens/certificates_screen.dart';
+import 'package:exim_lab/features/notifications/presentation/providers/notifications_provider.dart';
+import 'package:exim_lab/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dart';
 import 'package:exim_lab/features/courses/data/models/course_model.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_details_screen.dart';
@@ -44,6 +46,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       // Fetch Dashboard Data
       if (mounted) {
         await context.read<DashboardProvider>().fetchDashboardData();
+        if (mounted) {
+          await context.read<NotificationsProvider>().fetchUnreadCount();
+        }
 
         // Show Promo Banner if available
         if (mounted) {
@@ -125,15 +130,73 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                       ],
                     ),
-                    InkWell(
-                      onTap: () {
-                        AppNavigator.push(context, const ProfileScreen());
-                      },
-                      child: CircleAvatar(
-                        radius: 22,
-                        backgroundColor: cs.primaryContainer,
-                        child: Icon(Icons.person, color: cs.primary),
-                      ),
+                    Row(
+                      children: [
+                        // NOTIFICATION BELL
+                        Consumer<NotificationsProvider>(
+                          builder: (context, notifProvider, child) {
+                            return Stack(
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    AppNavigator.push(
+                                      context,
+                                      const NotificationsScreen(),
+                                    );
+                                  },
+                                  icon: Icon(
+                                    Icons.notifications_outlined,
+                                    color: cs.onSurface,
+                                    size: 28,
+                                  ),
+                                ),
+                                if (notifProvider.unreadCount > 0)
+                                  Positioned(
+                                    right: 8,
+                                    top: 8,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(4),
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: cs.surface,
+                                          width: 1.5,
+                                        ),
+                                      ),
+                                      constraints: const BoxConstraints(
+                                        minWidth: 16,
+                                        minHeight: 16,
+                                      ),
+                                      child: Text(
+                                        '${notifProvider.unreadCount}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            );
+                          },
+                        ),
+                        SizedBox(width: 2.w),
+
+                        // PROFILE
+                        InkWell(
+                          onTap: () {
+                            AppNavigator.push(context, const ProfileScreen());
+                          },
+                          child: CircleAvatar(
+                            radius: 22,
+                            backgroundColor: cs.primaryContainer,
+                            child: Icon(Icons.person, color: cs.primary),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
