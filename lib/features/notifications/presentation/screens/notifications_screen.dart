@@ -1,5 +1,6 @@
 import 'package:exim_lab/features/notifications/data/models/notification_model.dart';
 import 'package:exim_lab/features/notifications/presentation/providers/notifications_provider.dart';
+import 'package:exim_lab/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -40,13 +41,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final t = AppLocalizations.of(context);
     final provider = context.watch<NotificationsProvider>();
     final notifications = provider.notifications;
 
     return Scaffold(
       backgroundColor: cs.surface,
       appBar: AppBar(
-        title: const Text('Notifications'),
+        title: Text(t.translate('notifications')),
         centerTitle: true,
         actions: [
           IconButton(
@@ -54,7 +56,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               context.read<NotificationsProvider>().markAllAsRead();
             },
             icon: const Icon(Icons.done_all),
-            tooltip: 'Mark all as read',
+            tooltip: t.translate('mark_all_read'),
           ),
         ],
       ),
