@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:exim_lab/core/theme/theme_provider.dart';
 import 'package:sizer/sizer.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -8,6 +10,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final themeProvider = context.watch<ThemeProvider>();
 
     return Scaffold(
       appBar: AppBar(title: const Text('Settings'), centerTitle: true),
@@ -25,8 +28,10 @@ class SettingsScreen extends StatelessWidget {
           ),
           SizedBox(height: 1.h),
           SwitchListTile(
-            value: false, // TODO: Link to ThemeProvider
-            onChanged: (val) {},
+            value: themeProvider.themeMode == ThemeMode.dark,
+            onChanged: (val) {
+              val ? themeProvider.setDark() : themeProvider.setLight();
+            },
             title: const Text('Dark Mode'),
             secondary: const Icon(Icons.dark_mode_outlined),
             contentPadding: EdgeInsets.zero,

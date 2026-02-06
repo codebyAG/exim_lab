@@ -159,7 +159,9 @@ class _ResourceCard extends StatelessWidget {
           // ACTION
           IconButton(
             onPressed: () {
-              // TODO: Open / Download resource
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('Downloading $title...')));
             },
             icon: const Icon(Icons.download),
             color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
