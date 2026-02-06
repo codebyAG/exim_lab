@@ -51,16 +51,61 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               child: Row(
                 children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Colors.white,
-                    backgroundImage:
-                        (user?.avatarUrl != null && user!.avatarUrl!.isNotEmpty)
-                        ? NetworkImage(user.avatarUrl!)
-                        : null,
-                    child: (user?.avatarUrl == null || user!.avatarUrl!.isEmpty)
-                        ? Icon(Icons.person, size: 35, color: cs.primary)
-                        : null,
+                  Container(
+                    height: 60,
+                    width: 60,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: cs.primary, // Solid background for contrast
+                      border: Border.all(color: Colors.white, width: 2),
+                    ),
+                    child: ClipOval(
+                      child:
+                          (user?.avatarUrl != null &&
+                              user!.avatarUrl!.isNotEmpty)
+                          ? Image.network(
+                              user!.avatarUrl!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Center(
+                                  child: Icon(
+                                    Icons.person,
+                                    size: 35,
+                                    color: Colors.white,
+                                  ),
+                                );
+                              },
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: CircularProgressIndicator(
+                                          value:
+                                              loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                        .cumulativeBytesLoaded /
+                                                    loadingProgress
+                                                        .expectedTotalBytes!
+                                              : null,
+                                          strokeWidth: 2,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                            )
+                          : const Center(
+                              child: Icon(
+                                Icons.person,
+                                size: 35,
+                                color: Colors.white,
+                              ),
+                            ),
+                    ),
                   ),
                   SizedBox(width: 4.w),
                   Expanded(
