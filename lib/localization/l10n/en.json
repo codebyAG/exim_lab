@@ -73,7 +73,7 @@
   "iec_registration_process": "IEC Registration Process",
   "gst_for_import_export": "GST for Import Export",
   "terms_privacy": "By continuing, you agree to our Terms of Service and Privacy Policy.",
-  "news": "News",
+
   "quizzes_title": "Quizzes",
   "quizzes_subtitle": "Test skills",
   "learn_more": "Learn More",
@@ -107,6 +107,7 @@
   "stats_completed": "Completed",
   "stats_quizzes": "Quizzes",
   "menu_my_details": "My Details",
+  "menu_settings": "Settings",
   "menu_help": "Help & Support",
   "menu_privacy": "Privacy Policy",
   "menu_logout": "Logout",
@@ -152,6 +153,6 @@
   "ai_error": "⚠️ Something went wrong. Please try again.",
   "news": "Market News",
   "no_news": "No news available.",
-  "read_more": "Read more",
-  "error": "Error"
+  "read_more": "Read more"
+
 }
