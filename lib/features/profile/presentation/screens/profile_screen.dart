@@ -280,7 +280,9 @@ class _ProfileOption extends StatelessWidget {
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: isDestructive ? cs.errorContainer : cs.surfaceVariant,
+            color: isDestructive
+                ? cs.errorContainer
+                : cs.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(

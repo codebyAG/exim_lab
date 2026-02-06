@@ -19,7 +19,7 @@ class HorizontalCourses extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: 5.w),
         itemCount: courses.length,
-        separatorBuilder: (_, __) => SizedBox(width: 2.w),
+        separatorBuilder: (context, index) => SizedBox(width: 2.w),
         itemBuilder: (context, index) {
           final course = courses[index];
           // Determine learners count (mock logic if missing or assume 0)

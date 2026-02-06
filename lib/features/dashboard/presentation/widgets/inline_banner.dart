@@ -54,7 +54,7 @@ class _InlineBannerState extends State<InlineBanner> {
                 imgUrl,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  return Container(color: cs.surfaceVariant);
+                  return Container(color: cs.surfaceContainerHighest);
                 },
               ),
             ),

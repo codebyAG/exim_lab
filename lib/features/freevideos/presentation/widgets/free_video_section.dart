@@ -17,7 +17,7 @@ class FreeVideosSection extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: 4.w),
         itemCount: videos.length,
-        separatorBuilder: (_, __) => SizedBox(width: 4.w),
+        separatorBuilder: (context, index) => SizedBox(width: 4.w),
         itemBuilder: (context, index) {
           final v = videos[index];
           return FreeVideoCard(video: v);

@@ -118,7 +118,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                         SizedBox(height: 0.5.h),
                         Text(
-                          '${context.watch<AuthProvider>().user?.name ?? 'User'}',
+                          context.watch<AuthProvider>().user?.name ?? 'User',
                           style: theme.textTheme.headlineSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -320,7 +320,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           );
                         }
                         return const SizedBox();
-                      }).toList(),
+                      }),
 
                       // 7. COURSE OF THE DAY
                       if (data.courseOfTheDay != null) ...[

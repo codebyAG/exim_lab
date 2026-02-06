@@ -105,7 +105,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                             course.imageUrl!,
                             width: double.infinity,
                             fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) {
+                            errorBuilder: (context, error, stackTrace) {
                               return Image.asset(
                                 'assets/course1.png', // 🔁 fallback asset
                                 fit: BoxFit.cover,
@@ -198,13 +198,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
 class _StatChip extends StatelessWidget {
   final IconData icon;
   final String text;
-  final bool isAccent;
 
-  const _StatChip({
-    required this.icon,
-    required this.text,
-    this.isAccent = false,
-  });
+  const _StatChip({required this.icon, required this.text});
 
   @override
   Widget build(BuildContext context) {

@@ -215,9 +215,8 @@ class _Bullet extends StatelessWidget {
 class _Question {
   final String user;
   final String question;
-  final String? answer;
 
-  _Question({required this.user, required this.question, this.answer});
+  _Question({required this.user, required this.question});
 }
 
 // ================= QUESTION CARD =================
@@ -256,12 +255,6 @@ class _QuestionCard extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(question.question),
-          if (question.answer != null) ...[
-            const Divider(height: 20),
-            const Text('Answer', style: TextStyle(fontWeight: FontWeight.w600)),
-            const SizedBox(height: 4),
-            Text(question.answer!),
-          ],
         ],
       ),
     );

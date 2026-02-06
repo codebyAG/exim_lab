@@ -19,10 +19,10 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    checkForUpdates(context);
+    checkForUpdates();
   }
 
-  Future<void> checkForUpdates(BuildContext context) async {
+  Future<void> checkForUpdates() async {
     if (!Platform.isAndroid) {
       goToLogin();
       return;
@@ -37,6 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
               updateInfo.updateAvailability ==
                   UpdateAvailability.developerTriggeredUpdateInProgress) &&
           updateInfo.immediateUpdateAllowed) {
+        // ignore: use_build_context_synchronously
         showUpdateBottomSheet(context);
       } else {
         goToLogin();

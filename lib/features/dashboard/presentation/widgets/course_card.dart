@@ -58,7 +58,7 @@ class CourseCard extends StatelessWidget {
                         ? NetworkImage(image)
                         : AssetImage(image) as ImageProvider,
                     fit: BoxFit.cover,
-                    onError: (_, __) {
+                    onError: (context, error) {
                       // Fallback if network fails, or could be handled by image provider error builder context not available here easily for DecorationImage
                     },
                   ),
