@@ -7,9 +7,11 @@ class CoursesState extends ChangeNotifier {
 
   /// 📦 DATA
   List<CourseModel> courses = [];
+  List<CourseModel> myCourses = [];
 
   /// ⏳ STATE
   bool isLoading = false;
+  bool isMyCoursesLoading = false;
   String? errorMessage;
 
   /// 🔁 FETCH COURSES
@@ -25,6 +27,21 @@ class CoursesState extends ChangeNotifier {
     }
 
     isLoading = false;
+    notifyListeners();
+    isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> fetchMyCourses() async {
+    isMyCoursesLoading = true;
+    notifyListeners();
+    try {
+      myCourses = await _remoteDataSource.getMyCourses();
+    } catch (e) {
+      // Handle error cleanly, maybe show toast or just empty list
+      debugPrint("Error fetching my courses: $e");
+    }
+    isMyCoursesLoading = false;
     notifyListeners();
   }
 }

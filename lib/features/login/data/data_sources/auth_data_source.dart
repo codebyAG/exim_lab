@@ -28,4 +28,22 @@ class AuthDataSource {
       methodType: MethodType.post,
     );
   }
+
+  Future<Map<String, dynamic>> getProfile() async {
+    return await callApi(
+      ApiConstants.userProfile,
+      requestData: {},
+      parser: (json) => json as Map<String, dynamic>,
+      methodType: MethodType.get,
+    );
+  }
+
+  Future<Map<String, dynamic>> updateProfile(Map<String, dynamic> data) async {
+    return await callApi(
+      ApiConstants.userProfile,
+      requestData: data,
+      parser: (json) => json as Map<String, dynamic>,
+      methodType: MethodType.put,
+    );
+  }
 }

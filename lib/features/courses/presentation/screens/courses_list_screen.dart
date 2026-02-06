@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:exim_lab/features/courses/data/models/course_model.dart';
+
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_details_screen.dart';
 import 'package:exim_lab/features/courses/presentation/states/course_details_state.dart';
@@ -26,6 +28,7 @@ class _CoursesListScreenState extends State<CoursesListScreen>
     /// 🔹 API CALL
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<CoursesState>().fetchCourses();
+      context.read<CoursesState>().fetchMyCourses();
     });
   }
 
@@ -66,7 +69,7 @@ class _CoursesListScreenState extends State<CoursesListScreen>
         controller: _tabController,
         children: [
           _allCourses(context, state),
-          _myCoursesMockList(context),
+          _myCoursesList(context, state),
           _allCourses(context, state),
         ],
       ),
@@ -195,36 +198,21 @@ class _CourseTile extends StatelessWidget {
   }
 }
 
-// ================= MOCK: MY COURSES =================
+// 🔹 MY COURSES (API)
+Widget _myCoursesList(BuildContext context, CoursesState state) {
+  if (state.isMyCoursesLoading) {
+    return const Center(child: CircularProgressIndicator());
+  }
 
-class _MyCourse {
-  final String title;
-  final int completedLessons;
-  final int totalLessons;
+  if (state.myCourses.isEmpty) {
+    return const Center(
+      child: Text(
+        'No courses enrolled yet.\nStart learning now!',
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
 
-  const _MyCourse({
-    required this.title,
-    required this.completedLessons,
-    required this.totalLessons,
-  });
-
-  double get progress => completedLessons / totalLessons;
-}
-
-const List<_MyCourse> _mockMyCourses = [
-  _MyCourse(
-    title: 'Advanced Export Strategy',
-    completedLessons: 3,
-    totalLessons: 10,
-  ),
-  _MyCourse(
-    title: 'Import Documentation Mastery',
-    completedLessons: 6,
-    totalLessons: 8,
-  ),
-];
-
-Widget _myCoursesMockList(BuildContext context) {
   return GridView.builder(
     padding: const EdgeInsets.all(16),
     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -233,16 +221,16 @@ Widget _myCoursesMockList(BuildContext context) {
       crossAxisSpacing: 16,
       childAspectRatio: 0.78,
     ),
-    itemCount: _mockMyCourses.length,
+    itemCount: state.myCourses.length,
     itemBuilder: (context, index) {
-      final course = _mockMyCourses[index];
+      final course = state.myCourses[index];
       return _MyCourseCard(course: course, colorIndex: index);
     },
   );
 }
 
 class _MyCourseCard extends StatelessWidget {
-  final _MyCourse course;
+  final CourseModel course;
   final int colorIndex;
 
   const _MyCourseCard({required this.course, required this.colorIndex});
@@ -262,6 +250,7 @@ class _MyCourseCard extends StatelessWidget {
     ];
 
     final bgColor = bgColors[colorIndex % bgColors.length];
+    final progress = (course.completionPercentage ?? 0) / 100.0;
 
     return Container(
       padding: const EdgeInsets.all(14),
@@ -279,7 +268,7 @@ class _MyCourseCard extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: theme.textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.w600,
-              color: cs.onSurface, // ✅ FIXED FOR DARK MODE
+              color: cs.onSurface,
             ),
           ),
 
@@ -287,9 +276,9 @@ class _MyCourseCard extends StatelessWidget {
 
           // COMPLETED TEXT
           Text(
-            'Completed ${course.completedLessons}/${course.totalLessons}',
+            '${course.completionPercentage ?? 0}% Completed',
             style: theme.textTheme.bodySmall?.copyWith(
-              color: cs.onSurface.withOpacity(0.7), // ✅ FIXED
+              color: cs.onSurface.withOpacity(0.7),
             ),
           ),
 
@@ -299,7 +288,7 @@ class _MyCourseCard extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: LinearProgressIndicator(
-              value: course.progress,
+              value: progress,
               minHeight: 6,
               backgroundColor: cs.onSurface.withOpacity(0.15),
               color: cs.primary,
@@ -315,7 +304,7 @@ class _MyCourseCard extends StatelessWidget {
               onTap: () {
                 AppNavigator.push(
                   context,
-                  const CourseDetailsScreen(courseId: 'resume-course-id'),
+                  CourseDetailsScreen(courseId: course.id),
                 );
               },
               child: Container(

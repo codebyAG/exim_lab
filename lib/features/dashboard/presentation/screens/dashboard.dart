@@ -8,7 +8,6 @@ import 'package:exim_lab/features/courses/presentation/screens/courses_details_s
 import 'package:exim_lab/features/courses/presentation/screens/courses_list_screen.dart';
 import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart';
 import 'package:exim_lab/features/dashboard/presentation/providers/dashboard_provider.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/animated_search_bar.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/continue_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/course_of_the_day.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/cta_carasoul.dart';
@@ -22,7 +21,6 @@ import 'package:exim_lab/features/freevideos/data/models/free_videos_model.dart'
 import 'package:exim_lab/features/freevideos/presentation/widgets/free_video_section.dart';
 import 'package:exim_lab/features/news/presentation/screens/news_list_screen.dart';
 import 'package:exim_lab/features/quiz/presentation/screens/quiz_topics_screen.dart';
-import 'package:exim_lab/features/resources/presentation/screens/resource_screen.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:exim_lab/features/profile/presentation/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
@@ -142,16 +140,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               SizedBox(height: 2.h),
 
-              // 2. SEARCH BAR (Static)
-              AnimatedSearchBar(
-                hints: [
-                  t.translate('search_hint'),
-                  'Search IEC, GST, HS Code',
-                  'Find import–export courses',
-                ],
-                onTap: () {},
-              ),
-              SizedBox(height: 2.h),
+              // 2. SEARCH BAR (Removed)
+              // SizedBox(height: 2.h),
 
               // DYNAMIC CONTENT
               Consumer<DashboardProvider>(
@@ -197,17 +187,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ),
                             ),
                             SizedBox(width: 3.w),
-                            Expanded(
-                              child: QuickCard(
-                                icon: Icons.folder_copy_rounded,
-                                title: t.translate('resources'),
-                                subtitle: t.translate('guides_docs'),
-                                onTap: () => AppNavigator.push(
-                                  context,
-                                  const ResourcesScreen(),
-                                ),
-                              ),
-                            ),
+                            // Resources Removed
                             SizedBox(width: 3.w),
                             Expanded(
                               child: QuickCard(
@@ -402,8 +382,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
               AppNavigator.push(context, const CoursesListScreen());
             } else if (index == 2) {
               AppNavigator.push(context, const NewsListScreen());
-            } else if (index == 3) {
-              AppNavigator.push(context, const ResourcesScreen());
             }
           },
           items: [
@@ -421,11 +399,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
               icon: const Icon(Icons.newspaper_rounded),
               activeIcon: const Icon(Icons.newspaper),
               label: t.translate('news'),
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.folder_open_rounded),
-              activeIcon: const Icon(Icons.folder_rounded),
-              label: t.translate('resources'),
             ),
           ],
         ),

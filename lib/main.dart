@@ -25,8 +25,15 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:sizer/sizer.dart';
 import 'dart:developer';
 
+import 'package:exim_lab/features/news/data/services/news_service.dart';
+import 'package:exim_lab/features/news/presentation/providers/news_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  final prefs = await SharedPreferences.getInstance();
+  final newsService = NewsService(prefs);
 
   // 🔥 Firebase Init
   try {
@@ -88,6 +95,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => QuizProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => DashboardProvider()),
+        ChangeNotifierProvider(create: (_) => NewsProvider(newsService)),
       ],
       child: const EximLabApp(),
     ),

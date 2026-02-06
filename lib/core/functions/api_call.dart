@@ -89,7 +89,9 @@ class ApiException implements Exception {
 
 enum MethodType {
   get("GET"),
-  post("POST");
+  post("POST"),
+  put("PUT"),
+  delete("DELETE");
 
   final String methodType;
 

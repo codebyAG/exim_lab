@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'news_list_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:exim_lab/features/news/data/models/news_model.dart';
+import 'package:sizer/sizer.dart';
 
 class NewsDetailScreen extends StatelessWidget {
   final NewsModel news;
@@ -15,9 +17,7 @@ class NewsDetailScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: theme.colorScheme.surface,
         elevation: 0,
-        iconTheme: IconThemeData(
-          color: theme.colorScheme.onSurface,
-        ),
+        iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
         title: Text(
           'Trade Update',
           style: theme.textTheme.titleLarge?.copyWith(
@@ -30,11 +30,22 @@ class NewsDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 🖼 IMAGE
-            Image.asset(
-              news.image,
+            // 🖼 IMAGE
+            CachedNetworkImage(
+              imageUrl: news.imageUrl,
               width: double.infinity,
-              height: 220,
+              height: 30.h,
               fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                height: 30.h,
+                color: theme.colorScheme.surfaceContainerHighest,
+                child: const Center(child: Icon(Icons.image)),
+              ),
+              errorWidget: (context, url, error) => Container(
+                height: 30.h,
+                color: theme.colorScheme.surfaceContainerHighest,
+                child: const Center(child: Icon(Icons.broken_image)),
+              ),
             ),
 
             Padding(
@@ -44,7 +55,7 @@ class NewsDetailScreen extends StatelessWidget {
                 children: [
                   // 🗓 DATE
                   Text(
-                    news.date,
+                    "${news.createdAt.day}/${news.createdAt.month}/${news.createdAt.year}",
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurface.withOpacity(0.6),
                     ),
@@ -64,7 +75,7 @@ class NewsDetailScreen extends StatelessWidget {
 
                   // 📄 FULL DESCRIPTION
                   Text(
-                    news.fullDescription,
+                    news.content,
                     style: theme.textTheme.bodyLarge?.copyWith(
                       height: 1.6,
                       color: theme.colorScheme.onSurface.withOpacity(0.85),

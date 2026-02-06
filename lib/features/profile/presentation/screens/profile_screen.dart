@@ -2,17 +2,33 @@ import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:exim_lab/features/profile/presentation/screens/settings_screen.dart';
 import 'package:exim_lab/features/welcome/presentation/screens/welcome_screen.dart';
+import 'package:exim_lab/features/profile/presentation/screens/update_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AuthProvider>().fetchProfile();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final authProvider = context.watch<AuthProvider>();
+    final user = authProvider.user;
 
     return Scaffold(
       backgroundColor: cs.surface,
@@ -38,7 +54,13 @@ class ProfileScreen extends StatelessWidget {
                   CircleAvatar(
                     radius: 30,
                     backgroundColor: Colors.white,
-                    child: Icon(Icons.person, size: 35, color: cs.primary),
+                    backgroundImage:
+                        (user?.avatarUrl != null && user!.avatarUrl!.isNotEmpty)
+                        ? NetworkImage(user.avatarUrl!)
+                        : null,
+                    child: (user?.avatarUrl == null || user!.avatarUrl!.isEmpty)
+                        ? Icon(Icons.person, size: 35, color: cs.primary)
+                        : null,
                   ),
                   SizedBox(width: 4.w),
                   Expanded(
@@ -46,7 +68,7 @@ class ProfileScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Akash Goyal', // TODO: Dynamic
+                          user?.name ?? 'Guest',
                           style: theme.textTheme.titleLarge?.copyWith(
                             color: cs.onPrimaryContainer,
                             fontWeight: FontWeight.bold,
@@ -54,7 +76,7 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 0.5.h),
                         Text(
-                          'user@example.com',
+                          user?.email ?? user?.mobile ?? 'No Email',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: cs.onPrimaryContainer.withOpacity(0.8),
                           ),
@@ -64,13 +86,44 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   IconButton(
                     onPressed: () {
-                      // Navigate to Edit Profile
+                      AppNavigator.push(
+                        context,
+                        UpdateProfileScreen(user: user),
+                      );
                     },
                     icon: Icon(Icons.edit, color: cs.onPrimaryContainer),
                   ),
                 ],
               ),
             ),
+            SizedBox(height: 3.h),
+
+            // STATS ROW
+            if (user?.stats != null)
+              Row(
+                children: [
+                  _StatsCard(
+                    label: 'Active',
+                    value: '${user!.stats!.activeCourses}',
+                    icon: Icons.play_circle_outline_rounded,
+                    color: Colors.blue,
+                  ),
+                  SizedBox(width: 3.w),
+                  _StatsCard(
+                    label: 'Completed',
+                    value: '${user!.stats!.completedCourses}',
+                    icon: Icons.check_circle_outline_rounded,
+                    color: Colors.green,
+                  ),
+                  SizedBox(width: 3.w),
+                  _StatsCard(
+                    label: 'Quizzes',
+                    value: '${user!.stats!.quizzesTaken}',
+                    icon: Icons.quiz_outlined,
+                    color: Colors.orange,
+                  ),
+                ],
+              ),
             SizedBox(height: 4.h),
 
             // MENU OPTIONS
@@ -138,6 +191,59 @@ class ProfileScreen extends StatelessWidget {
             child: const Text('Logout', style: TextStyle(color: Colors.red)),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _StatsCard extends StatelessWidget {
+  final String label;
+  final String value;
+  final IconData icon;
+  final Color color;
+
+  const _StatsCard({
+    required this.label,
+    required this.value,
+    required this.icon,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 1.w),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: color.withOpacity(0.2)),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: color, size: 24),
+            SizedBox(height: 1.h),
+            Text(
+              value,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+            SizedBox(height: 0.5.h),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: cs.onSurfaceVariant,
+                fontSize: 10.sp,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

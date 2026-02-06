@@ -107,4 +107,50 @@ class AuthProvider extends ChangeNotifier {
     _user = null;
     notifyListeners();
   }
+
+  Future<void> fetchProfile() async {
+    try {
+      final response = await _dataSource.getProfile();
+      // Assuming response is UserModel compatible or has 'data'
+      // If response is the user object directly:
+      if (response['data'] != null) {
+        _user = UserModel.fromJson(response['data']);
+        await _sharedPrefService.saveUser(_user!);
+        notifyListeners();
+      } else if (response['_id'] != null) {
+        // Direct object
+        _user = UserModel.fromJson(response);
+        await _sharedPrefService.saveUser(_user!);
+        notifyListeners();
+      }
+    } catch (e) {
+      log("Fetch Profile Error: $e");
+    }
+  }
+
+  Future<bool> updateProfile(Map<String, dynamic> data) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      final response = await _dataSource.updateProfile(data);
+      if (response['data'] != null) {
+        _user = UserModel.fromJson(response['data']);
+        await _sharedPrefService.saveUser(_user!);
+        _isLoading = false;
+        notifyListeners();
+        return true;
+      } else {
+        // Some APIs return "success": true without data, or updated user
+        await fetchProfile(); // Refresh to be safe
+        _isLoading = false;
+        notifyListeners();
+        return true;
+      }
+    } catch (e) {
+      _error = e.toString();
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
 }

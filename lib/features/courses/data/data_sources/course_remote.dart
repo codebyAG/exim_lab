@@ -14,4 +14,15 @@ class CoursesRemoteDataSource {
       },
     );
   }
+
+  Future<List<CourseModel>> getMyCourses() async {
+    return callApi<List<CourseModel>>(
+      ApiConstants.myCourses,
+      methodType: MethodType.get,
+      parser: (json) {
+        final List list = json['data'] ?? [];
+        return list.map((e) => CourseModel.fromJson(e)).toList();
+      },
+    );
+  }
 }

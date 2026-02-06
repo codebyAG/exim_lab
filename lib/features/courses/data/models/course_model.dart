@@ -4,7 +4,8 @@ class CourseModel {
   final String description;
   final double basePrice;
   final bool isPublished;
-  final DateTime createdAt;
+  final DateTime? createdAt;
+  final DateTime? enrolledAt;
   final String? imageUrl;
   final int? completionPercentage;
   final DateTime? progressUpdatedAt;
@@ -17,7 +18,8 @@ class CourseModel {
     required this.description,
     required this.basePrice,
     required this.isPublished,
-    required this.createdAt,
+    this.createdAt,
+    this.enrolledAt,
     this.imageUrl,
     this.completionPercentage,
     this.progressUpdatedAt,
@@ -32,7 +34,12 @@ class CourseModel {
       description: json['description'] ?? '',
       basePrice: (json['basePrice'] ?? 0).toDouble(),
       isPublished: json['isPublished'] ?? false,
-      createdAt: DateTime.parse(json['createdAt']),
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : null,
+      enrolledAt: json['enrolledAt'] != null
+          ? DateTime.parse(json['enrolledAt'])
+          : null,
       imageUrl: json['imageUrl'],
       completionPercentage: (json['completionPercentage'] ?? 0).toInt(),
       progressUpdatedAt: json['progressUpdatedAt'] != null

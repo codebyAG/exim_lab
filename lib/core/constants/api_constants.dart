@@ -7,6 +7,7 @@ class ApiConstants {
 
   // 📌 ENDPOINTS
   static const String courses = '/api/courses';
+  static const String myCourses = '/api/courses/my';
 
   static const String aiChat = "$aiChathost/api/chat";
 
@@ -19,7 +20,9 @@ class ApiConstants {
   // 🔑 AUTH API
   static const String auth = '$baseUrl/api/auth';
   static const String verifyOtp = '$baseUrl/api/auth/verify-otp';
+  static const String userProfile = '$baseUrl/api/user/profile';
   static const String dashboard = '$baseUrl/api/dashboard';
+  static const String news = '$baseUrl/api/news';
 
   // ⏱ TIMEOUTS
   static const int connectTimeout = 15000;

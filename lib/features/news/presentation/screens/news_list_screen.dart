@@ -1,9 +1,26 @@
+import 'package:exim_lab/features/news/presentation/providers/news_provider.dart';
 import 'package:exim_lab/features/news/presentation/screens/news_details_screen.dart';
+import 'package:exim_lab/features/news/data/models/news_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
-class NewsListScreen extends StatelessWidget {
+class NewsListScreen extends StatefulWidget {
   const NewsListScreen({super.key});
+
+  @override
+  State<NewsListScreen> createState() => _NewsListScreenState();
+}
+
+class _NewsListScreenState extends State<NewsListScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<NewsProvider>().fetchNews();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +41,29 @@ class NewsListScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: ListView.separated(
-        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
-        itemCount: _newsList.length,
-        separatorBuilder: (context, index) => SizedBox(height: 2.h),
-        itemBuilder: (context, index) {
-          final news = _newsList[index];
-          return _NewsCard(news: news);
+      body: Consumer<NewsProvider>(
+        builder: (context, newsProvider, child) {
+          if (newsProvider.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (newsProvider.error != null) {
+            return Center(child: Text('Error: ${newsProvider.error}'));
+          }
+
+          if (newsProvider.newsList.isEmpty) {
+            return const Center(child: Text('No news available.'));
+          }
+
+          return ListView.separated(
+            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+            itemCount: newsProvider.newsList.length,
+            separatorBuilder: (context, index) => SizedBox(height: 2.h),
+            itemBuilder: (context, index) {
+              final news = newsProvider.newsList[index];
+              return _NewsCard(news: news);
+            },
+          );
         },
       ),
     );
@@ -45,9 +78,14 @@ class _NewsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final dateStr =
+        "${news.createdAt.day}/${news.createdAt.month}/${news.createdAt.year}";
 
     return GestureDetector(
       onTap: () {
+        // NewsDetailScreen likely needs update for NewsModel vs old model
+        // Assuming NewsDetailScreen accepts NewsModel or similar fields
+        // For now, passing news object. If distinct, we map fields.
         Navigator.push(
           context,
           MaterialPageRoute(builder: (_) => NewsDetailScreen(news: news)),
@@ -75,11 +113,19 @@ class _NewsCard extends StatelessWidget {
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(22),
                   ),
-                  child: Image.asset(
-                    news.image,
+                  child: CachedNetworkImage(
+                    imageUrl: news.imageUrl,
                     height: 22.h,
                     width: double.infinity,
                     fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      color: cs.surfaceContainerHighest,
+                      child: const Center(child: Icon(Icons.image)),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      color: cs.surfaceContainerHighest,
+                      child: const Center(child: Icon(Icons.broken_image)),
+                    ),
                   ),
                 ),
                 // Date Badge
@@ -96,11 +142,11 @@ class _NewsCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      news.date,
+                      dateStr,
                       style: theme.textTheme.labelSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: cs.onSurface,
-                        fontSize: 11.sp, // Increased
+                        fontSize: 11.sp,
                       ),
                     ),
                   ),
@@ -121,7 +167,7 @@ class _NewsCard extends StatelessWidget {
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w800,
                       height: 1.2,
-                      fontSize: 17.sp, // Increased significantly
+                      fontSize: 17.sp,
                     ),
                   ),
 
@@ -129,12 +175,12 @@ class _NewsCard extends StatelessWidget {
 
                   // Description
                   Text(
-                    news.shortDescription,
+                    news.description, // Mapped from shortDescription
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: cs.onSurfaceVariant,
-                      fontSize: 13.sp, // Increased
+                      fontSize: 13.sp,
                     ),
                   ),
 
@@ -148,7 +194,7 @@ class _NewsCard extends StatelessWidget {
                         style: theme.textTheme.labelLarge?.copyWith(
                           fontWeight: FontWeight.w700,
                           color: cs.primary,
-                          fontSize: 13.sp, // Increased
+                          fontSize: 13.sp,
                         ),
                       ),
                       SizedBox(width: 1.w),
@@ -168,40 +214,3 @@ class _NewsCard extends StatelessWidget {
     );
   }
 }
-
-class NewsModel {
-  final String title;
-  final String shortDescription;
-  final String fullDescription;
-  final String image;
-  final String date;
-
-  const NewsModel({
-    required this.title,
-    required this.shortDescription,
-    required this.fullDescription,
-    required this.image,
-    required this.date,
-  });
-}
-
-final List<NewsModel> _newsList = [
-  NewsModel(
-    title: 'Government revises Export Policy for MSMEs',
-    shortDescription:
-        'New incentives announced for MSME exporters to boost global trade.',
-    fullDescription:
-        'The Government of India has revised the export policy for MSMEs. Under the new framework, exporters will receive enhanced incentives, simplified documentation, and faster clearance procedures.',
-    image: 'assets/news_1.jpg',
-    date: '12 Jan',
-  ),
-  NewsModel(
-    title: 'HS Code updates effective from April 2026',
-    shortDescription:
-        'Major changes introduced in HS Code classification system.',
-    fullDescription:
-        'The Directorate General of Foreign Trade (DGFT) has notified changes to HS Codes effective from April 2026.',
-    image: 'assets/news_2.jpg',
-    date: '08 Jan',
-  ),
-];
