@@ -106,105 +106,189 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: ListView(
             padding: EdgeInsets.symmetric(vertical: 2.h),
             children: [
-              // 1. HEADER (Static)
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5.w),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          t.translate('welcome_back'),
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: cs.onSurface.withValues(alpha: 0.6),
-                          ),
-                        ),
-                        SizedBox(height: 0.5.h),
-                        Text(
-                          context.watch<AuthProvider>().user?.name ?? 'User',
-                          style: theme.textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+              // 1. HEADER
+              Container(
+                padding: EdgeInsets.fromLTRB(5.w, 1.h, 5.w, 2.5.h),
+                decoration: BoxDecoration(
+                  color: cs.surface,
+                  borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(30),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: cs.shadow.withValues(alpha: 0.05),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
                     ),
+                  ],
+                ),
+                child: Column(
+                  children: [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // NOTIFICATION BELL
-                        Consumer<NotificationsProvider>(
-                          builder: (context, notifProvider, child) {
-                            return Stack(
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    AppNavigator.push(
-                                      context,
-                                      const NotificationsScreen(),
-                                    );
-                                  },
-                                  icon: Icon(
-                                    Icons.notifications_outlined,
-                                    color: cs.onSurface,
-                                    size: 28,
-                                  ),
-                                ),
-                                if (notifProvider.unreadCount > 0)
-                                  Positioned(
-                                    right: 8,
-                                    top: 8,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(4),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              t.translate('welcome_back'),
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                color: cs.onSurface.withValues(alpha: 0.6),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              context.watch<AuthProvider>().user?.name ??
+                                  'Guest',
+                              style: theme.textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: -0.5,
+                                color: cs.onSurface,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              "Let's start learning!",
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: cs.primary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            // NOTIFICATION BELL
+                            Consumer<NotificationsProvider>(
+                              builder: (context, notifProvider, child) {
+                                return Stack(
+                                  clipBehavior: Clip.none,
+                                  children: [
+                                    Container(
                                       decoration: BoxDecoration(
-                                        color: Colors.red,
+                                        color: cs.surfaceContainerHighest
+                                            .withValues(alpha: 0.5),
                                         shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: cs.surface,
-                                          width: 1.5,
-                                        ),
                                       ),
-                                      constraints: const BoxConstraints(
-                                        minWidth: 16,
-                                        minHeight: 16,
-                                      ),
-                                      child: Text(
-                                        '${notifProvider.unreadCount}',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.bold,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          AppNavigator.push(
+                                            context,
+                                            const NotificationsScreen(),
+                                          );
+                                        },
+                                        icon: Icon(
+                                          Icons.notifications_outlined,
+                                          color: cs.onSurface,
+                                          size: 24,
                                         ),
-                                        textAlign: TextAlign.center,
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(
+                                          minWidth: 46,
+                                          minHeight: 46,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                              ],
-                            );
-                          },
-                        ),
-                        SizedBox(width: 2.w),
+                                    if (notifProvider.unreadCount > 0)
+                                      Positioned(
+                                        right: 0,
+                                        top: 0,
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 5,
+                                            vertical: 2,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: cs.error,
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                            border: Border.all(
+                                              color: cs.surface,
+                                              width: 2,
+                                            ),
+                                          ),
+                                          constraints: const BoxConstraints(
+                                            minWidth: 18,
+                                            minHeight: 18,
+                                          ),
+                                          child: Text(
+                                            '${notifProvider.unreadCount}',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              },
+                            ),
+                            SizedBox(width: 3.w),
 
-                        // PROFILE
-                        InkWell(
-                          onTap: () {
-                            AppNavigator.push(context, const ProfileScreen());
-                          },
-                          child: CircleAvatar(
-                            radius: 22,
-                            backgroundColor: cs.primaryContainer,
-                            child: Icon(Icons.person, color: cs.primary),
-                          ),
+                            // PROFILE
+                            InkWell(
+                              onTap: () {
+                                AppNavigator.push(
+                                  context,
+                                  const ProfileScreen(),
+                                );
+                              },
+                              child: Container(
+                                height: 46,
+                                width: 46,
+                                decoration: BoxDecoration(
+                                  color: cs.primaryContainer,
+                                  shape: BoxShape.circle,
+                                  image:
+                                      context
+                                              .watch<AuthProvider>()
+                                              .user
+                                              ?.avatarUrl !=
+                                          null
+                                      ? DecorationImage(
+                                          image: NetworkImage(
+                                            context
+                                                .watch<AuthProvider>()
+                                                .user!
+                                                .avatarUrl!,
+                                          ),
+                                          fit: BoxFit.cover,
+                                        )
+                                      : null,
+                                  border: Border.all(
+                                    color: cs.surface,
+                                    width: 2,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: cs.shadow.withValues(alpha: 0.1),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child:
+                                    context
+                                            .watch<AuthProvider>()
+                                            .user
+                                            ?.avatarUrl ==
+                                        null
+                                    ? Icon(Icons.person, color: cs.primary)
+                                    : null,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 2.h),
-
-              // 2. SEARCH BAR (Removed)
-              // SizedBox(height: 2.h),
 
               // DYNAMIC CONTENT
               Consumer<DashboardProvider>(
