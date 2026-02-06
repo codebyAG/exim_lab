@@ -91,7 +91,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     Text(
                       t.translate('login_subtitle'),
                       style: theme.textTheme.bodyLarge?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.65),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.65,
+                        ),
                       ),
                     ),
 
@@ -141,7 +143,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     Text(
                       t.translate('otp_info'),
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.55),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.55,
+                        ),
                       ),
                     ),
 
@@ -189,7 +193,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         t.translate('terms_privacy'),
                         textAlign: TextAlign.center,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.5),
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.5,
+                          ),
                         ),
                       ),
                     ),

@@ -79,8 +79,8 @@ class _CertificateTile extends StatelessWidget {
             boxShadow: [
               BoxShadow(
                 color: theme.brightness == Brightness.light
-                    ? Colors.black.withOpacity(0.05)
-                    : Colors.black.withOpacity(0.25),
+                    ? Colors.black.withValues(alpha: 0.05)
+                    : Colors.black.withValues(alpha: 0.25),
                 blurRadius: 12,
                 offset: const Offset(0, 8),
               ),
@@ -115,7 +115,9 @@ class _CertificateTile extends StatelessWidget {
                           ? 'Issued on $issuedDate'
                           : 'Complete course to unlock',
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.65),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.65,
+                        ),
                       ),
                     ),
                   ],
@@ -124,7 +126,7 @@ class _CertificateTile extends StatelessWidget {
 
               Icon(
                 isUnlocked ? Icons.chevron_right : Icons.lock_outline,
-                color: theme.colorScheme.onSurface.withOpacity(0.6),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ],
           ),

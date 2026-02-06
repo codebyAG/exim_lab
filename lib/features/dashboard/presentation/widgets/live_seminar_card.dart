@@ -32,14 +32,14 @@ class LiveSeminarCard extends StatelessWidget {
             boxShadow: [
               BoxShadow(
                 color: theme.brightness == Brightness.dark
-                    ? Colors.black.withOpacity(0.4)
-                    : Colors.black.withOpacity(0.12),
+                    ? Colors.black.withValues(alpha: 0.4)
+                    : Colors.black.withValues(alpha: 0.12),
                 blurRadius: 16,
                 offset: const Offset(0, 8),
               ),
             ],
             border: Border.all(
-              color: cs.outlineVariant.withOpacity(0.15),
+              color: cs.outlineVariant.withValues(alpha: 0.15),
               width: 1.5,
             ),
           ),
@@ -49,7 +49,7 @@ class LiveSeminarCard extends StatelessWidget {
               Container(
                 width: 20.w,
                 decoration: BoxDecoration(
-                  color: cs.primary.withOpacity(0.12),
+                  color: cs.primary.withValues(alpha: 0.12),
                   borderRadius: const BorderRadius.horizontal(
                     left: Radius.circular(20),
                   ),
@@ -96,7 +96,7 @@ class LiveSeminarCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: cs.onSurface.withOpacity(0.6),
+                          color: cs.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                     ],

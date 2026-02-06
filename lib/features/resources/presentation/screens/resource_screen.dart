@@ -109,8 +109,8 @@ class _ResourceCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: theme.brightness == Brightness.light
-                ? Colors.black.withOpacity(0.05)
-                : Colors.black.withOpacity(0.25),
+                ? Colors.black.withValues(alpha: 0.05)
+                : Colors.black.withValues(alpha: 0.25),
             blurRadius: 10,
             offset: const Offset(0, 6),
           ),
@@ -123,7 +123,7 @@ class _ResourceCard extends StatelessWidget {
             height: 44,
             width: 44,
             decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withOpacity(0.15),
+              color: theme.colorScheme.primary.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
@@ -149,7 +149,7 @@ class _ResourceCard extends StatelessWidget {
                 Text(
                   '$type • $size',
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
               ],
@@ -162,7 +162,7 @@ class _ResourceCard extends StatelessWidget {
               // TODO: Open / Download resource
             },
             icon: const Icon(Icons.download),
-            color: theme.colorScheme.onSurface.withOpacity(0.6),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
           ),
         ],
       ),

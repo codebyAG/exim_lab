@@ -76,7 +76,7 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
                           border: Border.all(
                             color: isSelected
                                 ? cs.primary
-                                : cs.outline.withOpacity(0.2),
+                                : cs.outline.withValues(alpha: 0.2),
                           ),
                         ),
                         child: Text(
@@ -117,10 +117,10 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isHighlight ? cs.primary.withOpacity(0.1) : cs.surface,
+        color: isHighlight ? cs.primary.withValues(alpha: 0.1) : cs.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isHighlight ? cs.primary : cs.outline.withOpacity(0.1),
+          color: isHighlight ? cs.primary : cs.outline.withValues(alpha: 0.1),
         ),
       ),
       child: Row(

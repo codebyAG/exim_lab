@@ -34,14 +34,20 @@ class CourseOfTheDayCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(26),
           gradient: LinearGradient(
             colors: isDark
-                ? [cs.surface.withOpacity(0.95), cs.surface.withOpacity(0.85)]
-                : [cs.primary.withOpacity(0.95), cs.primary.withOpacity(0.75)],
+                ? [
+                    cs.surface.withValues(alpha: 0.95),
+                    cs.surface.withValues(alpha: 0.85),
+                  ]
+                : [
+                    cs.primary.withValues(alpha: 0.95),
+                    cs.primary.withValues(alpha: 0.75),
+                  ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(isDark ? 0.6 : 0.35),
+              color: Colors.black.withValues(alpha: isDark ? 0.6 : 0.35),
               blurRadius: 22,
               offset: const Offset(0, 14),
             ),
@@ -88,8 +94,8 @@ class CourseOfTheDayCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: (isDark ? cs.onSurface : cs.onPrimary).withOpacity(
-                        0.85,
+                      color: (isDark ? cs.onSurface : cs.onPrimary).withValues(
+                        alpha: 0.85,
                       ),
                       fontSize: 15.sp,
                       height: 1.4,
@@ -125,7 +131,7 @@ class CourseOfTheDayCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: (isDark ? cs.onSurface : cs.onPrimary)
-                                .withOpacity(0.8),
+                                .withValues(alpha: 0.8),
                           ),
                         ),
                       ),

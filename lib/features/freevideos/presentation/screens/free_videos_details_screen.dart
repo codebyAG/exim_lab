@@ -84,7 +84,7 @@ class _FreeVideoDetailsScreenState extends State<FreeVideoDetailsScreen> {
                     vertical: .6.h,
                   ),
                   decoration: BoxDecoration(
-                    color: cs.primary.withOpacity(0.12),
+                    color: cs.primary.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -107,7 +107,7 @@ class _FreeVideoDetailsScreenState extends State<FreeVideoDetailsScreen> {
               style: TextStyle(
                 fontSize: 13.sp,
                 height: 1.5,
-                color: cs.onSurface.withOpacity(0.75),
+                color: cs.onSurface.withValues(alpha: 0.75),
               ),
             ),
           ],

@@ -74,7 +74,10 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [cs.surfaceContainerHighest.withOpacity(0.5), cs.surface],
+            colors: [
+              cs.surfaceContainerHighest.withValues(alpha: 0.5),
+              cs.surface,
+            ],
           ),
         ),
         child: Consumer<QuizProvider>(
@@ -169,13 +172,13 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                       borderRadius: BorderRadius.circular(24),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withValues(alpha: 0.1),
                           blurRadius: 30,
                           offset: const Offset(0, 10),
                         ),
                       ],
                       border: Border.all(
-                        color: cs.outlineVariant.withOpacity(0.5),
+                        color: cs.outlineVariant.withValues(alpha: 0.5),
                         width: 1,
                       ),
                     ),
@@ -199,22 +202,22 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
 
                     Color tileColor = cs.surface;
                     Color borderColor = cs.outlineVariant;
-                    Color dotColor = cs.surfaceContainerHighest.withOpacity(
-                      0.5,
+                    Color dotColor = cs.surfaceContainerHighest.withValues(
+                      alpha: 0.5,
                     );
                     Color charColor = cs.primary;
 
                     if (selectedIndex != null) {
                       if (isSelected) {
                         tileColor = isCorrect
-                            ? Colors.green.withOpacity(0.12)
-                            : Colors.red.withOpacity(0.12);
+                            ? Colors.green.withValues(alpha: 0.12)
+                            : Colors.red.withValues(alpha: 0.12);
                         borderColor = isCorrect ? Colors.green : Colors.red;
                         dotColor = isCorrect ? Colors.green : Colors.red;
                         charColor = Colors.white;
                       } else if (isCorrect) {
-                        tileColor = Colors.green.withOpacity(0.05);
-                        borderColor = Colors.green.withOpacity(0.5);
+                        tileColor = Colors.green.withValues(alpha: 0.05);
+                        borderColor = Colors.green.withValues(alpha: 0.5);
                       }
                     }
 
@@ -240,7 +243,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.08),
+                                  color: Colors.black.withValues(alpha: 0.08),
                                   blurRadius: 15,
                                   offset: const Offset(0, 6),
                                 ),

@@ -137,7 +137,7 @@ class _CbmCalculatorScreenState extends State<CbmCalculatorScreen> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isHighlight
-            ? theme.colorScheme.primary.withOpacity(0.1)
+            ? theme.colorScheme.primary.withValues(alpha: 0.1)
             : theme.colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),
       ),

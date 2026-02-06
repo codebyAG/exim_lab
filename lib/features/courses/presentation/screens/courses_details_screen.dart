@@ -81,8 +81,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                 boxShadow: [
                   BoxShadow(
                     color: theme.brightness == Brightness.light
-                        ? Colors.black.withOpacity(0.05)
-                        : Colors.black.withOpacity(0.25),
+                        ? Colors.black.withValues(alpha: 0.05)
+                        : Colors.black.withValues(alpha: 0.25),
                     blurRadius: 12,
                     offset: const Offset(0, 8),
                   ),
@@ -132,7 +132,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                   Text(
                     course.description,
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: cs.onSurface.withOpacity(0.65),
+                      color: cs.onSurface.withValues(alpha: 0.65),
                       height: 1.4,
                     ),
                   ),
@@ -192,14 +192,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
       ),
     );
   }
-
-  Widget _sectionTitle(BuildContext context, String text) {
-    final theme = Theme.of(context);
-    return Text(
-      text,
-      style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-    );
-  }
 }
 
 // ================= STAT CHIP =================
@@ -221,7 +213,7 @@ class _StatChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: theme.colorScheme.onSurface.withOpacity(0.08),
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -229,9 +221,7 @@ class _StatChip extends StatelessWidget {
           Icon(
             icon,
             size: 14,
-            color: isAccent
-                ? theme.colorScheme.primary
-                : theme.colorScheme.onSurface.withOpacity(0.7),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
           ),
           const SizedBox(width: 4),
           Text(text, style: theme.textTheme.bodySmall),

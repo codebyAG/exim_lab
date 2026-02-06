@@ -62,7 +62,7 @@ class _InlineBannerState extends State<InlineBanner> {
           // 2. DARK OVERLAY
           if (imgUrl.isNotEmpty)
             Positioned.fill(
-              child: Container(color: Colors.black.withOpacity(0.4)),
+              child: Container(color: Colors.black.withValues(alpha: 0.4)),
             ),
 
           // 3. CONTENT

@@ -4,8 +4,6 @@ import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/login/presentations/screens/login_screen.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:exim_lab/localization/locale_provider.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -36,14 +34,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   end: Alignment.bottomCenter,
                   colors: theme.brightness == Brightness.dark
                       ? [
-                          Colors.black.withOpacity(0.65),
-                          Colors.black.withOpacity(0.65),
-                          Colors.black.withOpacity(0.65),
+                          Colors.black.withValues(alpha: 0.65),
+                          Colors.black.withValues(alpha: 0.65),
+                          Colors.black.withValues(alpha: 0.65),
                         ]
                       : [
-                          Colors.black.withOpacity(0.35),
-                          Colors.black.withOpacity(0.25),
-                          Colors.black.withOpacity(0.15),
+                          Colors.black.withValues(alpha: 0.35),
+                          Colors.black.withValues(alpha: 0.25),
+                          Colors.black.withValues(alpha: 0.15),
                           Colors.transparent,
                         ],
                 ),

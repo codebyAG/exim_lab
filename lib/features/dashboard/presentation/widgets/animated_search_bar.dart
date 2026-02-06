@@ -46,8 +46,8 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
           boxShadow: [
             BoxShadow(
               color: isDark
-                  ? Colors.black.withOpacity(0.45)
-                  : Colors.black.withOpacity(0.08),
+                  ? Colors.black.withValues(alpha: 0.45)
+                  : Colors.black.withValues(alpha: 0.08),
               blurRadius: 16,
               offset: const Offset(0, 8),
             ),
@@ -55,7 +55,7 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
         ),
         child: Row(
           children: [
-            Icon(Icons.search, color: cs.onSurface.withOpacity(0.5)),
+            Icon(Icons.search, color: cs.onSurface.withValues(alpha: 0.5)),
             const SizedBox(width: 12),
 
             // 🔥 ANIMATED HINT
@@ -78,14 +78,14 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
                     widget.hints[_currentIndex],
                     key: ValueKey(_currentIndex),
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: cs.onSurface.withOpacity(0.6),
+                      color: cs.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                 ),
               ),
             ),
 
-            Icon(Icons.tune, color: cs.onSurface.withOpacity(0.4)),
+            Icon(Icons.tune, color: cs.onSurface.withValues(alpha: 0.4)),
           ],
         ),
       ),

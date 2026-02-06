@@ -43,7 +43,10 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [cs.surfaceContainerHighest.withOpacity(0.5), cs.surface],
+            colors: [
+              cs.surfaceContainerHighest.withValues(alpha: 0.5),
+              cs.surface,
+            ],
           ),
         ),
         child: Consumer<QuizProvider>(
@@ -63,7 +66,7 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
             return ListView.separated(
               padding: const EdgeInsets.fromLTRB(16, 120, 16, 20),
               itemCount: provider.topics.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 16),
+              separatorBuilder: (context, index) => const SizedBox(height: 16),
               itemBuilder: (context, index) {
                 final topic = provider.topics[index];
                 return Container(
@@ -72,12 +75,12 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withValues(alpha: 0.1),
                         blurRadius: 20,
                         offset: const Offset(0, 10),
                       ),
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 5,
                         offset: const Offset(0, 2),
                       ),
@@ -157,7 +160,7 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                                   ),
                                   decoration: BoxDecoration(
                                     color: topic.hasAttempted
-                                        ? Colors.green.withOpacity(0.1)
+                                        ? Colors.green.withValues(alpha: 0.1)
                                         : cs.surfaceContainerHighest,
                                     borderRadius: BorderRadius.circular(8),
                                   ),

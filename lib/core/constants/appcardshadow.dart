@@ -6,8 +6,8 @@ List<BoxShadow> appCardShadow(BuildContext context) {
   return [
     BoxShadow(
       color: isDark
-          ? Colors.black.withOpacity(0.4)
-          : Colors.black.withOpacity(0.08),
+          ? Colors.black.withValues(alpha: 0.4)
+          : Colors.black.withValues(alpha: 0.08),
       blurRadius: 16,
       offset: const Offset(0, 8),
     ),

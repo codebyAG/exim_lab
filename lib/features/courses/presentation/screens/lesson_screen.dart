@@ -30,10 +30,7 @@ class LessonsScreen extends StatelessWidget {
           icon: Icon(Icons.arrow_back, color: cs.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(
-          courseTitle,
-          style: theme.textTheme.titleLarge,
-        ),
+        title: Text(courseTitle, style: theme.textTheme.titleLarge),
       ),
 
       body: ListView.builder(
@@ -57,10 +54,7 @@ class LessonsScreen extends StatelessWidget {
     }
 
     return map.entries.map((e) {
-      return _Chapter(
-        title: e.key,
-        lessons: e.value,
-      );
+      return _Chapter(title: e.key, lessons: e.value);
     }).toList();
   }
 }
@@ -86,8 +80,8 @@ class _ChapterCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: theme.brightness == Brightness.light
-                ? Colors.black.withOpacity(0.05)
-                : Colors.black.withOpacity(0.25),
+                ? Colors.black.withValues(alpha: 0.05)
+                : Colors.black.withValues(alpha: 0.25),
             blurRadius: 10,
             offset: const Offset(0, 6),
           ),
@@ -133,10 +127,7 @@ class _LessonTile extends StatelessWidget {
       onTap: () {
         AppNavigator.push(
           context,
-          VideoLessonScreen(
-            videoUrl: lesson.contentUrl,
-            title: lesson.title,
-          ),
+          VideoLessonScreen(videoUrl: lesson.contentUrl, title: lesson.title),
         );
       },
       child: Padding(
@@ -148,13 +139,10 @@ class _LessonTile extends StatelessWidget {
               height: 38,
               width: 38,
               decoration: BoxDecoration(
-                color: cs.primary.withOpacity(0.12),
+                color: cs.primary.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                Icons.play_arrow,
-                color: cs.primary,
-              ),
+              child: Icon(Icons.play_arrow, color: cs.primary),
             ),
 
             const SizedBox(width: 12),
@@ -181,8 +169,5 @@ class _Chapter {
   final String title;
   final List<LessonModel> lessons;
 
-  const _Chapter({
-    required this.title,
-    required this.lessons,
-  });
+  const _Chapter({required this.title, required this.lessons});
 }

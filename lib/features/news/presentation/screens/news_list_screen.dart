@@ -97,7 +97,7 @@ class _NewsCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(22),
           boxShadow: [
             BoxShadow(
-              color: cs.shadow.withOpacity(0.08),
+              color: cs.shadow.withValues(alpha: 0.08),
               blurRadius: 18,
               offset: const Offset(0, 6),
             ),
@@ -138,7 +138,7 @@ class _NewsCard extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: cs.surface.withOpacity(0.95),
+                      color: cs.surface.withValues(alpha: 0.95),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(

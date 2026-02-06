@@ -34,13 +34,13 @@ class CourseCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(18),
             boxShadow: [
               BoxShadow(
-                color: cs.shadow.withOpacity(0.12),
+                color: cs.shadow.withValues(alpha: 0.12),
                 blurRadius: 14,
                 offset: const Offset(0, 6),
               ),
             ],
             border: Border.all(
-              color: cs.outlineVariant.withOpacity(0.15),
+              color: cs.outlineVariant.withValues(alpha: 0.15),
               width: 1.5,
             ),
           ),
@@ -85,7 +85,7 @@ class CourseCard extends StatelessWidget {
                 '$rating • $learners',
                 style: theme.textTheme.bodySmall?.copyWith(
                   fontSize: 14.sp,
-                  color: cs.onSurface.withOpacity(0.6),
+                  color: cs.onSurface.withValues(alpha: 0.6),
                 ),
               ),
             ],

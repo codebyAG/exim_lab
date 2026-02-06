@@ -53,7 +53,9 @@ class _CoursesListScreenState extends State<CoursesListScreen>
         bottom: TabBar(
           controller: _tabController,
           labelColor: theme.colorScheme.primary,
-          unselectedLabelColor: theme.colorScheme.onSurface.withOpacity(0.6),
+          unselectedLabelColor: theme.colorScheme.onSurface.withValues(
+            alpha: 0.6,
+          ),
           indicatorColor: theme.colorScheme.primary,
           tabs: const [
             Tab(text: 'All'),
@@ -129,8 +131,8 @@ class _CourseTile extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: theme.brightness == Brightness.light
-                ? Colors.black.withOpacity(0.05)
-                : Colors.black.withOpacity(0.25),
+                ? Colors.black.withValues(alpha: 0.05)
+                : Colors.black.withValues(alpha: 0.25),
             blurRadius: 10,
             offset: const Offset(0, 6),
           ),
@@ -143,7 +145,7 @@ class _CourseTile extends StatelessWidget {
             height: 80,
             width: 80,
             decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withOpacity(0.15),
+              color: theme.colorScheme.primary.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(14),
             ),
             child: Icon(
@@ -172,7 +174,7 @@ class _CourseTile extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.65),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
                   ),
                 ),
               ],
@@ -277,7 +279,7 @@ class _MyCourseCard extends StatelessWidget {
           Text(
             '${course.completionPercentage ?? 0}% Completed',
             style: theme.textTheme.bodySmall?.copyWith(
-              color: cs.onSurface.withOpacity(0.7),
+              color: cs.onSurface.withValues(alpha: 0.7),
             ),
           ),
 
@@ -289,7 +291,7 @@ class _MyCourseCard extends StatelessWidget {
             child: LinearProgressIndicator(
               value: progress,
               minHeight: 6,
-              backgroundColor: cs.onSurface.withOpacity(0.15),
+              backgroundColor: cs.onSurface.withValues(alpha: 0.15),
               color: cs.primary,
             ),
           ),

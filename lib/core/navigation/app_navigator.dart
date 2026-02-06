@@ -2,21 +2,12 @@ import 'package:flutter/material.dart';
 
 class AppNavigator {
   // 🔹 SIMPLE PUSH
-  static Future<T?> push<T>(
-    BuildContext context,
-    Widget page,
-  ) {
-    return Navigator.push<T>(
-      context,
-      MaterialPageRoute(builder: (_) => page),
-    );
+  static Future<T?> push<T>(BuildContext context, Widget page) {
+    return Navigator.push<T>(context, MaterialPageRoute(builder: (_) => page));
   }
 
   // 🔹 PUSH & REPLACE (WELCOME → LOGIN)
-  static Future<T?> replace<T>(
-    BuildContext context,
-    Widget page,
-  ) {
+  static Future<T?> replace<T>(BuildContext context, Widget page) {
     return Navigator.pushReplacement<T, T>(
       context,
       MaterialPageRoute(builder: (_) => page),
@@ -24,10 +15,7 @@ class AppNavigator {
   }
 
   // 🔹 CLEAR STACK & GO (LOGIN → DASHBOARD)
-  static Future<T?> clearAndGo<T>(
-    BuildContext context,
-    Widget page,
-  ) {
+  static Future<T?> clearAndGo<T>(BuildContext context, Widget page) {
     return Navigator.pushAndRemoveUntil<T>(
       context,
       MaterialPageRoute(builder: (_) => page),
@@ -139,8 +127,8 @@ class AppNavigator {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (_) => WillPopScope(
-        onWillPop: () async => false,
+      builder: (_) => PopScope(
+        canPop: false,
         child: AlertDialog(
           content: Row(
             children: [

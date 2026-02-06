@@ -78,7 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Text(
                           user?.email ?? user?.mobile ?? 'No Email',
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: cs.onPrimaryContainer.withOpacity(0.8),
+                            color: cs.onPrimaryContainer.withValues(alpha: 0.8),
                           ),
                         ),
                       ],
@@ -218,9 +218,9 @@ class _StatsCard extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 1.w),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withOpacity(0.2)),
+          border: Border.all(color: color.withValues(alpha: 0.2)),
         ),
         child: Column(
           children: [
@@ -273,7 +273,7 @@ class _ProfileOption extends StatelessWidget {
       decoration: BoxDecoration(
         color: cs.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: cs.outlineVariant.withOpacity(0.4)),
+        border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.4)),
       ),
       child: ListTile(
         onTap: onTap,
@@ -299,7 +299,7 @@ class _ProfileOption extends StatelessWidget {
         trailing: Icon(
           Icons.arrow_forward_ios_rounded,
           size: 16,
-          color: color.withOpacity(0.5),
+          color: color.withValues(alpha: 0.5),
         ),
       ),
     );

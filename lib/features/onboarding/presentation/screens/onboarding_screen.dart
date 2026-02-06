@@ -74,7 +74,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           height: 120,
                           width: 120,
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.primary.withOpacity(0.12),
+                            color: theme.colorScheme.primary.withValues(
+                              alpha: 0.12,
+                            ),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
@@ -105,8 +107,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           style: theme.textTheme.bodyLarge?.copyWith(
                             fontSize: 17,
                             height: 1.4,
-                            color: theme.colorScheme.onSurface.withOpacity(
-                              0.7,
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.7,
                             ),
                           ),
                         ),
@@ -118,8 +120,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           t.translate('onboard_who_for'),
                           textAlign: TextAlign.center,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withOpacity(
-                              0.55,
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.55,
                             ),
                           ),
                         ),

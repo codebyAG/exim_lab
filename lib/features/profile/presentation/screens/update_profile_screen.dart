@@ -111,20 +111,24 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                       ? null
                       : () async {
                           if (_formKey.currentState!.validate()) {
+                            final messenger = ScaffoldMessenger.of(context);
+                            final navigator = Navigator.of(context);
+
                             final success = await authProvider.updateProfile({
                               "name": _nameController.text.trim(),
                               "email": _emailController.text.trim(),
                               "avatarUrl": _avatarController.text.trim(),
                             });
+
                             if (success && mounted) {
-                              Navigator.pop(context);
-                              ScaffoldMessenger.of(context).showSnackBar(
+                              messenger.showSnackBar(
                                 const SnackBar(
                                   content: Text(
                                     'Profile updated successfully!',
                                   ),
                                 ),
                               );
+                              navigator.pop();
                             }
                           }
                         },

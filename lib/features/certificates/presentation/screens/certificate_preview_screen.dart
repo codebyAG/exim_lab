@@ -48,8 +48,8 @@ class CertificatePreviewScreen extends StatelessWidget {
                 boxShadow: [
                   BoxShadow(
                     color: theme.brightness == Brightness.light
-                        ? Colors.black.withOpacity(0.08)
-                        : Colors.black.withOpacity(0.35),
+                        ? Colors.black.withValues(alpha: 0.08)
+                        : Colors.black.withValues(alpha: 0.35),
                     blurRadius: 22,
                     offset: const Offset(0, 12),
                   ),
@@ -108,7 +108,9 @@ class CertificatePreviewScreen extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                  Divider(color: theme.colorScheme.onSurface.withOpacity(0.15)),
+                  Divider(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.15),
+                  ),
 
                   const SizedBox(height: 12),
 
@@ -170,7 +172,7 @@ class _Info extends StatelessWidget {
         Text(
           label,
           style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.6),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
           ),
         ),
         const SizedBox(height: 4),

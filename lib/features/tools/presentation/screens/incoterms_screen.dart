@@ -85,14 +85,14 @@ class IncotermsScreen extends StatelessWidget {
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: _terms.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 12),
+        separatorBuilder: (context, index) => const SizedBox(height: 12),
         itemBuilder: (context, index) {
           final term = _terms[index];
           return ExpansionTile(
-            collapsedBackgroundColor: cs.surfaceContainerHighest.withOpacity(
-              0.5,
+            collapsedBackgroundColor: cs.surfaceContainerHighest.withValues(
+              alpha: 0.5,
             ),
-            backgroundColor: cs.surfaceContainerHighest.withOpacity(0.3),
+            backgroundColor: cs.surfaceContainerHighest.withValues(alpha: 0.3),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),

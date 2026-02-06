@@ -102,7 +102,7 @@ class _ExportPriceCalculatorScreenState
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isHighlight
-            ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
+            ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
             : Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
       ),

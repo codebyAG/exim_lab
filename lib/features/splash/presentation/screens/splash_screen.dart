@@ -22,27 +22,29 @@ class _SplashScreenState extends State<SplashScreen> {
     checkForUpdates(context);
   }
 
-  void checkForUpdates(BuildContext context) {
+  Future<void> checkForUpdates(BuildContext context) async {
     if (!Platform.isAndroid) {
       goToLogin();
       return;
     }
 
-    InAppUpdate.checkForUpdate()
-        .then((updateInfo) {
-          if ((updateInfo.updateAvailability ==
-                      UpdateAvailability.updateAvailable ||
-                  updateInfo.updateAvailability ==
-                      UpdateAvailability.developerTriggeredUpdateInProgress) &&
-              updateInfo.immediateUpdateAllowed) {
-            showUpdateBottomSheet(context);
-          } else {
-            goToLogin();
-          }
-        })
-        .catchError((_) {
-          goToLogin();
-        });
+    try {
+      final updateInfo = await InAppUpdate.checkForUpdate();
+      if (!mounted) return;
+
+      if ((updateInfo.updateAvailability ==
+                  UpdateAvailability.updateAvailable ||
+              updateInfo.updateAvailability ==
+                  UpdateAvailability.developerTriggeredUpdateInProgress) &&
+          updateInfo.immediateUpdateAllowed) {
+        showUpdateBottomSheet(context);
+      } else {
+        goToLogin();
+      }
+    } catch (_) {
+      if (!mounted) return;
+      goToLogin();
+    }
   }
 
   void goToLogin() async {
@@ -52,6 +54,8 @@ class _SplashScreenState extends State<SplashScreen> {
     if (!mounted) return;
 
     final isLoggedIn = await context.read<AuthProvider>().checkLoginStatus();
+
+    if (!mounted) return;
 
     if (isLoggedIn) {
       AppNavigator.replace(context, const DashboardScreen());

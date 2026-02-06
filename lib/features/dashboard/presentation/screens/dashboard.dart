@@ -1,4 +1,3 @@
-import 'package:exim_lab/common/widgets/language_switch.dart';
 import 'package:exim_lab/common/widgets/promo_banner_dialog.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/certificates/presentation/screens/certificates_screen.dart';
@@ -8,6 +7,7 @@ import 'package:exim_lab/features/courses/presentation/screens/courses_details_s
 import 'package:exim_lab/features/courses/presentation/screens/courses_list_screen.dart';
 import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart';
 import 'package:exim_lab/features/dashboard/presentation/providers/dashboard_provider.dart';
+import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/continue_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/course_of_the_day.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/cta_carasoul.dart';
@@ -113,12 +113,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Text(
                           t.translate('welcome_back'),
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: cs.onSurface.withOpacity(0.6),
+                            color: cs.onSurface.withValues(alpha: 0.6),
                           ),
                         ),
                         SizedBox(height: 0.5.h),
                         Text(
-                          'Akash Goyal', // TODO: Dynamic User Name
+                          '${context.watch<AuthProvider>().user?.name ?? 'User'}',
                           style: theme.textTheme.headlineSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -356,7 +356,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: cs.shadow.withOpacity(0.05),
+              color: cs.shadow.withValues(alpha: 0.05),
               blurRadius: 20,
               offset: const Offset(0, -5),
             ),
@@ -366,7 +366,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           backgroundColor: cs.surface,
           elevation: 0,
           selectedItemColor: cs.primary,
-          unselectedItemColor: cs.onSurfaceVariant.withOpacity(0.6),
+          unselectedItemColor: cs.onSurfaceVariant.withValues(alpha: 0.6),
           selectedLabelStyle: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 13.sp,

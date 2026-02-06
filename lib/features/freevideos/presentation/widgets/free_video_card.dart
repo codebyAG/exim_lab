@@ -41,7 +41,7 @@ class FreeVideoCard extends StatelessWidget {
                     height: 7.h,
                     width: 7.h,
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.6),
+                      color: Colors.black.withValues(alpha: 0.6),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(

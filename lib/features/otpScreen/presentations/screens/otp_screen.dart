@@ -83,7 +83,9 @@ class _OtpScreenState extends State<OtpScreen> {
                     Text(
                       t.translate('otp_subtitle'),
                       style: theme.textTheme.bodyLarge?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.65),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.65,
+                        ),
                       ),
                     ),
 
@@ -106,8 +108,8 @@ class _OtpScreenState extends State<OtpScreen> {
                         fieldWidth: 42,
                         activeColor: theme.colorScheme.primary,
                         selectedColor: theme.colorScheme.primary,
-                        inactiveColor: theme.colorScheme.onSurface.withOpacity(
-                          0.3,
+                        inactiveColor: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.3,
                         ),
                       ),
                       onChanged: (value) {
@@ -177,7 +179,9 @@ class _OtpScreenState extends State<OtpScreen> {
                           t.translate('otp_footer'),
                           textAlign: TextAlign.center,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withOpacity(0.5),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.5,
+                            ),
                           ),
                         ),
                       ),

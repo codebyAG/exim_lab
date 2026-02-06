@@ -28,13 +28,13 @@ class QuickCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: cs.shadow.withOpacity(isDark ? 0.3 : 0.12),
+            color: cs.shadow.withValues(alpha: isDark ? 0.3 : 0.12),
             blurRadius: 18,
             offset: const Offset(0, 8),
           ),
         ],
         border: Border.all(
-          color: cs.outlineVariant.withOpacity(0.15),
+          color: cs.outlineVariant.withValues(alpha: 0.15),
           width: 1.5,
         ),
       ),
@@ -52,7 +52,7 @@ class QuickCard extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(1.2.h),
                   decoration: BoxDecoration(
-                    color: cs.primaryContainer.withOpacity(0.4),
+                    color: cs.primaryContainer.withValues(alpha: 0.4),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(icon, size: 3.h, color: cs.primary),

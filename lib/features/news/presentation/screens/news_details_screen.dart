@@ -57,7 +57,7 @@ class NewsDetailScreen extends StatelessWidget {
                   Text(
                     "${news.createdAt.day}/${news.createdAt.month}/${news.createdAt.year}",
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.6),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
 
@@ -78,7 +78,9 @@ class NewsDetailScreen extends StatelessWidget {
                     news.content,
                     style: theme.textTheme.bodyLarge?.copyWith(
                       height: 1.6,
-                      color: theme.colorScheme.onSurface.withOpacity(0.85),
+                      color: theme.colorScheme.onSurface.withValues(
+                        alpha: 0.85,
+                      ),
                     ),
                   ),
                 ],

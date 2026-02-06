@@ -7,9 +7,9 @@ ThemeData buildAppTheme(ColorScheme scheme) {
 
     // 🔹 CORE COLORS
     colorScheme: scheme,
-    scaffoldBackgroundColor: scheme.background,
+    scaffoldBackgroundColor: scheme.surface,
     cardColor: scheme.surface,
-    dividerColor: scheme.outline.withOpacity(0.3),
+    dividerColor: scheme.outline.withValues(alpha: 0.3),
 
     // 🔹 APP BAR
     appBarTheme: AppBarTheme(
@@ -26,33 +26,33 @@ ThemeData buildAppTheme(ColorScheme scheme) {
     ),
 
     // 🔹 ICONS (GLOBAL)
-    iconTheme: IconThemeData(color: scheme.onBackground, size: 22),
+    iconTheme: IconThemeData(color: scheme.onSurface, size: 22),
 
     // 🔹 TEXT
     textTheme: TextTheme(
       headlineMedium: TextStyle(
         fontSize: 28,
         fontWeight: FontWeight.bold,
-        color: scheme.onBackground,
+        color: scheme.onSurface,
       ),
       titleLarge: TextStyle(
         fontSize: 22,
         fontWeight: FontWeight.w600,
-        color: scheme.onBackground,
+        color: scheme.onSurface,
       ),
       titleMedium: TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w600,
-        color: scheme.onBackground,
+        color: scheme.onSurface,
       ),
-      bodyLarge: TextStyle(fontSize: 16, color: scheme.onBackground),
+      bodyLarge: TextStyle(fontSize: 16, color: scheme.onSurface),
       bodyMedium: TextStyle(
         fontSize: 14,
-        color: scheme.onBackground.withOpacity(0.85),
+        color: scheme.onSurface.withValues(alpha: 0.85),
       ),
       bodySmall: TextStyle(
         fontSize: 12,
-        color: scheme.onBackground.withOpacity(0.65),
+        color: scheme.onSurface.withValues(alpha: 0.65),
       ),
       labelLarge: TextStyle(
         fontSize: 14,
@@ -97,14 +97,14 @@ ThemeData buildAppTheme(ColorScheme scheme) {
         borderRadius: BorderRadius.circular(14),
         borderSide: BorderSide.none,
       ),
-      hintStyle: TextStyle(color: scheme.onSurface.withOpacity(0.5)),
+      hintStyle: TextStyle(color: scheme.onSurface.withValues(alpha: 0.5)),
     ),
 
     // 🔹 BOTTOM NAV
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: scheme.surface,
       selectedItemColor: scheme.primary,
-      unselectedItemColor: scheme.onSurface.withOpacity(0.5),
+      unselectedItemColor: scheme.onSurface.withValues(alpha: 0.5),
       selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
       showUnselectedLabels: true,
       elevation: 8,

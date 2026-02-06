@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'dart:io';
 import 'package:exim_lab/core/services/shared_pref_service.dart';
 
 Future<T> callApi<T>(
@@ -39,7 +40,9 @@ Future<T> callApi<T>(
   final dio = Dio();
 
   // 🔐 SSL handling (for dev / staging)
-  (dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (client) {
+  // 🔐 SSL handling (for dev / staging)
+  (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
+    final client = HttpClient();
     client.badCertificateCallback = (cert, host, port) => true;
     return client;
   };
