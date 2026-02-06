@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import 'package:exim_lab/localization/app_localization.dart';
+
 class NewsListScreen extends StatefulWidget {
   const NewsListScreen({super.key});
 
@@ -26,6 +28,7 @@ class _NewsListScreenState extends State<NewsListScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final t = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: cs.surface,
@@ -35,7 +38,7 @@ class _NewsListScreenState extends State<NewsListScreen> {
         elevation: 0,
         centerTitle: false,
         title: Text(
-          'Trade Updates',
+          t.translate('news'),
           style: theme.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.w600,
           ),

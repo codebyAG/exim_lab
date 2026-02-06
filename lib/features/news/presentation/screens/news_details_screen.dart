@@ -3,6 +3,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:exim_lab/features/news/data/models/news_model.dart';
 import 'package:sizer/sizer.dart';
 
+import 'package:exim_lab/localization/app_localization.dart'; // Add import
+
 class NewsDetailScreen extends StatelessWidget {
   final NewsModel news;
 
@@ -11,6 +13,7 @@ class NewsDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
@@ -19,7 +22,7 @@ class NewsDetailScreen extends StatelessWidget {
         elevation: 0,
         iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
         title: Text(
-          'Trade Update',
+          t.translate('news'),
           style: theme.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.w600,
           ),
