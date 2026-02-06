@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exim_lab/core/theme/theme_provider.dart';
+import 'package:exim_lab/localization/locale_provider.dart';
 import 'package:sizer/sizer.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -35,6 +36,36 @@ class SettingsScreen extends StatelessWidget {
             title: const Text('Dark Mode'),
             secondary: const Icon(Icons.dark_mode_outlined),
             contentPadding: EdgeInsets.zero,
+          ),
+
+          SizedBox(height: 3.h),
+
+          // LANGUAGE
+          Text(
+            'LANGUAGE',
+            style: theme.textTheme.labelMedium?.copyWith(
+              color: cs.primary,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.2,
+            ),
+          ),
+          SizedBox(height: 1.h),
+          Consumer<LocaleProvider>(
+            builder: (context, localeProvider, child) {
+              final currentLang = localeProvider.locale.languageCode == 'hi'
+                  ? 'Hindi'
+                  : 'English';
+              return ListTile(
+                leading: const Icon(Icons.language),
+                title: const Text('Change Language'),
+                subtitle: Text(currentLang),
+                contentPadding: EdgeInsets.zero,
+                trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
+                onTap: () {
+                  _showLanguageDialog(context, localeProvider);
+                },
+              );
+            },
           ),
 
           SizedBox(height: 3.h),
@@ -85,6 +116,55 @@ class SettingsScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showLanguageDialog(
+    BuildContext context,
+    LocaleProvider localeProvider,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Select Language'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: const Text('English'),
+                leading: Radio<String>(
+                  value: 'en',
+                  groupValue: localeProvider.locale.languageCode,
+                  onChanged: (val) {
+                    localeProvider.setLocale('en');
+                    Navigator.pop(context);
+                  },
+                ),
+                onTap: () {
+                  localeProvider.setLocale('en');
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: const Text('Hindi'),
+                leading: Radio<String>(
+                  value: 'hi',
+                  groupValue: localeProvider.locale.languageCode,
+                  onChanged: (val) {
+                    localeProvider.setLocale('hi');
+                    Navigator.pop(context);
+                  },
+                ),
+                onTap: () {
+                  localeProvider.setLocale('hi');
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
