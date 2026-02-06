@@ -78,7 +78,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'No notifications yet',
+                    t.translate('no_notifications'),
                     style: theme.textTheme.titleMedium?.copyWith(
                       color: cs.onSurface.withValues(alpha: 0.6),
                     ),

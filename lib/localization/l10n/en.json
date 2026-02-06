@@ -143,5 +143,15 @@
   "question_hint": "Type your question here...",
   "submit_question": "Submit Question",
   "questions_answers": "Questions & Answers",
-  "you_user": "You"
+  "you_user": "You",
+  "lets_start_learning": "Let's start learning!",
+  "tools_section_title": "Tools",
+  "tools_section_subtitle": "Everything you need in one place",
+  "ai_title": "Exim AI",
+  "ai_welcome": "Hi 👋 I’m Exim AI.\nAsk me anything about import–export, prices, documents or courses.",
+  "ai_error": "⚠️ Something went wrong. Please try again.",
+  "news": "Market News",
+  "no_news": "No news available.",
+  "read_more": "Read more",
+  "error": "Error"
 }

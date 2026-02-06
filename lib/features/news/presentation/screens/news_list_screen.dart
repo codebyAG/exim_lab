@@ -28,7 +28,7 @@ class _NewsListScreenState extends State<NewsListScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
-    final t = AppLocalizations.of(context)!;
+    final t = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: cs.surface,
@@ -51,11 +51,13 @@ class _NewsListScreenState extends State<NewsListScreen> {
           }
 
           if (newsProvider.error != null) {
-            return Center(child: Text('Error: ${newsProvider.error}'));
+            return Center(
+              child: Text('${t.translate('error')}: ${newsProvider.error}'),
+            );
           }
 
           if (newsProvider.newsList.isEmpty) {
-            return const Center(child: Text('No news available.'));
+            return Center(child: Text(t.translate('no_news')));
           }
 
           return ListView.separated(
@@ -81,6 +83,7 @@ class _NewsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final t = AppLocalizations.of(context);
     final dateStr =
         "${news.createdAt.day}/${news.createdAt.month}/${news.createdAt.year}";
 
@@ -193,7 +196,7 @@ class _NewsCard extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        'Read more',
+                        t.translate('read_more'),
                         style: theme.textTheme.labelLarge?.copyWith(
                           fontWeight: FontWeight.w700,
                           color: cs.primary,

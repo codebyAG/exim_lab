@@ -145,7 +145,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             const SizedBox(height: 4),
                             Text(
                               context.watch<AuthProvider>().user?.name ??
-                                  'Guest',
+                                  t!.translate('guest_user'),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: theme.textTheme.headlineMedium?.copyWith(
@@ -156,7 +156,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              "Let's start learning!",
+                              t!.translate('lets_start_learning'),
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: cs.onPrimary.withValues(alpha: 0.9),
                                 fontWeight: FontWeight.w600,
@@ -504,9 +504,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ],
 
                     // 8. TOOLS
-                    const SectionHeader(
-                      title: 'Tools',
-                      subtitle: 'Everything you need in one place',
+                    SectionHeader(
+                      title: t!.translate('tools_section_title'),
+                      subtitle: t.translate('tools_section_subtitle'),
                     ),
                     SizedBox(height: 1.5.h),
                     const ToolsSection(),
