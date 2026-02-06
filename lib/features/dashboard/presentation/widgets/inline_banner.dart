@@ -91,12 +91,15 @@ class _InlineBannerState extends State<InlineBanner> {
                 ],
                 SizedBox(height: 2.h),
                 SizedBox(
-                  height: 4.5.h,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: cs.primary,
                       elevation: 0,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 4.w,
+                        vertical: 1.2.h,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -113,6 +116,7 @@ class _InlineBannerState extends State<InlineBanner> {
                       _banner!.ctaText.isEmpty
                           ? 'Learn More'
                           : _banner!.ctaText,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
