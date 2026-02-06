@@ -285,7 +285,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               return Center(
                                                 child: Icon(
                                                   Icons.person,
-                                                  color: cs.primary,
+                                                  color: Colors.white,
                                                 ),
                                               );
                                             },
@@ -310,7 +310,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           );
                                         },
                                       )
-                                    : Icon(Icons.person, color: cs.primary),
+                                    : Icon(Icons.person, color: Colors.white),
                               ),
                             ),
                           ),
