@@ -73,5 +73,19 @@
   "iec_registration_process": "IEC पंजीकरण प्रक्रिया",
   "gst_for_import_export": "आयात निर्यात के लिए GST",
   "terms_privacy": "आगे बढ़ने पर आप हमारी सेवा की शर्तों और गोपनीयता नीति से सहमत होते हैं।",
-  "news": "समाचार"
+  "news": "समाचार",
+  "quizzes_title": "क्विज़",
+  "quizzes_subtitle": "कौशल का परीक्षण करें",
+  "learn_more": "अधिक जानें",
+  "tool_export_calc": "निर्यात मूल्य कैलकुलेटर",
+  "tool_export_calc_sub": "बिक्री मूल्य और लाभ की गणना करें",
+  "tool_cbm_calc": "CBM कैलकुलेटर",
+  "tool_cbm_calc_sub": "shipment आयतन की गणना करें",
+  "tool_gst_calc": "GST कैलकुलेटर",
+  "tool_gst_calc_sub": "कर और कुल राशि",
+  "tool_incoterms": "इनकोटर्म्स 2020",
+  "tool_incoterms_sub": "लॉजिस्टिक्स नियम गाइड",
+  "notifications": "सूचनाएं",
+  "mark_all_read": "सभी को पढ़ा हुआ चिह्नित करें",
+  "no_notifications": "अभी कोई सूचना नहीं है"
 }

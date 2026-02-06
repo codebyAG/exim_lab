@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:exim_lab/localization/app_localization.dart';
+
 class InlineBanner extends StatefulWidget {
   final List<BannerModel> banners;
   const InlineBanner({super.key, required this.banners});
@@ -29,6 +31,7 @@ class _InlineBannerState extends State<InlineBanner> {
 
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final t = AppLocalizations.of(context)!;
 
     // Sanitize URL
     String imgUrl = _banner!.imageUrl.trim();
@@ -114,7 +117,7 @@ class _InlineBannerState extends State<InlineBanner> {
                     },
                     child: Text(
                       _banner!.ctaText.isEmpty
-                          ? 'Learn More'
+                          ? t.translate('learn_more')
                           : _banner!.ctaText,
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),

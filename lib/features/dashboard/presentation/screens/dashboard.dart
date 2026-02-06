@@ -346,8 +346,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           Expanded(
                             child: QuickCard(
                               icon: Icons.quiz_rounded,
-                              title: 'Quizzes',
-                              subtitle: 'Test skills',
+                              title: t.translate('quizzes_title'),
+                              subtitle: t.translate('quizzes_subtitle'),
                               onTap: () => AppNavigator.push(
                                 context,
                                 const QuizTopicsScreen(),

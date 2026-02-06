@@ -5,6 +5,7 @@ import 'package:exim_lab/features/tools/presentation/screens/gst_calculator.dart
 import 'package:exim_lab/features/tools/presentation/screens/incoterms_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:exim_lab/localization/app_localization.dart';
 import 'tool_card.dart';
 
 class ToolsSection extends StatelessWidget {
@@ -12,6 +13,7 @@ class ToolsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return SizedBox(
       height: 22.h, // ✅ responsive height
       child: ListView(
@@ -20,8 +22,8 @@ class ToolsSection extends StatelessWidget {
         children: [
           ToolCard(
             icon: Icons.calculate,
-            title: 'Export Price Calculator',
-            subtitle: 'Calculate selling price & profit',
+            title: t.translate('tool_export_calc'),
+            subtitle: t.translate('tool_export_calc_sub'),
             onTap: () {
               AppNavigator.push(context, const ExportPriceCalculatorScreen());
             },
@@ -31,8 +33,8 @@ class ToolsSection extends StatelessWidget {
 
           ToolCard(
             icon: Icons.aspect_ratio_rounded,
-            title: 'CBM Calculator',
-            subtitle: 'Calculate shipment volume',
+            title: t.translate('tool_cbm_calc'),
+            subtitle: t.translate('tool_cbm_calc_sub'),
             onTap: () {
               AppNavigator.push(context, const CbmCalculatorScreen());
             },
@@ -42,8 +44,8 @@ class ToolsSection extends StatelessWidget {
 
           ToolCard(
             icon: Icons.percent_rounded,
-            title: 'GST Calculator',
-            subtitle: 'Tax & Total Amount',
+            title: t.translate('tool_gst_calc'),
+            subtitle: t.translate('tool_gst_calc_sub'),
             onTap: () {
               AppNavigator.push(context, const GstCalculatorScreen());
             },
@@ -53,8 +55,8 @@ class ToolsSection extends StatelessWidget {
 
           ToolCard(
             icon: Icons.menu_book_rounded,
-            title: 'Incoterms 2020',
-            subtitle: 'Shipping Terms Guide',
+            title: t.translate('tool_incoterms'),
+            subtitle: t.translate('tool_incoterms_sub'),
             onTap: () {
               AppNavigator.push(context, const IncotermsScreen());
             },

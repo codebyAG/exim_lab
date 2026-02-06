@@ -73,5 +73,19 @@
   "iec_registration_process": "IEC Registration Process",
   "gst_for_import_export": "GST for Import Export",
   "terms_privacy": "By continuing, you agree to our Terms of Service and Privacy Policy.",
-  "news": "News"
+  "news": "News",
+  "quizzes_title": "Quizzes",
+  "quizzes_subtitle": "Test skills",
+  "learn_more": "Learn More",
+  "tool_export_calc": "Export Price Calculator",
+  "tool_export_calc_sub": "Calculate selling price & profit",
+  "tool_cbm_calc": "CBM Calculator",
+  "tool_cbm_calc_sub": "Calculate shipment volume",
+  "tool_gst_calc": "GST Calculator",
+  "tool_gst_calc_sub": "Tax & Total Amount",
+  "tool_incoterms": "Incoterms 2020",
+  "tool_incoterms_sub": "Shipping Terms Guide",
+  "notifications": "Notifications",
+  "mark_all_read": "Mark all as read",
+  "no_notifications": "No notifications yet"
 }
