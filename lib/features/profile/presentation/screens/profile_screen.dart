@@ -6,6 +6,7 @@ import 'package:exim_lab/features/profile/presentation/screens/update_profile_sc
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:exim_lab/localization/app_localization.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -29,11 +30,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final cs = theme.colorScheme;
     final authProvider = context.watch<AuthProvider>();
     final user = authProvider.user;
+    final t = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: cs.surface,
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: Text(t.translate('profile_title')),
         centerTitle: true,
         backgroundColor: cs.surface,
         elevation: 0,
@@ -113,7 +115,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          user?.name ?? 'Guest',
+                          user?.name ?? t.translate('guest_user'),
                           style: theme.textTheme.titleLarge?.copyWith(
                             color: cs.onPrimaryContainer,
                             fontWeight: FontWeight.bold,
@@ -121,7 +123,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         SizedBox(height: 0.5.h),
                         Text(
-                          user?.email ?? user?.mobile ?? 'No Email',
+                          user?.email ??
+                              user?.mobile ??
+                              t.translate('no_email'),
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: cs.onPrimaryContainer.withValues(alpha: 0.8),
                           ),
@@ -148,21 +152,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Row(
                 children: [
                   _StatsCard(
-                    label: 'Active',
+                    label: t.translate('stats_active'),
                     value: '${user?.stats?.activeCourses ?? 0}',
                     icon: Icons.play_circle_outline_rounded,
                     color: Colors.blue,
                   ),
                   SizedBox(width: 3.w),
                   _StatsCard(
-                    label: 'Completed',
+                    label: t.translate('stats_completed'),
                     value: '${user?.stats?.completedCourses ?? 0}',
                     icon: Icons.check_circle_outline_rounded,
                     color: Colors.green,
                   ),
                   SizedBox(width: 3.w),
                   _StatsCard(
-                    label: 'Quizzes',
+                    label: t.translate('stats_quizzes'),
                     value: '${user?.stats?.quizzesTaken ?? 0}',
                     icon: Icons.quiz_outlined,
                     color: Colors.orange,
@@ -174,24 +178,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // MENU OPTIONS
             _ProfileOption(
               icon: Icons.person_outline_rounded,
-              title: 'My Details',
+              title: t.translate('menu_my_details'),
               onTap: () {},
             ),
             _ProfileOption(
               icon: Icons.settings_outlined,
-              title: 'Settings',
+              title: t.translate('menu_settings'),
               onTap: () {
                 AppNavigator.push(context, const SettingsScreen());
               },
             ),
             _ProfileOption(
               icon: Icons.help_outline_rounded,
-              title: 'Help & Support',
+              title: t.translate('menu_help'),
               onTap: () {},
             ),
             _ProfileOption(
               icon: Icons.privacy_tip_outlined,
-              title: 'Privacy Policy',
+              title: t.translate('menu_privacy'),
               onTap: () {},
             ),
 
@@ -200,7 +204,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // LOGOUT
             _ProfileOption(
               icon: Icons.logout_rounded,
-              title: 'Logout',
+              title: t.translate('menu_logout'),
               isDestructive: true,
               onTap: () => _handleLogout(context),
             ),
@@ -211,15 +215,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _handleLogout(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
+        title: Text(
+          t.translate('logout_confirm_title') ?? 'Logout',
+        ), // Default fallback if key missing
+        content: Text(t.translate('logout_confirm_msg')),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
+            child: Text(t.translate('cancel')),
           ),
           TextButton(
             onPressed: () async {
@@ -233,7 +240,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 AppNavigator.replace(context, const WelcomeScreen());
               }
             },
-            child: const Text('Logout', style: TextStyle(color: Colors.red)),
+            child: Text(
+              t.translate('menu_logout'),
+              style: const TextStyle(color: Colors.red),
+            ),
           ),
         ],
       ),

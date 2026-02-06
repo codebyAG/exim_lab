@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exim_lab/core/theme/theme_provider.dart';
 import 'package:exim_lab/localization/locale_provider.dart';
+import 'package:exim_lab/localization/app_localization.dart';
 import 'package:sizer/sizer.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -12,15 +13,19 @@ class SettingsScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final themeProvider = context.watch<ThemeProvider>();
+    final t = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings'), centerTitle: true),
+      appBar: AppBar(
+        title: Text(t.translate('settings_title')),
+        centerTitle: true,
+      ),
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
         children: [
           // APPEARANCE
           Text(
-            'APPEARANCE',
+            t.translate('appearance_section'),
             style: theme.textTheme.labelMedium?.copyWith(
               color: cs.primary,
               fontWeight: FontWeight.bold,
@@ -33,7 +38,7 @@ class SettingsScreen extends StatelessWidget {
             onChanged: (val) {
               val ? themeProvider.setDark() : themeProvider.setLight();
             },
-            title: const Text('Dark Mode'),
+            title: Text(t.translate('dark_mode')),
             secondary: const Icon(Icons.dark_mode_outlined),
             contentPadding: EdgeInsets.zero,
           ),
@@ -42,7 +47,7 @@ class SettingsScreen extends StatelessWidget {
 
           // LANGUAGE
           Text(
-            'LANGUAGE',
+            t.translate('language_section'),
             style: theme.textTheme.labelMedium?.copyWith(
               color: cs.primary,
               fontWeight: FontWeight.bold,
@@ -57,7 +62,7 @@ class SettingsScreen extends StatelessWidget {
                   : 'English';
               return ListTile(
                 leading: const Icon(Icons.language),
-                title: const Text('Change Language'),
+                title: Text(t.translate('change_language')),
                 subtitle: Text(currentLang),
                 contentPadding: EdgeInsets.zero,
                 trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
@@ -72,7 +77,7 @@ class SettingsScreen extends StatelessWidget {
 
           // NOTIFICATIONS
           Text(
-            'NOTIFICATIONS',
+            t.translate('notifications_section'),
             style: theme.textTheme.labelMedium?.copyWith(
               color: cs.primary,
               fontWeight: FontWeight.bold,
@@ -83,14 +88,14 @@ class SettingsScreen extends StatelessWidget {
           SwitchListTile(
             value: true,
             onChanged: (val) {},
-            title: const Text('Push Notifications'),
+            title: Text(t.translate('push_notifications')),
             secondary: const Icon(Icons.notifications_outlined),
             contentPadding: EdgeInsets.zero,
           ),
           SwitchListTile(
             value: true,
             onChanged: (val) {},
-            title: const Text('Email Updates'),
+            title: Text(t.translate('email_updates')),
             secondary: const Icon(Icons.email_outlined),
             contentPadding: EdgeInsets.zero,
           ),
@@ -99,7 +104,7 @@ class SettingsScreen extends StatelessWidget {
 
           // OTHER
           Text(
-            'OTHER',
+            t.translate('other_section'),
             style: theme.textTheme.labelMedium?.copyWith(
               color: cs.primary,
               fontWeight: FontWeight.bold,
@@ -109,8 +114,8 @@ class SettingsScreen extends StatelessWidget {
           SizedBox(height: 1.h),
           ListTile(
             leading: const Icon(Icons.info_outline),
-            title: const Text('About App'),
-            subtitle: const Text('Version 1.0.0'),
+            title: Text(t.translate('about_app')),
+            subtitle: Text('${t.translate('version')} 1.0.0'),
             contentPadding: EdgeInsets.zero,
             onTap: () {},
           ),
@@ -126,8 +131,9 @@ class SettingsScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) {
+        final t = AppLocalizations.of(context)!;
         return AlertDialog(
-          title: const Text('Select Language'),
+          title: Text(t.translate('select_language')),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
