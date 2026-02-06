@@ -250,22 +250,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               decoration: BoxDecoration(
                                 color: cs.primaryContainer,
                                 shape: BoxShape.circle,
-                                image:
-                                    context
-                                            .watch<AuthProvider>()
-                                            .user
-                                            ?.avatarUrl !=
-                                        null
-                                    ? DecorationImage(
-                                        image: NetworkImage(
-                                          context
-                                              .watch<AuthProvider>()
-                                              .user!
-                                              .avatarUrl!,
-                                        ),
-                                        fit: BoxFit.cover,
-                                      )
-                                    : null,
                                 border: Border.all(
                                   color: cs.onPrimary.withValues(alpha: 0.5),
                                   width: 2,
@@ -278,14 +262,56 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 ],
                               ),
-                              child:
-                                  context
-                                          .watch<AuthProvider>()
-                                          .user
-                                          ?.avatarUrl ==
-                                      null
-                                  ? Icon(Icons.person, color: cs.primary)
-                                  : null,
+                              child: ClipOval(
+                                child:
+                                    (context
+                                                .watch<AuthProvider>()
+                                                .user
+                                                ?.avatarUrl !=
+                                            null &&
+                                        context
+                                            .watch<AuthProvider>()
+                                            .user!
+                                            .avatarUrl!
+                                            .isNotEmpty)
+                                    ? Image.network(
+                                        context
+                                            .watch<AuthProvider>()
+                                            .user!
+                                            .avatarUrl!,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                              return Center(
+                                                child: Icon(
+                                                  Icons.person,
+                                                  color: cs.primary,
+                                                ),
+                                              );
+                                            },
+                                        loadingBuilder: (context, child, loadingProgress) {
+                                          if (loadingProgress == null)
+                                            return child;
+                                          return Padding(
+                                            padding: const EdgeInsets.all(12.0),
+                                            child: CircularProgressIndicator(
+                                              value:
+                                                  loadingProgress
+                                                          .expectedTotalBytes !=
+                                                      null
+                                                  ? loadingProgress
+                                                            .cumulativeBytesLoaded /
+                                                        loadingProgress
+                                                            .expectedTotalBytes!
+                                                  : null,
+                                              strokeWidth: 2,
+                                              color: cs.primary,
+                                            ),
+                                          );
+                                        },
+                                      )
+                                    : Icon(Icons.person, color: cs.primary),
+                              ),
                             ),
                           ),
                         ],
