@@ -99,403 +99,403 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Icon(Icons.support_agent, color: cs.onPrimary, size: 28),
       ),
 
-      body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () =>
-              context.read<DashboardProvider>().fetchDashboardData(),
-          child: ListView(
-            padding: EdgeInsets.symmetric(vertical: 2.h),
-            children: [
-              // 1. HEADER
-              Container(
-                padding: EdgeInsets.fromLTRB(5.w, 1.h, 5.w, 2.5.h),
-                decoration: BoxDecoration(
-                  color: cs.surface,
-                  borderRadius: const BorderRadius.vertical(
-                    bottom: Radius.circular(30),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: cs.shadow.withValues(alpha: 0.05),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
+      body: RefreshIndicator(
+        onRefresh: () => context.read<DashboardProvider>().fetchDashboardData(),
+        child: ListView(
+          padding: EdgeInsets
+              .zero, // Remove vertical padding from listview to touch top
+          children: [
+            // 1. HEADER
+            Container(
+              padding: EdgeInsets.fromLTRB(
+                5.w,
+                6.h,
+                5.w,
+                3.h,
+              ), // Increased top padding for status bar adjustment
+              decoration: BoxDecoration(
+                color: cs.primary,
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(30),
                 ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              t.translate('welcome_back'),
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                color: cs.onSurface.withValues(alpha: 0.6),
-                                fontWeight: FontWeight.w500,
-                              ),
+                boxShadow: [
+                  BoxShadow(
+                    color: cs.shadow.withValues(alpha: 0.05),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            t.translate('welcome_back'),
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              color: cs.onPrimary.withValues(alpha: 0.8),
+                              fontWeight: FontWeight.w500,
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              context.watch<AuthProvider>().user?.name ??
-                                  'Guest',
-                              style: theme.textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.w800,
-                                letterSpacing: -0.5,
-                                color: cs.onSurface,
-                              ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            context.watch<AuthProvider>().user?.name ?? 'Guest',
+                            style: theme.textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -0.5,
+                              color: cs.onPrimary,
                             ),
-                            const SizedBox(height: 2),
-                            Text(
-                              "Let's start learning!",
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: cs.primary,
-                                fontWeight: FontWeight.w600,
-                              ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            "Let's start learning!",
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: cs.onPrimary.withValues(alpha: 0.9),
+                              fontWeight: FontWeight.w600,
                             ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            // NOTIFICATION BELL
-                            Consumer<NotificationsProvider>(
-                              builder: (context, notifProvider, child) {
-                                return Stack(
-                                  clipBehavior: Clip.none,
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: cs.surfaceContainerHighest
-                                            .withValues(alpha: 0.5),
-                                        shape: BoxShape.circle,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          // NOTIFICATION BELL
+                          Consumer<NotificationsProvider>(
+                            builder: (context, notifProvider, child) {
+                              return Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: cs.onPrimary.withValues(
+                                        alpha: 0.2,
                                       ),
-                                      child: IconButton(
-                                        onPressed: () {
-                                          AppNavigator.push(
-                                            context,
-                                            const NotificationsScreen(),
-                                          );
-                                        },
-                                        icon: Icon(
-                                          Icons.notifications_outlined,
-                                          color: cs.onSurface,
-                                          size: 24,
-                                        ),
-                                        padding: EdgeInsets.zero,
-                                        constraints: const BoxConstraints(
-                                          minWidth: 46,
-                                          minHeight: 46,
-                                        ),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: IconButton(
+                                      onPressed: () {
+                                        AppNavigator.push(
+                                          context,
+                                          const NotificationsScreen(),
+                                        );
+                                      },
+                                      icon: Icon(
+                                        Icons.notifications_outlined,
+                                        color: cs.onPrimary,
+                                        size: 24,
+                                      ),
+                                      padding: EdgeInsets.zero,
+                                      constraints: const BoxConstraints(
+                                        minWidth: 46,
+                                        minHeight: 46,
                                       ),
                                     ),
-                                    if (notifProvider.unreadCount > 0)
-                                      Positioned(
-                                        right: 0,
-                                        top: 0,
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 5,
-                                            vertical: 2,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: cs.error,
-                                            borderRadius: BorderRadius.circular(
-                                              10,
-                                            ),
-                                            border: Border.all(
-                                              color: cs.surface,
-                                              width: 2,
-                                            ),
-                                          ),
-                                          constraints: const BoxConstraints(
-                                            minWidth: 18,
-                                            minHeight: 18,
-                                          ),
-                                          child: Text(
-                                            '${notifProvider.unreadCount}',
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                );
-                              },
-                            ),
-                            SizedBox(width: 3.w),
-
-                            // PROFILE
-                            InkWell(
-                              onTap: () {
-                                AppNavigator.push(
-                                  context,
-                                  const ProfileScreen(),
-                                );
-                              },
-                              child: Container(
-                                height: 46,
-                                width: 46,
-                                decoration: BoxDecoration(
-                                  color: cs.primaryContainer,
-                                  shape: BoxShape.circle,
-                                  image:
-                                      context
-                                              .watch<AuthProvider>()
-                                              .user
-                                              ?.avatarUrl !=
-                                          null
-                                      ? DecorationImage(
-                                          image: NetworkImage(
-                                            context
-                                                .watch<AuthProvider>()
-                                                .user!
-                                                .avatarUrl!,
-                                          ),
-                                          fit: BoxFit.cover,
-                                        )
-                                      : null,
-                                  border: Border.all(
-                                    color: cs.surface,
-                                    width: 2,
                                   ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: cs.shadow.withValues(alpha: 0.1),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 4),
+                                  if (notifProvider.unreadCount > 0)
+                                    Positioned(
+                                      right: 0,
+                                      top: 0,
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 5,
+                                          vertical: 2,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: cs.error,
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                          border: Border.all(
+                                            color: cs.primary,
+                                            width: 2,
+                                          ),
+                                        ),
+                                        constraints: const BoxConstraints(
+                                          minWidth: 18,
+                                          minHeight: 18,
+                                        ),
+                                        child: Text(
+                                          '${notifProvider.unreadCount}',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
                                     ),
-                                  ],
-                                ),
-                                child:
+                                ],
+                              );
+                            },
+                          ),
+                          SizedBox(width: 3.w),
+
+                          // PROFILE
+                          InkWell(
+                            onTap: () {
+                              AppNavigator.push(context, const ProfileScreen());
+                            },
+                            child: Container(
+                              height: 46,
+                              width: 46,
+                              decoration: BoxDecoration(
+                                color: cs.primaryContainer,
+                                shape: BoxShape.circle,
+                                image:
                                     context
                                             .watch<AuthProvider>()
                                             .user
-                                            ?.avatarUrl ==
+                                            ?.avatarUrl !=
                                         null
-                                    ? Icon(Icons.person, color: cs.primary)
-                                    : null,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              // DYNAMIC CONTENT
-              Consumer<DashboardProvider>(
-                builder: (context, dashboard, child) {
-                  if (dashboard.isLoading) {
-                    return SizedBox(
-                      height: 50.h,
-                      child: const Center(child: CircularProgressIndicator()),
-                    );
-                  }
-
-                  if (dashboard.error != null) {
-                    return Center(child: Text('Error: ${dashboard.error}'));
-                  }
-
-                  final data = dashboard.data;
-                  if (data == null) return const SizedBox();
-
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // 3. CAROUSEL (From Addons)
-                      if (data.addons.carousel.isNotEmpty) ...[
-                        CtaCarousel(banners: data.addons.carousel),
-                        SizedBox(height: 3.h),
-                      ],
-
-                      // 4. QUICK ACTIONS (Static)
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 5.w),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: QuickCard(
-                                icon: Icons.video_library_rounded,
-                                title: t.translate('my_courses'),
-                                subtitle: t.translate('completed_status'),
-                                onTap: () => AppNavigator.push(
-                                  context,
-                                  const CoursesListScreen(),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 3.w),
-                            // Resources Removed
-                            SizedBox(width: 3.w),
-                            Expanded(
-                              child: QuickCard(
-                                icon: Icons.workspace_premium_rounded,
-                                title: t.translate('certificates'),
-                                subtitle: t.translate('track_progress'),
-                                onTap: () => AppNavigator.push(
-                                  context,
-                                  const CertificatesScreen(),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 3.w),
-                            Expanded(
-                              child: QuickCard(
-                                icon: Icons.quiz_rounded,
-                                title: 'Quizzes',
-                                subtitle: 'Test skills',
-                                onTap: () => AppNavigator.push(
-                                  context,
-                                  const QuizTopicsScreen(),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-
-                      // 5. LIVE SEMINAR (If present)
-                      if (data.liveSeminar != null) ...[
-                        LiveSeminarCard(
-                          title: data.liveSeminar!.title,
-                          subtitle: data.liveSeminar!.subtitle,
-                          dateTime: data.liveSeminar!.dateTime,
-                          onTap: () {},
-                        ),
-                        SizedBox(height: 4.h),
-                      ],
-
-                      // 6. DYNAMIC SECTIONS LOOP
-                      ...data.sections.map((section) {
-                        // CONTINUE WATCHING
-                        if (section.key == 'continue') {
-                          final courses = section.data.cast<CourseModel>();
-                          if (courses.isEmpty) return const SizedBox();
-
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SectionHeader(
-                                title: section.title,
-                                subtitle: section.subtitle,
-                              ),
-                              SizedBox(height: 1.5.h),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                child: Row(
-                                  children: courses
-                                      .map(
-                                        (course) => ContinueCard(
-                                          course: course,
-                                          onTap: () {
-                                            AppNavigator.push(
-                                              context,
-                                              CourseDetailsScreen(
-                                                courseId: course.id,
-                                              ),
-                                            );
-                                          },
+                                    ? DecorationImage(
+                                        image: NetworkImage(
+                                          context
+                                              .watch<AuthProvider>()
+                                              .user!
+                                              .avatarUrl!,
                                         ),
+                                        fit: BoxFit.cover,
                                       )
-                                      .toList(),
+                                    : null,
+                                border: Border.all(
+                                  color: cs.onPrimary.withValues(alpha: 0.5),
+                                  width: 2,
                                 ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: cs.shadow.withValues(alpha: 0.1),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
                               ),
-                              SizedBox(height: 2.h),
-                            ],
-                          );
-                        }
-
-                        // COURSES
-                        if (section.key == 'course' ||
-                            section.key.contains('Popular') ||
-                            section.key.contains('Recommended')) {
-                          final courses = section.data.cast<CourseModel>();
-                          if (courses.isEmpty) return const SizedBox();
-
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SectionHeader(
-                                title: section.title,
-                                subtitle: section.subtitle,
-                              ),
-                              SizedBox(height: 1.5.h),
-                              HorizontalCourses(courses: courses),
-                              SizedBox(height: 2.h),
-                            ],
-                          );
-                        }
-                        // FREE VIDEOS
-                        else if (section.key == 'freeVideos') {
-                          final videos = section.data.cast<FreeVideoModel>();
-                          if (videos.isEmpty) return const SizedBox();
-
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SectionHeader(
-                                title: section.title,
-                                subtitle: section.subtitle,
-                              ),
-                              SizedBox(height: 1.5.h),
-                              FreeVideosSection(videos: videos),
-                              SizedBox(height: 2.h),
-                            ],
-                          );
-                        }
-                        // BANNERS
-                        else if (section.key == 'banner') {
-                          final banners = section.data.cast<BannerModel>();
-                          if (banners.isEmpty) return const SizedBox();
-
-                          return Column(
-                            children: [
-                              InlineBanner(banners: banners),
-                              SizedBox(height: 2.h),
-                            ],
-                          );
-                        }
-                        return const SizedBox();
-                      }),
-
-                      // 7. COURSE OF THE DAY
-                      if (data.courseOfTheDay != null) ...[
-                        CourseOfTheDayCard(
-                          title: data.courseOfTheDay!.title,
-                          subtitle: data.courseOfTheDay!.subtitle,
-                          priceText: data.courseOfTheDay!.priceText,
-                          badgeText: data.courseOfTheDay!.badgeText,
-                          imagePath: data.courseOfTheDay!.imageUrl,
-                          onTap: () {},
-                        ),
-                        SizedBox(height: 2.h),
-                      ],
-
-                      // 8. TOOLS
-                      const SectionHeader(
-                        title: 'Tools',
-                        subtitle: 'Everything you need in one place',
+                              child:
+                                  context
+                                          .watch<AuthProvider>()
+                                          .user
+                                          ?.avatarUrl ==
+                                      null
+                                  ? Icon(Icons.person, color: cs.primary)
+                                  : null,
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 1.5.h),
-                      const ToolsSection(),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            // DYNAMIC CONTENT
+            Consumer<DashboardProvider>(
+              builder: (context, dashboard, child) {
+                if (dashboard.isLoading) {
+                  return SizedBox(
+                    height: 50.h,
+                    child: const Center(child: CircularProgressIndicator()),
+                  );
+                }
+
+                if (dashboard.error != null) {
+                  return Center(child: Text('Error: ${dashboard.error}'));
+                }
+
+                final data = dashboard.data;
+                if (data == null) return const SizedBox();
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // 3. CAROUSEL (From Addons)
+                    if (data.addons.carousel.isNotEmpty) ...[
+                      CtaCarousel(banners: data.addons.carousel),
+                      SizedBox(height: 3.h),
+                    ],
+
+                    // 4. QUICK ACTIONS (Static)
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 5.w),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: QuickCard(
+                              icon: Icons.video_library_rounded,
+                              title: t.translate('my_courses'),
+                              subtitle: t.translate('completed_status'),
+                              onTap: () => AppNavigator.push(
+                                context,
+                                const CoursesListScreen(),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 3.w),
+                          // Resources Removed
+                          SizedBox(width: 3.w),
+                          Expanded(
+                            child: QuickCard(
+                              icon: Icons.workspace_premium_rounded,
+                              title: t.translate('certificates'),
+                              subtitle: t.translate('track_progress'),
+                              onTap: () => AppNavigator.push(
+                                context,
+                                const CertificatesScreen(),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 3.w),
+                          Expanded(
+                            child: QuickCard(
+                              icon: Icons.quiz_rounded,
+                              title: 'Quizzes',
+                              subtitle: 'Test skills',
+                              onTap: () => AppNavigator.push(
+                                context,
+                                const QuizTopicsScreen(),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+
+                    // 5. LIVE SEMINAR (If present)
+                    if (data.liveSeminar != null) ...[
+                      LiveSeminarCard(
+                        title: data.liveSeminar!.title,
+                        subtitle: data.liveSeminar!.subtitle,
+                        dateTime: data.liveSeminar!.dateTime,
+                        onTap: () {},
+                      ),
                       SizedBox(height: 4.h),
                     ],
-                  );
-                },
-              ),
-            ],
-          ),
+
+                    // 6. DYNAMIC SECTIONS LOOP
+                    ...data.sections.map((section) {
+                      // CONTINUE WATCHING
+                      if (section.key == 'continue') {
+                        final courses = section.data.cast<CourseModel>();
+                        if (courses.isEmpty) return const SizedBox();
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SectionHeader(
+                              title: section.title,
+                              subtitle: section.subtitle,
+                            ),
+                            SizedBox(height: 1.5.h),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              padding: EdgeInsets.symmetric(horizontal: 5.w),
+                              child: Row(
+                                children: courses
+                                    .map(
+                                      (course) => ContinueCard(
+                                        course: course,
+                                        onTap: () {
+                                          AppNavigator.push(
+                                            context,
+                                            CourseDetailsScreen(
+                                              courseId: course.id,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            ),
+                            SizedBox(height: 2.h),
+                          ],
+                        );
+                      }
+
+                      // COURSES
+                      if (section.key == 'course' ||
+                          section.key.contains('Popular') ||
+                          section.key.contains('Recommended')) {
+                        final courses = section.data.cast<CourseModel>();
+                        if (courses.isEmpty) return const SizedBox();
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SectionHeader(
+                              title: section.title,
+                              subtitle: section.subtitle,
+                            ),
+                            SizedBox(height: 1.5.h),
+                            HorizontalCourses(courses: courses),
+                            SizedBox(height: 2.h),
+                          ],
+                        );
+                      }
+                      // FREE VIDEOS
+                      else if (section.key == 'freeVideos') {
+                        final videos = section.data.cast<FreeVideoModel>();
+                        if (videos.isEmpty) return const SizedBox();
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SectionHeader(
+                              title: section.title,
+                              subtitle: section.subtitle,
+                            ),
+                            SizedBox(height: 1.5.h),
+                            FreeVideosSection(videos: videos),
+                            SizedBox(height: 2.h),
+                          ],
+                        );
+                      }
+                      // BANNERS
+                      else if (section.key == 'banner') {
+                        final banners = section.data.cast<BannerModel>();
+                        if (banners.isEmpty) return const SizedBox();
+
+                        return Column(
+                          children: [
+                            InlineBanner(banners: banners),
+                            SizedBox(height: 2.h),
+                          ],
+                        );
+                      }
+                      return const SizedBox();
+                    }),
+
+                    // 7. COURSE OF THE DAY
+                    if (data.courseOfTheDay != null) ...[
+                      CourseOfTheDayCard(
+                        title: data.courseOfTheDay!.title,
+                        subtitle: data.courseOfTheDay!.subtitle,
+                        priceText: data.courseOfTheDay!.priceText,
+                        badgeText: data.courseOfTheDay!.badgeText,
+                        imagePath: data.courseOfTheDay!.imageUrl,
+                        onTap: () {},
+                      ),
+                      SizedBox(height: 2.h),
+                    ],
+
+                    // 8. TOOLS
+                    const SectionHeader(
+                      title: 'Tools',
+                      subtitle: 'Everything you need in one place',
+                    ),
+                    SizedBox(height: 1.5.h),
+                    const ToolsSection(),
+                    SizedBox(height: 4.h),
+                  ],
+                );
+              },
+            ),
+          ],
         ),
       ),
 
