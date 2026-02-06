@@ -109,7 +109,6 @@ class CtaCarouselState extends State<CtaCarousel> {
                       // CTA BUTTON
                       if (banner.ctaText.isNotEmpty)
                         SizedBox(
-                          height: 4.6.h,
                           child: ElevatedButton(
                             onPressed: () {
                               if (banner.ctaUrl.isNotEmpty) {
@@ -117,15 +116,22 @@ class CtaCarouselState extends State<CtaCarousel> {
                               }
                             },
                             style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(horizontal: 4.w),
+                              backgroundColor: cs.primary,
+                              foregroundColor: cs.onPrimary,
+                              elevation: 2,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 4.w,
+                                vertical: 1.2.h,
+                              ),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(14),
+                                borderRadius: BorderRadius.circular(12),
                               ),
                             ),
                             child: Text(
                               banner.ctaText,
                               style: theme.textTheme.labelLarge?.copyWith(
                                 color: cs.onPrimary,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),

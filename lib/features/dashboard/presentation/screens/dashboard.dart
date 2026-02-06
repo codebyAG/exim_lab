@@ -131,34 +131,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            t.translate('welcome_back'),
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              color: cs.onPrimary.withValues(alpha: 0.8),
-                              fontWeight: FontWeight.w500,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              t.translate('welcome_back'),
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                color: cs.onPrimary.withValues(alpha: 0.8),
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            context.watch<AuthProvider>().user?.name ?? 'Guest',
-                            style: theme.textTheme.headlineMedium?.copyWith(
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: -0.5,
-                              color: cs.onPrimary,
+                            const SizedBox(height: 4),
+                            Text(
+                              context.watch<AuthProvider>().user?.name ??
+                                  'Guest',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: theme.textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: -0.5,
+                                color: cs.onPrimary,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            "Let's start learning!",
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: cs.onPrimary.withValues(alpha: 0.9),
-                              fontWeight: FontWeight.w600,
+                            const SizedBox(height: 2),
+                            Text(
+                              "Let's start learning!",
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: cs.onPrimary.withValues(alpha: 0.9),
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       Row(
                         children: [
@@ -335,19 +340,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ),
                           ),
                           SizedBox(width: 3.w),
+
                           // Resources Removed
-                          SizedBox(width: 3.w),
-                          Expanded(
-                            child: QuickCard(
-                              icon: Icons.workspace_premium_rounded,
-                              title: t.translate('certificates'),
-                              subtitle: t.translate('track_progress'),
-                              onTap: () => AppNavigator.push(
-                                context,
-                                const CertificatesScreen(),
-                              ),
-                            ),
-                          ),
                           SizedBox(width: 3.w),
                           Expanded(
                             child: QuickCard(
