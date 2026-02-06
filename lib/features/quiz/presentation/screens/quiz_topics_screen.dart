@@ -3,6 +3,7 @@ import 'package:exim_lab/features/quiz/presentation/states/quiz_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exim_lab/core/services/shared_pref_service.dart';
+import 'package:exim_lab/localization/app_localization.dart';
 
 class QuizTopicsScreen extends StatefulWidget {
   const QuizTopicsScreen({super.key});
@@ -28,11 +29,12 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final t = AppLocalizations.of(context)!;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('Quizzes'),
+        title: Text(t.translate('quizzes_title')),
         backgroundColor: Colors.transparent,
         foregroundColor: cs.onSurface,
         elevation: 0,
@@ -56,11 +58,15 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
             }
 
             if (provider.error != null) {
-              return Center(child: Text("Error: ${provider.error}"));
+              return Center(
+                child: Text(
+                  "${t.translate('generic_error')}: ${provider.error}",
+                ),
+              );
             }
 
             if (provider.topics.isEmpty) {
-              return const Center(child: Text("No quizzes available"));
+              return Center(child: Text(t.translate('no_quizzes')));
             }
 
             return ListView.separated(
@@ -178,8 +184,8 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                                       const SizedBox(width: 4),
                                       Text(
                                         topic.hasAttempted
-                                            ? "Attempted"
-                                            : "Not Started",
+                                            ? t.translate('attempted')
+                                            : t.translate('not_started'),
                                         style: theme.textTheme.labelSmall
                                             ?.copyWith(
                                               color: topic.hasAttempted

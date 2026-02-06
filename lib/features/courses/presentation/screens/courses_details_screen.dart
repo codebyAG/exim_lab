@@ -3,6 +3,7 @@ import 'package:exim_lab/features/courses/presentation/screens/lesson_screen.dar
 import 'package:exim_lab/features/courses/presentation/states/course_details_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:exim_lab/localization/app_localization.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
   final String courseId;
@@ -29,6 +30,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final state = context.watch<CourseDetailsState>();
+    final t = AppLocalizations.of(context)!;
 
     // ================= LOADING =================
     if (state.isLoading) {
@@ -143,13 +145,14 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                     children: [
                       _StatChip(
                         icon: Icons.menu_book,
-                        text: '${course.lessons.length} lessons',
+                        text:
+                            '${course.lessons.length} ${t.translate('lessons_count')}',
                       ),
                       const SizedBox(width: 8),
                       _StatChip(
                         icon: Icons.currency_rupee,
                         text: course.basePrice == 0
-                            ? 'Free'
+                            ? t.translate('free_cost')
                             : '₹${course.basePrice}',
                       ),
                     ],

@@ -2,6 +2,7 @@ import 'package:exim_lab/core/services/shared_pref_service.dart';
 import 'package:exim_lab/features/quiz/presentation/states/quiz_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:exim_lab/localization/app_localization.dart';
 
 class QuizQuestionScreen extends StatefulWidget {
   final String topicId;
@@ -59,6 +60,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final t = AppLocalizations.of(context)!;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -87,14 +89,18 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
             }
 
             if (provider.error != null) {
-              return Center(child: Text("Error: ${provider.error}"));
+              return Center(
+                child: Text(
+                  "${t.translate('generic_error')}: ${provider.error}",
+                ),
+              );
             }
 
             final questions = provider.questions;
             final attempt = provider.currentAttempt;
 
             if (questions.isEmpty) {
-              return const Center(child: Text("No questions found"));
+              return Center(child: Text(t.translate('no_questions')));
             }
 
             if (attempt != null && attempt.isCompleted) {
@@ -109,7 +115,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                     ),
                     const SizedBox(height: 24),
                     Text(
-                      "Quiz Completed!",
+                      t.translate('quiz_completed'),
                       style: theme.textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: cs.onSurface,
@@ -129,7 +135,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
-                      child: const Text("Back to Topics"),
+                      child: Text(t.translate('back_to_topics')),
                     ),
                   ],
                 ),
@@ -156,7 +162,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    "Question ${currentQuestionIndex + 1}/${questions.length}",
+                    "${t.translate('question_label')} ${currentQuestionIndex + 1}/${questions.length}",
                     style: theme.textTheme.labelLarge?.copyWith(
                       color: cs.onSurfaceVariant,
                     ),

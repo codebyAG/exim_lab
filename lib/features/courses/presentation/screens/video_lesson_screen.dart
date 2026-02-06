@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:exim_lab/localization/app_localization.dart';
 
 class VideoLessonScreen extends StatefulWidget {
   final String videoUrl;
@@ -49,6 +50,7 @@ class _VideoLessonScreenState extends State<VideoLessonScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final t = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: cs.surface,
@@ -84,33 +86,33 @@ class _VideoLessonScreenState extends State<VideoLessonScreen> {
                 const SizedBox(height: 20),
 
                 // 🔹 ABOUT
-                _sectionTitle(context, 'About this lesson'),
+                _sectionTitle(context, t.translate('about_lesson')),
                 const SizedBox(height: 8),
                 Text(
-                  'This lesson explains the topic in a clear and practical way to help you understand real-world import export scenarios.',
+                  t.translate('lesson_description'),
                   style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
                 ),
 
                 const SizedBox(height: 24),
 
                 // 🔹 WHAT YOU WILL LEARN
-                _sectionTitle(context, 'What you will learn'),
+                _sectionTitle(context, t.translate('what_learn')),
                 const SizedBox(height: 12),
-                const _Bullet(text: 'Practical business understanding'),
-                const _Bullet(text: 'Real trade examples'),
-                const _Bullet(text: 'Implementation guidance'),
+                _Bullet(text: t.translate('learn_point_1')),
+                _Bullet(text: t.translate('learn_point_2')),
+                _Bullet(text: t.translate('learn_point_3')),
 
                 const SizedBox(height: 28),
 
                 // 🔹 ASK QUESTION
-                _sectionTitle(context, 'Ask a question'),
+                _sectionTitle(context, t.translate('ask_question')),
                 const SizedBox(height: 10),
 
                 TextField(
                   controller: _questionController,
                   maxLines: 3,
                   decoration: InputDecoration(
-                    hintText: 'Type your question here...',
+                    hintText: t.translate('question_hint'),
                     filled: true,
                     fillColor: cs.surfaceContainerHighest,
                     border: OutlineInputBorder(
@@ -135,9 +137,9 @@ class _VideoLessonScreenState extends State<VideoLessonScreen> {
                       ),
                       elevation: 0,
                     ),
-                    child: const Text(
-                      'Submit Question',
-                      style: TextStyle(
+                    child: Text(
+                      t.translate('submit_question'),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -148,7 +150,7 @@ class _VideoLessonScreenState extends State<VideoLessonScreen> {
                 if (_questions.isNotEmpty) ...[
                   const SizedBox(height: 32),
 
-                  _sectionTitle(context, 'Questions & Answers'),
+                  _sectionTitle(context, t.translate('questions_answers')),
                   const SizedBox(height: 12),
 
                   Column(
@@ -168,10 +170,18 @@ class _VideoLessonScreenState extends State<VideoLessonScreen> {
   void _submitQuestion() {
     if (_questionController.text.trim().isEmpty) return;
 
+    // Note: 'You' could also be localized if needed, e.g. t.translate('you_user')
+    // But since it is inside a method, we need access to context or pass it.
+    // Ideally user name comes from profile.
+    final t = AppLocalizations.of(context)!;
+
     setState(() {
       _questions.insert(
         0,
-        _Question(user: 'You', question: _questionController.text.trim()),
+        _Question(
+          user: t.translate('you_user'),
+          question: _questionController.text.trim(),
+        ),
       );
       _questionController.clear();
     });

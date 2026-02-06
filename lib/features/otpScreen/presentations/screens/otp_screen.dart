@@ -16,10 +16,11 @@ class _OtpScreenState extends State<OtpScreen> {
   String _otp = "";
 
   void _handleVerify() async {
+    final t = AppLocalizations.of(context)!;
     if (_otp.length != 4) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter the 4-digit OTP')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(t.translate('enter_valid_otp'))));
       return;
     }
 
@@ -34,7 +35,11 @@ class _OtpScreenState extends State<OtpScreen> {
       );
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(authProvider.error ?? 'Verification failed')),
+        SnackBar(
+          content: Text(
+            authProvider.error ?? t.translate('verification_failed'),
+          ),
+        ),
       );
     }
   }
@@ -42,7 +47,7 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final t = AppLocalizations.of(context);
+    final t = AppLocalizations.of(context)!;
 
     return Scaffold(
       resizeToAvoidBottomInset: true, // ✅ IMPORTANT

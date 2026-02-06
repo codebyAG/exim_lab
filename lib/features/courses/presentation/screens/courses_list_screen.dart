@@ -7,6 +7,7 @@ import 'package:exim_lab/features/courses/presentation/screens/courses_details_s
 import 'package:exim_lab/features/courses/presentation/states/course_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:exim_lab/localization/app_localization.dart';
 
 class CoursesListScreen extends StatefulWidget {
   const CoursesListScreen({super.key});
@@ -35,6 +36,7 @@ class _CoursesListScreenState extends State<CoursesListScreen>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final state = context.watch<CoursesState>();
+    final t = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
@@ -43,7 +45,10 @@ class _CoursesListScreenState extends State<CoursesListScreen>
       appBar: AppBar(
         backgroundColor: theme.colorScheme.surface,
         elevation: 0,
-        title: Text('Courses', style: theme.textTheme.titleLarge),
+        title: Text(
+          t.translate('courses_title'),
+          style: theme.textTheme.titleLarge,
+        ),
         actions: [
           IconButton(
             onPressed: () {},
@@ -57,10 +62,10 @@ class _CoursesListScreenState extends State<CoursesListScreen>
             alpha: 0.6,
           ),
           indicatorColor: theme.colorScheme.primary,
-          tabs: const [
-            Tab(text: 'All'),
-            Tab(text: 'My Courses'),
-            Tab(text: 'Popular'),
+          tabs: [
+            Tab(text: t.translate('tab_all')),
+            Tab(text: t.translate('tab_my_courses')),
+            Tab(text: t.translate('tab_popular')),
           ],
         ),
       ),
@@ -87,8 +92,9 @@ class _CoursesListScreenState extends State<CoursesListScreen>
       return Center(child: Text(state.errorMessage!));
     }
 
+    final t = AppLocalizations.of(context)!;
     if (state.courses.isEmpty) {
-      return const Center(child: Text('No courses available'));
+      return Center(child: Text(t.translate('no_courses_available')));
     }
 
     return ListView.builder(
@@ -191,7 +197,7 @@ class _CourseTile extends StatelessWidget {
                 CourseDetailsScreen(courseId: courseId),
               );
             },
-            child: const Text('View'),
+            child: Text(AppLocalizations.of(context)!.translate('view_button')),
           ),
         ],
       ),
@@ -206,9 +212,10 @@ Widget _myCoursesList(BuildContext context, CoursesState state) {
   }
 
   if (state.myCourses.isEmpty) {
-    return const Center(
+    final t = AppLocalizations.of(context)!;
+    return Center(
       child: Text(
-        'No courses enrolled yet.\nStart learning now!',
+        t.translate('no_courses_enrolled'),
         textAlign: TextAlign.center,
       ),
     );
@@ -277,7 +284,7 @@ class _MyCourseCard extends StatelessWidget {
 
           // COMPLETED TEXT
           Text(
-            '${course.completionPercentage ?? 0}% Completed',
+            '${course.completionPercentage ?? 0}% ${AppLocalizations.of(context)!.translate('completed_percent')}',
             style: theme.textTheme.bodySmall?.copyWith(
               color: cs.onSurface.withValues(alpha: 0.7),
             ),

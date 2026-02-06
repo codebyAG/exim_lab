@@ -27,9 +27,10 @@ class _LoginScreenState extends State<LoginScreen> {
     final phoneRegex = RegExp(r'^[0-9]{10}$');
 
     if (!phoneRegex.hasMatch(phone)) {
+      final t = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter a valid 10-digit mobile number'),
+        SnackBar(
+          content: Text(t.translate('invalid_phone')),
           backgroundColor: Colors.red,
         ),
       );
@@ -42,8 +43,11 @@ class _LoginScreenState extends State<LoginScreen> {
     if (success && mounted) {
       AppNavigator.push(context, const OtpScreen());
     } else if (mounted) {
+      final t = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(authProvider.error ?? 'Something went wrong')),
+        SnackBar(
+          content: Text(authProvider.error ?? t.translate('generic_error')),
+        ),
       );
     }
   }
