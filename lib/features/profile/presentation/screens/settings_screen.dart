@@ -142,40 +142,35 @@ class SettingsScreen extends StatelessWidget {
         final t = AppLocalizations.of(context);
         return AlertDialog(
           title: Text(t.translate('select_language')),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                title: const Text('English'),
-                leading: Radio<String>(
-                  value: 'en',
-                  groupValue: localeProvider.locale.languageCode,
-                  onChanged: (val) {
+          content: RadioGroup<String>(
+            groupValue: localeProvider.locale.languageCode,
+            onChanged: (val) {
+              if (val != null) {
+                localeProvider.setLocale(val);
+                Navigator.pop(context);
+              }
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  title: const Text('English'),
+                  leading: const Radio<String>(value: 'en'),
+                  onTap: () {
                     localeProvider.setLocale('en');
                     Navigator.pop(context);
                   },
                 ),
-                onTap: () {
-                  localeProvider.setLocale('en');
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: const Text('Hindi'),
-                leading: Radio<String>(
-                  value: 'hi',
-                  groupValue: localeProvider.locale.languageCode,
-                  onChanged: (val) {
+                ListTile(
+                  title: const Text('Hindi'),
+                  leading: const Radio<String>(value: 'hi'),
+                  onTap: () {
                     localeProvider.setLocale('hi');
                     Navigator.pop(context);
                   },
                 ),
-                onTap: () {
-                  localeProvider.setLocale('hi');
-                  Navigator.pop(context);
-                },
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

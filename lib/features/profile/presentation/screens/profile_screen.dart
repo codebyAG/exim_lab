@@ -67,7 +67,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           (user?.avatarUrl != null &&
                               user!.avatarUrl!.isNotEmpty)
                           ? Image.network(
-                              user!.avatarUrl!,
+                              user.avatarUrl!,
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) {
                                 return const Center(
