@@ -22,11 +22,11 @@ class ModuleConfig {
       modules: {
         AppModule.carousel: true,
         AppModule.courses: true,
-        AppModule.continueLearning: true,
-        AppModule.quizzes: true,
+        AppModule.continueLearning: false,
+        AppModule.quizzes: false,
         AppModule.freeVideos: true,
         AppModule.tools: true,
-        AppModule.news: true,
+        AppModule.news: false,
         AppModule.banners: true,
       },
     );
