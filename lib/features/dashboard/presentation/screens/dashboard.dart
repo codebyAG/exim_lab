@@ -399,17 +399,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         final courses = section.data.cast<CourseModel>();
                         if (courses.isEmpty) return const SizedBox();
 
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SectionHeader(
-                              title: section.title,
-                              subtitle: section.subtitle,
-                            ),
-                            SizedBox(height: 1.5.h),
-                            ModuleVisibility(
-                              module: AppModule.continueLearning,
-                              child: SingleChildScrollView(
+                        return ModuleVisibility(
+                          module: AppModule.continueLearning,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SectionHeader(
+                                title: section.title,
+                                subtitle: section.subtitle,
+                              ),
+                              SizedBox(height: 1.5.h),
+                              SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 padding: EdgeInsets.symmetric(horizontal: 5.w),
                                 child: Row(
@@ -430,9 +430,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       .toList(),
                                 ),
                               ),
-                            ),
-                            SizedBox(height: 2.h),
-                          ],
+                              SizedBox(height: 2.h),
+                            ],
+                          ),
                         );
                       }
 
