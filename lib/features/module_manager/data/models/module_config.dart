@@ -27,6 +27,7 @@ class ModuleConfig {
         AppModule.freeVideos: true,
         AppModule.tools: true,
         AppModule.news: false,
+        AppModule.banners: true,
       },
     );
   }

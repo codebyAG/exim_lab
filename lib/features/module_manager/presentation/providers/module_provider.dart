@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../data/models/module_config.dart';
-
-export '../../data/models/module_config.dart';
-
-import 'package:flutter/material.dart';
-import '../../data/models/module_config.dart';
 import '../../data/services/module_service.dart';
 
 export '../../data/models/module_config.dart';
