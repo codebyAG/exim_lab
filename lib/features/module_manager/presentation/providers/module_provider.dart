@@ -3,10 +3,27 @@ import '../../data/models/module_config.dart';
 
 export '../../data/models/module_config.dart';
 
+import 'package:flutter/material.dart';
+import '../../data/models/module_config.dart';
+import '../../data/services/module_service.dart';
+
+export '../../data/models/module_config.dart';
+
 class ModuleProvider extends ChangeNotifier {
   ModuleConfig _config = ModuleConfig.defaults();
+  final ModuleService _service;
+
+  ModuleProvider(this._service);
 
   bool isEnabled(AppModule module) => _config.isEnabled(module);
+
+  Future<void> fetchModules() async {
+    final config = await _service.fetchConfig();
+    if (config != null) {
+      _config = config;
+      notifyListeners();
+    }
+  }
 
   // Method to update config (e.g. from API or local storage in future)
   void updateConfig(Map<AppModule, bool> newModules) {
