@@ -74,47 +74,53 @@ class _InlineBannerState extends State<InlineBanner> {
               // 3. CONTENT
               Padding(
                 padding: EdgeInsets.all(2.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
                   children: [
-                    Text(
-                      _banner!.title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            _banner!.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          if (_banner!.description.isNotEmpty) ...[
+                            SizedBox(height: 0.5.h),
+                            Text(
+                              _banner!.description,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: Colors.white70,
+                                fontSize: 10.sp,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ],
                       ),
                     ),
-                    if (_banner!.description.isNotEmpty) ...[
-                      SizedBox(height: 1.h),
-                      Expanded(
-                        child: Text(
-                          _banner!.description,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: Colors.white70,
-                          ),
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                    if (_banner!.description.isEmpty) const Spacer(),
-                    SizedBox(height: 1.h),
-                    SizedBox(
-                      child: ElevatedButton(
+                    if (_banner!.ctaText.isNotEmpty) ...[
+                      SizedBox(width: 2.w),
+                      ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           foregroundColor: cs.primary,
                           elevation: 0,
                           padding: EdgeInsets.symmetric(
-                            horizontal: 4.w,
-                            vertical: 1.h,
+                            horizontal: 3.w,
+                            vertical: 0.5.h,
                           ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          minimumSize: Size(0, 36), // Reduce default height
+                          minimumSize: const Size(0, 32),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
                         onPressed: () async {
                           if (_banner!.ctaUrl.isNotEmpty) {
@@ -125,13 +131,14 @@ class _InlineBannerState extends State<InlineBanner> {
                           }
                         },
                         child: Text(
-                          _banner!.ctaText.isEmpty
-                              ? t.translate('learn_more')
-                              : _banner!.ctaText,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          _banner!.ctaText,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 10.sp,
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ],
                 ),
               ),
