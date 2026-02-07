@@ -123,6 +123,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
       });
     }
 
+    // Always add Profile
+    navItems.add(
+      BottomNavigationBarItem(
+        icon: const Icon(Icons.person_outline_rounded),
+        activeIcon: const Icon(Icons.person_rounded),
+        label: t.translate('profile'),
+      ),
+    );
+    navActions.add(() {
+      AppNavigator.push(context, const ProfileScreen());
+    });
+
     return Scaffold(
       backgroundColor: cs.surface,
 
