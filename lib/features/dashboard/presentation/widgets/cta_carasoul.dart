@@ -47,13 +47,15 @@ class CtaCarouselState extends State<CtaCarousel> {
   Widget build(BuildContext context) {
     if (widget.banners.isEmpty) return const SizedBox();
 
+    if (widget.banners.isEmpty) return const SizedBox();
+
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
 
     return Column(
       children: [
-        SizedBox(
-          height: 18.h, // ✅ responsive height
+        AspectRatio(
+          aspectRatio: 16 / 9,
           child: PageView.builder(
             controller: _controller,
             itemCount: widget.banners.length,
@@ -73,7 +75,7 @@ class CtaCarouselState extends State<CtaCarousel> {
                     boxShadow: appCardShadow(context),
                     image: DecorationImage(
                       image: NetworkImage(banner.imageUrl),
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fill,
                       // opacity: 0.4, // Adjust opacity if needed or based on design
                     ),
                   ),
