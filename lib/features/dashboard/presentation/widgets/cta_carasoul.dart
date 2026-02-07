@@ -69,7 +69,7 @@ class CtaCarouselState extends State<CtaCarousel> {
                   padding: EdgeInsets.all(2.h),
                   decoration: BoxDecoration(
                     color: cs.surface,
-                    borderRadius: BorderRadius.circular(22),
+                    borderRadius: BorderRadius.circular(12),
                     boxShadow: appCardShadow(context),
                     image: DecorationImage(
                       image: NetworkImage(banner.imageUrl),
@@ -83,7 +83,7 @@ class CtaCarouselState extends State<CtaCarousel> {
                         launchUrlString(banner.ctaUrl);
                       }
                     },
-                    borderRadius: BorderRadius.circular(22),
+                    borderRadius: BorderRadius.circular(12),
                     child: const SizedBox.expand(),
                   ),
                 ),
