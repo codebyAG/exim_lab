@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:exim_lab/localization/app_localization.dart';
-
 class InlineBanner extends StatefulWidget {
   final List<BannerModel> banners;
   const InlineBanner({super.key, required this.banners});
@@ -89,7 +87,7 @@ class _InlineBannerState extends State<InlineBanner> {
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize:
-                                  13.sp, // Increased from default/implicit
+                                  18.sp, // Increased from default/implicit
                             ),
                           ),
                           if (_banner!.description.isNotEmpty) ...[
@@ -98,7 +96,7 @@ class _InlineBannerState extends State<InlineBanner> {
                               _banner!.description,
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: Colors.white70,
-                                fontSize: 11.sp, // Increased from 10.sp
+                                fontSize: 14.sp, // Increased from 10.sp
                               ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -136,7 +134,7 @@ class _InlineBannerState extends State<InlineBanner> {
                           _banner!.ctaText,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 11.sp, // Increased from 10.sp
+                            fontSize: 14.sp, // Increased from 10.sp
                           ),
                         ),
                       ),
