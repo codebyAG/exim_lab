@@ -25,6 +25,8 @@ import 'package:exim_lab/features/news/presentation/screens/news_list_screen.dar
 import 'package:exim_lab/features/quiz/presentation/screens/quiz_topics_screen.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:exim_lab/features/profile/presentation/screens/profile_screen.dart';
+import 'package:exim_lab/features/module_manager/presentation/widgets/module_visibility.dart';
+import 'package:exim_lab/features/module_manager/data/models/module_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -346,7 +348,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   children: [
                     // 3. CAROUSEL (From Addons)
                     if (data.addons.carousel.isNotEmpty) ...[
-                      CtaCarousel(banners: data.addons.carousel),
+                      ModuleVisibility(
+                        module: AppModule.carousel,
+                        child: CtaCarousel(banners: data.addons.carousel),
+                      ),
                       SizedBox(height: 3.h),
                     ],
 
@@ -372,13 +377,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           // Resources Removed
                           SizedBox(width: 3.w),
                           Expanded(
-                            child: QuickCard(
-                              icon: Icons.quiz_rounded,
-                              title: t.translate('quizzes_title'),
-                              subtitle: t.translate('quizzes_subtitle'),
-                              onTap: () => AppNavigator.push(
-                                context,
-                                const QuizTopicsScreen(),
+                            child: ModuleVisibility(
+                              module: AppModule.quizzes,
+                              child: QuickCard(
+                                icon: Icons.quiz_rounded,
+                                title: t.translate('quizzes_title'),
+                                subtitle: t.translate('quizzes_subtitle'),
+                                onTap: () => AppNavigator.push(
+                                  context,
+                                  const QuizTopicsScreen(),
+                                ),
                               ),
                             ),
                           ),
@@ -389,16 +397,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                     // 5. LIVE SEMINAR (If present)
                     if (data.liveSeminar != null) ...[
-                      LiveSeminarCard(
-                        title: data.liveSeminar!.title,
-                        subtitle: data.liveSeminar!.subtitle,
-                        dateTime: data.liveSeminar!.dateTime,
-                        onTap: () async {
-                          final url = Uri.parse(data.liveSeminar!.meetingUrl);
-                          if (await canLaunchUrl(url)) {
-                            await launchUrl(url);
-                          }
-                        },
+                      ModuleVisibility(
+                        module: AppModule.liveSeminar,
+                        child: LiveSeminarCard(
+                          title: data.liveSeminar!.title,
+                          subtitle: data.liveSeminar!.subtitle,
+                          dateTime: data.liveSeminar!.dateTime,
+                          onTap: () async {
+                            final url = Uri.parse(data.liveSeminar!.meetingUrl);
+                            if (await canLaunchUrl(url)) {
+                              await launchUrl(url);
+                            }
+                          },
+                        ),
                       ),
                       SizedBox(height: 4.h),
                     ],
@@ -459,7 +470,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               subtitle: section.subtitle,
                             ),
                             SizedBox(height: 1.5.h),
-                            HorizontalCourses(courses: courses),
+                            ModuleVisibility(
+                              module: AppModule.courses,
+                              child: HorizontalCourses(courses: courses),
+                            ),
                             SizedBox(height: 2.h),
                           ],
                         );
@@ -489,7 +503,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                         return Column(
                           children: [
-                            InlineBanner(banners: banners),
+                            ModuleVisibility(
+                              module: AppModule.banners,
+                              child: InlineBanner(banners: banners),
+                            ),
                             SizedBox(height: 2.h),
                           ],
                         );
@@ -518,12 +535,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ],
 
                     // 8. TOOLS
-                    SectionHeader(
-                      title: t.translate('tools_section_title'),
-                      subtitle: t.translate('tools_section_subtitle'),
+                    ModuleVisibility(
+                      module: AppModule.tools,
+                      child: Column(
+                        children: [
+                          SectionHeader(
+                            title: t.translate('tools_section_title'),
+                            subtitle: t.translate('tools_section_subtitle'),
+                          ),
+                          SizedBox(height: 1.5.h),
+                          const ToolsSection(),
+                        ],
+                      ),
                     ),
-                    SizedBox(height: 1.5.h),
-                    const ToolsSection(),
                     SizedBox(height: 4.h),
                   ],
                 );

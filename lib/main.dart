@@ -28,6 +28,7 @@ import 'dart:developer';
 import 'package:exim_lab/features/news/data/services/news_service.dart';
 import 'package:exim_lab/features/news/presentation/providers/news_provider.dart';
 import 'package:exim_lab/features/notifications/presentation/providers/notifications_provider.dart';
+import 'package:exim_lab/features/module_manager/presentation/providers/module_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -98,6 +99,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => DashboardProvider()),
         ChangeNotifierProvider(create: (_) => NewsProvider(newsService)),
         ChangeNotifierProvider(create: (_) => NotificationsProvider()),
+        ChangeNotifierProvider(create: (_) => ModuleProvider()),
       ],
       child: const EximLabApp(),
     ),
