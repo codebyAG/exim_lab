@@ -71,72 +71,20 @@ class CtaCarouselState extends State<CtaCarousel> {
                     color: cs.surface,
                     borderRadius: BorderRadius.circular(22),
                     boxShadow: appCardShadow(context),
-                    image: const DecorationImage(
-                      image: AssetImage('assets/cta_card_bg.png'),
+                    image: DecorationImage(
+                      image: NetworkImage(banner.imageUrl),
                       fit: BoxFit.cover,
-                      opacity: 0.4,
+                      // opacity: 0.4, // Adjust opacity if needed or based on design
                     ),
                   ),
-                  child: Row(
-                    children: [
-                      // TEXT
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              banner.title,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            SizedBox(height: 0.8.h),
-                            Text(
-                              banner.description,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: theme.textTheme.bodySmall,
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      SizedBox(width: 2.w),
-
-                      // CTA BUTTON
-                      if (banner.ctaText.isNotEmpty)
-                        SizedBox(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              if (banner.ctaUrl.isNotEmpty) {
-                                launchUrlString(banner.ctaUrl);
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: cs.primary,
-                              foregroundColor: cs.onPrimary,
-                              elevation: 2,
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 4.w,
-                                vertical: 1.2.h,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: Text(
-                              banner.ctaText,
-                              style: theme.textTheme.labelLarge?.copyWith(
-                                color: cs.onPrimary,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
+                  child: InkWell(
+                    onTap: () {
+                      if (banner.ctaUrl.isNotEmpty) {
+                        launchUrlString(banner.ctaUrl);
+                      }
+                    },
+                    borderRadius: BorderRadius.circular(22),
+                    child: const SizedBox.expand(),
                   ),
                 ),
               );
