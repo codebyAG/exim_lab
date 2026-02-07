@@ -24,7 +24,6 @@ import 'package:exim_lab/features/quiz/presentation/screens/quiz_topics_screen.d
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:exim_lab/features/profile/presentation/screens/profile_screen.dart';
 import 'package:exim_lab/features/module_manager/presentation/widgets/module_visibility.dart';
-import 'package:exim_lab/features/module_manager/data/models/module_config.dart';
 import 'package:exim_lab/features/module_manager/presentation/providers/module_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
