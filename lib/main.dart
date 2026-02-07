@@ -121,7 +121,7 @@ class EximLabApp extends StatelessWidget {
       builder: (context, orientation, deviceType) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'EximLab',
+          title: 'Import Export',
           // 🌗 THEME
           theme: lightTheme,
           darkTheme: darkTheme,
