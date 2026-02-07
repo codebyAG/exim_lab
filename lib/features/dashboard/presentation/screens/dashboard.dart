@@ -25,6 +25,7 @@ import 'package:exim_lab/localization/app_localization.dart';
 import 'package:exim_lab/features/profile/presentation/screens/profile_screen.dart';
 import 'package:exim_lab/features/module_manager/presentation/widgets/module_visibility.dart';
 import 'package:exim_lab/features/module_manager/data/models/module_config.dart';
+import 'package:exim_lab/features/module_manager/presentation/providers/module_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -83,6 +84,45 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final t = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final moduleProvider = Provider.of<ModuleProvider>(context);
+
+    // Prepare Bottom Navigation Items dynamically
+    List<BottomNavigationBarItem> navItems = [
+      BottomNavigationBarItem(
+        icon: const Icon(Icons.home_rounded),
+        activeIcon: const Icon(Icons.home_filled),
+        label: t.translate('home'),
+      ),
+    ];
+
+    // Parallel list of actions for each tab (index 0 is null/no-op)
+    List<VoidCallback?> navActions = [null];
+
+    if (moduleProvider.isEnabled(AppModule.courses)) {
+      navItems.add(
+        BottomNavigationBarItem(
+          icon: const Icon(Icons.play_circle_outline_rounded),
+          activeIcon: const Icon(Icons.play_circle_filled_rounded),
+          label: t.translate('courses'),
+        ),
+      );
+      navActions.add(() {
+        AppNavigator.push(context, const CoursesListScreen());
+      });
+    }
+
+    if (moduleProvider.isEnabled(AppModule.news)) {
+      navItems.add(
+        BottomNavigationBarItem(
+          icon: const Icon(Icons.newspaper_rounded),
+          activeIcon: const Icon(Icons.newspaper),
+          label: t.translate('news'),
+        ),
+      );
+      navActions.add(() {
+        AppNavigator.push(context, const NewsListScreen());
+      });
+    }
 
     return Scaffold(
       backgroundColor: cs.surface,
@@ -102,17 +142,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: RefreshIndicator(
         onRefresh: () => context.read<DashboardProvider>().fetchDashboardData(),
         child: ListView(
-          padding: EdgeInsets
-              .zero, // Remove vertical padding from listview to touch top
+          padding: EdgeInsets.zero,
           children: [
             // 1. HEADER
             Container(
-              padding: EdgeInsets.fromLTRB(
-                5.w,
-                6.h,
-                5.w,
-                3.h,
-              ), // Increased top padding for status bar adjustment
+              padding: EdgeInsets.fromLTRB(5.w, 6.h, 5.w, 3.h),
               decoration: BoxDecoration(
                 color: cs.primary,
                 borderRadius: const BorderRadius.vertical(
@@ -547,29 +581,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
           currentIndex: 0,
           type: BottomNavigationBarType.fixed,
           onTap: (index) {
-            if (index == 1) {
-              AppNavigator.push(context, const CoursesListScreen());
-            } else if (index == 2) {
-              AppNavigator.push(context, const NewsListScreen());
+            if (index < navActions.length && navActions[index] != null) {
+              navActions[index]!();
             }
           },
-          items: [
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.home_rounded),
-              activeIcon: const Icon(Icons.home_filled),
-              label: t.translate('home'),
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.play_circle_outline_rounded),
-              activeIcon: const Icon(Icons.play_circle_filled_rounded),
-              label: t.translate('courses'),
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.newspaper_rounded),
-              activeIcon: const Icon(Icons.newspaper),
-              label: t.translate('news'),
-            ),
-          ],
+          items: navItems,
         ),
       ),
     );
