@@ -407,25 +407,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               subtitle: section.subtitle,
                             ),
                             SizedBox(height: 1.5.h),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              padding: EdgeInsets.symmetric(horizontal: 5.w),
-                              child: Row(
-                                children: courses
-                                    .map(
-                                      (course) => ContinueCard(
-                                        course: course,
-                                        onTap: () {
-                                          AppNavigator.push(
-                                            context,
-                                            CourseDetailsScreen(
-                                              courseId: course.id,
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    )
-                                    .toList(),
+                            ModuleVisibility(
+                              module: AppModule.continueLearning,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                child: Row(
+                                  children: courses
+                                      .map(
+                                        (course) => ContinueCard(
+                                          course: course,
+                                          onTap: () {
+                                            AppNavigator.push(
+                                              context,
+                                              CourseDetailsScreen(
+                                                courseId: course.id,
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
                               ),
                             ),
                             SizedBox(height: 2.h),

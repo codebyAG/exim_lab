@@ -1,4 +1,12 @@
-enum AppModule { carousel, courses, quizzes, liveSeminar, tools, news, banners }
+enum AppModule {
+  carousel,
+  courses,
+  continueLearning,
+  quizzes,
+  tools,
+  news,
+  banners,
+}
 
 class ModuleConfig {
   final Map<AppModule, bool> _modules;
@@ -13,8 +21,8 @@ class ModuleConfig {
       modules: {
         AppModule.carousel: true,
         AppModule.courses: true,
+        AppModule.continueLearning: true,
         AppModule.quizzes: true,
-        AppModule.liveSeminar: true,
         AppModule.tools: true,
         AppModule.news: true,
         AppModule.banners: true,
