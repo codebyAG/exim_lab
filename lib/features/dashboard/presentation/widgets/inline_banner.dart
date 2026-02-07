@@ -31,7 +31,7 @@ class _InlineBannerState extends State<InlineBanner> {
 
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
-    final t = AppLocalizations.of(context);
+    // t variable removed as unused
 
     // Sanitize URL
     String imgUrl = _banner!.imageUrl.trim();
@@ -88,6 +88,8 @@ class _InlineBannerState extends State<InlineBanner> {
                             style: theme.textTheme.titleMedium?.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
+                              fontSize:
+                                  13.sp, // Increased from default/implicit
                             ),
                           ),
                           if (_banner!.description.isNotEmpty) ...[
@@ -96,7 +98,7 @@ class _InlineBannerState extends State<InlineBanner> {
                               _banner!.description,
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: Colors.white70,
-                                fontSize: 10.sp,
+                                fontSize: 11.sp, // Increased from 10.sp
                               ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -134,7 +136,7 @@ class _InlineBannerState extends State<InlineBanner> {
                           _banner!.ctaText,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 10.sp,
+                            fontSize: 11.sp, // Increased from 10.sp
                           ),
                         ),
                       ),
