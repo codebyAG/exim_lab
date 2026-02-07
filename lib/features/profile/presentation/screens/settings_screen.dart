@@ -117,7 +117,15 @@ class SettingsScreen extends StatelessWidget {
             title: Text(t.translate('about_app')),
             subtitle: Text('${t.translate('version')} 1.0.0'),
             contentPadding: EdgeInsets.zero,
-            onTap: () {},
+            onTap: () {
+              showAboutDialog(
+                context: context,
+                applicationName: 'Exim Lab',
+                applicationVersion: '1.0.0',
+                applicationIcon: const Icon(Icons.school_rounded, size: 50),
+                children: [const Text('Developed by SIIEA')],
+              );
+            },
           ),
         ],
       ),

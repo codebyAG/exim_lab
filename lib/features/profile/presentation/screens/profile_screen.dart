@@ -180,7 +180,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _ProfileOption(
               icon: Icons.person_outline_rounded,
               title: t.translate('menu_my_details'),
-              onTap: () {},
+              onTap: () {
+                AppNavigator.push(context, UpdateProfileScreen(user: user));
+              },
             ),
             _ProfileOption(
               icon: Icons.settings_outlined,

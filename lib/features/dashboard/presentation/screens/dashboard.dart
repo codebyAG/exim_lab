@@ -28,6 +28,7 @@ import 'package:exim_lab/features/profile/presentation/screens/profile_screen.da
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -391,7 +392,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         title: data.liveSeminar!.title,
                         subtitle: data.liveSeminar!.subtitle,
                         dateTime: data.liveSeminar!.dateTime,
-                        onTap: () {},
+                        onTap: () async {
+                          final url = Uri.parse(data.liveSeminar!.meetingUrl);
+                          if (await canLaunchUrl(url)) {
+                            await launchUrl(url);
+                          }
+                        },
                       ),
                       SizedBox(height: 4.h),
                     ],
@@ -498,7 +504,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         priceText: data.courseOfTheDay!.priceText,
                         badgeText: data.courseOfTheDay!.badgeText,
                         imagePath: data.courseOfTheDay!.imageUrl,
-                        onTap: () {},
+                        onTap: () {
+                          AppNavigator.push(
+                            context,
+                            CourseDetailsScreen(
+                              courseId: data.courseOfTheDay!.courseId,
+                            ),
+                          );
+                        },
                       ),
                       SizedBox(height: 2.h),
                     ],
