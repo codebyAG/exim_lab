@@ -11,11 +11,9 @@ import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart'
 import 'package:exim_lab/features/dashboard/presentation/providers/dashboard_provider.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/continue_card.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/course_of_the_day.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/cta_carasoul.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/horizontal_courses.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/inline_banner.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/live_seminar_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/quick_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/section_header.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/tool_section.dart';
@@ -30,7 +28,6 @@ import 'package:exim_lab/features/module_manager/data/models/module_config.dart'
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -395,25 +392,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     SizedBox(height: 4.h),
 
-                    // 5. LIVE SEMINAR (If present)
-                    if (data.liveSeminar != null) ...[
-                      ModuleVisibility(
-                        module: AppModule.liveSeminar,
-                        child: LiveSeminarCard(
-                          title: data.liveSeminar!.title,
-                          subtitle: data.liveSeminar!.subtitle,
-                          dateTime: data.liveSeminar!.dateTime,
-                          onTap: () async {
-                            final url = Uri.parse(data.liveSeminar!.meetingUrl);
-                            if (await canLaunchUrl(url)) {
-                              await launchUrl(url);
-                            }
-                          },
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                    ],
-
                     // 6. DYNAMIC SECTIONS LOOP
                     ...data.sections.map((section) {
                       // CONTINUE WATCHING
@@ -513,26 +491,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       }
                       return const SizedBox();
                     }),
-
-                    // 7. COURSE OF THE DAY
-                    if (data.courseOfTheDay != null) ...[
-                      CourseOfTheDayCard(
-                        title: data.courseOfTheDay!.title,
-                        subtitle: data.courseOfTheDay!.subtitle,
-                        priceText: data.courseOfTheDay!.priceText,
-                        badgeText: data.courseOfTheDay!.badgeText,
-                        imagePath: data.courseOfTheDay!.imageUrl,
-                        onTap: () {
-                          AppNavigator.push(
-                            context,
-                            CourseDetailsScreen(
-                              courseId: data.courseOfTheDay!.courseId,
-                            ),
-                          );
-                        },
-                      ),
-                      SizedBox(height: 2.h),
-                    ],
 
                     // 8. TOOLS
                     ModuleVisibility(

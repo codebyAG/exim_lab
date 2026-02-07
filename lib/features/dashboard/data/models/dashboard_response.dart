@@ -4,16 +4,8 @@ import 'package:exim_lab/features/freevideos/data/models/free_videos_model.dart'
 class DashboardResponse {
   final AddonsData addons;
   final List<DashboardSection> sections;
-  final LiveSeminarModel?
-  liveSeminar; // Optional, might come separately or not at all
-  final CourseOfTheDayModel? courseOfTheDay; // optional
 
-  DashboardResponse({
-    required this.addons,
-    required this.sections,
-    this.liveSeminar,
-    this.courseOfTheDay,
-  });
+  DashboardResponse({required this.addons, required this.sections});
 
   factory DashboardResponse.fromJson(Map<String, dynamic> json) {
     return DashboardResponse(
@@ -23,12 +15,6 @@ class DashboardResponse {
               ?.map((e) => DashboardSection.fromJson(e))
               .toList() ??
           [],
-      liveSeminar: json['liveSeminar'] != null
-          ? LiveSeminarModel.fromJson(json['liveSeminar'])
-          : null,
-      courseOfTheDay: json['courseOfTheDay'] != null
-          ? CourseOfTheDayModel.fromJson(json['courseOfTheDay'])
-          : null,
     );
   }
 }
@@ -38,8 +24,7 @@ class DashboardSection {
   final String title;
   final String subtitle;
   final int order;
-  final List<dynamic>
-  data; // Can be List<CourseModel> or List<BannerModel> etc.
+  final List<dynamic> data; // Can be List<CourseModel>, List<BannerModel>, etc.
 
   DashboardSection({
     required this.key,
@@ -76,13 +61,49 @@ class DashboardSection {
 }
 
 class AddonsData {
+  final String language;
+  final bool darkMode;
+  final String theme;
+  final String font;
+  final String fontSize;
+  final String fontWeight;
+  final String fontColor;
+  final String backgroundColor;
+  final String borderRadius;
+  final String primaryColor;
+  final String secondaryColor;
   final List<BannerModel> carousel;
   final BannerModel? popup;
 
-  AddonsData({required this.carousel, this.popup});
+  AddonsData({
+    required this.language,
+    required this.darkMode,
+    required this.theme,
+    required this.font,
+    required this.fontSize,
+    required this.fontWeight,
+    required this.fontColor,
+    required this.backgroundColor,
+    required this.borderRadius,
+    required this.primaryColor,
+    required this.secondaryColor,
+    required this.carousel,
+    this.popup,
+  });
 
   factory AddonsData.fromJson(Map<String, dynamic> json) {
     return AddonsData(
+      language: json['language'] ?? '',
+      darkMode: json['darkMode'] ?? false,
+      theme: json['theme'] ?? 'light',
+      font: json['font'] ?? '',
+      fontSize: json['fontSize'] ?? '',
+      fontWeight: json['fontWeight'] ?? '',
+      fontColor: json['fontColor'] ?? '',
+      backgroundColor: json['backgroundColor'] ?? '',
+      borderRadius: json['borderRadius'] ?? '',
+      primaryColor: json['primaryColor'] ?? '',
+      secondaryColor: json['secondaryColor'] ?? '',
       carousel:
           (json['carousel'] as List?)
               ?.map((e) => BannerModel.fromJson(e))
@@ -100,6 +121,7 @@ class BannerModel {
   final String ctaText;
   final String ctaUrl;
   final bool isActive;
+  final String type; // CAROUSEL or INLINE
 
   BannerModel({
     required this.title,
@@ -108,6 +130,7 @@ class BannerModel {
     required this.ctaText,
     required this.ctaUrl,
     required this.isActive,
+    required this.type,
   });
 
   factory BannerModel.fromJson(Map<String, dynamic> json) {
@@ -118,58 +141,7 @@ class BannerModel {
       ctaText: json['ctaText'] ?? '',
       ctaUrl: json['ctaUrl'] ?? json['link'] ?? '',
       isActive: json['isActive'] ?? false,
-    );
-  }
-}
-
-class LiveSeminarModel {
-  final String title;
-  final String subtitle;
-  final String dateTime;
-  final String meetingUrl;
-
-  LiveSeminarModel({
-    required this.title,
-    required this.subtitle,
-    required this.dateTime,
-    required this.meetingUrl,
-  });
-
-  factory LiveSeminarModel.fromJson(Map<String, dynamic> json) {
-    return LiveSeminarModel(
-      title: json['title'] ?? '',
-      subtitle: json['subtitle'] ?? '',
-      dateTime: json['dateTime'] ?? '',
-      meetingUrl: json['meetingUrl'] ?? '',
-    );
-  }
-}
-
-class CourseOfTheDayModel {
-  final String courseId;
-  final String title;
-  final String subtitle;
-  final String priceText;
-  final String badgeText;
-  final String imageUrl;
-
-  CourseOfTheDayModel({
-    required this.courseId,
-    required this.title,
-    required this.subtitle,
-    required this.priceText,
-    required this.badgeText,
-    required this.imageUrl,
-  });
-
-  factory CourseOfTheDayModel.fromJson(Map<String, dynamic> json) {
-    return CourseOfTheDayModel(
-      courseId: json['courseId'] ?? '',
-      title: json['title'] ?? '',
-      subtitle: json['subtitle'] ?? '',
-      priceText: json['priceText'] ?? '',
-      badgeText: json['badgeText'] ?? '',
-      imageUrl: json['imageUrl'] ?? '',
+      type: json['type'] ?? '',
     );
   }
 }
