@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:exim_lab/localization/app_localization.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -30,7 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final cs = theme.colorScheme;
     final authProvider = context.watch<AuthProvider>();
     final user = authProvider.user;
-    final t = AppLocalizations.of(context)!;
+    final t = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: cs.surface,
@@ -191,12 +192,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _ProfileOption(
               icon: Icons.help_outline_rounded,
               title: t.translate('menu_help'),
-              onTap: () {},
+              onTap: () => _showHelpSupportDialog(context),
             ),
             _ProfileOption(
               icon: Icons.privacy_tip_outlined,
               title: t.translate('menu_privacy'),
-              onTap: () {},
+              onTap: _launchPrivacyPolicy,
             ),
 
             SizedBox(height: 2.h),
@@ -214,8 +215,87 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  void _showHelpSupportDialog(BuildContext context) {
+    final t = AppLocalizations.of(context);
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(t.translate('contact_us')),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildContactRow(
+              context,
+              Icons.phone,
+              t.translate('phone'),
+              '+91 98717 69042',
+            ),
+            SizedBox(height: 1.5.h),
+            _buildContactRow(
+              context,
+              Icons.email,
+              t.translate('email'),
+              'info@siiea.in',
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(t.translate('cancel')),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContactRow(
+    BuildContext context,
+    IconData icon,
+    String label,
+    String value,
+  ) {
+    final theme = Theme.of(context);
+    return Row(
+      children: [
+        Icon(icon, color: theme.colorScheme.primary, size: 20),
+        SizedBox(width: 3.w),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            Text(
+              value,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Future<void> _launchPrivacyPolicy() async {
+    final Uri url = Uri.parse('https://www.siiea.in/privacy-policy/');
+    if (!await launchUrl(url)) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not launch privacy policy')),
+        );
+      }
+    }
+  }
+
   void _handleLogout(BuildContext context) {
-    final t = AppLocalizations.of(context)!;
+    final t = AppLocalizations.of(context);
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(

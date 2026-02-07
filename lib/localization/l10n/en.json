@@ -153,6 +153,9 @@
   "ai_error": "⚠️ Something went wrong. Please try again.",
   "news": "Market News",
   "no_news": "No news available.",
-  "read_more": "Read more"
+  "read_more": "Read more",
+  "contact_us": "Contact Us",
+  "phone": "Phone",
+  "email": "Email"
 
 }
