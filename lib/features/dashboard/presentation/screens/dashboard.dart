@@ -1,6 +1,6 @@
 import 'package:exim_lab/common/widgets/promo_banner_dialog.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
-import 'package:exim_lab/features/certificates/presentation/screens/certificates_screen.dart';
+
 import 'package:exim_lab/features/notifications/presentation/providers/notifications_provider.dart';
 import 'package:exim_lab/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dart';
@@ -146,7 +146,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             const SizedBox(height: 4),
                             Text(
                               context.watch<AuthProvider>().user?.name ??
-                                  t!.translate('guest_user'),
+                                  t.translate('guest_user'),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: theme.textTheme.headlineMedium?.copyWith(
@@ -157,7 +157,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              t!.translate('lets_start_learning'),
+                              t.translate('lets_start_learning'),
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: cs.onPrimary.withValues(alpha: 0.9),
                                 fontWeight: FontWeight.w600,
@@ -291,8 +291,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               );
                                             },
                                         loadingBuilder: (context, child, loadingProgress) {
-                                          if (loadingProgress == null)
+                                          if (loadingProgress == null) {
                                             return child;
+                                          }
                                           return Padding(
                                             padding: const EdgeInsets.all(12.0),
                                             child: CircularProgressIndicator(
@@ -518,7 +519,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                     // 8. TOOLS
                     SectionHeader(
-                      title: t!.translate('tools_section_title'),
+                      title: t.translate('tools_section_title'),
                       subtitle: t.translate('tools_section_subtitle'),
                     ),
                     SizedBox(height: 1.5.h),

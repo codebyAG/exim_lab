@@ -13,7 +13,7 @@ class ToolsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;
+    final t = AppLocalizations.of(context);
     return SizedBox(
       height: 22.h, // ✅ responsive height
       child: ListView(

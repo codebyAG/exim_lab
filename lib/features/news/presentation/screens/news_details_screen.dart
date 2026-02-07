@@ -13,7 +13,7 @@ class NewsDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final t = AppLocalizations.of(context)!;
+    final t = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,

@@ -31,7 +31,7 @@ class _InlineBannerState extends State<InlineBanner> {
 
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
-    final t = AppLocalizations.of(context)!;
+    final t = AppLocalizations.of(context);
 
     // Sanitize URL
     String imgUrl = _banner!.imageUrl.trim();

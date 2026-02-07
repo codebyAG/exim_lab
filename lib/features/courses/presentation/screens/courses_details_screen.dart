@@ -30,7 +30,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final state = context.watch<CourseDetailsState>();
-    final t = AppLocalizations.of(context)!;
+    final t = AppLocalizations.of(context);
 
     // ================= LOADING =================
     if (state.isLoading) {

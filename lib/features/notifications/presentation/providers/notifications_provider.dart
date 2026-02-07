@@ -15,7 +15,7 @@ class NotificationsProvider extends ChangeNotifier {
   int get unreadCount => _unreadCount;
 
   int _page = 1;
-  int _limit = 20;
+  final int _limit = 20;
   bool _hasMore = true;
   bool get hasMore => _hasMore;
 

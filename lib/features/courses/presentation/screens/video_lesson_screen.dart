@@ -50,7 +50,7 @@ class _VideoLessonScreenState extends State<VideoLessonScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
-    final t = AppLocalizations.of(context)!;
+    final t = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: cs.surface,
@@ -173,7 +173,7 @@ class _VideoLessonScreenState extends State<VideoLessonScreen> {
     // Note: 'You' could also be localized if needed, e.g. t.translate('you_user')
     // But since it is inside a method, we need access to context or pass it.
     // Ideally user name comes from profile.
-    final t = AppLocalizations.of(context)!;
+    final t = AppLocalizations.of(context);
 
     setState(() {
       _questions.insert(

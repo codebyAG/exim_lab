@@ -302,7 +302,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(
-          t.translate('logout_confirm_title') ?? 'Logout',
+          t.translate('logout_confirm_title'),
         ), // Default fallback if key missing
         content: Text(t.translate('logout_confirm_msg')),
         actions: [

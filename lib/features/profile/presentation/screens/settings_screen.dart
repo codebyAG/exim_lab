@@ -13,7 +13,7 @@ class SettingsScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final themeProvider = context.watch<ThemeProvider>();
-    final t = AppLocalizations.of(context)!;
+    final t = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -139,7 +139,7 @@ class SettingsScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) {
-        final t = AppLocalizations.of(context)!;
+        final t = AppLocalizations.of(context);
         return AlertDialog(
           title: Text(t.translate('select_language')),
           content: Column(

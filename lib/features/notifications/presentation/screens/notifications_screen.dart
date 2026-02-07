@@ -98,7 +98,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               controller: _scrollController,
               padding: const EdgeInsets.all(16),
               itemCount: notifications.length + (provider.hasMore ? 1 : 0),
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              separatorBuilder: (context, index) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
                 if (index == notifications.length) {
                   return const Padding(

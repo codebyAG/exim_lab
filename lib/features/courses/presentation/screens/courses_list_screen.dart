@@ -36,7 +36,7 @@ class _CoursesListScreenState extends State<CoursesListScreen>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final state = context.watch<CoursesState>();
-    final t = AppLocalizations.of(context)!;
+    final t = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
@@ -92,7 +92,7 @@ class _CoursesListScreenState extends State<CoursesListScreen>
       return Center(child: Text(state.errorMessage!));
     }
 
-    final t = AppLocalizations.of(context)!;
+    final t = AppLocalizations.of(context);
     if (state.courses.isEmpty) {
       return Center(child: Text(t.translate('no_courses_available')));
     }
@@ -197,7 +197,7 @@ class _CourseTile extends StatelessWidget {
                 CourseDetailsScreen(courseId: courseId),
               );
             },
-            child: Text(AppLocalizations.of(context)!.translate('view_button')),
+            child: Text(AppLocalizations.of(context).translate('view_button')),
           ),
         ],
       ),
@@ -212,7 +212,7 @@ Widget _myCoursesList(BuildContext context, CoursesState state) {
   }
 
   if (state.myCourses.isEmpty) {
-    final t = AppLocalizations.of(context)!;
+    final t = AppLocalizations.of(context);
     return Center(
       child: Text(
         t.translate('no_courses_enrolled'),
@@ -284,7 +284,7 @@ class _MyCourseCard extends StatelessWidget {
 
           // COMPLETED TEXT
           Text(
-            '${course.completionPercentage ?? 0}% ${AppLocalizations.of(context)!.translate('completed_percent')}',
+            '${course.completionPercentage ?? 0}% ${AppLocalizations.of(context).translate('completed_percent')}',
             style: theme.textTheme.bodySmall?.copyWith(
               color: cs.onSurface.withValues(alpha: 0.7),
             ),

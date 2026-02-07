@@ -16,7 +16,7 @@ class _OtpScreenState extends State<OtpScreen> {
   String _otp = "";
 
   void _handleVerify() async {
-    final t = AppLocalizations.of(context)!;
+    final t = AppLocalizations.of(context);
     if (_otp.length != 4) {
       ScaffoldMessenger.of(
         context,
@@ -47,7 +47,7 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final t = AppLocalizations.of(context)!;
+    final t = AppLocalizations.of(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: true, // ✅ IMPORTANT
