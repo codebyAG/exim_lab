@@ -15,19 +15,19 @@ class ModuleConfig {
   ModuleConfig({required Map<AppModule, bool> modules}) : _modules = modules;
 
   bool isEnabled(AppModule module) =>
-      _modules[module] ?? true; // Default to true
+      _modules[module] ?? false; // Default to false loops api unused
 
   factory ModuleConfig.defaults() {
     return ModuleConfig(
       modules: {
-        AppModule.carousel: true,
-        AppModule.courses: true,
+        AppModule.carousel: false,
+        AppModule.courses: false,
         AppModule.continueLearning: false,
         AppModule.quizzes: false,
-        AppModule.freeVideos: true,
-        AppModule.tools: true,
+        AppModule.freeVideos: false,
+        AppModule.tools: false,
         AppModule.news: false,
-        AppModule.banners: true,
+        AppModule.banners: false,
       },
     );
   }
