@@ -43,7 +43,7 @@ class _InlineBannerState extends State<InlineBanner> {
     return Padding(
       padding: EdgeInsets.only(bottom: 2.h, left: 5.w, right: 5.w),
       child: AspectRatio(
-        aspectRatio: 5 / 3,
+        aspectRatio: 3 / 1,
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
