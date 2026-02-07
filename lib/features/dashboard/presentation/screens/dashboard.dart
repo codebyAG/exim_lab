@@ -472,7 +472,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               subtitle: section.subtitle,
                             ),
                             SizedBox(height: 1.5.h),
-                            FreeVideosSection(videos: videos),
+                            ModuleVisibility(
+                              module: AppModule.freeVideos,
+                              child: FreeVideosSection(videos: videos),
+                            ),
                             SizedBox(height: 2.h),
                           ],
                         );
