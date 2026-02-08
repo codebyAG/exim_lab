@@ -89,6 +89,12 @@ void main() async {
 
   final moduleService = ModuleService();
 
+  final moduleProvider = ModuleProvider(moduleService);
+  await moduleProvider.fetchModules();
+
+  final shortsProvider = ShortsProvider(ShortsService());
+  // await shortsProvider.fetchShorts(); // Maybe await this too if critical, or let it load in background
+
   runApp(
     MultiProvider(
       providers: [
@@ -100,15 +106,11 @@ void main() async {
         ChangeNotifierProvider(create: (_) => QuizProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         // Shorts Provider
-        ChangeNotifierProvider(
-          create: (_) => ShortsProvider(ShortsService())..fetchShorts(),
-        ),
+        ChangeNotifierProvider.value(value: shortsProvider),
         ChangeNotifierProvider(create: (_) => DashboardProvider()),
         ChangeNotifierProvider(create: (_) => NewsProvider(newsService)),
         ChangeNotifierProvider(create: (_) => NotificationsProvider()),
-        ChangeNotifierProvider(
-          create: (_) => ModuleProvider(moduleService)..fetchModules(),
-        ),
+        ChangeNotifierProvider.value(value: moduleProvider),
       ],
       child: const EximLabApp(),
     ),
