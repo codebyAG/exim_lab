@@ -17,7 +17,7 @@ class AnalyticsConstants {
   static const String courseComplete = 'course_complete';
   static const String shareContent = 'share_content';
   static const String search = 'search';
-  static const String error = 'error';
+  static const String error = 'app_error';
 
   // 🔹 MODULE SPECIFIC
   static const String quizTopicView = 'quiz_topic_view';
