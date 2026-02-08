@@ -99,7 +99,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     // Parallel list of actions for each tab (index 0 is null/no-op)
     List<VoidCallback?> navActions = [null];
 
-    if (moduleProvider.isEnabled(AppModule.shorts)) {
+    if (moduleProvider.isEnabled(AppModule.shortVideos)) {
       navItems.add(
         BottomNavigationBarItem(
           icon: const Icon(Icons.slow_motion_video_rounded),
@@ -414,7 +414,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                     // SHORTS SECTION
                     ModuleVisibility(
-                      module: AppModule.shorts,
+                      module: AppModule.shortVideos,
                       child: const HomeShortsSection(),
                     ),
                     SizedBox(height: 2.h),

@@ -140,10 +140,12 @@ class _ShortsPlayerItemState extends State<ShortsPlayerItem> {
                   ),
                   SizedBox(height: 1.h),
                   Text(
-                    '${widget.short.views} views', // Should localize 'views'
+                    widget.short.description, // Replaced views with description
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.white70,
-                      fontSize: 14.sp, // Increased size
+                      fontSize: 12.sp,
                       shadows: [
                         Shadow(
                           blurRadius: 4,
