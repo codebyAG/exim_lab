@@ -79,26 +79,36 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
                 color: cs.surface,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(24), // Increased radius
                 boxShadow: [
                   BoxShadow(
                     color: theme.brightness == Brightness.light
-                        ? Colors.black.withValues(alpha: 0.05)
-                        : Colors.black.withValues(alpha: 0.25),
-                    blurRadius: 12,
-                    offset: const Offset(0, 8),
+                        ? Colors.black.withValues(alpha: 0.08)
+                        : Colors.black.withValues(alpha: 0.3),
+                    blurRadius: 24, // Increased blur
+                    offset: const Offset(0, 12),
                   ),
                 ],
+                border: Border.all(
+                  color: cs.outlineVariant.withValues(alpha: 0.2),
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: 180,
+                    height: 200, // Slightly taller
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(20),
                       color: cs.surfaceContainerHighest,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     clipBehavior: Clip.antiAlias,
                     child:
@@ -109,48 +119,48 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               return Image.asset(
-                                'assets/course1.png', // 🔁 fallback asset
+                                'assets/course1.png',
                                 fit: BoxFit.cover,
                               );
                             },
                           )
-                        : Image.asset(
-                            'assets/course1.png', // 🔁 fallback asset
-                            fit: BoxFit.cover,
-                          ),
+                        : Image.asset('assets/course1.png', fit: BoxFit.cover),
                   ),
 
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
 
                   Text(
                     course.title,
                     style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w800, // Extra Bold
+                      color: cs.onSurface,
+                      height: 1.2,
                     ),
                   ),
 
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 8),
 
                   Text(
                     course.description,
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: cs.onSurface.withValues(alpha: 0.65),
-                      height: 1.4,
+                      color: cs.onSurface.withValues(alpha: 0.7),
+                      height: 1.5,
+                      fontSize: 15,
                     ),
                   ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
 
                   Row(
                     children: [
                       _StatChip(
-                        icon: Icons.menu_book,
+                        icon: Icons.menu_book_rounded,
                         text:
                             '${course.lessons.length} ${t.translate('lessons_count')}',
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 10),
                       _StatChip(
-                        icon: Icons.currency_rupee,
+                        icon: Icons.currency_rupee_rounded,
                         text: course.basePrice == 0
                             ? t.translate('free_cost')
                             : '₹${course.basePrice}',
@@ -164,9 +174,20 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
             const SizedBox(height: 32),
 
             // ================= CTA =================
-            SizedBox(
+            // ================= CTA =================
+            Container(
               width: double.infinity,
-              height: 56,
+              height: 58,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: cs.primary.withValues(alpha: 0.3),
+                    blurRadius: 12,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
               child: ElevatedButton(
                 onPressed: () {
                   AppNavigator.push(
@@ -181,12 +202,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                   backgroundColor: cs.primary,
                   foregroundColor: cs.onPrimary,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(20),
                   ),
+                  elevation: 0, // Using Container shadow instead
                 ),
                 child: const Text(
                   'Start Learning',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
