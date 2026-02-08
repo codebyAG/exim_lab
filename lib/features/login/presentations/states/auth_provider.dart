@@ -33,6 +33,7 @@ class AuthProvider extends ChangeNotifier {
     _user = await _sharedPrefService.getUser();
     if (_user != null) {
       await _analytics.setUserId(_user!.id);
+      _analytics.setUserMobile(_user!.mobile);
       await _analytics.setUserProperty(name: 'role', value: _user!.role);
       await _analytics.setUserProperty(
         name: AnalyticsConstants.phoneNumber,
@@ -102,6 +103,7 @@ class AuthProvider extends ChangeNotifier {
       // 📊 ANALYTICS
       if (_user != null) {
         await _analytics.setUserId(_user!.id);
+        _analytics.setUserMobile(_user!.mobile);
         await _analytics.setUserProperty(name: 'role', value: _user!.role);
         await _analytics.setUserProperty(
           name: AnalyticsConstants.phoneNumber,
@@ -143,6 +145,7 @@ class AuthProvider extends ChangeNotifier {
         _user = UserModel.fromJson(response);
         await _sharedPrefService.saveUser(_user!);
         // Update analytics properties on profile fetch too
+        _analytics.setUserMobile(_user!.mobile);
         await _analytics.setUserProperty(
           name: AnalyticsConstants.phoneNumber,
           value: _user!.mobile,

@@ -6,14 +6,29 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AnalyticsService {
   FirebaseAnalytics get _analytics => FirebaseAnalytics.instance;
 
+  static String? _userMobile;
+
+  void setUserMobile(String? mobile) {
+    _userMobile = mobile;
+    debugPrint('📊 Analytics Mobile Set: $mobile');
+  }
+
   FirebaseAnalyticsObserver getAnalyticsObserver() =>
       FirebaseAnalyticsObserver(analytics: _analytics);
 
   // 🔹 GENERIC LOGGING
   Future<void> logEvent(String name, {Map<String, Object>? parameters}) async {
     try {
-      await _analytics.logEvent(name: name, parameters: parameters);
-      debugPrint('📊 Analytics Event: $name, Params: $parameters');
+      final Map<String, Object> finalParams = parameters != null
+          ? Map.from(parameters)
+          : {};
+
+      if (_userMobile != null) {
+        finalParams[AnalyticsConstants.phoneNumber] = _userMobile!;
+      }
+
+      await _analytics.logEvent(name: name, parameters: finalParams);
+      debugPrint('📊 Analytics Event: $name, Params: $finalParams');
     } catch (e) {
       debugPrint('⚠️ Analytics Error: $e');
     }
