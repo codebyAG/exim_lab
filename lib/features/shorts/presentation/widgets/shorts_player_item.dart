@@ -101,6 +101,12 @@ class _ShortsPlayerItemState extends State<ShortsPlayerItem> {
                 _initialized = true;
                 if (widget.isVisible) _controller.play();
               },
+              thumbnail: Container(
+                color: Colors.black,
+                child: const Center(
+                  child: CircularProgressIndicator(color: Colors.white),
+                ),
+              ),
               bottomActions: const [], // Hide default controls
             ),
 
