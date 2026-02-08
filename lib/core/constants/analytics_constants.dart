@@ -23,6 +23,7 @@ class AnalyticsConstants {
   static const String method = 'method';
   static const String userId = 'user_id';
   static const String role = 'role';
+  static const String phoneNumber = 'phone_number';
 
   static const String ctaUrl = 'cta_url';
   static const String imageUrl = 'image_url';

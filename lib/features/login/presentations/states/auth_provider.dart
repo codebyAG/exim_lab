@@ -3,6 +3,7 @@ import 'package:exim_lab/features/login/data/data_sources/auth_data_source.dart'
 import 'package:exim_lab/features/login/data/models/user_model.dart';
 import 'package:exim_lab/core/services/shared_pref_service.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
+import 'package:exim_lab/core/constants/analytics_constants.dart';
 
 class AuthProvider extends ChangeNotifier {
   final AuthDataSource _dataSource = AuthDataSource();
@@ -33,6 +34,10 @@ class AuthProvider extends ChangeNotifier {
     if (_user != null) {
       await _analytics.setUserId(_user!.id);
       await _analytics.setUserProperty(name: 'role', value: _user!.role);
+      await _analytics.setUserProperty(
+        name: AnalyticsConstants.phoneNumber,
+        value: _user!.mobile,
+      );
     }
     notifyListeners();
   }
@@ -98,6 +103,10 @@ class AuthProvider extends ChangeNotifier {
       if (_user != null) {
         await _analytics.setUserId(_user!.id);
         await _analytics.setUserProperty(name: 'role', value: _user!.role);
+        await _analytics.setUserProperty(
+          name: AnalyticsConstants.phoneNumber,
+          value: _user!.mobile,
+        );
         await _analytics.logLogin(method: 'otp');
       }
 
@@ -133,6 +142,11 @@ class AuthProvider extends ChangeNotifier {
         // Direct object
         _user = UserModel.fromJson(response);
         await _sharedPrefService.saveUser(_user!);
+        // Update analytics properties on profile fetch too
+        await _analytics.setUserProperty(
+          name: AnalyticsConstants.phoneNumber,
+          value: _user!.mobile,
+        );
         notifyListeners();
       }
     } catch (e) {
