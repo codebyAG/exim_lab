@@ -184,7 +184,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: Container(
                 padding: EdgeInsets.fromLTRB(
                   5.w,
-                  7.h,
+                  5.h,
                   5.w,
                   3.h,
                 ), // Increased top padding
@@ -200,7 +200,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ],
                   ),
                   borderRadius: const BorderRadius.vertical(
-                    bottom: Radius.circular(32), // Slightly more rounded
+                    bottom: Radius.circular(30), // Slightly more rounded
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -226,7 +226,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   fontWeight: FontWeight.bold, // w700
                                 ),
                               ),
-                              const SizedBox(height: 6),
+                              const SizedBox(height: 2),
                               Text(
                                 context.watch<AuthProvider>().user?.name ??
                                     t.translate('guest_user'),
@@ -236,14 +236,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   fontWeight: FontWeight.w900, // Extra Bold
                                   letterSpacing: -0.5,
                                   color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                t.translate('lets_start_learning'),
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: Colors.white.withValues(alpha: 0.9),
-                                  fontWeight: FontWeight.bold, // w700
                                 ),
                               ),
                             ],
@@ -280,12 +272,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         icon: const Icon(
                                           Icons.notifications_outlined,
                                           color: Colors.white,
-                                          size: 26,
+                                          size: 20,
                                         ),
                                         padding: EdgeInsets.zero,
                                         constraints: const BoxConstraints(
-                                          minWidth: 48,
-                                          minHeight: 48,
+                                          minWidth: 40,
+                                          minHeight: 40,
                                         ),
                                       ),
                                     ),
@@ -344,8 +336,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 );
                               },
                               child: Container(
-                                height: 50,
-                                width: 50,
+                                height: 40,
+                                width: 40,
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   shape: BoxShape.circle,
@@ -401,7 +393,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           child: Center(
                                             child: Icon(
                                               Icons.person_rounded,
-                                              size: 28,
+                                              size: 20,
                                               color: cs.primary,
                                             ),
                                           ),
