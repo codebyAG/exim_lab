@@ -128,7 +128,7 @@ class _ShortsPlayerItemState extends State<ShortsPlayerItem> {
                   widget.short.title,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 14.sp,
+                    fontSize: 16.sp, // Increased size
                     fontWeight: FontWeight.bold,
                     shadows: [
                       Shadow(
@@ -140,10 +140,10 @@ class _ShortsPlayerItemState extends State<ShortsPlayerItem> {
                 ),
                 SizedBox(height: 1.h),
                 Text(
-                  '${widget.short.views} views',
+                  '${widget.short.views} views', // Should localize 'views'
                   style: TextStyle(
                     color: Colors.white70,
-                    fontSize: 10.sp,
+                    fontSize: 14.sp, // Increased size
                     shadows: [
                       Shadow(
                         blurRadius: 4,

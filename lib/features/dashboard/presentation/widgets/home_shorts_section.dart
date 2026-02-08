@@ -29,7 +29,7 @@ class HomeShortsSection extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 25.h, // Height for vertical thumbnails
+              height: 28.h, // Increased height
               child: ListView.separated(
                 padding: EdgeInsets.symmetric(horizontal: 5.w),
                 scrollDirection: Axis.horizontal,
@@ -52,12 +52,12 @@ class HomeShortsSection extends StatelessWidget {
                       );
                     },
                     child: Container(
-                      width:
-                          15.h *
-                          (9 / 16), // 9:16 Aspect Ratio width based on height
+                      width: 35.w, // Increased width (was dynamic)
                       decoration: BoxDecoration(
                         color: Colors.black,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(
+                          16,
+                        ), // Rounded corners
                         image: thumbnailUrl.isNotEmpty
                             ? DecorationImage(
                                 image: NetworkImage(thumbnailUrl),
@@ -68,19 +68,19 @@ class HomeShortsSection extends StatelessWidget {
                       child: Stack(
                         children: [
                           Positioned(
-                            bottom: 1.h,
-                            left: 1.w,
-                            right: 1.w,
+                            bottom: 1.5.h,
+                            left: 2.w,
+                            right: 2.w,
                             child: Text(
                               short.title,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 8.sp,
+                                fontSize: 9.sp,
                                 fontWeight: FontWeight.bold,
                                 shadows: const [
-                                  Shadow(blurRadius: 2, color: Colors.black),
+                                  Shadow(blurRadius: 4, color: Colors.black),
                                 ],
                               ),
                             ),
@@ -89,7 +89,10 @@ class HomeShortsSection extends StatelessWidget {
                             child: Icon(
                               Icons.play_circle_fill,
                               color: Colors.white,
-                              size: 30,
+                              size: 40, // Increased size
+                              shadows: [
+                                Shadow(blurRadius: 5, color: Colors.black45),
+                              ],
                             ),
                           ),
                         ],

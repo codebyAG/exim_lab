@@ -2,6 +2,7 @@ import 'package:exim_lab/features/shorts/presentation/providers/shorts_provider.
 import 'package:exim_lab/features/shorts/presentation/widgets/shorts_player_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:exim_lab/localization/app_localization.dart';
 
 class ShortsFeedScreen extends StatefulWidget {
   final int initialIndex;
@@ -35,7 +36,10 @@ class _ShortsFeedScreenState extends State<ShortsFeedScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: BackButton(color: Colors.white),
-        title: const Text('Shorts', style: TextStyle(color: Colors.white)),
+        title: Text(
+          AppLocalizations.of(context).translate('shorts'),
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Consumer<ShortsProvider>(
         builder: (context, provider, child) {
