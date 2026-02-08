@@ -5,6 +5,9 @@ class ShortModel {
   final String videoUrl;
   final String thumbnailUrl;
   final int durationSeconds;
+  final int viewCount;
+  final int likeCount;
+  final bool metadataFetched;
 
   ShortModel({
     required this.id,
@@ -13,6 +16,9 @@ class ShortModel {
     required this.videoUrl,
     required this.thumbnailUrl,
     required this.durationSeconds,
+    this.viewCount = 0,
+    this.likeCount = 0,
+    this.metadataFetched = false,
   });
 
   factory ShortModel.fromJson(Map<String, dynamic> json) {
@@ -23,6 +29,27 @@ class ShortModel {
       videoUrl: json['videoUrl'] ?? '',
       thumbnailUrl: json['thumbnailUrl'] ?? '',
       durationSeconds: json['durationSeconds'] ?? 0,
+    );
+  }
+
+  ShortModel copyWith({
+    String? title,
+    String? description,
+    String? thumbnailUrl,
+    int? viewCount,
+    int? likeCount,
+    bool? metadataFetched,
+  }) {
+    return ShortModel(
+      id: id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      videoUrl: videoUrl,
+      thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+      durationSeconds: durationSeconds,
+      viewCount: viewCount ?? this.viewCount,
+      likeCount: likeCount ?? this.likeCount,
+      metadataFetched: metadataFetched ?? this.metadataFetched,
     );
   }
 }
