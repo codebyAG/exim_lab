@@ -17,7 +17,19 @@ class ModuleProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    _config = await _moduleService.fetchConfig();
+    // 1. Load Local Config first (Fast)
+    final localConfig = await _moduleService.getLocalConfig();
+    if (localConfig != null) {
+      _config = localConfig;
+      notifyListeners();
+    }
+
+    // 2. Fetch Remote (Async)
+    final remoteConfig = await _moduleService.fetchConfig();
+    if (remoteConfig != null) {
+      _config = remoteConfig;
+    }
+
     _isLoading = false;
     notifyListeners();
   }

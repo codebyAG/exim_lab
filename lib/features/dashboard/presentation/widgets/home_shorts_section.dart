@@ -9,13 +9,38 @@ import 'package:sizer/sizer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 
-class HomeShortsSection extends StatelessWidget {
+class HomeShortsSection extends StatefulWidget {
   const HomeShortsSection({super.key});
+
+  @override
+  State<HomeShortsSection> createState() => _HomeShortsSectionState();
+}
+
+class _HomeShortsSectionState extends State<HomeShortsSection> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        final provider = context.read<ShortsProvider>();
+        if (provider.shorts.isEmpty && !provider.isLoading) {
+          provider.fetchShorts();
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ShortsProvider>(
       builder: (context, provider, child) {
+        if (provider.isLoading) {
+          return SizedBox(
+            height: 28.h,
+            child: const Center(child: CircularProgressIndicator()),
+          );
+        }
+
         if (provider.shorts.isEmpty) return const SizedBox.shrink();
 
         return Column(

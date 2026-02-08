@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:exim_lab/common/widgets/promo_banner_dialog.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
-import 'package:exim_lab/features/shorts/presentation/providers/shorts_provider.dart';
 import 'package:exim_lab/features/notifications/presentation/providers/notifications_provider.dart';
 import 'package:exim_lab/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dart';
@@ -51,28 +50,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         await context.read<DashboardProvider>().fetchDashboardData();
         if (mounted) {
           await context.read<NotificationsProvider>().fetchUnreadCount();
-        }
-
-        if (mounted) {
-          // We need to listen to module provider changes or ensure it's loaded.
-          // Better to just check current state and also listen in build or use a listener.
-          // For now, let's just use the current state as we did, but let's make sure we are not facing a race condition.
-          // If modules are fetched in main or splash, it should be fine.
-          // BUT, if modules are fetched async and we are here before that, we might miss it.
-
-          final moduleProvider = context.read<ModuleProvider>();
-          // Force fetch if needed? No, module provider should manage that.
-
-          // Debugging log removed
-
-          if (moduleProvider.isEnabled('shortVideos')) {
-            context.read<ShortsProvider>().fetchShorts();
-          } else {
-            // If not enabled yet, maybe it's still loading?
-            // Let's retry or listen.
-            // Ideally we should listen to the provider.
-            // But for now let's just log.
-          }
         }
 
         // Show Promo Banner if available

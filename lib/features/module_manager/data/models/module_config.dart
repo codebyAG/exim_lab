@@ -50,4 +50,8 @@ class ModuleConfig {
 
     return ModuleConfig(modules: defaults);
   }
+
+  Map<String, dynamic> toJson() {
+    return _modules;
+  }
 }
