@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 enum AppModule {
   carousel,
   courses,
@@ -36,25 +38,28 @@ class ModuleConfig {
 
   factory ModuleConfig.fromJson(Map<String, dynamic> json) {
     final Map<AppModule, bool> modules = {};
+    log("Parsing ModuleConfig: $json");
+
     for (var key in json.keys) {
-      // Find matching enum (case-insensitive or exact?)
-      // Enum is cameCase, API keys should be too.
       try {
         final module = AppModule.values.firstWhere(
           (e) => e.name == key,
-          orElse: () => AppModule.values.first, // Fallback? Or skip
+          orElse: () => AppModule.values.first,
         );
+        log("Key: $key -> Enum: ${module.name}");
         if (module.name == key) {
           modules[module] = json[key] == true;
         }
       } catch (_) {}
     }
 
-    // Merge with defaults to ensure all keys exist
+    // Merge with defaults
     final defaults = ModuleConfig.defaults()._modules;
     modules.forEach((key, value) {
       defaults[key] = value;
     });
+
+    log("Final Modules: $defaults");
 
     return ModuleConfig(modules: defaults);
   }
