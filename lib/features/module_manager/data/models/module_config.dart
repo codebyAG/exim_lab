@@ -7,8 +7,6 @@ enum AppModule {
   tools,
   news,
   banners,
-  news,
-  banners,
   shortVideos,
 }
 
