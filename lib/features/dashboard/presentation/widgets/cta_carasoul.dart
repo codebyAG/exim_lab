@@ -101,7 +101,6 @@ class CtaCarouselState extends State<CtaCarousel> {
             },
           ),
         ),
-
         DotsIndicator(
           count: widget.banners.length,
           currentIndex: _currentIndex,
