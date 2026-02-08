@@ -20,19 +20,11 @@ class LessonsScreen extends StatefulWidget {
 }
 
 class _LessonsScreenState extends State<LessonsScreen> {
-  bool _isLoading = true;
+  final bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    // Simulate loading/fetching delay
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    });
   }
 
   @override

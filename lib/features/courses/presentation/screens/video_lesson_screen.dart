@@ -22,20 +22,11 @@ class _VideoLessonScreenState extends State<VideoLessonScreen> {
   final TextEditingController _questionController = TextEditingController();
 
   final List<_Question> _questions = [];
-  bool _isLoading = true;
+  final bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-
-    // Simulate loading/fetching delay
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    });
 
     final videoId = YoutubePlayer.convertUrlToId(widget.videoUrl);
 
