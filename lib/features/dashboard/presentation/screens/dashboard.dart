@@ -31,6 +31,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_shimmer.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -419,10 +420,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Consumer<DashboardProvider>(
               builder: (context, dashboard, child) {
                 if (dashboard.isLoading) {
-                  return SizedBox(
-                    height: 50.h,
-                    child: const Center(child: CircularProgressIndicator()),
-                  );
+                  return const DashboardShimmer();
                 }
 
                 if (dashboard.error != null) {
