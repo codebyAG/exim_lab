@@ -87,13 +87,13 @@ class _ShortsPlayerItemState extends State<ShortsPlayerItem> {
           _controller.pause();
         }
       },
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Video Player
-          GestureDetector(
-            onTap: _togglePlay,
-            child: YoutubePlayer(
+      child: GestureDetector(
+        onTap: _togglePlay,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Video Player
+            YoutubePlayer(
               controller: _controller,
               showVideoProgressIndicator: true,
               progressIndicatorColor: Colors.red,
@@ -103,59 +103,60 @@ class _ShortsPlayerItemState extends State<ShortsPlayerItem> {
               },
               bottomActions: const [], // Hide default controls
             ),
-          ),
 
-          // Play/Pause Overlay
-          if (!_isPlaying)
-            const Center(
-              child: Icon(
-                Icons.play_arrow_rounded,
-                color: Colors.white,
-                size: 60,
-                shadows: [Shadow(blurRadius: 10, color: Colors.black)],
+            // Play/Pause Overlay
+            if (!_isPlaying)
+              const Center(
+                child: Icon(
+                  Icons.play_arrow_rounded,
+                  color: Colors.white,
+                  size: 60,
+                  shadows: [Shadow(blurRadius: 10, color: Colors.black)],
+                ),
+              ),
+
+            // Overlay UI (Title, Views, etc.)
+            Positioned(
+              bottom: 2.h,
+              left: 4.w,
+              right: 15.w, // Leave space for side actions if added
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // ... text widgets
+                  Text(
+                    widget.short.title,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.sp, // Increased size
+                      fontWeight: FontWeight.bold,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 4,
+                          color: Colors.black.withOpacity(0.5),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 1.h),
+                  Text(
+                    '${widget.short.views} views', // Should localize 'views'
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14.sp, // Increased size
+                      shadows: [
+                        Shadow(
+                          blurRadius: 4,
+                          color: Colors.black.withOpacity(0.5),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
-
-          // Overlay UI (Title, Views, etc.)
-          Positioned(
-            bottom: 2.h,
-            left: 4.w,
-            right: 15.w, // Leave space for side actions if added
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.short.title,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.sp, // Increased size
-                    fontWeight: FontWeight.bold,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 4,
-                        color: Colors.black.withOpacity(0.5),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 1.h),
-                Text(
-                  '${widget.short.views} views', // Should localize 'views'
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 14.sp, // Increased size
-                    shadows: [
-                      Shadow(
-                        blurRadius: 4,
-                        color: Colors.black.withOpacity(0.5),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
