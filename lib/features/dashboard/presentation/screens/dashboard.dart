@@ -67,10 +67,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           // DEBUG:
           // DEBUG:
           log(
-            "Dashboard Init: ModuleProvider state: ${moduleProvider.isEnabled(AppModule.shortVideos)}",
+            "Dashboard Init: ModuleProvider state: ${moduleProvider.isEnabled('shortVideos')}",
           );
 
-          if (moduleProvider.isEnabled(AppModule.shortVideos)) {
+          if (moduleProvider.isEnabled('shortVideos')) {
             context.read<ShortsProvider>().fetchShorts();
           } else {
             // If not enabled yet, maybe it's still loading?
@@ -127,7 +127,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     // Parallel list of actions for each tab (index 0 is null/no-op)
     List<VoidCallback?> navActions = [null];
 
-    if (moduleProvider.isEnabled(AppModule.shortVideos)) {
+    if (moduleProvider.isEnabled('shortVideos')) {
       navItems.add(
         BottomNavigationBarItem(
           icon: const Icon(Icons.slow_motion_video_rounded),
@@ -140,7 +140,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       );
     }
 
-    if (moduleProvider.isEnabled(AppModule.courses)) {
+    if (moduleProvider.isEnabled('courses')) {
       navItems.add(
         BottomNavigationBarItem(
           icon: const Icon(Icons.play_circle_outline_rounded),
@@ -153,7 +153,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       });
     }
 
-    if (moduleProvider.isEnabled(AppModule.news)) {
+    if (moduleProvider.isEnabled('news')) {
       navItems.add(
         BottomNavigationBarItem(
           icon: const Icon(Icons.newspaper_rounded),
@@ -427,7 +427,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     // 3. CAROUSEL (From Addons)
                     if (data.addons.carousel.isNotEmpty) ...[
                       ModuleVisibility(
-                        module: AppModule.carousel,
+                        module: 'carousel',
                         child: CtaCarousel(banners: data.addons.carousel),
                       ),
                       SizedBox(height: 3.h),
@@ -435,7 +435,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                     // SHORTS SECTION
                     ModuleVisibility(
-                      module: AppModule.shortVideos,
+                      module: 'shortVideos',
                       child: const HomeShortsSection(),
                     ),
                     SizedBox(height: 2.h),
@@ -463,7 +463,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           SizedBox(width: 3.w),
                           Expanded(
                             child: ModuleVisibility(
-                              module: AppModule.quizzes,
+                              module: 'quizzes',
                               child: QuickCard(
                                 icon: Icons.quiz_rounded,
                                 title: t.translate('quizzes_title'),
@@ -488,7 +488,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         if (courses.isEmpty) return const SizedBox();
 
                         return ModuleVisibility(
-                          module: AppModule.continueLearning,
+                          module: 'continueLearning',
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -532,7 +532,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         if (courses.isEmpty) return const SizedBox();
 
                         return ModuleVisibility(
-                          module: AppModule.courses,
+                          module: 'courses',
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -553,7 +553,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         if (videos.isEmpty) return const SizedBox();
 
                         return ModuleVisibility(
-                          module: AppModule.freeVideos,
+                          module: 'freeVideos',
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -574,7 +574,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         if (banners.isEmpty) return const SizedBox();
 
                         return ModuleVisibility(
-                          module: AppModule.banners,
+                          module: 'banners',
                           child: Column(
                             children: [
                               InlineBanner(banners: banners),
@@ -588,7 +588,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                     // 8. TOOLS
                     ModuleVisibility(
-                      module: AppModule.tools,
+                      module: 'tools',
                       child: Column(
                         children: [
                           SectionHeader(

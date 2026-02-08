@@ -3,6 +3,8 @@ class ModuleConfig {
 
   ModuleConfig({required Map<String, bool> modules}) : _modules = modules;
 
+  Map<String, bool> get modules => Map.unmodifiable(_modules);
+
   bool isEnabled(String key) => _modules[key] ?? false;
 
   factory ModuleConfig.defaults() {
@@ -48,5 +50,4 @@ class ModuleConfig {
 
     return ModuleConfig(modules: defaults);
   }
-}
 }

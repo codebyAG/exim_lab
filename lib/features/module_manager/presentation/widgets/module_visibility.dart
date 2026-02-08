@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/module_provider.dart';
 
 class ModuleVisibility extends StatelessWidget {
-  final AppModule module;
+  final String module;
   final Widget child;
   final Widget? replacement;
 

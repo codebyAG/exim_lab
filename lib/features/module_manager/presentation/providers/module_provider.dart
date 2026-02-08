@@ -33,15 +33,11 @@ class ModuleProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-    final currentMap = Map<AppModule, bool>.from(_config._modules);
+  // Helper to toggle a module (for dev testing)
+  void toggleModule(String module) {
+    if (_config == null) return;
+    final currentMap = Map<String, bool>.from(_config!.modules);
     currentMap[module] = !isEnabled(module);
     updateConfig(currentMap);
   }
-}
-
-extension ModuleConfigExtension on ModuleConfig {
-  Map<AppModule, bool> get _modules => (this as dynamic)._modules;
-  // Wait, I can't access private field _modules easily in extension without modifying model.
-  // I'll fix model or provider.
-  // Actually, I'll just expose modules in model.
 }
