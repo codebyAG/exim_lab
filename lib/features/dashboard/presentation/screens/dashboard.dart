@@ -372,21 +372,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         fit: BoxFit.cover,
                                         errorWidget: (context, url, error) {
                                           return Container(
-                                            color: cs.primaryContainer,
-                                            child: Icon(
-                                              Icons.person,
-                                              color: cs.primary,
+                                            color: Colors.white,
+                                            child: Center(
+                                              child: Icon(
+                                                Icons.person_rounded,
+                                                size: 28,
+                                                color: cs.primary,
+                                              ),
                                             ),
                                           );
                                         },
                                         placeholder: (context, url) =>
-                                            Container(color: cs.surfaceVariant),
+                                            Container(color: Colors.white),
                                       )
                                     : Container(
-                                        color: cs.primaryContainer,
-                                        child: Icon(
-                                          Icons.person,
-                                          color: cs.primary,
+                                        color: Colors.white,
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.person_rounded,
+                                            size: 28,
+                                            color: cs.primary,
+                                          ),
                                         ),
                                       ),
                               ),
