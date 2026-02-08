@@ -11,6 +11,8 @@ import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart'
 import 'package:exim_lab/features/dashboard/presentation/providers/dashboard_provider.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/continue_card.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/home_shorts_section.dart';
+import 'package:exim_lab/features/shorts/presentation/screens/shorts_feed_screen.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/cta_carasoul.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/horizontal_courses.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/inline_banner.dart';
@@ -92,10 +94,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
         activeIcon: const Icon(Icons.home_filled),
         label: t.translate('home'),
       ),
+      // Shorts Item
+      BottomNavigationBarItem(
+        icon: const Icon(Icons.slow_motion_video_rounded),
+        activeIcon: const Icon(Icons.slow_motion_video),
+        label: 'Shorts',
+      ),
     ];
 
     // Parallel list of actions for each tab (index 0 is null/no-op)
-    List<VoidCallback?> navActions = [null];
+    List<VoidCallback?> navActions = [
+      null,
+      () => AppNavigator.push(context, const ShortsFeedScreen()),
+    ];
 
     if (moduleProvider.isEnabled(AppModule.courses)) {
       navItems.add(
@@ -396,6 +407,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                       SizedBox(height: 3.h),
                     ],
+
+                    // SHORTS SECTION
+                    const HomeShortsSection(),
+                    SizedBox(height: 2.h),
 
                     // 4. QUICK ACTIONS (Static)
                     Padding(
