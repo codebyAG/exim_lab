@@ -1,3 +1,5 @@
+import 'package:exim_lab/core/constants/api_constants.dart';
+import 'package:exim_lab/core/functions/api_call.dart';
 import 'package:exim_lab/core/constants/analytics_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
@@ -27,10 +29,36 @@ class AnalyticsService {
         finalParams[AnalyticsConstants.phoneNumber] = _userMobile!;
       }
 
+      // 1. Log to Firebase (Keep as secondary/primary until transition complete)
       await _analytics.logEvent(name: name, parameters: finalParams);
-      debugPrint('📊 Analytics Event: $name, Params: $finalParams');
+      debugPrint('📊 Firebase Event: $name, Params: $finalParams');
+
+      // 2. Log to Custom Server
+      await _logToServer(name, finalParams);
     } catch (e) {
       debugPrint('⚠️ Analytics Error: $e');
+    }
+  }
+
+  Future<void> _logToServer(
+    String eventName,
+    Map<String, Object> params,
+  ) async {
+    try {
+      await callApi(
+        ApiConstants.logAnalytics,
+        methodType: MethodType.post,
+        requestData: {
+          'event_name': eventName,
+          'parameters': params,
+          'phone_number': _userMobile ?? '',
+          'timestamp': DateTime.now().toIso8601String(),
+        },
+        parser: (json) => json,
+      );
+      debugPrint('🚀 Server Analytics Logged: $eventName');
+    } catch (e) {
+      debugPrint('⚠️ Server Analytics Error: $e');
     }
   }
 
