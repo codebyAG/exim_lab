@@ -7,6 +7,7 @@ import 'package:exim_lab/features/welcome/presentation/screens/welcome_screen.da
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:provider/provider.dart';
+import 'package:exim_lab/features/module_manager/presentation/providers/module_provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -24,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> checkForUpdates() async {
     if (!Platform.isAndroid) {
-      goToLogin();
+      initializeAndNavigate();
       return;
     }
 
@@ -40,25 +41,43 @@ class _SplashScreenState extends State<SplashScreen> {
         // ignore: use_build_context_synchronously
         showUpdateBottomSheet(context);
       } else {
-        goToLogin();
+        initializeAndNavigate();
       }
     } catch (_) {
       if (!mounted) return;
-      goToLogin();
+      initializeAndNavigate();
     }
   }
 
-  void goToLogin() async {
-    // ⏳ WAIT A BIT FOR SPLASH EFFECT
+  Future<void> initializeAndNavigate() async {
+    // ⏳ MINIMUM SPLASH DELAY (Visual Experience)
+    // Run the delay in parallel with initialization if we want,
+    // OR await it to ensure logo is seen.
+    // Let's await it to ensure branding is visible.
     await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
 
-    final isLoggedIn = await context.read<AuthProvider>().checkLoginStatus();
+    final authProvider = context.read<AuthProvider>();
+    final isLoggedIn = await authProvider.checkLoginStatus();
 
     if (!mounted) return;
 
     if (isLoggedIn) {
+      // 🚀 PRE-FETCH DATA FOR DASHBOARD
+      // This ensures the dashboard is populated when opened
+      try {
+        final moduleProvider = context.read<ModuleProvider>();
+
+        // 1. Ensure Modules are loaded
+        // We fetch again to ensure we have the latest config before entering app
+        await moduleProvider.fetchModules();
+      } catch (e) {
+        // Log error but allow navigation to proceed
+        // log("Error pre-fetching data: $e");
+      }
+
+      if (!mounted) return;
       AppNavigator.replace(context, const DashboardScreen());
     } else {
       AppNavigator.replace(context, const WelcomeScreen());
