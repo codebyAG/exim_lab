@@ -2,7 +2,6 @@ import 'package:exim_lab/features/shorts/presentation/providers/shorts_provider.
 import 'package:exim_lab/features/shorts/presentation/widgets/shorts_player_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sizer/sizer.dart';
 
 class ShortsFeedScreen extends StatefulWidget {
   final int initialIndex;

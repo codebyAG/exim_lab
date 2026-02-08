@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:exim_lab/localization/app_localization.dart';
 
 class HomeShortsSection extends StatelessWidget {
   const HomeShortsSection({super.key});
@@ -21,7 +22,7 @@ class HomeShortsSection extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
               child: Text(
-                'Shorts', // Localization key should be added later
+                AppLocalizations.of(context).translate('shorts'),
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),

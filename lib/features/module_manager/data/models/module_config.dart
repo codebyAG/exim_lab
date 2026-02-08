@@ -7,6 +7,7 @@ enum AppModule {
   tools,
   news,
   banners,
+  shorts,
 }
 
 class ModuleConfig {
@@ -28,6 +29,7 @@ class ModuleConfig {
         AppModule.tools: false,
         AppModule.news: false,
         AppModule.banners: false,
+        AppModule.shorts: true,
       },
     );
   }

@@ -22,6 +22,8 @@ class _ShortsPlayerItemState extends State<ShortsPlayerItem> {
   late YoutubePlayerController _controller;
   bool _initialized = false;
 
+  bool _isPlaying = true;
+
   @override
   void initState() {
     super.initState();
@@ -43,7 +45,9 @@ class _ShortsPlayerItemState extends State<ShortsPlayerItem> {
 
   void _listener() {
     if (_initialized && mounted) {
-      // Handle state changes if needed
+      setState(() {
+        _isPlaying = _controller.value.isPlaying;
+      });
     }
   }
 
@@ -64,6 +68,14 @@ class _ShortsPlayerItemState extends State<ShortsPlayerItem> {
     super.dispose();
   }
 
+  void _togglePlay() {
+    if (_controller.value.isPlaying) {
+      _controller.pause();
+    } else {
+      _controller.play();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return VisibilityDetector(
@@ -79,16 +91,30 @@ class _ShortsPlayerItemState extends State<ShortsPlayerItem> {
         fit: StackFit.expand,
         children: [
           // Video Player
-          YoutubePlayer(
-            controller: _controller,
-            showVideoProgressIndicator: true,
-            progressIndicatorColor: Colors.red,
-            onReady: () {
-              _initialized = true;
-              if (widget.isVisible) _controller.play();
-            },
-            bottomActions: const [], // Hide default controls
+          GestureDetector(
+            onTap: _togglePlay,
+            child: YoutubePlayer(
+              controller: _controller,
+              showVideoProgressIndicator: true,
+              progressIndicatorColor: Colors.red,
+              onReady: () {
+                _initialized = true;
+                if (widget.isVisible) _controller.play();
+              },
+              bottomActions: const [], // Hide default controls
+            ),
           ),
+
+          // Play/Pause Overlay
+          if (!_isPlaying)
+            const Center(
+              child: Icon(
+                Icons.play_arrow_rounded,
+                color: Colors.white,
+                size: 60,
+                shadows: [Shadow(blurRadius: 10, color: Colors.black)],
+              ),
+            ),
 
           // Overlay UI (Title, Views, etc.)
           Positioned(

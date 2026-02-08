@@ -94,19 +94,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
         activeIcon: const Icon(Icons.home_filled),
         label: t.translate('home'),
       ),
-      // Shorts Item
-      BottomNavigationBarItem(
-        icon: const Icon(Icons.slow_motion_video_rounded),
-        activeIcon: const Icon(Icons.slow_motion_video),
-        label: 'Shorts',
-      ),
     ];
 
     // Parallel list of actions for each tab (index 0 is null/no-op)
-    List<VoidCallback?> navActions = [
-      null,
-      () => AppNavigator.push(context, const ShortsFeedScreen()),
-    ];
+    List<VoidCallback?> navActions = [null];
+
+    if (moduleProvider.isEnabled(AppModule.shorts)) {
+      navItems.add(
+        BottomNavigationBarItem(
+          icon: const Icon(Icons.slow_motion_video_rounded),
+          activeIcon: const Icon(Icons.slow_motion_video),
+          label: t.translate('shorts'),
+        ),
+      );
+      navActions.add(
+        () => AppNavigator.push(context, const ShortsFeedScreen()),
+      );
+    }
 
     if (moduleProvider.isEnabled(AppModule.courses)) {
       navItems.add(
@@ -409,7 +413,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ],
 
                     // SHORTS SECTION
-                    const HomeShortsSection(),
+                    ModuleVisibility(
+                      module: AppModule.shorts,
+                      child: const HomeShortsSection(),
+                    ),
                     SizedBox(height: 2.h),
 
                     // 4. QUICK ACTIONS (Static)
