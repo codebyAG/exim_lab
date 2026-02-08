@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:provider/provider.dart';
 import 'package:exim_lab/features/module_manager/presentation/providers/module_provider.dart';
+import 'package:animate_do/animate_do.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -199,10 +200,14 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Image.asset(
-          'assets/app_logo.png', // Ensure you have this logo
-          width: 150,
-          height: 150,
+        child: FadeInDown(
+          // Wrap with FadeInDown
+          duration: const Duration(milliseconds: 1200),
+          child: Image.asset(
+            'assets/app_logo.png', // Ensure you have this logo
+            width: 150,
+            height: 150,
+          ),
         ),
       ),
     );

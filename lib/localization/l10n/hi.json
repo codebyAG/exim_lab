@@ -111,6 +111,7 @@
   "menu_help": "मदद और समर्थन",
   "menu_privacy": "गोपनीयता नीति",
   "menu_logout": "लॉग आउट",
+  "logout_confirm_title": "लॉग आउट",
   "logout_confirm_msg": "क्या आप लॉग आउट करना चाहते हैं?",
   "cancel": "रद्द करें",
   "invalid_phone": "कृपया 10 अंकों का मान्य मोबाइल नंबर दर्ज करें",

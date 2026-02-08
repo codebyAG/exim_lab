@@ -5,6 +5,7 @@ import 'package:exim_lab/features/otpScreen/presentations/screens/otp_screen.dar
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:animate_do/animate_do.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -82,21 +83,28 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 24),
 
                     // 🔹 HEADER
-                    Text(
-                      t.translate('welcome_back'),
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        fontSize: 30,
-                        fontWeight: FontWeight.w600,
+                    FadeInDown(
+                      duration: const Duration(milliseconds: 800),
+                      child: Text(
+                        t.translate('welcome_back'),
+                        style: theme.textTheme.headlineMedium?.copyWith(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
 
                     const SizedBox(height: 8),
 
-                    Text(
-                      t.translate('login_subtitle'),
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.65,
+                    FadeInDown(
+                      delay: const Duration(milliseconds: 200),
+                      duration: const Duration(milliseconds: 800),
+                      child: Text(
+                        t.translate('login_subtitle'),
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.65,
+                          ),
                         ),
                       ),
                     ),
@@ -104,38 +112,46 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 40),
 
                     // 🔹 PHONE LABEL
-                    Text(
-                      t.translate('phone_hint'),
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: theme.colorScheme.onSurface,
+                    FadeInLeft(
+                      delay: const Duration(milliseconds: 400),
+                      child: Text(
+                        t.translate('phone_hint'),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: theme.colorScheme.onSurface,
+                        ),
                       ),
                     ),
 
                     const SizedBox(height: 8),
 
                     // 🔹 INPUT
-                    TextField(
-                      controller: _phoneController,
-                      keyboardType: TextInputType.phone,
-                      style: theme.textTheme.bodyLarge?.copyWith(fontSize: 18),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(10),
-                      ],
-                      decoration: InputDecoration(
-                        prefixText: '+91 ',
-                        hintText: 'XXXXXXXXXX',
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 14,
+                    FadeInLeft(
+                      delay: const Duration(milliseconds: 500),
+                      child: TextField(
+                        controller: _phoneController,
+                        keyboardType: TextInputType.phone,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          fontSize: 18,
                         ),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: theme.dividerColor),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: theme.colorScheme.primary,
-                            width: 2,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(10),
+                        ],
+                        decoration: InputDecoration(
+                          prefixText: '+91 ',
+                          hintText: 'XXXXXXXXXX',
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 14,
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: theme.dividerColor),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: theme.colorScheme.primary,
+                              width: 2,
+                            ),
                           ),
                         ),
                       ),
@@ -144,11 +160,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 12),
 
                     // 🔹 HELPER TEXT
-                    Text(
-                      t.translate('otp_info'),
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.55,
+                    FadeInLeft(
+                      delay: const Duration(milliseconds: 600),
+                      child: Text(
+                        t.translate('otp_info'),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.55,
+                          ),
                         ),
                       ),
                     ),
@@ -158,32 +177,35 @@ class _LoginScreenState extends State<LoginScreen> {
                     // 🔹 CONTINUE BUTTON
                     Consumer<AuthProvider>(
                       builder: (context, provider, child) {
-                        return SizedBox(
-                          width: double.infinity,
-                          height: 56,
-                          child: ElevatedButton(
-                            onPressed: provider.isLoading
-                                ? null
-                                : _handleContinue,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: theme.colorScheme.primary,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(14),
+                        return FadeInUp(
+                          delay: const Duration(milliseconds: 800),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 56,
+                            child: ElevatedButton(
+                              onPressed: provider.isLoading
+                                  ? null
+                                  : _handleContinue,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: theme.colorScheme.primary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                elevation: 0,
                               ),
-                              elevation: 0,
-                            ),
-                            child: provider.isLoading
-                                ? const CircularProgressIndicator(
-                                    color: Colors.white,
-                                  )
-                                : Text(
-                                    t.translate('continue'),
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                      color: theme.colorScheme.onPrimary,
+                              child: provider.isLoading
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )
+                                  : Text(
+                                      t.translate('continue'),
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600,
+                                        color: theme.colorScheme.onPrimary,
+                                      ),
                                     ),
-                                  ),
+                            ),
                           ),
                         );
                       },
@@ -193,12 +215,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     // 🔹 FOOTER
                     Center(
-                      child: Text(
-                        t.translate('terms_privacy'),
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.5,
+                      child: FadeInUp(
+                        delay: const Duration(milliseconds: 1000),
+                        child: Text(
+                          t.translate('terms_privacy'),
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.5,
+                            ),
                           ),
                         ),
                       ),
