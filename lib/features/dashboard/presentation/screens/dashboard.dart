@@ -537,20 +537,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         final courses = section.data.cast<CourseModel>();
                         if (courses.isEmpty) return const SizedBox();
 
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SectionHeader(
-                              title: section.title,
-                              subtitle: section.subtitle,
-                            ),
-                            SizedBox(height: 1.5.h),
-                            ModuleVisibility(
-                              module: AppModule.courses,
-                              child: HorizontalCourses(courses: courses),
-                            ),
-                            SizedBox(height: 2.h),
-                          ],
+                        return ModuleVisibility(
+                          module: AppModule.courses,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SectionHeader(
+                                title: section.title,
+                                subtitle: section.subtitle,
+                              ),
+                              SizedBox(height: 1.5.h),
+                              HorizontalCourses(courses: courses),
+                              SizedBox(height: 2.h),
+                            ],
+                          ),
                         );
                       }
                       // FREE VIDEOS
@@ -558,20 +558,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         final videos = section.data.cast<FreeVideoModel>();
                         if (videos.isEmpty) return const SizedBox();
 
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SectionHeader(
-                              title: section.title,
-                              subtitle: section.subtitle,
-                            ),
-                            SizedBox(height: 1.5.h),
-                            ModuleVisibility(
-                              module: AppModule.freeVideos,
-                              child: FreeVideosSection(videos: videos),
-                            ),
-                            SizedBox(height: 2.h),
-                          ],
+                        return ModuleVisibility(
+                          module: AppModule.freeVideos,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SectionHeader(
+                                title: section.title,
+                                subtitle: section.subtitle,
+                              ),
+                              SizedBox(height: 1.5.h),
+                              FreeVideosSection(videos: videos),
+                              SizedBox(height: 2.h),
+                            ],
+                          ),
                         );
                       }
                       // BANNERS
@@ -579,14 +579,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         final banners = section.data.cast<BannerModel>();
                         if (banners.isEmpty) return const SizedBox();
 
-                        return Column(
-                          children: [
-                            ModuleVisibility(
-                              module: AppModule.banners,
-                              child: InlineBanner(banners: banners),
-                            ),
-                            SizedBox(height: 2.h),
-                          ],
+                        return ModuleVisibility(
+                          module: AppModule.banners,
+                          child: Column(
+                            children: [
+                              InlineBanner(banners: banners),
+                              SizedBox(height: 2.h),
+                            ],
+                          ),
                         );
                       }
                       return const SizedBox();
