@@ -51,33 +51,35 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> initializeAndNavigate() async {
     // ⏳ MINIMUM SPLASH DELAY (Visual Experience)
-    // Run the delay in parallel with initialization if we want,
-    // OR await it to ensure logo is seen.
-    // Let's await it to ensure branding is visible.
-    await Future.delayed(const Duration(seconds: 2));
+    // Run the delay in parallel with initialization
+    final minDelayFuture = Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
 
+    // 1. 🚀 FETCH MODULES FIRST (No Auth Required)
+    // This ensures we have the latest config (maintenance mode, feature flags)
+    // before we even decide where to navigate.
+    try {
+      final moduleProvider = context.read<ModuleProvider>();
+      await moduleProvider.fetchModules();
+    } catch (e) {
+      // Log error but allow navigation to proceed (will use defaults/cache)
+      // log("Error fetching modules on splash: $e");
+    }
+
+    // Wait for the minimum splash delay to finish
+    await minDelayFuture;
+
+    if (!mounted) return;
+
+    // 2. CHECK LOGIN STATUS
     final authProvider = context.read<AuthProvider>();
     final isLoggedIn = await authProvider.checkLoginStatus();
 
     if (!mounted) return;
 
+    // 3. NAVIGATE
     if (isLoggedIn) {
-      // 🚀 PRE-FETCH DATA FOR DASHBOARD
-      // This ensures the dashboard is populated when opened
-      try {
-        final moduleProvider = context.read<ModuleProvider>();
-
-        // 1. Ensure Modules are loaded
-        // We fetch again to ensure we have the latest config before entering app
-        await moduleProvider.fetchModules();
-      } catch (e) {
-        // Log error but allow navigation to proceed
-        // log("Error pre-fetching data: $e");
-      }
-
-      if (!mounted) return;
       AppNavigator.replace(context, const DashboardScreen());
     } else {
       AppNavigator.replace(context, const WelcomeScreen());
