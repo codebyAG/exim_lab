@@ -133,7 +133,7 @@ class _ShortsPlayerItemState extends State<ShortsPlayerItem> {
                       shadows: [
                         Shadow(
                           blurRadius: 4,
-                          color: Colors.black.withOpacity(0.5),
+                          color: Colors.black.withValues(alpha: 0.5),
                         ),
                       ],
                     ),
@@ -149,7 +149,7 @@ class _ShortsPlayerItemState extends State<ShortsPlayerItem> {
                       shadows: [
                         Shadow(
                           blurRadius: 4,
-                          color: Colors.black.withOpacity(0.5),
+                          color: Colors.black.withValues(alpha: 0.5),
                         ),
                       ],
                     ),
