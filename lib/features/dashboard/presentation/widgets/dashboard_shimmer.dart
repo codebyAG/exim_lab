@@ -20,7 +20,7 @@ class DashboardShimmer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 1. HEADER SHIMMER
-          _HeaderShimmer(baseColor: baseColor, highlightColor: highlightColor),
+          SizedBox(height: 2.h),
 
           SizedBox(height: 2.h),
 
@@ -76,56 +76,7 @@ class DashboardShimmer extends StatelessWidget {
 // INDIVIDUAL SHIMMER COMPONENTS
 // -----------------------------------------------------------------------------
 
-class _HeaderShimmer extends StatelessWidget {
-  final Color baseColor;
-  final Color highlightColor;
-
-  const _HeaderShimmer({required this.baseColor, required this.highlightColor});
-
-  @override
-  Widget build(BuildContext context) {
-    return Shimmer.fromColors(
-      baseColor: baseColor,
-      highlightColor: highlightColor,
-      child: Container(
-        height: 22.h,
-        padding: EdgeInsets.fromLTRB(5.w, 7.h, 5.w, 2.h),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.vertical(
-            bottom: Radius.circular(32),
-          ),
-        ),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(height: 16, width: 100, color: Colors.white),
-                    SizedBox(height: 8),
-                    Container(height: 24, width: 180, color: Colors.white),
-                    SizedBox(height: 8),
-                    Container(height: 16, width: 140, color: Colors.white),
-                  ],
-                ),
-                Row(
-                  children: [
-                    CircleAvatar(radius: 24, backgroundColor: Colors.white),
-                    SizedBox(width: 12),
-                    CircleAvatar(radius: 24, backgroundColor: Colors.white),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+// Header Shimmer Removed
 
 class _CarouselShimmer extends StatelessWidget {
   @override
@@ -151,8 +102,8 @@ class _ShortsShimmer extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemCount: 5,
         // Shorts Shimmer
-        separatorBuilder: (_, __) => SizedBox(width: 12),
-        itemBuilder: (_, __) => Container(
+        separatorBuilder: (_, _) => SizedBox(width: 12),
+        itemBuilder: (_, _) => Container(
           width: 100,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -192,8 +143,8 @@ class _HorizontalListShimmer extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemCount: 3,
         // Horizontal List Shimmer
-        separatorBuilder: (_, __) => SizedBox(width: 16),
-        itemBuilder: (_, __) => Container(
+        separatorBuilder: (_, _) => SizedBox(width: 16),
+        itemBuilder: (_, _) => Container(
           width: width,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -221,7 +172,7 @@ class _ToolsGridShimmer extends StatelessWidget {
         ),
         itemCount: 4,
         // Tools Grid Shimmer
-        itemBuilder: (_, __) => Container(
+        itemBuilder: (_, _) => Container(
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
