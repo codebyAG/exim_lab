@@ -176,17 +176,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             // 1. HEADER
             Container(
-              padding: EdgeInsets.fromLTRB(5.w, 6.h, 5.w, 3.h),
+              padding: EdgeInsets.fromLTRB(
+                5.w,
+                7.h,
+                5.w,
+                3.h,
+              ), // Increased top padding
               decoration: BoxDecoration(
-                color: cs.primary,
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    cs.primary,
+                    cs.primary.withValues(
+                      alpha: 0.8,
+                    ), // Slightly lighter/different shade
+                  ],
+                ),
                 borderRadius: const BorderRadius.vertical(
-                  bottom: Radius.circular(30),
+                  bottom: Radius.circular(32), // Slightly more rounded
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: cs.shadow.withValues(alpha: 0.05),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
+                    color: cs.primary.withValues(alpha: 0.3),
+                    blurRadius: 24,
+                    offset: const Offset(0, 12),
                   ),
                 ],
               ),
@@ -202,28 +216,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             Text(
                               t.translate('welcome_back'),
                               style: theme.textTheme.titleMedium?.copyWith(
-                                color: cs.onPrimary.withValues(alpha: 0.8),
+                                color: Colors.white70,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 6),
                             Text(
                               context.watch<AuthProvider>().user?.name ??
                                   t.translate('guest_user'),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: theme.textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.w800,
+                                fontWeight: FontWeight.bold,
                                 letterSpacing: -0.5,
-                                color: cs.onPrimary,
+                                color: Colors.white,
                               ),
                             ),
-                            const SizedBox(height: 2),
+                            const SizedBox(height: 4),
                             Text(
                               t.translate('lets_start_learning'),
                               style: theme.textTheme.bodyMedium?.copyWith(
-                                color: cs.onPrimary.withValues(alpha: 0.9),
-                                fontWeight: FontWeight.w600,
+                                color: Colors.white.withValues(alpha: 0.9),
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ],
@@ -239,10 +253,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 children: [
                                   Container(
                                     decoration: BoxDecoration(
-                                      color: cs.onPrimary.withValues(
-                                        alpha: 0.2,
-                                      ),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.15,
+                                      ), // Glassmorphic feel
                                       shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: Colors.white.withValues(
+                                          alpha: 0.2,
+                                        ),
+                                        width: 1,
+                                      ),
                                     ),
                                     child: IconButton(
                                       onPressed: () {
@@ -251,15 +271,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           const NotificationsScreen(),
                                         );
                                       },
-                                      icon: Icon(
+                                      icon: const Icon(
                                         Icons.notifications_outlined,
-                                        color: cs.onPrimary,
-                                        size: 24,
+                                        color: Colors.white,
+                                        size: 26,
                                       ),
                                       padding: EdgeInsets.zero,
                                       constraints: const BoxConstraints(
-                                        minWidth: 46,
-                                        minHeight: 46,
+                                        minWidth: 48,
+                                        minHeight: 48,
                                       ),
                                     ),
                                   ),
@@ -269,28 +289,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       top: 0,
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(
-                                          horizontal: 5,
-                                          vertical: 2,
+                                          horizontal: 6,
+                                          vertical: 3,
                                         ),
                                         decoration: BoxDecoration(
                                           color: cs.error,
                                           borderRadius: BorderRadius.circular(
-                                            10,
+                                            12,
                                           ),
                                           border: Border.all(
                                             color: cs.primary,
                                             width: 2,
                                           ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black12,
+                                              blurRadius: 4,
+                                            ),
+                                          ],
                                         ),
                                         constraints: const BoxConstraints(
-                                          minWidth: 18,
-                                          minHeight: 18,
+                                          minWidth: 20,
+                                          minHeight: 20,
                                         ),
                                         child: Text(
                                           '${notifProvider.unreadCount}',
                                           style: const TextStyle(
                                             color: Colors.white,
-                                            fontSize: 10,
+                                            fontSize: 11,
                                             fontWeight: FontWeight.bold,
                                           ),
                                           textAlign: TextAlign.center,
@@ -303,28 +329,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                           SizedBox(width: 3.w),
 
-                          // PROFILE
+                          // PROFILE (No border, just clean image)
                           InkWell(
                             onTap: () {
                               AppNavigator.push(context, const ProfileScreen());
                             },
                             child: Container(
-                              height: 46,
-                              width: 46,
+                              height: 50,
+                              width: 50,
                               decoration: BoxDecoration(
-                                color: cs.primaryContainer,
+                                color: Colors.white,
                                 shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: cs.onPrimary.withValues(alpha: 0.5),
-                                  width: 2,
-                                ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: cs.shadow.withValues(alpha: 0.1),
-                                    blurRadius: 10,
+                                    color: Colors.black.withValues(alpha: 0.1),
+                                    blurRadius: 12,
                                     offset: const Offset(0, 4),
                                   ),
                                 ],
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2,
+                                ),
                               ),
                               child: ClipOval(
                                 child:
@@ -345,30 +371,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             .avatarUrl!,
                                         fit: BoxFit.cover,
                                         errorWidget: (context, url, error) {
-                                          return Center(
+                                          return Container(
+                                            color: cs.primaryContainer,
                                             child: Icon(
                                               Icons.person,
-                                              color: Colors.white,
+                                              color: cs.primary,
                                             ),
                                           );
                                         },
-                                        progressIndicatorBuilder:
-                                            (context, url, downloadProgress) {
-                                              return Padding(
-                                                padding: const EdgeInsets.all(
-                                                  12.0,
-                                                ),
-                                                child:
-                                                    CircularProgressIndicator(
-                                                      value: downloadProgress
-                                                          .progress,
-                                                      strokeWidth: 2,
-                                                      color: cs.primary,
-                                                    ),
-                                              );
-                                            },
+                                        placeholder: (context, url) =>
+                                            Container(color: cs.surfaceVariant),
                                       )
-                                    : Icon(Icons.person, color: Colors.white),
+                                    : Container(
+                                        color: cs.primaryContainer,
+                                        child: Icon(
+                                          Icons.person,
+                                          color: cs.primary,
+                                        ),
+                                      ),
                               ),
                             ),
                           ),

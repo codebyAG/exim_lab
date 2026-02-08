@@ -1,4 +1,3 @@
-import 'package:exim_lab/core/constants/appcardshadow.dart';
 import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/dots_iniidcator.dart';
 import 'package:flutter/material.dart';
@@ -71,12 +70,20 @@ class CtaCarouselState extends State<CtaCarousel> {
                   padding: EdgeInsets.all(2.h),
                   decoration: BoxDecoration(
                     color: cs.surface,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: appCardShadow(context),
+                    borderRadius: BorderRadius.circular(20), // More rounded
+                    boxShadow: [
+                      BoxShadow(
+                        color: cs.shadow.withValues(
+                          alpha: 0.08,
+                        ), // Softer shadow
+                        blurRadius: 16,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
                     image: DecorationImage(
                       image: NetworkImage(banner.imageUrl),
-                      fit: BoxFit.fill,
-                      // opacity: 0.4, // Adjust opacity if needed or based on design
+                      fit: BoxFit.cover, // Better fit
+                      // opacity: 0.4,
                     ),
                   ),
                   child: InkWell(
@@ -85,7 +92,7 @@ class CtaCarouselState extends State<CtaCarousel> {
                         launchUrlString(banner.ctaUrl);
                       }
                     },
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(20),
                     child: const SizedBox.expand(),
                   ),
                 ),
