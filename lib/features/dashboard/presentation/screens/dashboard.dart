@@ -182,12 +182,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             FadeInDown(
               duration: const Duration(milliseconds: 800),
               child: Container(
-                padding: EdgeInsets.fromLTRB(
-                  5.w,
-                  5.h,
-                  5.w,
-                  3.h,
-                ), // Increased top padding
+                padding: EdgeInsets.fromLTRB(5.w, 4.h, 5.w, 2.h),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
@@ -200,7 +195,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ],
                   ),
                   borderRadius: const BorderRadius.vertical(
-                    bottom: Radius.circular(30), // Slightly more rounded
+                    bottom: Radius.circular(24),
                   ),
                   boxShadow: [
                     BoxShadow(
