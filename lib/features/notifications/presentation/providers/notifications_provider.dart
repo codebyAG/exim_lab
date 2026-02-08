@@ -68,7 +68,7 @@ class NotificationsProvider extends ChangeNotifier {
       _unreadCount = await _repository.getUnreadCount();
       notifyListeners();
     } catch (e) {
-      debugPrint("Error fetching unread count: $e");
+      // Error handling
     }
   }
 

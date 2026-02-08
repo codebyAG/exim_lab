@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'dart:developer';
 import 'package:exim_lab/common/widgets/promo_banner_dialog.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/shorts/presentation/providers/shorts_provider.dart';
@@ -64,11 +63,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           final moduleProvider = context.read<ModuleProvider>();
           // Force fetch if needed? No, module provider should manage that.
 
-          // DEBUG:
-          // DEBUG:
-          log(
-            "Dashboard Init: ModuleProvider state: ${moduleProvider.isEnabled('shortVideos')}",
-          );
+          // Debugging log removed
 
           if (moduleProvider.isEnabled('shortVideos')) {
             context.read<ShortsProvider>().fetchShorts();

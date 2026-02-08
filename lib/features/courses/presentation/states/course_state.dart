@@ -39,7 +39,7 @@ class CoursesState extends ChangeNotifier {
       myCourses = await _remoteDataSource.getMyCourses();
     } catch (e) {
       // Handle error cleanly, maybe show toast or just empty list
-      debugPrint("Error fetching my courses: $e");
+      // Error handling
     }
     isMyCoursesLoading = false;
     notifyListeners();
