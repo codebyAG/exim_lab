@@ -2,6 +2,7 @@ import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/courses/data/models/course_details_model.dart';
 import 'package:exim_lab/features/courses/presentation/screens/video_lesson_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:animate_do/animate_do.dart';
 
 class LessonsScreen extends StatelessWidget {
   final List<LessonModel> lessons;
@@ -38,7 +39,11 @@ class LessonsScreen extends StatelessWidget {
         itemCount: groupedLessons.length,
         itemBuilder: (context, index) {
           final chapter = groupedLessons[index];
-          return _ChapterCard(chapter: chapter);
+          return FadeInUp(
+            duration: const Duration(milliseconds: 600),
+            delay: Duration(milliseconds: index * 100),
+            child: _ChapterCard(chapter: chapter),
+          );
         },
       ),
     );
@@ -101,8 +106,13 @@ class _ChapterCard extends StatelessWidget {
           const SizedBox(height: 12),
 
           Column(
-            children: chapter.lessons.map((lesson) {
-              return _LessonTile(lesson: lesson);
+            children: chapter.lessons.asMap().entries.map((entry) {
+              final index = entry.key;
+              final lesson = entry.value;
+              return FadeInRight(
+                delay: Duration(milliseconds: 200 + (index * 50)),
+                child: _LessonTile(lesson: lesson),
+              );
             }).toList(),
           ),
         ],

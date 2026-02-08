@@ -16,12 +16,13 @@ class ModuleService {
           bool isSuccess = false;
           if (json is Map<String, dynamic>) {
             final successVal = json['success'];
-            if (successVal is bool)
+            if (successVal is bool) {
               isSuccess = successVal;
-            else if (successVal is String)
+            } else if (successVal is String) {
               isSuccess = successVal.toLowerCase() == 'true';
-            else if (successVal is int)
+            } else if (successVal is int) {
               isSuccess = successVal == 1;
+            }
           }
 
           if (isSuccess && json['data'] != null) {
