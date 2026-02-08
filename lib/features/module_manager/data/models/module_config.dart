@@ -42,56 +42,35 @@ class ModuleConfig {
 
     for (var rawKey in json.keys) {
       final key = rawKey.trim();
-      AppModule? module;
+      try {
+        final module = AppModule.values.firstWhere(
+          (e) => e.name == key,
+          orElse: () => AppModule.values.first,
+        );
 
-      // Explicit mapping to handle obfuscation/minification
-      switch (key) {
-        case 'carousel':
-          module = AppModule.carousel;
-          break;
-        case 'courses':
-          module = AppModule.courses;
-          break;
-        case 'continueLearning':
-          module = AppModule.continueLearning;
-          break;
-        case 'quizzes':
-          module = AppModule.quizzes;
-          break;
-        case 'freeVideos':
-          module = AppModule.freeVideos;
-          break;
-        case 'tools':
-          module = AppModule.tools;
-          break;
-        case 'news':
-          module = AppModule.news;
-          break;
-        case 'banners':
-          module = AppModule.banners;
-          break;
-        case 'shortVideos':
-          module = AppModule.shortVideos;
-          break;
-        default:
-          log("Values: Unknown key '$key'");
-      }
+        // Ensure successful match
+        if (module.name == key) {
+          final rawValue = json[rawKey];
+          log("Raw Value for $key: $rawValue (Type: ${rawValue.runtimeType})");
 
-      if (module != null) {
-        final rawValue = json[rawKey];
-        log("Raw Value for $key: $rawValue (Type: ${rawValue.runtimeType})");
+          bool value = false;
+          if (rawValue is bool) {
+            value = rawValue;
+          } else if (rawValue is String) {
+            value = rawValue.toLowerCase() == 'true';
+          } else if (rawValue is int) {
+            value = rawValue == 1;
+          }
 
-        bool value = false;
-        if (rawValue is bool) {
-          value = rawValue;
-        } else if (rawValue is String) {
-          value = rawValue.toLowerCase() == 'true';
-        } else if (rawValue is int) {
-          value = rawValue == 1;
+          modules[module] = value;
+          log("Assigned $key -> $value");
+        } else {
+          log(
+            "Warning: Key '$key' matched default or mismatch '${module.name}' - Ignored",
+          );
         }
-
-        modules[module] = value;
-        log("Assigned $key -> $value");
+      } catch (e) {
+        log("Error parsing key '$key': $e");
       }
     }
 
