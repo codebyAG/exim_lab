@@ -36,7 +36,7 @@ class HomeShortsSection extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 5.w),
                 scrollDirection: Axis.horizontal,
                 itemCount: provider.shorts.length,
-                separatorBuilder: (_, __) => SizedBox(width: 3.w),
+                separatorBuilder: (context, index) => SizedBox(width: 3.w),
                 itemBuilder: (context, index) {
                   final short = provider.shorts[index];
                   String? videoId = YoutubePlayer.convertUrlToId(
