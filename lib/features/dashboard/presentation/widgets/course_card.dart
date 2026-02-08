@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:sizer/sizer.dart';
 
 class CourseCard extends StatelessWidget {
@@ -55,7 +56,7 @@ class CourseCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
                     image: image.startsWith('http')
-                        ? NetworkImage(image)
+                        ? CachedNetworkImageProvider(image)
                         : AssetImage(image) as ImageProvider,
                     fit: BoxFit.cover,
                     onError: (context, error) {

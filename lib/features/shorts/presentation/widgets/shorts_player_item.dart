@@ -44,7 +44,8 @@ class _ShortsPlayerItemState extends State<ShortsPlayerItem> {
   }
 
   void _listener() {
-    if (_initialized && mounted) {
+    if (_initialized && mounted && !_controller.value.isFullScreen) {
+      // Added mounted check again for safety
       setState(() {
         _isPlaying = _controller.value.isPlaying;
       });
@@ -54,6 +55,8 @@ class _ShortsPlayerItemState extends State<ShortsPlayerItem> {
   @override
   void didUpdateWidget(covariant ShortsPlayerItem oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (!_initialized || !mounted) return; // Safety check
+
     if (widget.isVisible && !oldWidget.isVisible) {
       _controller.play();
     } else if (!widget.isVisible && oldWidget.isVisible) {
@@ -69,6 +72,8 @@ class _ShortsPlayerItemState extends State<ShortsPlayerItem> {
   }
 
   void _togglePlay() {
+    if (!_initialized || !mounted) return;
+
     if (_controller.value.isPlaying) {
       _controller.pause();
     } else {
@@ -81,6 +86,8 @@ class _ShortsPlayerItemState extends State<ShortsPlayerItem> {
     return VisibilityDetector(
       key: Key(widget.short.id),
       onVisibilityChanged: (info) {
+        if (!_initialized || !mounted) return;
+
         if (info.visibleFraction > 0.65) {
           _controller.play();
         } else {

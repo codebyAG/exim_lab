@@ -30,6 +30,7 @@ import 'package:exim_lab/features/module_manager/presentation/providers/module_p
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:animate_do/animate_do.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -175,234 +176,242 @@ class _DashboardScreenState extends State<DashboardScreen> {
           padding: EdgeInsets.zero,
           children: [
             // 1. HEADER
-            Container(
-              padding: EdgeInsets.fromLTRB(
-                5.w,
-                7.h,
-                5.w,
-                3.h,
-              ), // Increased top padding
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    cs.primary,
-                    cs.primary.withValues(
-                      alpha: 0.8,
-                    ), // Slightly lighter/different shade
+            FadeInDown(
+              duration: const Duration(milliseconds: 800),
+              child: Container(
+                padding: EdgeInsets.fromLTRB(
+                  5.w,
+                  7.h,
+                  5.w,
+                  3.h,
+                ), // Increased top padding
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      cs.primary,
+                      cs.primary.withValues(
+                        alpha: 0.8,
+                      ), // Slightly lighter/different shade
+                    ],
+                  ),
+                  borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(32), // Slightly more rounded
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: cs.primary.withValues(alpha: 0.3),
+                      blurRadius: 24,
+                      offset: const Offset(0, 12),
+                    ),
                   ],
                 ),
-                borderRadius: const BorderRadius.vertical(
-                  bottom: Radius.circular(32), // Slightly more rounded
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: cs.primary.withValues(alpha: 0.3),
-                    blurRadius: 24,
-                    offset: const Offset(0, 12),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                t.translate('welcome_back'),
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  color: Colors.white70,
+                                  fontWeight: FontWeight.bold, // w700
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                context.watch<AuthProvider>().user?.name ??
+                                    t.translate('guest_user'),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: theme.textTheme.headlineMedium?.copyWith(
+                                  fontWeight: FontWeight.w900, // Extra Bold
+                                  letterSpacing: -0.5,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                t.translate('lets_start_learning'),
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: Colors.white.withValues(alpha: 0.9),
+                                  fontWeight: FontWeight.bold, // w700
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(
                           children: [
-                            Text(
-                              t.translate('welcome_back'),
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                color: Colors.white70,
-                                fontWeight: FontWeight.bold, // w700
-                              ),
+                            // NOTIFICATION BELL
+                            Consumer<NotificationsProvider>(
+                              builder: (context, notifProvider, child) {
+                                return Stack(
+                                  clipBehavior: Clip.none,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withValues(
+                                          alpha: 0.15,
+                                        ), // Glassmorphic feel
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: Colors.white.withValues(
+                                            alpha: 0.2,
+                                          ),
+                                          width: 1,
+                                        ),
+                                      ),
+                                      child: IconButton(
+                                        onPressed: () {
+                                          AppNavigator.push(
+                                            context,
+                                            const NotificationsScreen(),
+                                          );
+                                        },
+                                        icon: const Icon(
+                                          Icons.notifications_outlined,
+                                          color: Colors.white,
+                                          size: 26,
+                                        ),
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(
+                                          minWidth: 48,
+                                          minHeight: 48,
+                                        ),
+                                      ),
+                                    ),
+                                    if (notifProvider.unreadCount > 0)
+                                      Positioned(
+                                        right: 0,
+                                        top: 0,
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 6,
+                                            vertical: 3,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: cs.error,
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                            border: Border.all(
+                                              color: cs.primary,
+                                              width: 2,
+                                            ),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black12,
+                                                blurRadius: 4,
+                                              ),
+                                            ],
+                                          ),
+                                          constraints: const BoxConstraints(
+                                            minWidth: 20,
+                                            minHeight: 20,
+                                          ),
+                                          child: Text(
+                                            '${notifProvider.unreadCount}',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              },
                             ),
-                            const SizedBox(height: 6),
-                            Text(
-                              context.watch<AuthProvider>().user?.name ??
-                                  t.translate('guest_user'),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: theme.textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.w900, // Extra Bold
-                                letterSpacing: -0.5,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              t.translate('lets_start_learning'),
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: Colors.white.withValues(alpha: 0.9),
-                                fontWeight: FontWeight.bold, // w700
+                            SizedBox(width: 3.w),
+
+                            // PROFILE (No border, just clean image)
+                            InkWell(
+                              onTap: () {
+                                AppNavigator.push(
+                                  context,
+                                  const ProfileScreen(),
+                                );
+                              },
+                              child: Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 2,
+                                  ),
+                                ),
+                                child: ClipOval(
+                                  child:
+                                      (context
+                                                  .watch<AuthProvider>()
+                                                  .user
+                                                  ?.avatarUrl !=
+                                              null &&
+                                          context
+                                              .watch<AuthProvider>()
+                                              .user!
+                                              .avatarUrl!
+                                              .isNotEmpty)
+                                      ? CachedNetworkImage(
+                                          imageUrl: context
+                                              .watch<AuthProvider>()
+                                              .user!
+                                              .avatarUrl!,
+                                          fit: BoxFit.cover,
+                                          errorWidget: (context, url, error) {
+                                            return Container(
+                                              color: Colors.white,
+                                              child: Center(
+                                                child: Icon(
+                                                  Icons.person_rounded,
+                                                  size: 28,
+                                                  color: cs.primary,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          placeholder: (context, url) =>
+                                              Container(color: Colors.white),
+                                        )
+                                      : Container(
+                                          color: Colors.white,
+                                          child: Center(
+                                            child: Icon(
+                                              Icons.person_rounded,
+                                              size: 28,
+                                              color: cs.primary,
+                                            ),
+                                          ),
+                                        ),
+                                ),
                               ),
                             ),
                           ],
                         ),
-                      ),
-                      Row(
-                        children: [
-                          // NOTIFICATION BELL
-                          Consumer<NotificationsProvider>(
-                            builder: (context, notifProvider, child) {
-                              return Stack(
-                                clipBehavior: Clip.none,
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withValues(
-                                        alpha: 0.15,
-                                      ), // Glassmorphic feel
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: Colors.white.withValues(
-                                          alpha: 0.2,
-                                        ),
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: IconButton(
-                                      onPressed: () {
-                                        AppNavigator.push(
-                                          context,
-                                          const NotificationsScreen(),
-                                        );
-                                      },
-                                      icon: const Icon(
-                                        Icons.notifications_outlined,
-                                        color: Colors.white,
-                                        size: 26,
-                                      ),
-                                      padding: EdgeInsets.zero,
-                                      constraints: const BoxConstraints(
-                                        minWidth: 48,
-                                        minHeight: 48,
-                                      ),
-                                    ),
-                                  ),
-                                  if (notifProvider.unreadCount > 0)
-                                    Positioned(
-                                      right: 0,
-                                      top: 0,
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 6,
-                                          vertical: 3,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: cs.error,
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                          border: Border.all(
-                                            color: cs.primary,
-                                            width: 2,
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black12,
-                                              blurRadius: 4,
-                                            ),
-                                          ],
-                                        ),
-                                        constraints: const BoxConstraints(
-                                          minWidth: 20,
-                                          minHeight: 20,
-                                        ),
-                                        child: Text(
-                                          '${notifProvider.unreadCount}',
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              );
-                            },
-                          ),
-                          SizedBox(width: 3.w),
-
-                          // PROFILE (No border, just clean image)
-                          InkWell(
-                            onTap: () {
-                              AppNavigator.push(context, const ProfileScreen());
-                            },
-                            child: Container(
-                              height: 50,
-                              width: 50,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.1),
-                                    blurRadius: 12,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                                border: Border.all(
-                                  color: Colors.white,
-                                  width: 2,
-                                ),
-                              ),
-                              child: ClipOval(
-                                child:
-                                    (context
-                                                .watch<AuthProvider>()
-                                                .user
-                                                ?.avatarUrl !=
-                                            null &&
-                                        context
-                                            .watch<AuthProvider>()
-                                            .user!
-                                            .avatarUrl!
-                                            .isNotEmpty)
-                                    ? CachedNetworkImage(
-                                        imageUrl: context
-                                            .watch<AuthProvider>()
-                                            .user!
-                                            .avatarUrl!,
-                                        fit: BoxFit.cover,
-                                        errorWidget: (context, url, error) {
-                                          return Container(
-                                            color: Colors.white,
-                                            child: Center(
-                                              child: Icon(
-                                                Icons.person_rounded,
-                                                size: 28,
-                                                color: cs.primary,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        placeholder: (context, url) =>
-                                            Container(color: Colors.white),
-                                      )
-                                    : Container(
-                                        color: Colors.white,
-                                        child: Center(
-                                          child: Icon(
-                                            Icons.person_rounded,
-                                            size: 28,
-                                            color: cs.primary,
-                                          ),
-                                        ),
-                                      ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
 
@@ -430,7 +439,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     if (data.addons.carousel.isNotEmpty) ...[
                       ModuleVisibility(
                         module: 'carousel',
-                        child: CtaCarousel(banners: data.addons.carousel),
+                        child: FadeIn(
+                          // 🔹 FADE IN CAROUSEL
+                          duration: const Duration(milliseconds: 800),
+                          child: CtaCarousel(banners: data.addons.carousel),
+                        ),
                       ),
                       SizedBox(height: 1.h),
                     ],
@@ -438,46 +451,54 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     // SHORTS SECTION
                     ModuleVisibility(
                       module: 'shortVideos',
-                      child: const HomeShortsSection(),
+                      child: FadeInRight(
+                        // 🔹 SLIDE IN SHORTS
+                        delay: const Duration(milliseconds: 200),
+                        child: const HomeShortsSection(),
+                      ),
                     ),
                     SizedBox(height: 5.h),
 
                     // 4. QUICK ACTIONS (Static)
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 5.w),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: QuickCard(
-                              icon: Icons.video_library_rounded,
-                              title: t.translate('my_courses'),
-                              subtitle: t.translate('completed_status'),
-                              onTap: () => AppNavigator.push(
-                                context,
-                                const CoursesListScreen(),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 3.w),
-
-                          // Resources Removed
-                          SizedBox(width: 3.w),
-                          Expanded(
-                            child: ModuleVisibility(
-                              module: 'quizzes',
+                      child: FadeInUp(
+                        // 🔹 FADE UP QUICK ACTIONS
+                        delay: const Duration(milliseconds: 300),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
                               child: QuickCard(
-                                icon: Icons.quiz_rounded,
-                                title: t.translate('quizzes_title'),
-                                subtitle: t.translate('quizzes_subtitle'),
+                                icon: Icons.video_library_rounded,
+                                title: t.translate('my_courses'),
+                                subtitle: t.translate('completed_status'),
                                 onTap: () => AppNavigator.push(
                                   context,
-                                  const QuizTopicsScreen(),
+                                  const CoursesListScreen(),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                            SizedBox(width: 3.w),
+
+                            // Resources Removed
+                            SizedBox(width: 3.w),
+                            Expanded(
+                              child: ModuleVisibility(
+                                module: 'quizzes',
+                                child: QuickCard(
+                                  icon: Icons.quiz_rounded,
+                                  title: t.translate('quizzes_title'),
+                                  subtitle: t.translate('quizzes_subtitle'),
+                                  onTap: () => AppNavigator.push(
+                                    context,
+                                    const QuizTopicsScreen(),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(height: 4.h),

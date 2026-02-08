@@ -6,6 +6,7 @@ import 'package:exim_lab/features/courses/presentation/states/course_state.dart'
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exim_lab/localization/app_localization.dart';
+import 'package:animate_do/animate_do.dart';
 
 class CoursesListScreen extends StatefulWidget {
   const CoursesListScreen({super.key});
@@ -136,10 +137,13 @@ class _CoursesListScreenState extends State<CoursesListScreen>
       itemCount: state.courses.length,
       itemBuilder: (context, index) {
         final course = state.courses[index];
-        return _CourseTile(
-          title: course.title,
-          subtitle: course.description,
-          courseId: course.id,
+        return FadeInUp(
+          // 🔹 LIST ANIMATION
+          child: _CourseTile(
+            title: course.title,
+            subtitle: course.description,
+            courseId: course.id,
+          ),
         );
       },
     );
@@ -286,7 +290,11 @@ Widget _myCoursesList(BuildContext context, CoursesState state) {
     itemCount: state.myCourses.length,
     itemBuilder: (context, index) {
       final course = state.myCourses[index];
-      return _MyCourseCard(course: course, colorIndex: index);
+      return FadeInUp(
+        // 🔹 GRID ANIMATION
+        delay: Duration(milliseconds: index * 100), // Staggered effect
+        child: _MyCourseCard(course: course, colorIndex: index),
+      );
     },
   );
 }

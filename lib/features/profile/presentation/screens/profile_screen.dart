@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:animate_do/animate_do.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -52,164 +54,175 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: cs.primaryContainer,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Row(
-                children: [
-                  Container(
-                    height: 60,
-                    width: 60,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: cs.primary, // Solid background for contrast
-                      border: Border.all(color: Colors.white, width: 2),
-                    ),
-                    child: ClipOval(
-                      child:
-                          (user?.avatarUrl != null &&
-                              user!.avatarUrl!.isNotEmpty)
-                          ? Image.network(
-                              user.avatarUrl!,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Center(
-                                  child: Icon(
-                                    Icons.person,
-                                    size: 35,
-                                    color: Colors.white,
+              child: FadeInDown(
+                // 🔹 ANIMATION
+                duration: const Duration(milliseconds: 600),
+                child: Row(
+                  children: [
+                    Container(
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: cs.primary, // Solid background for contrast
+                        border: Border.all(color: Colors.white, width: 2),
+                      ),
+                      child: ClipOval(
+                        child:
+                            (user?.avatarUrl != null &&
+                                user!.avatarUrl!.isNotEmpty)
+                            ? CachedNetworkImage(
+                                // 🔹 CACHED IMAGE
+                                imageUrl: user.avatarUrl!,
+                                fit: BoxFit.cover,
+                                errorWidget: (context, url, error) {
+                                  return const Center(
+                                    child: Icon(
+                                      Icons.person,
+                                      size: 35,
+                                      color: Colors.white,
+                                    ),
+                                  );
+                                },
+                                placeholder: (context, url) => Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                );
-                              },
-                              loadingBuilder:
-                                  (context, child, loadingProgress) {
-                                    if (loadingProgress == null) return child;
-                                    return Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: CircularProgressIndicator(
-                                          value:
-                                              loadingProgress
-                                                      .expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                        .cumulativeBytesLoaded /
-                                                    loadingProgress
-                                                        .expectedTotalBytes!
-                                              : null,
-                                          strokeWidth: 2,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                            )
-                          : const Center(
-                              child: Icon(
-                                Icons.person,
-                                size: 35,
-                                color: Colors.white,
+                                ),
+                              )
+                            : const Center(
+                                child: Icon(
+                                  Icons.person,
+                                  size: 35,
+                                  color: Colors.white,
+                                ),
+                              ),
+                      ),
+                    ),
+                    SizedBox(width: 4.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            user?.name ?? t.translate('guest_user'),
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              color: cs.onPrimaryContainer,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 0.5.h),
+                          Text(
+                            user?.email ??
+                                user?.mobile ??
+                                t.translate('no_email'),
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: cs.onPrimaryContainer.withValues(
+                                alpha: 0.8,
                               ),
                             ),
-                    ),
-                  ),
-                  SizedBox(width: 4.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          user?.name ?? t.translate('guest_user'),
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            color: cs.onPrimaryContainer,
-                            fontWeight: FontWeight.bold,
                           ),
-                        ),
-                        SizedBox(height: 0.5.h),
-                        Text(
-                          user?.email ??
-                              user?.mobile ??
-                              t.translate('no_email'),
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: cs.onPrimaryContainer.withValues(alpha: 0.8),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      AppNavigator.push(
-                        context,
-                        UpdateProfileScreen(user: user),
-                      );
-                    },
-                    icon: Icon(Icons.edit, color: cs.onPrimaryContainer),
-                  ),
-                ],
+                    IconButton(
+                      onPressed: () {
+                        AppNavigator.push(
+                          context,
+                          UpdateProfileScreen(user: user),
+                        );
+                      },
+                      icon: Icon(Icons.edit, color: cs.onPrimaryContainer),
+                    ),
+                  ],
+                ),
               ),
             ),
             SizedBox(height: 3.h),
 
             // STATS ROW
             if (user?.stats != null)
-              Row(
-                children: [
-                  _StatsCard(
-                    label: t.translate('stats_active'),
-                    value: '${user?.stats?.activeCourses ?? 0}',
-                    icon: Icons.play_circle_outline_rounded,
-                    color: Colors.blue,
-                  ),
-                  SizedBox(width: 3.w),
-                  _StatsCard(
-                    label: t.translate('stats_completed'),
-                    value: '${user?.stats?.completedCourses ?? 0}',
-                    icon: Icons.check_circle_outline_rounded,
-                    color: Colors.green,
-                  ),
-                  SizedBox(width: 3.w),
-                  _StatsCard(
-                    label: t.translate('stats_quizzes'),
-                    value: '${user?.stats?.quizzesTaken ?? 0}',
-                    icon: Icons.quiz_outlined,
-                    color: Colors.orange,
-                  ),
-                ],
+              FadeInLeft(
+                // 🔹 ANIMATION
+                duration: const Duration(milliseconds: 700),
+                delay: const Duration(milliseconds: 200),
+                child: Row(
+                  children: [
+                    _StatsCard(
+                      label: t.translate('stats_active'),
+                      value: '${user?.stats?.activeCourses ?? 0}',
+                      icon: Icons.play_circle_outline_rounded,
+                      color: Colors.blue,
+                    ),
+                    SizedBox(width: 3.w),
+                    _StatsCard(
+                      label: t.translate('stats_completed'),
+                      value: '${user?.stats?.completedCourses ?? 0}',
+                      icon: Icons.check_circle_outline_rounded,
+                      color: Colors.green,
+                    ),
+                    SizedBox(width: 3.w),
+                    _StatsCard(
+                      label: t.translate('stats_quizzes'),
+                      value: '${user?.stats?.quizzesTaken ?? 0}',
+                      icon: Icons.quiz_outlined,
+                      color: Colors.orange,
+                    ),
+                  ],
+                ),
               ),
             SizedBox(height: 4.h),
 
             // MENU OPTIONS
-            _ProfileOption(
-              icon: Icons.person_outline_rounded,
-              title: t.translate('menu_my_details'),
-              onTap: () {
-                AppNavigator.push(context, UpdateProfileScreen(user: user));
-              },
-            ),
-            _ProfileOption(
-              icon: Icons.settings_outlined,
-              title: t.translate('menu_settings'),
-              onTap: () {
-                AppNavigator.push(context, const SettingsScreen());
-              },
-            ),
-            _ProfileOption(
-              icon: Icons.help_outline_rounded,
-              title: t.translate('menu_help'),
-              onTap: () => _showHelpSupportDialog(context),
-            ),
-            _ProfileOption(
-              icon: Icons.privacy_tip_outlined,
-              title: t.translate('menu_privacy'),
-              onTap: _launchPrivacyPolicy,
-            ),
+            FadeInUp(
+              // 🔹 ANIMATION - Staggered could be better but this is simple group
+              duration: const Duration(milliseconds: 800),
+              delay: const Duration(milliseconds: 300),
+              child: Column(
+                children: [
+                  _ProfileOption(
+                    icon: Icons.person_outline_rounded,
+                    title: t.translate('menu_my_details'),
+                    onTap: () {
+                      AppNavigator.push(
+                        context,
+                        UpdateProfileScreen(user: user),
+                      );
+                    },
+                  ),
+                  _ProfileOption(
+                    icon: Icons.settings_outlined,
+                    title: t.translate('menu_settings'),
+                    onTap: () {
+                      AppNavigator.push(context, const SettingsScreen());
+                    },
+                  ),
+                  _ProfileOption(
+                    icon: Icons.help_outline_rounded,
+                    title: t.translate('menu_help'),
+                    onTap: () => _showHelpSupportDialog(context),
+                  ),
+                  _ProfileOption(
+                    icon: Icons.privacy_tip_outlined,
+                    title: t.translate('menu_privacy'),
+                    onTap: _launchPrivacyPolicy,
+                  ),
 
-            SizedBox(height: 2.h),
+                  SizedBox(height: 2.h),
 
-            // LOGOUT
-            _ProfileOption(
-              icon: Icons.logout_rounded,
-              title: t.translate('menu_logout'),
-              isDestructive: true,
-              onTap: () => _handleLogout(context),
+                  // LOGOUT
+                  _ProfileOption(
+                    icon: Icons.logout_rounded,
+                    title: t.translate('menu_logout'),
+                    isDestructive: true,
+                    onTap: () => _handleLogout(context),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

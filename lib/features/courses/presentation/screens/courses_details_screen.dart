@@ -4,6 +4,8 @@ import 'package:exim_lab/features/courses/presentation/states/course_details_sta
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exim_lab/localization/app_localization.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:animate_do/animate_do.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
   final String courseId;
@@ -75,140 +77,155 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // ================= HERO CARD =================
-            Container(
-              padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                color: cs.surface,
-                borderRadius: BorderRadius.circular(24), // Increased radius
-                boxShadow: [
-                  BoxShadow(
-                    color: theme.brightness == Brightness.light
-                        ? Colors.black.withValues(alpha: 0.08)
-                        : Colors.black.withValues(alpha: 0.3),
-                    blurRadius: 24, // Increased blur
-                    offset: const Offset(0, 12),
+            FadeIn(
+              // 🔹 HERO ANIMATION
+              duration: const Duration(milliseconds: 800),
+              child: Container(
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  color: cs.surface,
+                  borderRadius: BorderRadius.circular(24), // Increased radius
+                  boxShadow: [
+                    BoxShadow(
+                      color: theme.brightness == Brightness.light
+                          ? Colors.black.withValues(alpha: 0.08)
+                          : Colors.black.withValues(alpha: 0.3),
+                      blurRadius: 24, // Increased blur
+                      offset: const Offset(0, 12),
+                    ),
+                  ],
+                  border: Border.all(
+                    color: cs.outlineVariant.withValues(alpha: 0.2),
                   ),
-                ],
-                border: Border.all(
-                  color: cs.outlineVariant.withValues(alpha: 0.2),
                 ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 200, // Slightly taller
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: cs.surfaceContainerHighest,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 200, // Slightly taller
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: cs.surfaceContainerHighest,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      child:
+                          course.imageUrl != null && course.imageUrl!.isNotEmpty
+                          ? CachedNetworkImage(
+                              // 🔹 CACHED IMAGE
+                              imageUrl: course.imageUrl!,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                              errorWidget: (context, error, stackTrace) {
+                                return Image.asset(
+                                  'assets/course1.png',
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                              placeholder: (context, url) =>
+                                  Center(child: CircularProgressIndicator()),
+                            )
+                          : Image.asset(
+                              'assets/course1.png',
+                              fit: BoxFit.cover,
+                            ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    Text(
+                      course.title,
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.w800, // Extra Bold
+                        color: cs.onSurface,
+                        height: 1.2,
+                      ),
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    Text(
+                      course.description,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: cs.onSurface.withValues(alpha: 0.7),
+                        height: 1.5,
+                        fontSize: 15,
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    Row(
+                      children: [
+                        _StatChip(
+                          icon: Icons.menu_book_rounded,
+                          text:
+                              '${course.lessons.length} ${t.translate('lessons_count')}',
+                        ),
+                        const SizedBox(width: 10),
+                        _StatChip(
+                          icon: Icons.currency_rupee_rounded,
+                          text: course.basePrice == 0
+                              ? t.translate('free_cost')
+                              : '₹${course.basePrice}',
                         ),
                       ],
                     ),
-                    clipBehavior: Clip.antiAlias,
-                    child:
-                        course.imageUrl != null && course.imageUrl!.isNotEmpty
-                        ? Image.network(
-                            course.imageUrl!,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Image.asset(
-                                'assets/course1.png',
-                                fit: BoxFit.cover,
-                              );
-                            },
-                          )
-                        : Image.asset('assets/course1.png', fit: BoxFit.cover),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  Text(
-                    course.title,
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w800, // Extra Bold
-                      color: cs.onSurface,
-                      height: 1.2,
-                    ),
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  Text(
-                    course.description,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: cs.onSurface.withValues(alpha: 0.7),
-                      height: 1.5,
-                      fontSize: 15,
-                    ),
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  Row(
-                    children: [
-                      _StatChip(
-                        icon: Icons.menu_book_rounded,
-                        text:
-                            '${course.lessons.length} ${t.translate('lessons_count')}',
-                      ),
-                      const SizedBox(width: 10),
-                      _StatChip(
-                        icon: Icons.currency_rupee_rounded,
-                        text: course.basePrice == 0
-                            ? t.translate('free_cost')
-                            : '₹${course.basePrice}',
-                      ),
-                    ],
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+            ), // 🔹 END HERO ANIMATION
 
             const SizedBox(height: 32),
 
             // ================= CTA =================
             // ================= CTA =================
-            Container(
-              width: double.infinity,
-              height: 58,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: cs.primary.withValues(alpha: 0.3),
-                    blurRadius: 12,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
-              ),
-              child: ElevatedButton(
-                onPressed: () {
-                  AppNavigator.push(
-                    context,
-                    LessonsScreen(
-                      lessons: course.lessons,
-                      courseTitle: course.title,
+            FadeInUp(
+              // 🔹 CONTENT ANIMATION
+              duration: const Duration(milliseconds: 800),
+              delay: const Duration(milliseconds: 300),
+              child: Container(
+                width: double.infinity,
+                height: 58,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: cs.primary.withValues(alpha: 0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 6),
                     ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: cs.primary,
-                  foregroundColor: cs.onPrimary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  elevation: 0, // Using Container shadow instead
+                  ],
                 ),
-                child: const Text(
-                  'Start Learning',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                child: ElevatedButton(
+                  onPressed: () {
+                    AppNavigator.push(
+                      context,
+                      LessonsScreen(
+                        lessons: course.lessons,
+                        courseTitle: course.title,
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: cs.primary,
+                    foregroundColor: cs.onPrimary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    elevation: 0, // Using Container shadow instead
+                  ),
+                  child: const Text(
+                    'Start Learning',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ),

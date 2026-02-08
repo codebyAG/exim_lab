@@ -1,4 +1,5 @@
 import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/dots_iniidcator.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
@@ -81,7 +82,7 @@ class CtaCarouselState extends State<CtaCarousel> {
                       ),
                     ],
                     image: DecorationImage(
-                      image: NetworkImage(banner.imageUrl),
+                      image: CachedNetworkImageProvider(banner.imageUrl),
                       fit: BoxFit.cover, // Better fit
                       // opacity: 0.4,
                     ),
