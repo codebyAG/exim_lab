@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:exim_lab/features/login/data/data_sources/auth_data_source.dart';
 import 'package:exim_lab/features/login/data/models/user_model.dart';
 import 'package:exim_lab/core/services/shared_pref_service.dart';
-import 'dart:developer';
 
 class AuthProvider extends ChangeNotifier {
   final AuthDataSource _dataSource = AuthDataSource();
@@ -79,7 +78,6 @@ class AuthProvider extends ChangeNotifier {
         mobile: _currentMobile!,
         otp: otp,
       );
-      log("Auth Response: $response");
 
       if (response['user'] != null) {
         _user = UserModel.fromJson(response['user']);
@@ -124,7 +122,7 @@ class AuthProvider extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      log("Fetch Profile Error: $e");
+      // Fetch Profile Error: $e
     }
   }
 

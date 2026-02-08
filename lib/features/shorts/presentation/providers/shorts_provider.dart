@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:exim_lab/features/shorts/data/models/short_model.dart';
 import 'package:exim_lab/features/shorts/data/services/shorts_service.dart';
 import 'package:flutter/material.dart';
@@ -19,13 +18,11 @@ class ShortsProvider extends ChangeNotifier {
   Future<void> fetchShorts() async {
     _isLoading = true;
     notifyListeners();
-    log("ShortsProvider: Fetching shorts...");
 
     try {
       _shorts = await _service.getShorts();
-      log("ShortsProvider: Fetched ${_shorts.length} shorts");
     } catch (e) {
-      log('Error fetching shorts: $e');
+      // Handle error if necessary, but log statement is removed
     } finally {
       _isLoading = false;
       notifyListeners();

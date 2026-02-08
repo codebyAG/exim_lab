@@ -102,7 +102,7 @@ class NotificationsProvider extends ChangeNotifier {
       fetchUnreadCount();
     } catch (e) {
       // Revert if needed, but low priority
-      debugPrint("Error marking as read: $e");
+      //
     }
   }
 
@@ -121,7 +121,7 @@ class NotificationsProvider extends ChangeNotifier {
       fetchNotifications(refresh: true);
       fetchUnreadCount();
     } catch (e) {
-      debugPrint("Error marking all as read: $e");
+      //
     }
   }
 }

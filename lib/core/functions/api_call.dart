@@ -1,8 +1,8 @@
-import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'dart:io';
 import 'package:exim_lab/core/services/shared_pref_service.dart';
+import 'dart:developer';
 
 Future<T> callApi<T>(
   String url, {
@@ -39,7 +39,6 @@ Future<T> callApi<T>(
 
   final dio = Dio();
 
-  // 🔐 SSL handling (for dev / staging)
   // 🔐 SSL handling (for dev / staging)
   (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
     final client = HttpClient();

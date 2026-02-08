@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:exim_lab/core/constants/api_constants.dart';
 import 'package:exim_lab/core/functions/api_call.dart';
 import 'package:exim_lab/features/module_manager/data/models/module_config.dart';
@@ -10,7 +9,6 @@ class ModuleService {
         ApiConstants.appModules,
         methodType: MethodType.get,
         parser: (json) {
-          log("ModuleService Parsing: $json");
           bool isSuccess = false;
           if (json is Map<String, dynamic>) {
             final successVal = json['success'];
@@ -25,9 +23,6 @@ class ModuleService {
           if (isSuccess && json['data'] != null) {
             return ModuleConfig.fromJson(json['data']);
           }
-          log(
-            "ModuleService: Parse failed. Success: $isSuccess, Data: ${json['data']}",
-          );
           return null;
         },
       );

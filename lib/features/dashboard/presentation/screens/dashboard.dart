@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:developer';
 import 'package:exim_lab/common/widgets/promo_banner_dialog.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
@@ -361,42 +362,35 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             .user!
                                             .avatarUrl!
                                             .isNotEmpty)
-                                    ? Image.network(
-                                        context
+                                    ? CachedNetworkImage(
+                                        imageUrl: context
                                             .watch<AuthProvider>()
                                             .user!
                                             .avatarUrl!,
                                         fit: BoxFit.cover,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                              return Center(
-                                                child: Icon(
-                                                  Icons.person,
-                                                  color: Colors.white,
-                                                ),
-                                              );
-                                            },
-                                        loadingBuilder: (context, child, loadingProgress) {
-                                          if (loadingProgress == null) {
-                                            return child;
-                                          }
-                                          return Padding(
-                                            padding: const EdgeInsets.all(12.0),
-                                            child: CircularProgressIndicator(
-                                              value:
-                                                  loadingProgress
-                                                          .expectedTotalBytes !=
-                                                      null
-                                                  ? loadingProgress
-                                                            .cumulativeBytesLoaded /
-                                                        loadingProgress
-                                                            .expectedTotalBytes!
-                                                  : null,
-                                              strokeWidth: 2,
-                                              color: cs.primary,
+                                        errorWidget: (context, url, error) {
+                                          return Center(
+                                            child: Icon(
+                                              Icons.person,
+                                              color: Colors.white,
                                             ),
                                           );
                                         },
+                                        progressIndicatorBuilder:
+                                            (context, url, downloadProgress) {
+                                              return Padding(
+                                                padding: const EdgeInsets.all(
+                                                  12.0,
+                                                ),
+                                                child:
+                                                    CircularProgressIndicator(
+                                                      value: downloadProgress
+                                                          .progress,
+                                                      strokeWidth: 2,
+                                                      color: cs.primary,
+                                                    ),
+                                              );
+                                            },
                                       )
                                     : Icon(Icons.person, color: Colors.white),
                               ),

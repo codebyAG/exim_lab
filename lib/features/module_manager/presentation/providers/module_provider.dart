@@ -5,29 +5,34 @@ import '../../data/services/module_service.dart';
 export '../../data/models/module_config.dart';
 
 class ModuleProvider extends ChangeNotifier {
-  ModuleConfig _config = ModuleConfig.defaults();
-  final ModuleService _service;
+  final ModuleService _moduleService;
+  ModuleConfig? _config;
+  bool _isLoading = true;
 
-  ModuleProvider(this._service);
+  ModuleProvider(this._moduleService);
 
-  bool isEnabled(AppModule module) => _config.isEnabled(module);
+  bool get isLoading => _isLoading;
 
   Future<void> fetchModules() async {
-    final config = await _service.fetchConfig();
-    if (config != null) {
-      _config = config;
-      notifyListeners();
-    }
+    _isLoading = true;
+    notifyListeners();
+
+    _config = await _moduleService.fetchConfig();
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  bool isEnabled(String module) {
+    if (_config == null) return false;
+    return _config!.isEnabled(module);
   }
 
   // Method to update config (e.g. from API or local storage in future)
-  void updateConfig(Map<AppModule, bool> newModules) {
+  void updateConfig(Map<String, bool> newModules) {
     _config = ModuleConfig(modules: newModules);
     notifyListeners();
   }
 
-  // Helper to toggle a module (for dev testing)
-  void toggleModule(AppModule module) {
     final currentMap = Map<AppModule, bool>.from(_config._modules);
     currentMap[module] = !isEnabled(module);
     updateConfig(currentMap);

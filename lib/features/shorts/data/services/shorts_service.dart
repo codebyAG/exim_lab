@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:exim_lab/core/constants/api_constants.dart';
 import 'package:exim_lab/core/functions/api_call.dart';
@@ -22,7 +21,7 @@ class ShortsService {
 
       return await _enrichWithYouTubeMetadata(shorts);
     } catch (e) {
-      log('Error getting shorts: $e');
+      // log('Error getting shorts: $e');
       return [];
     }
   }
@@ -49,7 +48,7 @@ class ShortsService {
           ),
         );
       } catch (e) {
-        log('Error fetching YouTube metadata for ${short.videoUrl}: $e');
+        // log('Error fetching YouTube metadata for ${short.videoUrl}: $e');
         enrichedShorts.add(short); // Fallback to original if YT fetch fails
       }
     }

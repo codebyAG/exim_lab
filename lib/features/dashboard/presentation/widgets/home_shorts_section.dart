@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'dart:developer';
+
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/shorts/presentation/providers/shorts_provider.dart';
 import 'package:exim_lab/features/shorts/presentation/screens/shorts_feed_screen.dart';
@@ -63,7 +63,7 @@ class HomeShortsSection extends StatelessWidget {
                                 image: CachedNetworkImageProvider(thumbnailUrl),
                                 fit: BoxFit.cover,
                                 onError: (exception, stackTrace) {
-                                  log("Error loading thumbnail: $exception");
+                                  // log("Error loading thumbnail: $exception");
                                 },
                               )
                             : null,

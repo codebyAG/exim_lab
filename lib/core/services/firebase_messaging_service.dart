@@ -1,4 +1,3 @@
-import 'dart:developer' as dev;
 import 'dart:math';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -13,42 +12,36 @@ class FirebaseMessagingService {
       badge: true,
       sound: true,
     );
-
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      dev.log('User granted permission');
-    } else {
-      dev.log('User declined or has not accepted permission');
-    }
   }
 
   Future<void> subsScribetoAlltopic() async {
-    dev.log("Subscribing to topic: live");
     try {
       await _firebaseMessaging.subscribeToTopic("live");
     } catch (e) {
-      dev.log("Error subscribing to topic: $e");
+      // ignore
     }
   }
 
   Future<String?> getFirebaseToken() async {
     try {
-      String? token = await _firebaseMessaging.getToken();
-      dev.log("FCM Token: $token");
-      return token;
+      return await _firebaseMessaging.getToken();
     } catch (e) {
-      dev.log("Error getting FCM token: $e");
+      return null;
     }
-    return null;
   }
 
-  // 🔹 Background Message Handler
-  static Future<void> firebaseBackgroundMessage(RemoteMessage message) async {
-    dev.log("Handling a background message: ${message.messageId}");
+  Future<void> initPushNotifications() async {
+    await _firebaseMessaging.getInitialMessage();
 
+    FirebaseMessaging.onBackgroundMessage(firebaseBackgroundMessage);
+  }
+
+  static Future<void> firebaseBackgroundMessage(RemoteMessage message) async {
     String title = message.notification?.title ?? message.data["title"] ?? "";
     String body = message.notification?.body ?? message.data["body"] ?? "";
     String? image = message.data["image"];
 
+    // Notification handling logic...
     if (title.isNotEmpty) {
       if (image != null && image.isNotEmpty) {
         await AwesomeNotifications().createNotification(
