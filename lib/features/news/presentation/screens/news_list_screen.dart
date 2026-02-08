@@ -8,6 +8,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:exim_lab/localization/app_localization.dart';
 
+import 'package:exim_lab/core/services/analytics_service.dart';
+
 class NewsListScreen extends StatefulWidget {
   const NewsListScreen({super.key});
 
@@ -89,6 +91,10 @@ class _NewsCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
+        context.read<AnalyticsService>().logNewsView(
+          newsId: news.id,
+          title: news.title,
+        );
         // NewsDetailScreen likely needs update for NewsModel vs old model
         // Assuming NewsDetailScreen accepts NewsModel or similar fields
         // For now, passing news object. If distinct, we map fields.

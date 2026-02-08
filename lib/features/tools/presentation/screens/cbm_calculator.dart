@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 
 class CbmCalculatorScreen extends StatefulWidget {
   const CbmCalculatorScreen({super.key});
@@ -34,6 +36,11 @@ class _CbmCalculatorScreenState extends State<CbmCalculatorScreen> {
         _totalCbm = total;
         _volumetricWeight = volWeight;
       });
+
+      context.read<AnalyticsService>().logToolUse(
+        toolName: 'CBM Calculator',
+        action: 'Calculate',
+      );
     }
   }
 

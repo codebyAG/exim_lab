@@ -27,6 +27,12 @@ class _LessonsScreenState extends State<LessonsScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AnalyticsService>().logEvent(
+        'lesson_list_view',
+        parameters: {'course_title': widget.courseTitle},
+      );
+    });
   }
 
   @override

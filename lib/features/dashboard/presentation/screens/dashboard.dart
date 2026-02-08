@@ -50,6 +50,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       // Fetch Dashboard Data
       if (mounted) {
+        context.read<AnalyticsService>().logEvent('home_view');
         await context.read<DashboardProvider>().fetchDashboardData();
         if (mounted) {
           await context.read<NotificationsProvider>().fetchUnreadCount();

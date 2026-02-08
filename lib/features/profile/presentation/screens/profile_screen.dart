@@ -5,6 +5,7 @@ import 'package:exim_lab/features/welcome/presentation/screens/welcome_screen.da
 import 'package:exim_lab/features/profile/presentation/screens/update_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:sizer/sizer.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -24,6 +25,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<AuthProvider>().fetchProfile();
+      context.read<AnalyticsService>().logProfileView();
     });
   }
 

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 
 class ExportPriceCalculatorScreen extends StatefulWidget {
   const ExportPriceCalculatorScreen({super.key});
@@ -29,6 +31,11 @@ class _ExportPriceCalculatorScreenState
     sellingPrice = totalCost + profitAmount!;
 
     setState(() {});
+
+    context.read<AnalyticsService>().logToolUse(
+      toolName: 'Export Price Calculator',
+      action: 'Calculate',
+    );
   }
 
   @override

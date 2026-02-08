@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exim_lab/core/services/shared_pref_service.dart';
 import 'package:exim_lab/localization/app_localization.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 
 class QuizTopicsScreen extends StatefulWidget {
   const QuizTopicsScreen({super.key});
@@ -21,6 +22,7 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
       final userId = user?.id ?? "64f0cccc3333333333333333"; // Fallback for dev
       if (mounted) {
         context.read<QuizProvider>().fetchTopics(userId);
+        context.read<AnalyticsService>().logQuizTopicView('General');
       }
     });
   }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 
 class GstCalculatorScreen extends StatefulWidget {
   const GstCalculatorScreen({super.key});
@@ -22,6 +24,11 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
       _gstAmount = gst;
       _totalAmount = total;
     });
+
+    context.read<AnalyticsService>().logToolUse(
+      toolName: 'GST Calculator',
+      action: 'Calculate',
+    );
   }
 
   @override

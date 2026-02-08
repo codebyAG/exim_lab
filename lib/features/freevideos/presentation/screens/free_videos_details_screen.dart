@@ -1,5 +1,7 @@
 import 'package:exim_lab/features/freevideos/data/models/free_videos_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:sizer/sizer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -25,6 +27,13 @@ class _FreeVideoDetailsScreenState extends State<FreeVideoDetailsScreen> {
       initialVideoId: videoId,
       flags: const YoutubePlayerFlags(autoPlay: true, mute: false),
     );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AnalyticsService>().logEvent(
+        'free_video_view',
+        parameters: {'video_id': widget.video.id, 'title': widget.video.title},
+      );
+    });
   }
 
   @override

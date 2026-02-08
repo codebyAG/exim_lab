@@ -30,6 +30,7 @@ class _CoursesListScreenState extends State<CoursesListScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<CoursesState>().fetchCourses();
       context.read<CoursesState>().fetchMyCourses();
+      context.read<AnalyticsService>().logEvent('courses_list_view');
     });
   }
 

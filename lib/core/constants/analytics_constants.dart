@@ -19,6 +19,16 @@ class AnalyticsConstants {
   static const String search = 'search';
   static const String error = 'error';
 
+  // 🔹 MODULE SPECIFIC
+  static const String quizTopicView = 'quiz_topic_view';
+  static const String quizStart = 'quiz_start';
+  static const String quizFinish = 'quiz_finish';
+  static const String newsView = 'news_view';
+  static const String shortsView = 'shorts_view';
+  static const String aiChatView = 'ai_chat_view';
+  static const String toolUse = 'tool_use';
+  static const String profileView = 'profile_view';
+
   // 🔹 PARAMETERS
   static const String method = 'method';
   static const String userId = 'user_id';
@@ -39,6 +49,9 @@ class AnalyticsConstants {
   static const String contentType = 'content_type';
   static const String searchTerm = 'search_term';
   static const String errorMessage = 'error_message';
+  static const String quizId = 'quiz_id';
+  static const String score = 'score';
+  static const String toolName = 'tool_name';
 
   static const String videoId = 'video_id';
   static const String videoTitle = 'video_title';

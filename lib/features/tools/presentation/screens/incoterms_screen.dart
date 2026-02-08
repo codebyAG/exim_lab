@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 
 class IncotermsScreen extends StatelessWidget {
   const IncotermsScreen({super.key});
@@ -74,6 +76,10 @@ class IncotermsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AnalyticsService>().logToolUse(toolName: 'Incoterms');
+    });
 
     return Scaffold(
       backgroundColor: cs.surface,

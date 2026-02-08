@@ -3,6 +3,7 @@ import 'package:exim_lab/features/shorts/presentation/widgets/shorts_player_item
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exim_lab/localization/app_localization.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 
 class ShortsFeedScreen extends StatefulWidget {
   final int initialIndex;
@@ -19,6 +20,9 @@ class _ShortsFeedScreenState extends State<ShortsFeedScreen> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: widget.initialIndex);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AnalyticsService>().logShortsView();
+    });
   }
 
   @override

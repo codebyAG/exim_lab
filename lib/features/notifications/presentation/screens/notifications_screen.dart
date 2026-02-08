@@ -3,6 +3,7 @@ import 'package:exim_lab/features/notifications/presentation/providers/notificat
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:sizer/sizer.dart';
 import 'package:intl/intl.dart';
 
@@ -21,6 +22,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<NotificationsProvider>().fetchNotifications(refresh: true);
+      context.read<AnalyticsService>().logEvent('notifications_view');
     });
 
     _scrollController.addListener(() {

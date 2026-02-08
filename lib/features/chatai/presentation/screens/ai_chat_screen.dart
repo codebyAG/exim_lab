@@ -2,6 +2,8 @@ import 'package:exim_lab/features/chatai/data/datasources/ai_chat_data_remote.da
 import 'package:exim_lab/features/chatai/domain/ai_chat_repository.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 
 class AiChatScreen extends StatefulWidget {
   const AiChatScreen({super.key});
@@ -32,6 +34,9 @@ class _AiChatScreenState extends State<AiChatScreen> {
   void initState() {
     super.initState();
     _repo = AiChatRepository(AiChatRemote());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AnalyticsService>().logAiChatView();
+    });
   }
 
   Future<void> _sendMessage(String text) async {
@@ -43,6 +48,8 @@ class _AiChatScreenState extends State<AiChatScreen> {
       _controller.clear();
       _isTyping = true;
     });
+
+    context.read<AnalyticsService>().logAiChatMessageSent();
 
     try {
       final reply = await _repo.askAi(text);

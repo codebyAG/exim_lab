@@ -3,6 +3,7 @@ import 'package:exim_lab/features/quiz/presentation/states/quiz_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exim_lab/localization/app_localization.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 
 class QuizQuestionScreen extends StatefulWidget {
   final String topicId;
@@ -31,6 +32,10 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
 
       if (user?.id != null) {
         context.read<QuizProvider>().startQuiz(user!.id, widget.topicId);
+        context.read<AnalyticsService>().logQuizStart(
+          quizId: widget.topicId,
+          title: widget.topicTitle,
+        );
       } else {
         // Handle case where user is not found (e.g. logout or error)
         Navigator.pop(context);
@@ -104,6 +109,13 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
             }
 
             if (attempt != null && attempt.isCompleted) {
+              // 📊 LOG FINISH
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.read<AnalyticsService>().logQuizFinish(
+                  quizId: widget.topicId,
+                );
+              });
+
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

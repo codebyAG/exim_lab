@@ -228,4 +228,70 @@ class AnalyticsService {
       },
     );
   }
+
+  // 🔹 QUIZ
+  Future<void> logQuizTopicView(String category) async {
+    await logEvent(
+      AnalyticsConstants.quizTopicView,
+      parameters: {'category': category},
+    );
+  }
+
+  Future<void> logQuizStart({
+    required String quizId,
+    required String title,
+  }) async {
+    await logEvent(
+      AnalyticsConstants.quizStart,
+      parameters: {AnalyticsConstants.quizId: quizId, 'quiz_title': title},
+    );
+  }
+
+  Future<void> logQuizFinish({required String quizId}) async {
+    await logEvent(
+      AnalyticsConstants.quizFinish,
+      parameters: {AnalyticsConstants.quizId: quizId},
+    );
+  }
+
+  // 🔹 NEWS
+  Future<void> logNewsView({
+    required String newsId,
+    required String title,
+  }) async {
+    await logEvent(
+      AnalyticsConstants.newsView,
+      parameters: {'news_id': newsId, 'news_title': title},
+    );
+  }
+
+  // 🔹 SHORTS
+  Future<void> logShortsView() async {
+    await logEvent(AnalyticsConstants.shortsView);
+  }
+
+  // 🔹 AI CHAT
+  Future<void> logAiChatView() async {
+    await logEvent(AnalyticsConstants.aiChatView);
+  }
+
+  Future<void> logAiChatMessageSent() async {
+    await logEvent('ai_message_sent');
+  }
+
+  // 🔹 TOOLS
+  Future<void> logToolUse({required String toolName, String? action}) async {
+    await logEvent(
+      AnalyticsConstants.toolUse,
+      parameters: {
+        AnalyticsConstants.toolName: toolName,
+        if (action != null) 'action': action,
+      },
+    );
+  }
+
+  // 🔹 PROFILE
+  Future<void> logProfileView() async {
+    await logEvent(AnalyticsConstants.profileView);
+  }
 }
