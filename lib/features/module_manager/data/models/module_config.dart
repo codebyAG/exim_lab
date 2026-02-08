@@ -29,7 +29,7 @@ class ModuleConfig {
         AppModule.tools: false,
         AppModule.news: false,
         AppModule.banners: false,
-        AppModule.shorts: true,
+        AppModule.shorts: false,
       },
     );
   }
