@@ -96,11 +96,36 @@ class _ChapterCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // CHAPTER TITLE
-          Text(
-            chapter.title,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment:
+                CrossAxisAlignment.start, // Align to top for multiline
+            children: [
+              Expanded(
+                child: Text(
+                  chapter.title,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 17,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: cs.primary.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  '${chapter.lessons.length} Lessons',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: cs.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
           ),
 
           const SizedBox(height: 12),
@@ -146,30 +171,83 @@ class _LessonTile extends StatelessWidget {
           children: [
             // ICON
             Container(
-              height: 38,
-              width: 38,
+              height: 42,
+              width: 42,
               decoration: BoxDecoration(
-                color: cs.primary.withValues(alpha: 0.12),
+                color: _getLessonColor(lesson.type).withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.play_arrow, color: cs.primary),
+              child: Icon(
+                _getLessonIcon(lesson.type),
+                color: _getLessonColor(lesson.type),
+                size: 20,
+              ),
             ),
 
             const SizedBox(width: 12),
 
             // TITLE
             Expanded(
-              child: Text(
-                lesson.title,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    lesson.title,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: cs.onSurface,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    lesson.type.toUpperCase(),
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: cs.onSurfaceVariant,
+                      letterSpacing: 0.5,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 10,
+                    ),
+                  ),
+                ],
               ),
+            ),
+
+            // TRAILING
+            Icon(
+              Icons.play_circle_fill,
+              color: cs.primary.withValues(alpha: 0.8),
+              size: 28,
             ),
           ],
         ),
       ),
     );
+  }
+
+  IconData _getLessonIcon(String type) {
+    switch (type.toLowerCase()) {
+      case 'video':
+        return Icons.play_arrow_rounded;
+      case 'quiz':
+        return Icons.quiz_rounded;
+      case 'document':
+      case 'pdf':
+        return Icons.description_rounded;
+      default:
+        return Icons.play_circle_outline_rounded;
+    }
+  }
+
+  Color _getLessonColor(String type) {
+    switch (type.toLowerCase()) {
+      case 'quiz':
+        return Colors.orange;
+      case 'document':
+      case 'pdf':
+        return Colors.blue;
+      default:
+        return const Color(0xFFE53935); // Primary Redish
+    }
   }
 }
 
