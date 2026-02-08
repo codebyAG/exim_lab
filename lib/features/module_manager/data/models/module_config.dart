@@ -19,6 +19,7 @@ class ModuleConfig {
         'news': false,
         'banners': false,
         'shortVideos': false,
+        'aiChat': false,
       },
     );
   }

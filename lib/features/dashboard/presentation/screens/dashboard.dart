@@ -154,16 +154,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
       backgroundColor: cs.surface,
 
       // Floating AI Support Button
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: cs.primary,
-        tooltip: t.translate('ai_support'),
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        onPressed: () {
-          AppNavigator.push(context, const AiChatScreen());
-        },
-        child: Icon(Icons.support_agent, color: cs.onPrimary, size: 28),
-      ),
+      floatingActionButton: moduleProvider.isEnabled('aiChat')
+          ? FloatingActionButton(
+              backgroundColor: cs.primary,
+              tooltip: t.translate('ai_support'),
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              onPressed: () {
+                AppNavigator.push(context, const AiChatScreen());
+              },
+              child: Icon(Icons.support_agent, color: cs.onPrimary, size: 28),
+            )
+          : null,
 
       body: RefreshIndicator(
         onRefresh: () => context.read<DashboardProvider>().fetchDashboardData(),
