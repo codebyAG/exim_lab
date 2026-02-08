@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 
 class CertificatePreviewScreen extends StatelessWidget {
   final String userName;
@@ -132,7 +134,12 @@ class CertificatePreviewScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: OutlinedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      context.read<AnalyticsService>().logButtonTap(
+                        buttonName: 'download_certificate',
+                        screenName: 'certificate_preview',
+                      );
+                    },
                     icon: const Icon(Icons.download),
                     label: const Text('Download'),
                   ),
@@ -142,7 +149,13 @@ class CertificatePreviewScreen extends StatelessWidget {
 
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      context.read<AnalyticsService>().logShare(
+                        contentId: certificateId,
+                        contentType: 'certificate',
+                        method: 'system_share',
+                      );
+                    },
                     icon: const Icon(Icons.share),
                     label: const Text('Share'),
                   ),

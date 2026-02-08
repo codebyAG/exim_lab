@@ -3,6 +3,7 @@ import 'package:exim_lab/core/services/firebase_messaging_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:exim_lab/firebase_options.dart'; // User needs to generate this
 import 'package:exim_lab/core/theme/light_theme.dart';
 import 'package:exim_lab/core/theme/dark_theme.dart';
@@ -37,6 +38,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final newsService = NewsService();
+  // Moved AnalyticsService creation after Firebase.initializeApp to avoid early instance access
 
   // 🔥 Firebase Init
   try {
@@ -50,6 +52,8 @@ void main() async {
       "⚠️ Firebase initialization failed (Missing firebase_options.dart?): $e",
     );
   }
+
+  final analyticsService = AnalyticsService();
 
   // 🔔 Awesome Notifications Init
   AwesomeNotifications().initialize(
@@ -111,6 +115,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => NewsProvider(newsService)),
         ChangeNotifierProvider(create: (_) => NotificationsProvider()),
         ChangeNotifierProvider.value(value: moduleProvider),
+        Provider.value(value: analyticsService),
       ],
       child: const EximLabApp(),
     ),
@@ -143,6 +148,9 @@ class EximLabApp extends StatelessWidget {
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
+          ],
+          navigatorObservers: [
+            context.read<AnalyticsService>().getAnalyticsObserver(),
           ],
 
           home: const SplashScreen(),

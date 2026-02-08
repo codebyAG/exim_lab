@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:exim_lab/core/navigation/app_navigator.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:exim_lab/features/dashboard/presentation/screens/dashboard.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:exim_lab/features/welcome/presentation/screens/welcome_screen.dart';
@@ -22,6 +23,11 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     checkForUpdates();
+
+    // 📊 CHECK FIRST OPEN
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AnalyticsService>().checkFirstAppOpen();
+    });
   }
 
   Future<void> checkForUpdates() async {

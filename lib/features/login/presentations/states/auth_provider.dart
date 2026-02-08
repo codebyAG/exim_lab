@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:exim_lab/features/login/data/data_sources/auth_data_source.dart';
 import 'package:exim_lab/features/login/data/models/user_model.dart';
 import 'package:exim_lab/core/services/shared_pref_service.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   final AuthDataSource _dataSource = AuthDataSource();
   final SharedPrefService _sharedPrefService = SharedPrefService();
+  final AnalyticsService _analytics = AnalyticsService();
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -28,6 +30,10 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> _loadUser() async {
     _user = await _sharedPrefService.getUser();
+    if (_user != null) {
+      await _analytics.setUserId(_user!.id);
+      await _analytics.setUserProperty(name: 'role', value: _user!.role);
+    }
     notifyListeners();
   }
 
@@ -88,6 +94,13 @@ class AuthProvider extends ChangeNotifier {
         await _sharedPrefService.saveToken(response['token']);
       }
 
+      // 📊 ANALYTICS
+      if (_user != null) {
+        await _analytics.setUserId(_user!.id);
+        await _analytics.setUserProperty(name: 'role', value: _user!.role);
+        await _analytics.logLogin(method: 'otp');
+      }
+
       _isLoading = false;
       notifyListeners();
       return true;
@@ -102,6 +115,7 @@ class AuthProvider extends ChangeNotifier {
   Future<void> logout() async {
     await _sharedPrefService.clearUser();
     await _sharedPrefService.clearToken();
+    await _analytics.logLogout();
     _user = null;
     notifyListeners();
   }

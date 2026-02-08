@@ -1,5 +1,7 @@
 import 'package:exim_lab/core/navigation/app_navigator.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:exim_lab/features/courses/data/models/course_details_model.dart';
+import 'package:provider/provider.dart';
 import 'package:exim_lab/features/courses/presentation/screens/video_lesson_screen.dart';
 import 'package:exim_lab/features/courses/presentation/widgets/lesson_shimmer.dart';
 import 'package:flutter/material.dart';
@@ -177,6 +179,13 @@ class _LessonTile extends StatelessWidget {
 
     return InkWell(
       onTap: () {
+        context.read<AnalyticsService>().logLessonStart(
+          lessonId: lesson.id,
+          lessonName: lesson.title,
+          courseName:
+              'Unknown', // We don't have course name in LessonTile context easily without passing down
+        );
+
         AppNavigator.push(
           context,
           VideoLessonScreen(videoUrl: lesson.contentUrl, title: lesson.title),

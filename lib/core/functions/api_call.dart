@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'dart:io';
 import 'package:exim_lab/core/services/shared_pref_service.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 import 'dart:developer';
 
 Future<T> callApi<T>(
@@ -69,12 +70,18 @@ Future<T> callApi<T>(
     }
   } on DioException catch (e) {
     log("❌ DIO ERROR: ${e.message}");
+    // 📊 LOG ERROR
+    AnalyticsService().logError(message: 'Dio Error: ${e.message} at $url');
+
     throw ApiException(
       message: dioExceptionMessage(e.type),
       statusCode: e.response?.statusCode,
     );
   } catch (e) {
     log("❌ UNKNOWN ERROR: $e");
+    // 📊 LOG ERROR
+    AnalyticsService().logError(message: 'Unknown Error: $e at $url');
+
     throw ApiException(message: 'Something went wrong');
   }
 }

@@ -3,6 +3,7 @@ import 'package:exim_lab/features/courses/data/models/course_model.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_details_screen.dart';
 import 'package:exim_lab/features/courses/presentation/states/course_state.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exim_lab/localization/app_localization.dart';
@@ -57,7 +58,13 @@ class _CoursesListScreenState extends State<CoursesListScreen>
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                context.read<AnalyticsService>().logButtonTap(
+                  buttonName: 'search_courses',
+                  screenName: 'courses_list',
+                );
+                // Future: Implement actual search view
+              },
               icon: Icon(
                 Icons.search,
                 size: 28,

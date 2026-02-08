@@ -1,6 +1,7 @@
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/courses/presentation/screens/lesson_screen.dart';
 import 'package:exim_lab/features/courses/presentation/states/course_details_state.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exim_lab/localization/app_localization.dart';
@@ -25,6 +26,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
     /// ✅ Correct way to call provider API from initState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<CourseDetailsState>().fetchCourseDetails(widget.courseId);
+      // 📊 LOG COURSE VIEW (Optimistic or wait for data?)
+      // Let's wait for data in build or just log the ID here if we have name?
+      // We only have ID here. We can log 'view_item' with ID.
+      context.read<AnalyticsService>().logEvent(
+        'view_course_details',
+        parameters: {'course_id': widget.courseId},
+      );
     });
   }
 
@@ -203,6 +211,11 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                 ),
                 child: ElevatedButton(
                   onPressed: () {
+                    context.read<AnalyticsService>().logButtonTap(
+                      buttonName: 'start_learning',
+                      screenName: 'course_details',
+                    );
+
                     AppNavigator.push(
                       context,
                       LessonsScreen(

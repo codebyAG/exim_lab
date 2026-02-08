@@ -9,6 +9,7 @@ import 'package:exim_lab/features/courses/presentation/screens/courses_details_s
 import 'package:exim_lab/features/courses/presentation/screens/courses_list_screen.dart';
 import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart';
 import 'package:exim_lab/features/dashboard/presentation/providers/dashboard_provider.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/continue_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/home_shorts_section.dart';
@@ -471,15 +472,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 icon: Icons.video_library_rounded,
                                 title: t.translate('my_courses'),
                                 subtitle: t.translate('completed_status'),
-                                onTap: () => AppNavigator.push(
-                                  context,
-                                  const CoursesListScreen(),
-                                ),
+                                onTap: () {
+                                  context.read<AnalyticsService>().logButtonTap(
+                                    buttonName: 'my_courses_card',
+                                    screenName: 'dashboard',
+                                  );
+                                  AppNavigator.push(
+                                    context,
+                                    const CoursesListScreen(),
+                                  );
+                                },
                               ),
                             ),
-                            SizedBox(width: 3.w),
-
-                            // Resources Removed
                             SizedBox(width: 3.w),
                             Expanded(
                               child: ModuleVisibility(
@@ -488,10 +492,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   icon: Icons.quiz_rounded,
                                   title: t.translate('quizzes_title'),
                                   subtitle: t.translate('quizzes_subtitle'),
-                                  onTap: () => AppNavigator.push(
-                                    context,
-                                    const QuizTopicsScreen(),
-                                  ),
+                                  onTap: () {
+                                    context
+                                        .read<AnalyticsService>()
+                                        .logButtonTap(
+                                          buttonName: 'quizzes_card',
+                                          screenName: 'dashboard',
+                                        );
+                                    AppNavigator.push(
+                                      context,
+                                      const QuizTopicsScreen(),
+                                    );
+                                  },
                                 ),
                               ),
                             ),

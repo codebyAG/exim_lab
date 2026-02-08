@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:exim_lab/features/courses/presentation/widgets/video_lesson_shimmer.dart';
 import 'package:exim_lab/localization/app_localization.dart';
+import 'package:provider/provider.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 
 class VideoLessonScreen extends StatefulWidget {
   final String videoUrl;
@@ -38,7 +40,27 @@ class _VideoLessonScreenState extends State<VideoLessonScreen> {
         enableCaption: true,
         isLive: false,
       ),
-    );
+    )..addListener(_onPlayerStateChange);
+
+    // 📊 LOG VIDEO START
+    // We use postFrameCallback because we need context to access Provider
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<AnalyticsService>().logVideoStart(
+          videoId: videoId ?? 'unknown',
+          videoTitle: widget.title,
+        );
+      }
+    });
+  }
+
+  void _onPlayerStateChange() {
+    if (_controller.value.playerState == PlayerState.ended) {
+      context.read<AnalyticsService>().logVideoComplete(
+        videoId: _controller.initialVideoId,
+        videoTitle: widget.title,
+      );
+    }
   }
 
   @override

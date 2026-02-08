@@ -4,6 +4,8 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/dots_iniidcator
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:provider/provider.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 
 class CtaCarousel extends StatefulWidget {
   final List<BannerModel> banners;
@@ -89,6 +91,10 @@ class CtaCarouselState extends State<CtaCarousel> {
                   ),
                   child: InkWell(
                     onTap: () {
+                      context.read<AnalyticsService>().logBannerClick(
+                        ctaUrl: banner.ctaUrl,
+                        imageUrl: banner.imageUrl,
+                      );
                       if (banner.ctaUrl.isNotEmpty) {
                         launchUrlString(banner.ctaUrl);
                       }
