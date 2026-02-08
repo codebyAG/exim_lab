@@ -1,10 +1,11 @@
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/courses/data/models/course_details_model.dart';
 import 'package:exim_lab/features/courses/presentation/screens/video_lesson_screen.dart';
+import 'package:exim_lab/features/courses/presentation/widgets/lesson_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 
-class LessonsScreen extends StatelessWidget {
+class LessonsScreen extends StatefulWidget {
   final List<LessonModel> lessons;
   final String courseTitle;
 
@@ -15,11 +16,35 @@ class LessonsScreen extends StatelessWidget {
   });
 
   @override
+  State<LessonsScreen> createState() => _LessonsScreenState();
+}
+
+class _LessonsScreenState extends State<LessonsScreen> {
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // Simulate loading/fetching delay
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const LessonShimmer();
+    }
+
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
 
-    final groupedLessons = _groupByChapter(lessons);
+    final groupedLessons = _groupByChapter(widget.lessons);
 
     return Scaffold(
       backgroundColor: cs.surface,
@@ -31,7 +56,7 @@ class LessonsScreen extends StatelessWidget {
           icon: Icon(Icons.arrow_back, color: cs.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(courseTitle, style: theme.textTheme.titleLarge),
+        title: Text(widget.courseTitle, style: theme.textTheme.titleLarge),
       ),
 
       body: ListView.builder(

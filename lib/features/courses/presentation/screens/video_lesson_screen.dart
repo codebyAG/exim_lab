@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:exim_lab/features/courses/presentation/widgets/video_lesson_shimmer.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 
 class VideoLessonScreen extends StatefulWidget {
@@ -21,10 +22,20 @@ class _VideoLessonScreenState extends State<VideoLessonScreen> {
   final TextEditingController _questionController = TextEditingController();
 
   final List<_Question> _questions = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
+
+    // Simulate loading/fetching delay
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    });
 
     final videoId = YoutubePlayer.convertUrlToId(widget.videoUrl);
 
@@ -48,6 +59,10 @@ class _VideoLessonScreenState extends State<VideoLessonScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const VideoLessonShimmer();
+    }
+
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final t = AppLocalizations.of(context);
