@@ -40,17 +40,26 @@ class ModuleConfig {
     final Map<AppModule, bool> modules = {};
     log("Parsing ModuleConfig: $json");
 
-    for (var key in json.keys) {
+    for (var rawKey in json.keys) {
+      final key = rawKey.trim();
       try {
         final module = AppModule.values.firstWhere(
           (e) => e.name == key,
           orElse: () => AppModule.values.first,
         );
-        log("Key: $key -> Enum: ${module.name}");
+        log("Key: '$rawKey' (trimmed: '$key') -> Enum: ${module.name}");
         if (module.name == key) {
-          modules[module] = json[key] == true;
+          modules[module] = json[rawKey] == true;
+        } else {
+          // Try partial match or case insensitive?
+          // For now, let's just log failure to match exactly if nomes differ
+          log(
+            "Warning: Key '$key' matched default or mismatch '${module.name}'",
+          );
         }
-      } catch (_) {}
+      } catch (e) {
+        log("Error parsing key '$key': $e");
+      }
     }
 
     // Merge with defaults
