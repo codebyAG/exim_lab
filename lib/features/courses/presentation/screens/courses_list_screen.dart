@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:exim_lab/features/courses/presentation/widgets/courses_shimmer.dart';
 
 class CoursesListScreen extends StatefulWidget {
   const CoursesListScreen({super.key});
@@ -120,7 +121,7 @@ class _CoursesListScreenState extends State<CoursesListScreen>
   // 🔹 ALL COURSES (API)
   Widget _allCourses(BuildContext context, CoursesState state) {
     if (state.isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const CoursesShimmer(isGrid: false);
     }
 
     if (state.errorMessage != null) {
@@ -144,6 +145,42 @@ class _CoursesListScreenState extends State<CoursesListScreen>
             subtitle: course.description,
             courseId: course.id,
           ),
+        );
+      },
+    );
+  }
+
+  // 🔹 MY COURSES (API)
+  Widget _myCoursesList(BuildContext context, CoursesState state) {
+    if (state.isMyCoursesLoading) {
+      return const CoursesShimmer(isGrid: true);
+    }
+
+    if (state.myCourses.isEmpty) {
+      final t = AppLocalizations.of(context);
+      return Center(
+        child: Text(
+          t.translate('no_courses_enrolled'),
+          textAlign: TextAlign.center,
+        ),
+      );
+    }
+
+    return GridView.builder(
+      padding: const EdgeInsets.all(16),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2, // ✅ 2 cards per row
+        mainAxisSpacing: 16,
+        crossAxisSpacing: 16,
+        childAspectRatio: 0.78,
+      ),
+      itemCount: state.myCourses.length,
+      itemBuilder: (context, index) {
+        final course = state.myCourses[index];
+        return FadeInUp(
+          // 🔹 GRID ANIMATION
+          delay: Duration(milliseconds: index * 100), // Staggered effect
+          child: _MyCourseCard(course: course, colorIndex: index),
         );
       },
     );
@@ -261,42 +298,6 @@ class _CourseTile extends StatelessWidget {
       ),
     );
   }
-}
-
-// 🔹 MY COURSES (API)
-Widget _myCoursesList(BuildContext context, CoursesState state) {
-  if (state.isMyCoursesLoading) {
-    return const Center(child: CircularProgressIndicator());
-  }
-
-  if (state.myCourses.isEmpty) {
-    final t = AppLocalizations.of(context);
-    return Center(
-      child: Text(
-        t.translate('no_courses_enrolled'),
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
-
-  return GridView.builder(
-    padding: const EdgeInsets.all(16),
-    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 2, // ✅ 2 cards per row
-      mainAxisSpacing: 16,
-      crossAxisSpacing: 16,
-      childAspectRatio: 0.78,
-    ),
-    itemCount: state.myCourses.length,
-    itemBuilder: (context, index) {
-      final course = state.myCourses[index];
-      return FadeInUp(
-        // 🔹 GRID ANIMATION
-        delay: Duration(milliseconds: index * 100), // Staggered effect
-        child: _MyCourseCard(course: course, colorIndex: index),
-      );
-    },
-  );
 }
 
 class _MyCourseCard extends StatelessWidget {

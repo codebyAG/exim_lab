@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:exim_lab/features/courses/presentation/widgets/course_details_shimmer.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
   final String courseId;
@@ -36,11 +37,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
 
     // ================= LOADING =================
     if (state.isLoading) {
-      return Scaffold(
-        backgroundColor: cs.surface,
-        appBar: AppBar(backgroundColor: cs.surface, elevation: 0),
-        body: const Center(child: CircularProgressIndicator()),
-      );
+      return const CourseDetailsShimmer();
     }
 
     // ================= ERROR =================
