@@ -178,32 +178,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            // 1. HEADER
+            // 1. PREMIUM FLOATING HEADER
             FadeInDown(
-              duration: const Duration(milliseconds: 800),
+              duration: const Duration(milliseconds: 1000),
               child: Container(
-                padding: EdgeInsets.fromLTRB(5.w, 4.h, 5.w, 2.h),
+                margin: EdgeInsets.fromLTRB(4.w, 2.h, 4.w, 1.h),
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.5.h),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [
-                      cs.primary,
-                      cs.primary.withValues(
-                        alpha: 0.8,
-                      ), // Slightly lighter/different shade
-                    ],
+                    colors: [cs.primary, cs.primary.withValues(alpha: 0.85)],
                   ),
-                  borderRadius: const BorderRadius.vertical(
-                    bottom: Radius.circular(24),
-                  ),
+                  borderRadius: BorderRadius.circular(32),
                   boxShadow: [
                     BoxShadow(
                       color: cs.primary.withValues(alpha: 0.3),
-                      blurRadius: 24,
-                      offset: const Offset(0, 12),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
                     ),
                   ],
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    width: 1.5,
+                  ),
                 ),
                 child: Column(
                   children: [
@@ -216,187 +214,199 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             children: [
                               Text(
                                 t.translate('welcome_back'),
-                                style: theme.textTheme.titleMedium?.copyWith(
-                                  color: Colors.white70,
-                                  fontWeight: FontWeight.bold, // w700
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: Colors.white.withValues(alpha: 0.8),
+                                  letterSpacing: 0.5,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              const SizedBox(height: 2),
+                              const SizedBox(height: 4),
                               Text(
                                 context.watch<AuthProvider>().user?.name ??
                                     t.translate('guest_user'),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: theme.textTheme.headlineMedium?.copyWith(
-                                  fontWeight: FontWeight.w900, // Extra Bold
-                                  letterSpacing: -0.5,
+                                style: theme.textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.w800,
                                   color: Colors.white,
+                                  letterSpacing: -0.5,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  "Continue your journey",
+                                  style: theme.textTheme.labelSmall?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        Row(
-                          children: [
-                            // NOTIFICATION BELL
-                            Consumer<NotificationsProvider>(
-                              builder: (context, notifProvider, child) {
-                                return Stack(
-                                  clipBehavior: Clip.none,
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white.withValues(
-                                          alpha: 0.15,
-                                        ), // Glassmorphic feel
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: Colors.white.withValues(
-                                            alpha: 0.2,
-                                          ),
-                                          width: 1,
-                                        ),
+                        // NOTIFICATION BELL (REFINED)
+                        Consumer<NotificationsProvider>(
+                          builder: (context, notifProvider, child) {
+                            return Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withValues(alpha: 0.2),
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.3,
                                       ),
-                                      child: IconButton(
-                                        onPressed: () {
-                                          AppNavigator.push(
-                                            context,
-                                            const NotificationsScreen(),
-                                          );
-                                        },
-                                        icon: const Icon(
-                                          Icons.notifications_outlined,
-                                          color: Colors.white,
-                                          size: 20,
-                                        ),
-                                        padding: EdgeInsets.zero,
-                                        constraints: const BoxConstraints(
-                                          minWidth: 40,
-                                          minHeight: 40,
-                                        ),
-                                      ),
+                                      width: 1.5,
                                     ),
-                                    if (notifProvider.unreadCount > 0)
-                                      Positioned(
-                                        right: 0,
-                                        top: 0,
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 6,
-                                            vertical: 3,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: cs.error,
-                                            borderRadius: BorderRadius.circular(
-                                              12,
-                                            ),
-                                            border: Border.all(
-                                              color: cs.primary,
-                                              width: 2,
-                                            ),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black12,
-                                                blurRadius: 4,
-                                              ),
-                                            ],
-                                          ),
-                                          constraints: const BoxConstraints(
-                                            minWidth: 20,
-                                            minHeight: 20,
-                                          ),
-                                          child: Text(
-                                            '${notifProvider.unreadCount}',
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(
+                                          alpha: 0.1,
                                         ),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 4),
                                       ),
-                                  ],
-                                );
-                              },
-                            ),
-                            SizedBox(width: 3.w),
-
-                            // PROFILE (No border, just clean image)
-                            InkWell(
-                              onTap: () {
-                                AppNavigator.push(
-                                  context,
-                                  const ProfileScreen(),
-                                );
-                              },
-                              child: Container(
-                                height: 40,
-                                width: 40,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withValues(
-                                        alpha: 0.1,
-                                      ),
-                                      blurRadius: 12,
-                                      offset: const Offset(0, 4),
+                                    ],
+                                  ),
+                                  child: IconButton(
+                                    onPressed: () {
+                                      AppNavigator.push(
+                                        context,
+                                        const NotificationsScreen(),
+                                      );
+                                    },
+                                    icon: const Icon(
+                                      Icons.notifications_outlined,
+                                      color: Colors.white,
+                                      size: 20,
                                     ),
-                                  ],
-                                  border: Border.all(
-                                    color: Colors.white,
-                                    width: 2,
+                                    padding: EdgeInsets.zero,
+                                    constraints: const BoxConstraints(
+                                      minWidth: 40,
+                                      minHeight: 40,
+                                    ),
                                   ),
                                 ),
-                                child: ClipOval(
-                                  child:
-                                      (context
-                                                  .watch<AuthProvider>()
-                                                  .user
-                                                  ?.avatarUrl !=
-                                              null &&
-                                          context
+                                if (notifProvider.unreadCount > 0)
+                                  Positioned(
+                                    right: 0,
+                                    top: 0,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 6,
+                                        vertical: 3,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: cs.error,
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: cs.primary,
+                                          width: 2,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black12,
+                                            blurRadius: 4,
+                                          ),
+                                        ],
+                                      ),
+                                      constraints: const BoxConstraints(
+                                        minWidth: 20,
+                                        minHeight: 20,
+                                      ),
+                                      child: Text(
+                                        '${notifProvider.unreadCount}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            );
+                          },
+                        ),
+                        SizedBox(width: 3.w),
+
+                        // PROFILE (No border, just clean image)
+                        InkWell(
+                          onTap: () {
+                            AppNavigator.push(context, const ProfileScreen());
+                          },
+                          child: Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.1),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                              border: Border.all(color: Colors.white, width: 2),
+                            ),
+                            child: ClipOval(
+                              child:
+                                  (context
                                               .watch<AuthProvider>()
-                                              .user!
-                                              .avatarUrl!
-                                              .isNotEmpty)
-                                      ? CachedNetworkImage(
-                                          imageUrl: context
-                                              .watch<AuthProvider>()
-                                              .user!
-                                              .avatarUrl!,
-                                          fit: BoxFit.cover,
-                                          errorWidget: (context, url, error) {
-                                            return Container(
-                                              color: Colors.white,
-                                              child: Center(
-                                                child: Icon(
-                                                  Icons.person_rounded,
-                                                  size: 28,
-                                                  color: cs.primary,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          placeholder: (context, url) =>
-                                              Container(color: Colors.white),
-                                        )
-                                      : Container(
+                                              .user
+                                              ?.avatarUrl !=
+                                          null &&
+                                      context
+                                          .watch<AuthProvider>()
+                                          .user!
+                                          .avatarUrl!
+                                          .isNotEmpty)
+                                  ? CachedNetworkImage(
+                                      imageUrl: context
+                                          .watch<AuthProvider>()
+                                          .user!
+                                          .avatarUrl!,
+                                      fit: BoxFit.cover,
+                                      errorWidget: (context, url, error) {
+                                        return Container(
                                           color: Colors.white,
                                           child: Center(
                                             child: Icon(
                                               Icons.person_rounded,
-                                              size: 20,
+                                              size: 28,
                                               color: cs.primary,
                                             ),
                                           ),
+                                        );
+                                      },
+                                      placeholder: (context, url) =>
+                                          Container(color: Colors.white),
+                                    )
+                                  : Container(
+                                      color: Colors.white,
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.person_rounded,
+                                          size: 20,
+                                          color: cs.primary,
                                         ),
-                                ),
-                              ),
+                                      ),
+                                    ),
                             ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
