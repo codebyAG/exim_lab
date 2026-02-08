@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:developer';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/shorts/presentation/providers/shorts_provider.dart';
 import 'package:exim_lab/features/shorts/presentation/screens/shorts_feed_screen.dart';
@@ -55,13 +57,14 @@ class HomeShortsSection extends StatelessWidget {
                       width: 35.w, // Increased width (was dynamic)
                       decoration: BoxDecoration(
                         color: Colors.black,
-                        borderRadius: BorderRadius.circular(
-                          16,
-                        ), // Rounded corners
+                        borderRadius: BorderRadius.circular(16),
                         image: thumbnailUrl.isNotEmpty
                             ? DecorationImage(
-                                image: NetworkImage(thumbnailUrl),
+                                image: CachedNetworkImageProvider(thumbnailUrl),
                                 fit: BoxFit.cover,
+                                onError: (exception, stackTrace) {
+                                  log("Error loading thumbnail: $exception");
+                                },
                               )
                             : null,
                       ),
