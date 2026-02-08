@@ -58,25 +58,38 @@ class _ShortsFeedScreenState extends State<ShortsFeedScreen> {
             );
           }
 
-          return PageView.builder(
-            scrollDirection: Axis.vertical,
-            controller: _pageController,
-            itemCount: provider.shorts.length,
-            onPageChanged: (index) {
-              provider.setCurrentIndex(index);
+          return GestureDetector(
+            onVerticalDragEnd: (details) {
+              if (details.primaryVelocity! < -800) {
+                // Swipe Up -> Next
+                _pageController.nextPage(
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeInOut,
+                );
+              } else if (details.primaryVelocity! > 800) {
+                // Swipe Down -> Previous
+                _pageController.previousPage(
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeInOut,
+                );
+              }
             },
-            itemBuilder: (context, index) {
-              // Only load/play if it's the current page or very close?
-              // Actually PageView keeps state.
-              // We pass 'isVisible' based on index matching provider.currentIndex
-              // But PageView does lazy building.
-              // Let's rely on VisibilityDetector inside the Item,
-              // BUT PageView pre-renders adjacent pages.
-              return ShortsPlayerItem(
-                short: provider.shorts[index],
-                isVisible: true, // VisibilityDetector handles actual playing
-              );
-            },
+            child: PageView.builder(
+              scrollDirection: Axis.vertical,
+              controller: _pageController,
+              itemCount: provider.shorts.length,
+              physics:
+                  const ClampingScrollPhysics(), // Better for "snapping" feel
+              onPageChanged: (index) {
+                provider.setCurrentIndex(index);
+              },
+              itemBuilder: (context, index) {
+                return ShortsPlayerItem(
+                  short: provider.shorts[index],
+                  isVisible: true,
+                );
+              },
+            ),
           );
         },
       ),

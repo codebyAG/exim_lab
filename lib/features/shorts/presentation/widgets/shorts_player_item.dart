@@ -81,7 +81,7 @@ class _ShortsPlayerItemState extends State<ShortsPlayerItem> {
     return VisibilityDetector(
       key: Key(widget.short.id),
       onVisibilityChanged: (info) {
-        if (info.visibleFraction > 0.8) {
+        if (info.visibleFraction > 0.65) {
           _controller.play();
         } else {
           _controller.pause();
