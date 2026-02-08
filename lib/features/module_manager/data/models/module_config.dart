@@ -49,7 +49,20 @@ class ModuleConfig {
         );
         log("Key: '$rawKey' (trimmed: '$key') -> Enum: ${module.name}");
         if (module.name == key) {
-          modules[module] = json[rawKey] == true;
+          final rawValue = json[rawKey];
+          log("Raw Value for $key: $rawValue (Type: ${rawValue.runtimeType})");
+
+          bool value = false;
+          if (rawValue is bool) {
+            value = rawValue;
+          } else if (rawValue is String) {
+            value = rawValue.toLowerCase() == 'true';
+          } else if (rawValue is int) {
+            value = rawValue == 1;
+          }
+
+          modules[module] = value;
+          log("Assigned $key -> $value");
         } else {
           // Try partial match or case insensitive?
           // For now, let's just log failure to match exactly if nomes differ
@@ -61,6 +74,8 @@ class ModuleConfig {
         log("Error parsing key '$key': $e");
       }
     }
+
+    log("Parsed Modules Map: $modules");
 
     // Merge with defaults
     final defaults = ModuleConfig.defaults()._modules;
