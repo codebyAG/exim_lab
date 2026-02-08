@@ -217,7 +217,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               t.translate('welcome_back'),
                               style: theme.textTheme.titleMedium?.copyWith(
                                 color: Colors.white70,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.bold, // w700
                               ),
                             ),
                             const SizedBox(height: 6),
@@ -227,7 +227,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: theme.textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w900, // Extra Bold
                                 letterSpacing: -0.5,
                                 color: Colors.white,
                               ),
@@ -237,7 +237,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               t.translate('lets_start_learning'),
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: Colors.white.withValues(alpha: 0.9),
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.bold, // w700
                               ),
                             ),
                           ],
@@ -426,7 +426,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         module: 'carousel',
                         child: CtaCarousel(banners: data.addons.carousel),
                       ),
-                      SizedBox(height: 3.h),
+                      SizedBox(height: 1.h),
                     ],
 
                     // SHORTS SECTION
@@ -434,7 +434,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       module: 'shortVideos',
                       child: const HomeShortsSection(),
                     ),
-                    SizedBox(height: 2.h),
+                    SizedBox(height: 5.h),
 
                     // 4. QUICK ACTIONS (Static)
                     Padding(
