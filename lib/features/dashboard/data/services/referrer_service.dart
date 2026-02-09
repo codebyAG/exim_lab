@@ -51,6 +51,26 @@ class ReferrerService {
       };
       params.addAll(utmParams);
 
+      // Set User Properties for Firebase Segmentation
+      if (utmParams.containsKey('utm_source')) {
+        await AnalyticsService().setUserProperty(
+          name: 'install_source',
+          value: utmParams['utm_source']!,
+        );
+      }
+      if (utmParams.containsKey('utm_medium')) {
+        await AnalyticsService().setUserProperty(
+          name: 'install_medium',
+          value: utmParams['utm_medium']!,
+        );
+      }
+      if (utmParams.containsKey('utm_campaign')) {
+        await AnalyticsService().setUserProperty(
+          name: 'install_campaign',
+          value: utmParams['utm_campaign']!,
+        );
+      }
+
       await AnalyticsService().logEvent('install_referrer', parameters: params);
 
       // Mark as logged
