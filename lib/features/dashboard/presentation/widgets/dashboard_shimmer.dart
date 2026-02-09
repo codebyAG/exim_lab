@@ -20,10 +20,8 @@ class DashboardShimmer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 1. HEADER SHIMMER
-          SizedBox(height: 2.h),
-
-          SizedBox(height: 2.h),
-
+          // SizedBox(height: 2.h),
+          // SizedBox(height: 3.h),
           Shimmer.fromColors(
             baseColor: baseColor,
             highlightColor: highlightColor,
@@ -81,12 +79,11 @@ class DashboardShimmer extends StatelessWidget {
 class _CarouselShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 22.h,
-      margin: EdgeInsets.symmetric(horizontal: 5.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5.w),
+      child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
+        child: Container(height: 22.h, color: Colors.white),
       ),
     );
   }
