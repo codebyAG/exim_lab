@@ -60,7 +60,9 @@ class _HomeShortsSectionState extends State<HomeShortsSection> {
               child: ListView.separated(
                 padding: EdgeInsets.symmetric(horizontal: 5.w),
                 scrollDirection: Axis.horizontal,
-                itemCount: provider.shorts.length,
+                itemCount: provider.shorts.length > 5
+                    ? 5
+                    : provider.shorts.length,
                 separatorBuilder: (context, index) => SizedBox(width: 3.w),
                 itemBuilder: (context, index) {
                   final short = provider.shorts[index];
