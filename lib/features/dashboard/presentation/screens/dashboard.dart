@@ -182,15 +182,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
             FadeInDown(
               duration: const Duration(milliseconds: 1000),
               child: Container(
-                margin: EdgeInsets.fromLTRB(4.w, 2.h, 4.w, 1.h),
-                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.5.h),
+                margin: EdgeInsets.only(bottom: 2.h),
+                padding: EdgeInsets.fromLTRB(5.w, 6.h, 5.w, 3.h),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [cs.primary, cs.primary.withValues(alpha: 0.85)],
                   ),
-                  borderRadius: BorderRadius.circular(32),
+                  borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(30),
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: cs.primary.withValues(alpha: 0.3),
@@ -198,9 +200,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       offset: const Offset(0, 10),
                     ),
                   ],
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    width: 1.5,
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      width: 1.5,
+                    ),
                   ),
                 ),
                 child: Column(
