@@ -49,6 +49,17 @@ class AnalyticsService {
     Map<String, Object> params,
   ) async {
     try {
+      // 🔸 Check for Token (Only log to strict Backend API if logged in)
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(
+        'auth_token',
+      ); // Ensure this matches login key
+
+      if (token == null || token.isEmpty) {
+        // debugPrint('ℹ️ Skipping Server Log (No Auth Token): $eventName');
+        return;
+      }
+
       await callApi(
         ApiConstants.logAnalytics,
         methodType: MethodType.post,
@@ -62,7 +73,7 @@ class AnalyticsService {
       );
       debugPrint('🚀 Server Analytics Logged: $eventName');
     } catch (e) {
-      debugPrint('⚠️ Server Analytics Error: $e');
+      // debugPrint('⚠️ Server Analytics Error: $e'); // Silent fail to avoid spam
     }
   }
 
