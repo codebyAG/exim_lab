@@ -177,243 +177,238 @@ class _DashboardScreenState extends State<DashboardScreen> {
           padding: EdgeInsets.zero,
           children: [
             // 1. PREMIUM FLOATING HEADER
-            FadeInDown(
-              duration: const Duration(milliseconds: 1000),
-              child: Container(
-                margin: EdgeInsets.only(bottom: 2.h),
-                padding: EdgeInsets.fromLTRB(5.w, 6.h, 5.w, 3.h),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [cs.primary, cs.primary.withValues(alpha: 0.85)],
+            Container(
+              margin: EdgeInsets.only(bottom: 2.h),
+              padding: EdgeInsets.fromLTRB(5.w, 6.h, 5.w, 3.h),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [cs.primary, cs.primary.withValues(alpha: 0.85)],
+                ),
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(30),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: cs.primary.withValues(alpha: 0.3),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
                   ),
-                  borderRadius: const BorderRadius.vertical(
-                    bottom: Radius.circular(30),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: cs.primary.withValues(alpha: 0.3),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
-                  border: Border(
-                    bottom: BorderSide(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      width: 1.5,
-                    ),
+                ],
+                border: Border(
+                  bottom: BorderSide(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    width: 1.5,
                   ),
                 ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                t.translate('welcome_back'),
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: Colors.white.withValues(alpha: 0.8),
-                                  letterSpacing: 0.5,
-                                  fontWeight: FontWeight.w500,
-                                ),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              t.translate('welcome_back'),
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: Colors.white.withValues(alpha: 0.8),
+                                letterSpacing: 0.5,
+                                fontWeight: FontWeight.w500,
                               ),
-                              const SizedBox(height: 4),
-                              Text(
-                                context.watch<AuthProvider>().user?.name ??
-                                    t.translate('guest_user'),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: theme.textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.w800,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              context.watch<AuthProvider>().user?.name ??
+                                  t.translate('guest_user'),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: theme.textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.w800,
+                                color: Colors.white,
+                                letterSpacing: -0.5,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.15),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                "Continue your journey",
+                                style: theme.textTheme.labelSmall?.copyWith(
                                   color: Colors.white,
-                                  letterSpacing: -0.5,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              const SizedBox(height: 6),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // NOTIFICATION BELL (REFINED)
+                      Consumer<NotificationsProvider>(
+                        builder: (context, notifProvider, child) {
+                          return Stack(
+                            clipBehavior: Clip.none,
+                            children: [
                               Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 4,
-                                ),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.15),
-                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.white.withValues(alpha: 0.2),
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.3),
+                                    width: 1.5,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
                                 ),
-                                child: Text(
-                                  "Continue your journey",
-                                  style: theme.textTheme.labelSmall?.copyWith(
+                                child: IconButton(
+                                  onPressed: () {
+                                    AppNavigator.push(
+                                      context,
+                                      const NotificationsScreen(),
+                                    );
+                                  },
+                                  icon: const Icon(
+                                    Icons.notifications_outlined,
                                     color: Colors.white,
-                                    fontWeight: FontWeight.w600,
+                                    size: 20,
+                                  ),
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(
+                                    minWidth: 40,
+                                    minHeight: 40,
                                   ),
                                 ),
+                              ),
+                              if (notifProvider.unreadCount > 0)
+                                Positioned(
+                                  right: 0,
+                                  top: 0,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                      vertical: 3,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: cs.error,
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: cs.primary,
+                                        width: 2,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius: 4,
+                                        ),
+                                      ],
+                                    ),
+                                    constraints: const BoxConstraints(
+                                      minWidth: 20,
+                                      minHeight: 20,
+                                    ),
+                                    child: Text(
+                                      '${notifProvider.unreadCount}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          );
+                        },
+                      ),
+                      SizedBox(width: 3.w),
+
+                      // PROFILE (No border, just clean image)
+                      InkWell(
+                        onTap: () {
+                          AppNavigator.push(context, const ProfileScreen());
+                        },
+                        child: Container(
+                          height: 40,
+                          width: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.1),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
                               ),
                             ],
+                            border: Border.all(color: Colors.white, width: 2),
                           ),
-                        ),
-                        // NOTIFICATION BELL (REFINED)
-                        Consumer<NotificationsProvider>(
-                          builder: (context, notifProvider, child) {
-                            return Stack(
-                              clipBehavior: Clip.none,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withValues(alpha: 0.2),
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: Colors.white.withValues(
-                                        alpha: 0.3,
-                                      ),
-                                      width: 1.5,
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withValues(
-                                          alpha: 0.1,
+                          child: ClipOval(
+                            child:
+                                (context
+                                            .watch<AuthProvider>()
+                                            .user
+                                            ?.avatarUrl !=
+                                        null &&
+                                    context
+                                        .watch<AuthProvider>()
+                                        .user!
+                                        .avatarUrl!
+                                        .isNotEmpty)
+                                ? CachedNetworkImage(
+                                    imageUrl: context
+                                        .watch<AuthProvider>()
+                                        .user!
+                                        .avatarUrl!,
+                                    fit: BoxFit.cover,
+                                    errorWidget: (context, url, error) {
+                                      return Container(
+                                        color: Colors.white,
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.person_rounded,
+                                            size: 28,
+                                            color: cs.primary,
+                                          ),
                                         ),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 4),
-                                      ),
-                                    ],
-                                  ),
-                                  child: IconButton(
-                                    onPressed: () {
-                                      AppNavigator.push(
-                                        context,
-                                        const NotificationsScreen(),
                                       );
                                     },
-                                    icon: const Icon(
-                                      Icons.notifications_outlined,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                    padding: EdgeInsets.zero,
-                                    constraints: const BoxConstraints(
-                                      minWidth: 40,
-                                      minHeight: 40,
-                                    ),
-                                  ),
-                                ),
-                                if (notifProvider.unreadCount > 0)
-                                  Positioned(
-                                    right: 0,
-                                    top: 0,
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 6,
-                                        vertical: 3,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: cs.error,
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(
-                                          color: cs.primary,
-                                          width: 2,
-                                        ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black12,
-                                            blurRadius: 4,
-                                          ),
-                                        ],
-                                      ),
-                                      constraints: const BoxConstraints(
-                                        minWidth: 20,
-                                        minHeight: 20,
-                                      ),
-                                      child: Text(
-                                        '${notifProvider.unreadCount}',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        textAlign: TextAlign.center,
+                                    placeholder: (context, url) =>
+                                        Container(color: Colors.white),
+                                  )
+                                : Container(
+                                    color: Colors.white,
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.person_rounded,
+                                        size: 20,
+                                        color: cs.primary,
                                       ),
                                     ),
                                   ),
-                              ],
-                            );
-                          },
-                        ),
-                        SizedBox(width: 3.w),
-
-                        // PROFILE (No border, just clean image)
-                        InkWell(
-                          onTap: () {
-                            AppNavigator.push(context, const ProfileScreen());
-                          },
-                          child: Container(
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.1),
-                                  blurRadius: 12,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                              border: Border.all(color: Colors.white, width: 2),
-                            ),
-                            child: ClipOval(
-                              child:
-                                  (context
-                                              .watch<AuthProvider>()
-                                              .user
-                                              ?.avatarUrl !=
-                                          null &&
-                                      context
-                                          .watch<AuthProvider>()
-                                          .user!
-                                          .avatarUrl!
-                                          .isNotEmpty)
-                                  ? CachedNetworkImage(
-                                      imageUrl: context
-                                          .watch<AuthProvider>()
-                                          .user!
-                                          .avatarUrl!,
-                                      fit: BoxFit.cover,
-                                      errorWidget: (context, url, error) {
-                                        return Container(
-                                          color: Colors.white,
-                                          child: Center(
-                                            child: Icon(
-                                              Icons.person_rounded,
-                                              size: 28,
-                                              color: cs.primary,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      placeholder: (context, url) =>
-                                          Container(color: Colors.white),
-                                    )
-                                  : Container(
-                                      color: Colors.white,
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.person_rounded,
-                                          size: 20,
-                                          color: cs.primary,
-                                        ),
-                                      ),
-                                    ),
-                            ),
                           ),
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
 
