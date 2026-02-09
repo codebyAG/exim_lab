@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_shimmer.dart';
+import 'package:shimmer/shimmer.dart';
 
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/shorts/presentation/providers/shorts_provider.dart';
@@ -35,9 +37,32 @@ class _HomeShortsSectionState extends State<HomeShortsSection> {
     return Consumer<ShortsProvider>(
       builder: (context, provider, child) {
         if (provider.isLoading) {
-          return SizedBox(
-            height: 28.h,
-            child: const Center(child: CircularProgressIndicator()),
+          return Padding(
+            padding: EdgeInsets.only(top: 1.h),
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 5.w,
+                      vertical: 1.h,
+                    ),
+                    child: Container(
+                      width: 150,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 28.h, child: const ShortsShimmer()),
+                ],
+              ),
+            ),
           );
         }
 

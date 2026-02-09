@@ -37,7 +37,7 @@ class DashboardShimmer extends StatelessWidget {
                 // 3. SHORTS SHIMMER
                 _SectionTitleShimmer(),
                 SizedBox(height: 1.5.h),
-                _ShortsShimmer(),
+                const ShortsShimmer(),
                 SizedBox(height: 4.h),
 
                 // 4. QUICK ACTIONS SHIMMER
@@ -92,19 +92,22 @@ class _CarouselShimmer extends StatelessWidget {
   }
 }
 
-class _ShortsShimmer extends StatelessWidget {
+class ShortsShimmer extends StatelessWidget {
+  const ShortsShimmer({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 160,
       child: ListView.separated(
+        physics: const NeverScrollableScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: 5.w),
         scrollDirection: Axis.horizontal,
         itemCount: 5,
         // Shorts Shimmer
-        separatorBuilder: (_, _) => SizedBox(width: 12),
+        separatorBuilder: (_, _) => SizedBox(width: 3.w),
         itemBuilder: (_, _) => Container(
-          width: 100,
+          width: 35.w,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
