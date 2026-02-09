@@ -5,21 +5,18 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ReferrerService {
-  static const String _prefKey = 'referrer_logged';
+  static const String _prefReferrerLogged = 'referrer_logged_public';
 
-  /// Checks if referrer needs to be logged and does so if it's the first time.
-  Future<void> checkAndLogReferrer() async {
-    // Only for Android
+  /// 1. TRACK INSTALL (Called in main.dart)
+  /// Fetches referrer details and sends to PUBLIC API immediately.
+  Future<void> trackInstallSource() async {
     if (!Platform.isAndroid) return;
 
     try {
       final prefs = await SharedPreferences.getInstance();
-      final isLogged = prefs.getBool(_prefKey) ?? false;
+      final isLogged = prefs.getBool(_prefReferrerLogged) ?? false;
 
-      if (isLogged) {
-        debugPrint('ℹ️ Referrer already logged.');
-        return;
-      }
+      if (isLogged) return; // Already logged
 
       debugPrint('🔍 Fetching Install Referrer...');
       final ReferrerDetails referrerDetails =
@@ -29,54 +26,41 @@ class ReferrerService {
       final clickTimestamp = referrerDetails.referrerClickTimestampSeconds;
       final installTimestamp = referrerDetails.installBeginTimestampSeconds;
 
-      debugPrint('✅ Referrer Fetched: $referrerUrl');
+      debugPrint('✅ Install Referrer Fetched: $referrerUrl');
 
-      // Parse UTM parameters manually
-      final Map<String, String> utmParams = {};
+      // Prepare Data
+      final Map<String, dynamic> data = {
+        'referrer_url': referrerUrl ?? 'unknown',
+        'click_timestamp': clickTimestamp,
+        'install_timestamp': installTimestamp,
+      };
+
+      // Parse UTM manually
       if (referrerUrl != null) {
         final pairs = referrerUrl.split('&');
         for (final pair in pairs) {
           final parts = pair.split('=');
           if (parts.length == 2) {
-            utmParams[parts[0]] = parts[1];
+            data[parts[0]] = parts[1];
           }
         }
       }
 
-      // Log to Analytics
-      final params = {
-        'referrer_url': referrerUrl ?? 'unknown',
-        'click_timestamp': clickTimestamp,
-        'install_timestamp': installTimestamp,
-      };
-      params.addAll(utmParams);
+      // 🚀 Log to PUBLIC API (No Token needed)
+      await AnalyticsService().logInstallSource(data);
 
-      // Set User Properties for Firebase Segmentation
-      if (utmParams.containsKey('utm_source')) {
+      // Also set user property for Firebase (it caches it until next event)
+      if (data.containsKey('utm_source')) {
         await AnalyticsService().setUserProperty(
           name: 'install_source',
-          value: utmParams['utm_source']!,
+          value: data['utm_source'] as String,
         );
       }
-      if (utmParams.containsKey('utm_medium')) {
-        await AnalyticsService().setUserProperty(
-          name: 'install_medium',
-          value: utmParams['utm_medium']!,
-        );
-      }
-      if (utmParams.containsKey('utm_campaign')) {
-        await AnalyticsService().setUserProperty(
-          name: 'install_campaign',
-          value: utmParams['utm_campaign']!,
-        );
-      }
-
-      await AnalyticsService().logEvent('install_referrer', parameters: params);
 
       // Mark as logged
-      await prefs.setBool(_prefKey, true);
+      await prefs.setBool(_prefReferrerLogged, true);
     } catch (e) {
-      debugPrint('⚠️ Error fetching install referrer: $e');
+      debugPrint('⚠️ Error tracking install source: $e');
     }
   }
 }

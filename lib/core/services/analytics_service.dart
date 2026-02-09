@@ -66,6 +66,25 @@ class AnalyticsService {
     }
   }
 
+  // 🔹 PUBLIC INSTALL TRACKING (No Token)
+  Future<void> logInstallSource(Map<String, dynamic> params) async {
+    try {
+      await callApi(
+        ApiConstants.logInstall,
+        methodType: MethodType.post,
+        requestData: {
+          'parameters': params,
+          'timestamp': DateTime.now().toIso8601String(),
+          // No phone number because this matches anonymous install
+        },
+        parser: (json) => json,
+      );
+      debugPrint('🚀 Install Source Logged to Public API');
+    } catch (e) {
+      debugPrint('⚠️ Error logging install source: $e');
+    }
+  }
+
   // 🔹 SCREEN TRACKING (Manual if needed, auto is handled by Observer)
   Future<void> logScreenView(String screenName) async {
     await _analytics.logScreenView(screenName: screenName);

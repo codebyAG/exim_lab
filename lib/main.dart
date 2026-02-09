@@ -100,8 +100,8 @@ void main() async {
   final shortsProvider = ShortsProvider(ShortsService());
   // await shortsProvider.fetchShorts(); // Maybe await this too if critical, or let it load in background
 
-  // 📊 Check Install Referrer (Android)
-  ReferrerService().checkAndLogReferrer();
+  // 📊 Check Install Referrer (Public API - No Token)
+  ReferrerService().trackInstallSource();
 
   runApp(
     MultiProvider(
