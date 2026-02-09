@@ -15,15 +15,22 @@ class AuthDataSource {
   Future<Map<String, dynamic>> verifyOtp({
     required String mobile,
     required String otp,
+    String? fcmToken,
   }) async {
+    final Map<String, dynamic> body = {
+      "mobile": mobile,
+      "role": "USER",
+      "otp": otp,
+      "organizationId": AppContants.organizationId,
+    };
+
+    if (fcmToken != null) {
+      body['fcm_token'] = fcmToken;
+    }
+
     return await callApi(
       ApiConstants.verifyOtp,
-      requestData: {
-        "mobile": mobile,
-        "role": "USER",
-        "otp": otp,
-        "organizationId": AppContants.organizationId,
-      },
+      requestData: body,
       parser: (json) => json as Map<String, dynamic>,
       methodType: MethodType.post,
     );

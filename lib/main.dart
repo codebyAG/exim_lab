@@ -75,12 +75,15 @@ void main() async {
   FirebaseMessagingService firebaseMessagingService =
       FirebaseMessagingService();
   await firebaseMessagingService.setupFirebase();
+  await firebaseMessagingService.setupTokenSync(); // Listen for refresh
 
   FirebaseMessaging.onBackgroundMessage(
     FirebaseMessagingService.firebaseBackgroundMessage,
   );
 
-  await firebaseMessagingService.getFirebaseToken(); // Just to log it
+  final fcmToken = await firebaseMessagingService.getFirebaseToken();
+  // if (fcmToken != null) { ... }  <-- Removed sync logic, now just saves locally
+
   await firebaseMessagingService.subsScribetoAlltopic();
 
   // 🔒 LOCK ORIENTATION (PORTRAIT ONLY)

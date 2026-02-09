@@ -86,9 +86,13 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
+      final fcmToken = await _sharedPrefService
+          .getFcmToken(); // Get Saved FCM Token
+
       final response = await _dataSource.verifyOtp(
         mobile: _currentMobile!,
         otp: otp,
+        fcmToken: fcmToken,
       );
 
       if (response['user'] != null) {

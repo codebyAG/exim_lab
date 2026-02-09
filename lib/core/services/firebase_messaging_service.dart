@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:exim_lab/core/services/shared_pref_service.dart';
 
 class FirebaseMessagingService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -14,19 +15,29 @@ class FirebaseMessagingService {
     );
   }
 
+  Future<void> setupTokenSync() async {
+    _firebaseMessaging.onTokenRefresh.listen((token) async {
+      await SharedPrefService().saveFcmToken(token);
+    });
+  }
+
+  Future<String?> getFirebaseToken() async {
+    try {
+      String? token = await _firebaseMessaging.getToken();
+      if (token != null) {
+        await SharedPrefService().saveFcmToken(token);
+      }
+      return token;
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<void> subsScribetoAlltopic() async {
     try {
       await _firebaseMessaging.subscribeToTopic("live");
     } catch (e) {
       // ignore
-    }
-  }
-
-  Future<String?> getFirebaseToken() async {
-    try {
-      return await _firebaseMessaging.getToken();
-    } catch (e) {
-      return null;
     }
   }
 

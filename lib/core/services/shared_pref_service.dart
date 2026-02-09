@@ -5,6 +5,25 @@ import 'package:exim_lab/features/login/data/models/user_model.dart';
 class SharedPrefService {
   static const String _userKey = 'user_data';
   static const String _tokenKey = 'auth_token';
+  static const String _fcmTokenKey = 'fcm_token';
+
+  Future<void> saveFcmToken(String token) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_fcmTokenKey, token);
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  Future<String?> getFcmToken() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getString(_fcmTokenKey);
+    } catch (e) {
+      return null;
+    }
+  }
 
   Future<void> saveToken(String token) async {
     try {
