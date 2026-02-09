@@ -3,14 +3,23 @@ import 'package:flutter/material.dart';
 class AppNavigator {
   // 🔹 SIMPLE PUSH
   static Future<T?> push<T>(BuildContext context, Widget page) {
-    return Navigator.push<T>(context, MaterialPageRoute(builder: (_) => page));
+    return Navigator.push<T>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => page,
+        settings: RouteSettings(name: page.runtimeType.toString()),
+      ),
+    );
   }
 
   // 🔹 PUSH & REPLACE (WELCOME → LOGIN)
   static Future<T?> replace<T>(BuildContext context, Widget page) {
     return Navigator.pushReplacement<T, T>(
       context,
-      MaterialPageRoute(builder: (_) => page),
+      MaterialPageRoute(
+        builder: (_) => page,
+        settings: RouteSettings(name: page.runtimeType.toString()),
+      ),
     );
   }
 
@@ -18,7 +27,10 @@ class AppNavigator {
   static Future<T?> clearAndGo<T>(BuildContext context, Widget page) {
     return Navigator.pushAndRemoveUntil<T>(
       context,
-      MaterialPageRoute(builder: (_) => page),
+      MaterialPageRoute(
+        builder: (_) => page,
+        settings: RouteSettings(name: page.runtimeType.toString()),
+      ),
       (_) => false,
     );
   }
