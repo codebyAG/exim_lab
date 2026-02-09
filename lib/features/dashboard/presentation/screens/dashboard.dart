@@ -46,8 +46,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await Future.delayed(const Duration(seconds: 2));
-
       // Fetch Dashboard Data
       if (mounted) {
         context.read<AnalyticsService>().logEvent('home_view');
