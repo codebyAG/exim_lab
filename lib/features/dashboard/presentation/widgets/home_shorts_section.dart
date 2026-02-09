@@ -37,31 +37,13 @@ class _HomeShortsSectionState extends State<HomeShortsSection> {
     return Consumer<ShortsProvider>(
       builder: (context, provider, child) {
         if (provider.isLoading) {
+          final isDark = Theme.of(context).brightness == Brightness.dark;
           return Padding(
             padding: EdgeInsets.only(top: 1.h),
             child: Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 5.w,
-                      vertical: 1.h,
-                    ),
-                    child: Container(
-                      width: 150,
-                      height: 24,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 28.h, child: const ShortsShimmer()),
-                ],
-              ),
+              baseColor: isDark ? Colors.grey[900]! : Colors.grey[300]!,
+              highlightColor: isDark ? Colors.grey[800]! : Colors.grey[100]!,
+              child: SizedBox(height: 28.h, child: const ShortsShimmer()),
             ),
           );
         }
