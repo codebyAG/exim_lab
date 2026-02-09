@@ -20,8 +20,6 @@ class DashboardShimmer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 1. HEADER SHIMMER
-          // SizedBox(height: 2.h),
-          // SizedBox(height: 3.h),
           Shimmer.fromColors(
             baseColor: baseColor,
             highlightColor: highlightColor,
