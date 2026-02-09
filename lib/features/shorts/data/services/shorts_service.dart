@@ -30,30 +30,37 @@ class ShortsService {
     List<ShortModel> shorts,
   ) async {
     final yt = YoutubeExplode();
-    final enrichedShorts = <ShortModel>[];
 
-    for (var short in shorts) {
-      try {
-        final videoId = VideoId(short.videoUrl); // Extract ID from URL
-        final video = await yt.videos.get(videoId);
+    try {
+      final futures = shorts.map((short) async {
+        try {
+          final videoId = VideoId(short.videoUrl);
 
-        enrichedShorts.add(
-          short.copyWith(
+          // Add a timeout to prevent one bad request from blocking everything
+          final video = await yt.videos
+              .get(videoId)
+              .timeout(
+                const Duration(seconds: 5),
+                onTimeout: () => throw Exception('Timeout'),
+              );
+
+          return short.copyWith(
             title: video.title,
             description: video.description,
             thumbnailUrl: video.thumbnails.highResUrl,
             viewCount: video.engagement.viewCount,
             likeCount: video.engagement.likeCount,
             metadataFetched: true,
-          ),
-        );
-      } catch (e) {
-        // log('Error fetching YouTube metadata for ${short.videoUrl}: $e');
-        enrichedShorts.add(short); // Fallback to original if YT fetch fails
-      }
-    }
+          );
+        } catch (e) {
+          // Log error if needed, but return original short to keep things moving
+          return short;
+        }
+      });
 
-    yt.close();
-    return enrichedShorts;
+      return await Future.wait(futures);
+    } finally {
+      yt.close();
+    }
   }
 }
