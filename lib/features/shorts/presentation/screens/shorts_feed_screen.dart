@@ -20,15 +20,24 @@ class _ShortsFeedScreenState extends State<ShortsFeedScreen> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: widget.initialIndex);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<AnalyticsService>().logShortsView();
-    });
   }
 
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  bool _hasLoggedInitial = false;
+
+  void _logShortView(ShortsProvider provider, int index) {
+    if (index >= 0 && index < provider.shorts.length) {
+      final short = provider.shorts[index];
+      context.read<AnalyticsService>().logShortsView(
+        shortId: short.id,
+        title: short.title,
+      );
+    }
   }
 
   @override
@@ -62,6 +71,16 @@ class _ShortsFeedScreenState extends State<ShortsFeedScreen> {
             );
           }
 
+          // Log initial view once data is available
+          if (!_hasLoggedInitial) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) {
+                _logShortView(provider, widget.initialIndex);
+                _hasLoggedInitial = true;
+              }
+            });
+          }
+
           return GestureDetector(
             onVerticalDragEnd: (details) {
               if (details.primaryVelocity! < -800) {
@@ -86,6 +105,7 @@ class _ShortsFeedScreenState extends State<ShortsFeedScreen> {
                   const ClampingScrollPhysics(), // Better for "snapping" feel
               onPageChanged: (index) {
                 provider.setCurrentIndex(index);
+                _logShortView(provider, index);
               },
               itemBuilder: (context, index) {
                 return ShortsPlayerItem(

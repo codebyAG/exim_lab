@@ -151,6 +151,7 @@ class EximLabApp extends StatelessWidget {
           ],
           navigatorObservers: [
             context.read<AnalyticsService>().getAnalyticsObserver(),
+            context.read<AnalyticsService>().getCustomObserver(),
           ],
 
           home: const SplashScreen(),

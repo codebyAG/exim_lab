@@ -4,6 +4,7 @@ import 'package:exim_lab/core/constants/analytics_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'custom_analytics_observer.dart';
 
 class AnalyticsService {
   FirebaseAnalytics get _analytics => FirebaseAnalytics.instance;
@@ -17,6 +18,9 @@ class AnalyticsService {
 
   FirebaseAnalyticsObserver getAnalyticsObserver() =>
       FirebaseAnalyticsObserver(analytics: _analytics);
+
+  CustomAnalyticsObserver getCustomObserver() =>
+      CustomAnalyticsObserver(analyticsService: this);
 
   // 🔹 GENERIC LOGGING
   Future<void> logEvent(String name, {Map<String, Object>? parameters}) async {
@@ -65,6 +69,10 @@ class AnalyticsService {
   // 🔹 SCREEN TRACKING (Manual if needed, auto is handled by Observer)
   Future<void> logScreenView(String screenName) async {
     await _analytics.logScreenView(screenName: screenName);
+    await logEvent(
+      AnalyticsConstants.screenName,
+      parameters: {AnalyticsConstants.screenName: screenName},
+    );
   }
 
   // 🔹 FIRST APP OPEN
@@ -294,8 +302,17 @@ class AnalyticsService {
   }
 
   // 🔹 SHORTS
-  Future<void> logShortsView() async {
-    await logEvent(AnalyticsConstants.shortsView);
+  Future<void> logShortsView({
+    required String shortId,
+    required String title,
+  }) async {
+    await logEvent(
+      AnalyticsConstants.shortsView,
+      parameters: {
+        AnalyticsConstants.shortId: shortId,
+        AnalyticsConstants.title: title,
+      },
+    );
   }
 
   // 🔹 AI CHAT

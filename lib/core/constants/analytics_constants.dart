@@ -55,4 +55,7 @@ class AnalyticsConstants {
 
   static const String videoId = 'video_id';
   static const String videoTitle = 'video_title';
+
+  static const String shortId = 'short_id';
+  static const String title = 'title';
 }
