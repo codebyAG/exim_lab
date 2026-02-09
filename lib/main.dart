@@ -33,6 +33,7 @@ import 'package:exim_lab/features/module_manager/presentation/providers/module_p
 import 'package:exim_lab/features/shorts/data/services/shorts_service.dart';
 import 'package:exim_lab/features/shorts/presentation/providers/shorts_provider.dart';
 import 'package:exim_lab/features/module_manager/data/services/module_service.dart';
+import 'package:exim_lab/features/dashboard/data/services/referrer_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -98,6 +99,9 @@ void main() async {
 
   final shortsProvider = ShortsProvider(ShortsService());
   // await shortsProvider.fetchShorts(); // Maybe await this too if critical, or let it load in background
+
+  // 📊 Check Install Referrer (Android)
+  ReferrerService().checkAndLogReferrer();
 
   runApp(
     MultiProvider(
