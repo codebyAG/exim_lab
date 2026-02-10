@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
+import 'package:sizer/sizer.dart';
+import 'package:animate_do/animate_do.dart';
 
 class GstCalculatorScreen extends StatefulWidget {
   const GstCalculatorScreen({super.key});
@@ -14,21 +16,31 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
   double _gstRate = 18;
   double? _gstAmount;
   double? _totalAmount;
+  bool _showResults = false;
+
+  @override
+  void dispose() {
+    _amountCtrl.dispose();
+    super.dispose();
+  }
 
   void _calculate() {
     final amount = double.tryParse(_amountCtrl.text) ?? 0;
-    final gst = amount * (_gstRate / 100);
-    final total = amount + gst;
+    if (amount > 0) {
+      final gst = amount * (_gstRate / 100);
+      final total = amount + gst;
 
-    setState(() {
-      _gstAmount = gst;
-      _totalAmount = total;
-    });
+      setState(() {
+        _gstAmount = gst;
+        _totalAmount = total;
+        _showResults = true;
+      });
 
-    context.read<AnalyticsService>().logToolUse(
-      toolName: 'GST Calculator',
-      action: 'Calculate',
-    );
+      context.read<AnalyticsService>().logToolUse(
+        toolName: 'GST Calculator',
+        action: 'Calculate',
+      );
+    }
   }
 
   @override
@@ -37,61 +49,173 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
     final cs = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: cs.surface,
+      backgroundColor: cs.surfaceContainerLowest,
       appBar: AppBar(
         title: const Text('GST Calculator'),
-        backgroundColor: cs.surface,
+        backgroundColor: cs.surfaceContainerLowest,
         elevation: 0,
+        scrolledUnderElevation: 0,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Header Card
+            Container(
+              padding: EdgeInsets.all(2.h),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    cs.tertiaryContainer,
+                    cs.tertiaryContainer.withValues(alpha: 0.7),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: cs.tertiary,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      Icons.receipt_long_rounded,
+                      color: cs.onTertiary,
+                      size: 28,
+                    ),
+                  ),
+                  SizedBox(width: 2.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'GST Calculator',
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: cs.onTertiaryContainer,
+                          ),
+                        ),
+                        SizedBox(height: 0.3.h),
+                        Text(
+                          'Calculate tax with multiple rates',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: cs.onTertiaryContainer.withValues(
+                              alpha: 0.8,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            SizedBox(height: 3.h),
+
+            // Input Section
+            Text(
+              'Base Amount',
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: cs.onSurfaceVariant,
+              ),
+            ),
+            SizedBox(height: 1.5.h),
+
             TextField(
               controller: _amountCtrl,
-              keyboardType: TextInputType.number,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
               decoration: InputDecoration(
-                labelText: 'Base Amount (₹)',
+                labelText: 'Amount',
+                prefixIcon: const Icon(Icons.currency_rupee_rounded, size: 20),
+                suffixText: '₹',
                 filled: true,
+                fillColor: cs.surface,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: cs.outlineVariant),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: cs.outlineVariant.withValues(alpha: 0.5),
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: cs.primary, width: 2),
                 ),
               ),
               onChanged: (_) => _calculate(),
             ),
-            const SizedBox(height: 24),
+
+            SizedBox(height: 3.h),
+
+            // GST Rate Selector
+            Text(
+              'Select GST Rate',
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: cs.onSurfaceVariant,
+              ),
+            ),
+            SizedBox(height: 1.5.h),
+
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [5, 12, 18, 28].map((rate) {
                 final isSelected = _gstRate == rate;
                 return Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: GestureDetector(
+                    padding: EdgeInsets.symmetric(horizontal: 1.w),
+                    child: InkWell(
                       onTap: () {
                         setState(() => _gstRate = rate.toDouble());
                         if (_amountCtrl.text.isNotEmpty) _calculate();
                       },
+                      borderRadius: BorderRadius.circular(12),
                       child: Container(
-                        height: 50,
-                        alignment: Alignment.center,
+                        height: 56,
                         decoration: BoxDecoration(
-                          color: isSelected
-                              ? cs.primary
-                              : cs.surfaceContainerHighest,
+                          color: isSelected ? cs.tertiary : cs.surface,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color: isSelected
-                                ? cs.primary
-                                : cs.outline.withValues(alpha: 0.2),
+                                ? cs.tertiary
+                                : cs.outlineVariant.withValues(alpha: 0.5),
+                            width: isSelected ? 2 : 1,
                           ),
                         ),
-                        child: Text(
-                          '$rate%',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: isSelected ? cs.onPrimary : cs.onSurface,
-                          ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '$rate%',
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: isSelected
+                                    ? cs.onTertiary
+                                    : cs.onSurface,
+                              ),
+                            ),
+                            if (isSelected) ...[
+                              SizedBox(height: 0.2.h),
+                              Icon(
+                                Icons.check_circle_rounded,
+                                size: 14,
+                                color: cs.onTertiary,
+                              ),
+                            ],
+                          ],
                         ),
                       ),
                     ),
@@ -99,17 +223,47 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
                 );
               }).toList(),
             ),
-            const SizedBox(height: 32),
-            if (_totalAmount != null) ...[
-              _resultTile(
-                'GST Amount ($_gstRate%)',
-                '₹${_gstAmount!.toStringAsFixed(2)}',
-              ),
-              const SizedBox(height: 12),
-              _resultTile(
-                'Total Amount',
-                '₹${_totalAmount!.toStringAsFixed(2)}',
-                isHighlight: true,
+
+            // Results Section
+            if (_showResults && _totalAmount != null) ...[
+              SizedBox(height: 3.h),
+              FadeInUp(
+                duration: const Duration(milliseconds: 400),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.check_circle_outline_rounded,
+                          color: cs.tertiary,
+                          size: 20,
+                        ),
+                        SizedBox(width: 1.w),
+                        Text(
+                          'Tax Breakdown',
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: cs.tertiary,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 1.5.h),
+                    _resultCard(
+                      icon: Icons.percent_rounded,
+                      title: 'GST Amount ($_gstRate%)',
+                      value: '₹${_gstAmount!.toStringAsFixed(2)}',
+                    ),
+                    SizedBox(height: 1.2.h),
+                    _resultCard(
+                      icon: Icons.account_balance_wallet_outlined,
+                      title: 'Total Amount',
+                      value: '₹${_totalAmount!.toStringAsFixed(2)}',
+                      isHighlight: true,
+                    ),
+                  ],
+                ),
               ),
             ],
           ],
@@ -118,27 +272,57 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
     );
   }
 
-  Widget _resultTile(String title, String value, {bool isHighlight = false}) {
+  Widget _resultCard({
+    required IconData icon,
+    required String title,
+    required String value,
+    bool isHighlight = false,
+  }) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(2.h),
       decoration: BoxDecoration(
-        color: isHighlight ? cs.primary.withValues(alpha: 0.1) : cs.surface,
+        color: isHighlight ? cs.tertiaryContainer : cs.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isHighlight ? cs.primary : cs.outline.withValues(alpha: 0.1),
+          color: isHighlight
+              ? cs.tertiary.withValues(alpha: 0.3)
+              : cs.outlineVariant.withValues(alpha: 0.3),
         ),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: theme.textTheme.titleMedium),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: isHighlight
+                  ? cs.tertiary.withValues(alpha: 0.15)
+                  : cs.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              icon,
+              color: isHighlight ? cs.tertiary : cs.onSurfaceVariant,
+              size: 24,
+            ),
+          ),
+          SizedBox(width: 3.w),
+          Expanded(
+            child: Text(
+              title,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: cs.onSurfaceVariant,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
           Text(
             value,
             style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: isHighlight ? cs.primary : cs.onSurface,
+              fontWeight: FontWeight.w700,
+              color: isHighlight ? cs.tertiary : cs.onSurface,
             ),
           ),
         ],
