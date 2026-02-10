@@ -53,7 +53,8 @@ class _OtpScreenState extends State<OtpScreen> {
   void _handleResend() async {
     if (_resendSeconds > 0) return;
     final authProvider = context.read<AuthProvider>();
-    final success = await authProvider.sendOtp(authProvider.currentMobile ?? '');
+    final success =
+        await authProvider.sendOtp(authProvider.currentMobile ?? '');
     if (success && mounted) {
       _startResendTimer();
     }
@@ -62,9 +63,9 @@ class _OtpScreenState extends State<OtpScreen> {
   void _handleVerify() async {
     final t = AppLocalizations.of(context);
     if (_otp.length != 4) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(t.translate('enter_valid_otp'))));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(t.translate('enter_valid_otp'))),
+      );
       return;
     }
 
@@ -91,11 +92,13 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final cs = theme.colorScheme;
     final t = AppLocalizations.of(context);
+    final phone = context.read<AuthProvider>().currentMobile;
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: theme.colorScheme.surface,
+      backgroundColor: cs.surface,
       body: SafeArea(
         child: CustomScrollView(
           physics: const ClampingScrollPhysics(),
@@ -110,66 +113,112 @@ class _OtpScreenState extends State<OtpScreen> {
                     // BACK
                     IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: theme.colorScheme.onSurface,
+                      icon: Icon(Icons.arrow_back, color: cs.onSurface),
+                      padding: EdgeInsets.zero,
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // BRAND MARK
+                    FadeInDown(
+                      duration: const Duration(milliseconds: 600),
+                      child: Container(
+                        width: 52,
+                        height: 52,
+                        decoration: BoxDecoration(
+                          color: cs.primary.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: Icon(
+                          Icons.lock_open_rounded,
+                          color: cs.primary,
+                          size: 28,
+                        ),
                       ),
                     ),
 
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 20),
 
                     // HEADER
                     FadeInDown(
-                      duration: const Duration(milliseconds: 800),
+                      delay: const Duration(milliseconds: 100),
+                      duration: const Duration(milliseconds: 600),
                       child: Text(
                         t.translate('verify_number'),
                         style: theme.textTheme.headlineMedium?.copyWith(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w800,
+                          height: 1.1,
                         ),
                       ),
                     ),
 
                     const SizedBox(height: 8),
 
+                    // SUBTITLE — with phone number
                     FadeInDown(
                       delay: const Duration(milliseconds: 200),
-                      duration: const Duration(milliseconds: 800),
-                      child: Text(
-                        t.translate('otp_subtitle'),
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.65,
-                          ),
-                        ),
-                      ),
+                      duration: const Duration(milliseconds: 600),
+                      child: phone != null
+                          ? RichText(
+                              text: TextSpan(
+                                style: theme.textTheme.bodyLarge?.copyWith(
+                                  color: cs.onSurface.withValues(alpha: 0.55),
+                                ),
+                                children: [
+                                  const TextSpan(text: 'Code sent to  '),
+                                  TextSpan(
+                                    text: '+91 $phone',
+                                    style: TextStyle(
+                                      color: cs.onSurface,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Text(
+                              t.translate('otp_subtitle'),
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                color: cs.onSurface.withValues(alpha: 0.55),
+                              ),
+                            ),
                     ),
 
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 44),
 
-                    // OTP FIELD
+                    // OTP FIELD — box shape
                     FadeInLeft(
-                      delay: const Duration(milliseconds: 400),
+                      delay: const Duration(milliseconds: 350),
+                      duration: const Duration(milliseconds: 500),
                       child: PinCodeTextField(
                         appContext: context,
                         length: 4,
                         keyboardType: TextInputType.number,
                         autoFocus: true,
-                        animationType: AnimationType.fade,
-                        cursorColor: theme.colorScheme.primary,
-                        textStyle: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
+                        animationType: AnimationType.scale,
+                        cursorColor: cs.primary,
+                        textStyle: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: cs.onSurface,
                         ),
                         pinTheme: PinTheme(
-                          shape: PinCodeFieldShape.underline,
-                          fieldHeight: 48,
-                          fieldWidth: 42,
-                          activeColor: theme.colorScheme.primary,
-                          selectedColor: theme.colorScheme.primary,
-                          inactiveColor: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.3,
-                          ),
+                          shape: PinCodeFieldShape.box,
+                          borderRadius: BorderRadius.circular(14),
+                          fieldHeight: 60,
+                          fieldWidth: 60,
+                          activeFillColor: cs.primary.withValues(alpha: 0.08),
+                          selectedFillColor:
+                              cs.primary.withValues(alpha: 0.08),
+                          inactiveFillColor:
+                              cs.onSurface.withValues(alpha: 0.04),
+                          activeColor: cs.primary,
+                          selectedColor: cs.primary,
+                          inactiveColor:
+                              cs.outline.withValues(alpha: 0.5),
+                          borderWidth: 1.5,
                         ),
+                        enableActiveFill: true,
                         onChanged: (value) {
                           setState(() => _otp = value);
                           if (value.length == 4) {
@@ -183,32 +232,41 @@ class _OtpScreenState extends State<OtpScreen> {
 
                     // RESEND
                     FadeInLeft(
-                      delay: const Duration(milliseconds: 600),
+                      delay: const Duration(milliseconds: 450),
+                      duration: const Duration(milliseconds: 500),
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                          onPressed: _resendSeconds > 0 ? null : _handleResend,
+                          onPressed:
+                              _resendSeconds > 0 ? null : _handleResend,
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
                           child: Text(
                             _resendSeconds > 0
                                 ? '${t.translate('resend_otp')} (${_resendSeconds}s)'
                                 : t.translate('resend_otp'),
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: _resendSeconds > 0
-                                  ? theme.colorScheme.onSurface.withValues(alpha: 0.4)
-                                  : theme.colorScheme.primary,
+                                  ? cs.onSurface.withValues(alpha: 0.35)
+                                  : cs.primary,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
                       ),
                     ),
 
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 36),
 
                     // VERIFY BUTTON
                     Consumer<AuthProvider>(
                       builder: (context, provider, child) {
                         return FadeInUp(
-                          delay: const Duration(milliseconds: 800),
+                          delay: const Duration(milliseconds: 550),
+                          duration: const Duration(milliseconds: 500),
                           child: SizedBox(
                             width: double.infinity,
                             height: 56,
@@ -217,22 +275,27 @@ class _OtpScreenState extends State<OtpScreen> {
                                   ? null
                                   : _handleVerify,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: theme.colorScheme.primary,
+                                backgroundColor: cs.primary,
+                                foregroundColor: cs.onPrimary,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(14),
+                                  borderRadius: BorderRadius.circular(16),
                                 ),
                                 elevation: 0,
                               ),
                               child: provider.isLoading
-                                  ? const CircularProgressIndicator(
-                                      color: Colors.white,
+                                  ? const SizedBox(
+                                      width: 22,
+                                      height: 22,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 2.5,
+                                      ),
                                     )
                                   : Text(
                                       t.translate('verify'),
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                        color: theme.colorScheme.onPrimary,
+                                      style: const TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w700,
                                       ),
                                     ),
                             ),
@@ -248,14 +311,13 @@ class _OtpScreenState extends State<OtpScreen> {
                       padding: const EdgeInsets.only(bottom: 20),
                       child: Center(
                         child: FadeInUp(
-                          delay: const Duration(milliseconds: 1000),
+                          delay: const Duration(milliseconds: 700),
+                          duration: const Duration(milliseconds: 500),
                           child: Text(
                             t.translate('otp_footer'),
                             textAlign: TextAlign.center,
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurface.withValues(
-                                alpha: 0.5,
-                              ),
+                              color: cs.onSurface.withValues(alpha: 0.4),
                             ),
                           ),
                         ),

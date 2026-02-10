@@ -56,10 +56,11 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final cs = theme.colorScheme;
     final t = AppLocalizations.of(context);
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
+      backgroundColor: cs.surface,
       body: SafeArea(
         child: CustomScrollView(
           physics: const ClampingScrollPhysics(),
@@ -71,114 +72,183 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 🔹 BACK
+                    // BACK
                     IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: theme.colorScheme.onSurface,
-                      ),
+                      icon: Icon(Icons.arrow_back, color: cs.onSurface),
+                      padding: EdgeInsets.zero,
                     ),
 
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 20),
 
-                    // 🔹 HEADER
+                    // BRAND MARK
                     FadeInDown(
-                      duration: const Duration(milliseconds: 800),
-                      child: Text(
-                        t.translate('welcome_back'),
-                        style: theme.textTheme.headlineMedium?.copyWith(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w600,
+                      duration: const Duration(milliseconds: 600),
+                      child: Container(
+                        width: 52,
+                        height: 52,
+                        decoration: BoxDecoration(
+                          color: cs.primary.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: Icon(
+                          Icons.public_rounded,
+                          color: cs.primary,
+                          size: 28,
                         ),
                       ),
                     ),
 
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 20),
+
+                    // HEADER
+                    FadeInDown(
+                      delay: const Duration(milliseconds: 100),
+                      duration: const Duration(milliseconds: 600),
+                      child: Text(
+                        t.translate('welcome_back'),
+                        style: theme.textTheme.headlineMedium?.copyWith(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w800,
+                          height: 1.1,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 6),
 
                     FadeInDown(
                       delay: const Duration(milliseconds: 200),
-                      duration: const Duration(milliseconds: 800),
+                      duration: const Duration(milliseconds: 600),
                       child: Text(
                         t.translate('login_subtitle'),
                         style: theme.textTheme.bodyLarge?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.65,
-                          ),
+                          color: cs.onSurface.withValues(alpha: 0.55),
                         ),
                       ),
                     ),
 
                     const SizedBox(height: 40),
 
-                    // 🔹 PHONE LABEL
+                    // PHONE LABEL
                     FadeInLeft(
-                      delay: const Duration(milliseconds: 400),
+                      delay: const Duration(milliseconds: 350),
+                      duration: const Duration(milliseconds: 500),
                       child: Text(
                         t.translate('phone_hint'),
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: theme.colorScheme.onSurface,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: cs.onSurface,
                         ),
                       ),
                     ),
 
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 10),
 
-                    // 🔹 INPUT
+                    // PHONE INPUT — filled rounded
                     FadeInLeft(
-                      delay: const Duration(milliseconds: 500),
-                      child: TextField(
-                        controller: _phoneController,
-                        keyboardType: TextInputType.phone,
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          fontSize: 18,
+                      delay: const Duration(milliseconds: 450),
+                      duration: const Duration(milliseconds: 500),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: cs.onSurface.withValues(alpha: 0.05),
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(
+                            color: cs.outline.withValues(alpha: 0.6),
+                          ),
                         ),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(10),
-                        ],
-                        decoration: InputDecoration(
-                          prefixText: '+91 ',
-                          hintText: 'XXXXXXXXXX',
-                          contentPadding: const EdgeInsets.symmetric(
-                            vertical: 14,
+                        child: Row(
+                          children: [
+                            // Country code pill
+                            Container(
+                              margin: const EdgeInsets.all(6),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: cs.primary.withValues(alpha: 0.10),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                '🇮🇳  +91',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  color: cs.onSurface,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                            // Text field
+                            Expanded(
+                              child: TextField(
+                                controller: _phoneController,
+                                keyboardType: TextInputType.phone,
+                                style: theme.textTheme.bodyLarge?.copyWith(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 1.5,
+                                ),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(10),
+                                ],
+                                decoration: InputDecoration(
+                                  hintText: '00000 00000',
+                                  hintStyle: theme.textTheme.bodyLarge?.copyWith(
+                                    color: cs.onSurface.withValues(alpha: 0.3),
+                                    fontSize: 17,
+                                    letterSpacing: 1.5,
+                                  ),
+                                  border: InputBorder.none,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                    horizontal: 4,
+                                  ),
+                                ),
+                                onSubmitted: (_) => _handleContinue(),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    // HELPER TEXT
+                    FadeInLeft(
+                      delay: const Duration(milliseconds: 550),
+                      duration: const Duration(milliseconds: 500),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.info_outline_rounded,
+                            size: 13,
+                            color: cs.onSurface.withValues(alpha: 0.4),
                           ),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: theme.dividerColor),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: theme.colorScheme.primary,
-                              width: 2,
+                          const SizedBox(width: 6),
+                          Flexible(
+                            child: Text(
+                              t.translate('otp_info'),
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: cs.onSurface.withValues(alpha: 0.45),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 12),
-
-                    // 🔹 HELPER TEXT
-                    FadeInLeft(
-                      delay: const Duration(milliseconds: 600),
-                      child: Text(
-                        t.translate('otp_info'),
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.55,
-                          ),
-                        ),
+                        ],
                       ),
                     ),
 
                     const SizedBox(height: 32),
 
-                    // 🔹 CONTINUE BUTTON
+                    // CONTINUE BUTTON
                     Consumer<AuthProvider>(
                       builder: (context, provider, child) {
                         return FadeInUp(
-                          delay: const Duration(milliseconds: 800),
+                          delay: const Duration(milliseconds: 650),
+                          duration: const Duration(milliseconds: 500),
                           child: SizedBox(
                             width: double.infinity,
                             height: 56,
@@ -187,22 +257,27 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ? null
                                   : _handleContinue,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: theme.colorScheme.primary,
+                                backgroundColor: cs.primary,
+                                foregroundColor: cs.onPrimary,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(14),
+                                  borderRadius: BorderRadius.circular(16),
                                 ),
                                 elevation: 0,
                               ),
                               child: provider.isLoading
-                                  ? const CircularProgressIndicator(
-                                      color: Colors.white,
+                                  ? const SizedBox(
+                                      width: 22,
+                                      height: 22,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 2.5,
+                                      ),
                                     )
                                   : Text(
                                       t.translate('continue'),
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                        color: theme.colorScheme.onPrimary,
+                                      style: const TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w700,
                                       ),
                                     ),
                             ),
@@ -213,17 +288,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     const Spacer(),
 
-                    // 🔹 FOOTER
+                    // FOOTER
                     Center(
                       child: FadeInUp(
-                        delay: const Duration(milliseconds: 1000),
+                        delay: const Duration(milliseconds: 800),
+                        duration: const Duration(milliseconds: 500),
                         child: Text(
                           t.translate('terms_privacy'),
                           textAlign: TextAlign.center,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(
-                              alpha: 0.5,
-                            ),
+                            color: cs.onSurface.withValues(alpha: 0.4),
                           ),
                         ),
                       ),
