@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:exim_lab/core/services/shared_pref_service.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
+import 'package:sizer/sizer.dart';
+import 'package:shimmer/shimmer.dart';
 
 class QuizTopicsScreen extends StatefulWidget {
   const QuizTopicsScreen({super.key});
@@ -57,7 +59,24 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
         child: Consumer<QuizProvider>(
           builder: (context, provider, child) {
             if (provider.isLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return ListView.separated(
+                padding: EdgeInsets.fromLTRB(5.w, 12.h, 5.w, 2.h),
+                itemCount: 3,
+                separatorBuilder: (context, index) => SizedBox(height: 1.5.h),
+                itemBuilder: (context, index) {
+                  return Shimmer.fromColors(
+                    baseColor: cs.surfaceContainerHighest,
+                    highlightColor: cs.surface,
+                    child: Container(
+                      height: 13.h,
+                      decoration: BoxDecoration(
+                        color: cs.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                  );
+                },
+              );
             }
 
             if (provider.error != null) {
@@ -73,149 +92,191 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
             }
 
             return ListView.separated(
-              padding: const EdgeInsets.fromLTRB(16, 120, 16, 20),
+              padding: EdgeInsets.fromLTRB(5.w, 12.h, 5.w, 2.h),
               itemCount: provider.topics.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 16),
+              separatorBuilder: (context, index) => SizedBox(height: 1.5.h),
               itemBuilder: (context, index) {
                 final topic = provider.topics[index];
                 return FadeInUp(
                   duration: const Duration(milliseconds: 400),
                   delay: Duration(milliseconds: (index < 6 ? index : 5) * 70),
                   child: Container(
-                  decoration: BoxDecoration(
-                    color: cs.surface,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.1),
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
-                      ),
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
-                        blurRadius: 5,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(20),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => QuizQuestionScreen(
-                              topicId: topic.id,
-                              topicTitle: topic.title,
+                    decoration: BoxDecoration(
+                      color: cs.surface,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.1),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.05),
+                          blurRadius: 5,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(16),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => QuizQuestionScreen(
+                                topicId: topic.id,
+                                topicTitle: topic.title,
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: cs.primaryContainer,
-                                    borderRadius: BorderRadius.circular(12),
+                          );
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(2.h),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(1.2.h),
+                                    decoration: BoxDecoration(
+                                      color: cs.primaryContainer,
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Icon(
+                                      Icons.quiz_rounded,
+                                      color: cs.primary,
+                                      size: 24.sp,
+                                    ),
                                   ),
-                                  child: Icon(
-                                    Icons.quiz_rounded,
-                                    color: cs.primary,
-                                    size: 24,
+                                  SizedBox(width: 3.w),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          topic.title,
+                                          style: theme.textTheme.titleMedium
+                                              ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                        ),
+                                        SizedBox(height: 0.4.h),
+                                        Text(
+                                          topic.description,
+                                          style: theme.textTheme.bodyMedium
+                                              ?.copyWith(
+                                                color: cs.onSurfaceVariant,
+                                              ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                ],
+                              ),
+                              SizedBox(height: 1.5.h),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
                                     children: [
-                                      Text(
-                                        topic.title,
-                                        style: theme.textTheme.titleMedium
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        topic.description,
-                                        style: theme.textTheme.bodyMedium
-                                            ?.copyWith(
-                                              color: cs.onSurfaceVariant,
-                                            ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 5,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: topic.hasAttempted
-                                        ? Colors.green.withValues(alpha: 0.1)
-                                        : cs.surfaceContainerHighest,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        topic.hasAttempted
-                                            ? Icons.check_circle_outline
-                                            : Icons.circle_outlined,
-                                        size: 14,
-                                        color: topic.hasAttempted
-                                            ? Colors.green
-                                            : cs.onSurfaceVariant,
-                                      ),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        topic.hasAttempted
-                                            ? t.translate('attempted')
-                                            : t.translate('not_started'),
-                                        style: theme.textTheme.labelSmall
-                                            ?.copyWith(
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 2.5.w,
+                                          vertical: 0.6.h,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: topic.hasAttempted
+                                              ? Colors.green.withValues(
+                                                  alpha: 0.1,
+                                                )
+                                              : cs.surfaceContainerHighest,
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              topic.hasAttempted
+                                                  ? Icons.check_circle_outline
+                                                  : Icons.circle_outlined,
+                                              size: 14.sp,
                                               color: topic.hasAttempted
                                                   ? Colors.green
                                                   : cs.onSurfaceVariant,
-                                              fontWeight: FontWeight.bold,
                                             ),
+                                            SizedBox(width: 1.w),
+                                            Text(
+                                              topic.hasAttempted
+                                                  ? t.translate('attempted')
+                                                  : t.translate('not_started'),
+                                              style: theme.textTheme.labelSmall
+                                                  ?.copyWith(
+                                                    color: topic.hasAttempted
+                                                        ? Colors.green
+                                                        : cs.onSurfaceVariant,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(width: 2.w),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 2.5.w,
+                                          vertical: 0.6.h,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: cs.primaryContainer.withValues(
+                                            alpha: 0.3,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.quiz_outlined,
+                                              size: 14.sp,
+                                              color: cs.primary,
+                                            ),
+                                            SizedBox(width: 1.w),
+                                            Text(
+                                              '${topic.totalQuestions}',
+                                              style: theme.textTheme.labelSmall
+                                                  ?.copyWith(
+                                                    color: cs.primary,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_rounded,
-                                  color: cs.primary,
-                                  size: 20,
-                                ),
-                              ],
-                            ),
-                          ],
+                                  Icon(
+                                    Icons.arrow_forward_rounded,
+                                    color: cs.primary,
+                                    size: 20.sp,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
                 );
               },
             );

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
+import 'package:sizer/sizer.dart';
 
 class QuizQuestionScreen extends StatefulWidget {
   final String topicId;
@@ -117,39 +118,64 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
               });
 
               return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.check_circle,
-                      size: 80,
-                      color: Colors.green,
-                    ),
-                    const SizedBox(height: 24),
-                    Text(
-                      t.translate('quiz_completed'),
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: cs.onSurface,
-                      ),
-                    ),
-                    const SizedBox(height: 32),
-                    ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: cs.primary,
-                        foregroundColor: cs.onPrimary,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 32,
-                          vertical: 16,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(3.h),
+                        decoration: BoxDecoration(
+                          color: Colors.green.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
                         ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                        child: Icon(
+                          Icons.check_circle_rounded,
+                          size: 80.sp,
+                          color: Colors.green,
                         ),
                       ),
-                      child: Text(t.translate('back_to_topics')),
-                    ),
-                  ],
+                      SizedBox(height: 3.h),
+                      Text(
+                        t.translate('quiz_completed'),
+                        style: theme.textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: cs.onSurface,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 1.h),
+                      Text(
+                        'Great job! You\'ve completed this quiz.',
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          color: cs.onSurfaceVariant,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 4.h),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () => Navigator.pop(context),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: cs.primary,
+                            foregroundColor: cs.onPrimary,
+                            padding: EdgeInsets.symmetric(vertical: 1.8.h),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: Text(
+                            t.translate('back_to_topics'),
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: cs.onPrimary,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               );
             }
@@ -158,7 +184,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
             final currentQuestion = questions[currentQuestionIndex];
 
             return SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(20, 100, 20, 20),
+              padding: EdgeInsets.fromLTRB(5.w, 10.h, 5.w, 2.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -172,7 +198,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                       minHeight: 8,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 1.2.h),
                   Text(
                     "${t.translate('question_label')} ${currentQuestionIndex + 1}/${questions.length}",
                     style: theme.textTheme.labelLarge?.copyWith(
@@ -180,14 +206,14 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: 3.h),
 
                   // Question Card
                   Container(
-                    padding: const EdgeInsets.all(24),
+                    padding: EdgeInsets.all(2.5.h),
                     decoration: BoxDecoration(
                       color: cs.surface,
-                      borderRadius: BorderRadius.circular(24),
+                      borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.1),
@@ -204,13 +230,13 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                       currentQuestion.prompt,
                       style: theme.textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.bold,
-                        height: 1.3,
+                        height: 1.4,
                         color: cs.onSurface,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: 3.h),
 
                   // Options
                   ...List.generate(currentQuestion.options.length, (index) {
@@ -240,7 +266,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                     }
 
                     return Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
+                      padding: EdgeInsets.only(bottom: 1.5.h),
                       child: Material(
                         color: Colors.transparent,
                         child: InkWell(
@@ -249,12 +275,12 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                             currentQuestion.id,
                             currentQuestion.correctOptionIndex,
                           ),
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(14),
                           child: Ink(
-                            padding: const EdgeInsets.all(20),
+                            padding: EdgeInsets.all(2.h),
                             decoration: BoxDecoration(
                               color: tileColor,
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(14),
                               border: Border.all(
                                 color: borderColor,
                                 width: isSelected ? 2.5 : 1.5,
@@ -270,8 +296,8 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                             child: Row(
                               children: [
                                 Container(
-                                  width: 40,
-                                  height: 40,
+                                  width: 42,
+                                  height: 42,
                                   decoration: BoxDecoration(
                                     color: dotColor,
                                     shape: BoxShape.circle,
@@ -286,7 +312,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                                         ),
                                   ),
                                 ),
-                                const SizedBox(width: 16),
+                                SizedBox(width: 3.w),
                                 Expanded(
                                   child: Text(
                                     currentQuestion.options[index],
@@ -301,11 +327,12 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                                 if (selectedIndex != null && isSelected)
                                   Icon(
                                     isCorrect
-                                        ? Icons.check_circle
-                                        : Icons.cancel,
+                                        ? Icons.check_circle_rounded
+                                        : Icons.cancel_rounded,
                                     color: isCorrect
                                         ? Colors.green
                                         : Colors.red,
+                                    size: 24.sp,
                                   ),
                               ],
                             ),
