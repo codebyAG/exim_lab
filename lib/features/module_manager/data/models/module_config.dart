@@ -10,16 +10,16 @@ class ModuleConfig {
   factory ModuleConfig.defaults() {
     return ModuleConfig(
       modules: {
-        'carousel': false,
-        'courses': false,
-        'continueLearning': false,
-        'quizzes': false,
-        'freeVideos': false,
-        'tools': false,
-        'news': false,
-        'banners': false,
-        'shortVideos': false,
-        'aiChat': false,
+        'carousel': true, // Temporarily enabled for UI work
+        'courses': true, // Temporarily enabled for UI work
+        'continueLearning': true, // Temporarily enabled for UI work
+        'quizzes': true, // Temporarily enabled for UI work
+        'freeVideos': true, // Temporarily enabled for UI work
+        'tools': true, // Temporarily enabled for UI work
+        'news': true, // Temporarily enabled for UI work
+        'banners': true, // Temporarily enabled for UI work
+        'shortVideos': true, // Temporarily enabled for UI work
+        'aiChat': true, // Temporarily enabled for UI work
       },
     );
   }

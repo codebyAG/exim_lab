@@ -49,32 +49,126 @@ class _NewsListScreenState extends State<NewsListScreen> {
       ),
       body: Consumer<NewsProvider>(
         builder: (context, newsProvider, child) {
+          // LOADING STATE
           if (newsProvider.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (newsProvider.error != null) {
             return Center(
-              child: Text('${t.translate('error')}: ${newsProvider.error}'),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(color: cs.primary, strokeWidth: 3),
+                  SizedBox(height: 2.h),
+                  Text(
+                    t.translate('loading'),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: cs.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
             );
           }
 
-          if (newsProvider.newsList.isEmpty) {
-            return Center(child: Text(t.translate('no_news')));
+          // ERROR STATE
+          if (newsProvider.error != null) {
+            return Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.w),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: cs.errorContainer,
+                      ),
+                      child: Icon(
+                        Icons.error_outline_rounded,
+                        size: 48,
+                        color: cs.onErrorContainer,
+                      ),
+                    ),
+                    SizedBox(height: 2.h),
+                    Text(
+                      t.translate('error'),
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(height: 1.h),
+                    Text(
+                      newsProvider.error!,
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: cs.onSurfaceVariant,
+                      ),
+                    ),
+                    SizedBox(height: 3.h),
+                    FilledButton.icon(
+                      onPressed: () => newsProvider.fetchNews(),
+                      icon: const Icon(Icons.refresh_rounded),
+                      label: Text(t.translate('retry')),
+                    ),
+                  ],
+                ),
+              ),
+            );
           }
 
-          return ListView.separated(
-            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
-            itemCount: newsProvider.newsList.length,
-            separatorBuilder: (context, index) => SizedBox(height: 2.h),
-            itemBuilder: (context, index) {
-              final news = newsProvider.newsList[index];
-              return FadeInUp(
-                duration: const Duration(milliseconds: 400),
-                delay: Duration(milliseconds: (index < 6 ? index : 5) * 70),
-                child: _NewsCard(news: news),
-              );
-            },
+          // EMPTY STATE
+          if (newsProvider.newsList.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(28),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: cs.primaryContainer,
+                    ),
+                    child: Icon(
+                      Icons.newspaper_outlined,
+                      size: 56,
+                      color: cs.onPrimaryContainer,
+                    ),
+                  ),
+                  SizedBox(height: 2.h),
+                  Text(
+                    t.translate('no_news'),
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  SizedBox(height: 1.h),
+                  Text(
+                    t.translate('no_news_hint'),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: cs.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          // NEWS LIST
+          return RefreshIndicator(
+            color: cs.primary,
+            onRefresh: () => newsProvider.fetchNews(),
+            child: ListView.separated(
+              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+              itemCount: newsProvider.newsList.length,
+              separatorBuilder: (context, index) => SizedBox(height: 2.h),
+              itemBuilder: (context, index) {
+                final news = newsProvider.newsList[index];
+                return FadeInUp(
+                  duration: const Duration(milliseconds: 400),
+                  delay: Duration(milliseconds: (index < 6 ? index : 5) * 70),
+                  child: _NewsCard(news: news),
+                );
+              },
+            ),
           );
         },
       ),
@@ -100,9 +194,6 @@ class _NewsCard extends StatelessWidget {
           newsId: news.id,
           title: news.title,
         );
-        // NewsDetailScreen likely needs update for NewsModel vs old model
-        // Assuming NewsDetailScreen accepts NewsModel or similar fields
-        // For now, passing news object. If distinct, we map fields.
         Navigator.push(
           context,
           MaterialPageRoute(builder: (_) => NewsDetailScreen(news: news)),
@@ -111,60 +202,117 @@ class _NewsCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: cs.surface,
-          borderRadius: BorderRadius.circular(22),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: cs.outlineVariant.withValues(alpha: 0.3),
+            width: 1,
+          ),
           boxShadow: [
             BoxShadow(
-              color: cs.shadow.withValues(alpha: 0.08),
-              blurRadius: 18,
-              offset: const Offset(0, 6),
+              color: cs.shadow.withValues(alpha: 0.06),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image Stack
+            // Image Stack with Gradient Overlay
             Stack(
               children: [
                 ClipRRect(
                   borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(22),
+                    top: Radius.circular(19),
                   ),
-                  child: CachedNetworkImage(
-                    imageUrl: news.imageUrl,
-                    height: 22.h,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(
-                      color: cs.surfaceContainerHighest,
-                      child: const Center(child: Icon(Icons.image)),
-                    ),
-                    errorWidget: (context, url, error) => Container(
-                      color: cs.surfaceContainerHighest,
-                      child: const Center(child: Icon(Icons.broken_image)),
-                    ),
+                  child: Stack(
+                    children: [
+                      CachedNetworkImage(
+                        imageUrl: news.imageUrl,
+                        height: 20.h,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Container(
+                          height: 20.h,
+                          color: cs.surfaceContainerHighest,
+                          child: Center(
+                            child: Icon(
+                              Icons.image_outlined,
+                              size: 48,
+                              color: cs.onSurfaceVariant.withValues(alpha: 0.3),
+                            ),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          height: 20.h,
+                          color: cs.surfaceContainerHighest,
+                          child: Center(
+                            child: Icon(
+                              Icons.broken_image_outlined,
+                              size: 48,
+                              color: cs.onSurfaceVariant.withValues(alpha: 0.3),
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Subtle gradient overlay for better text readability
+                      Container(
+                        height: 20.h,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withValues(alpha: 0.05),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 // Date Badge
                 Positioned(
-                  top: 1.5.h,
-                  right: 1.5.h,
+                  top: 1.2.h,
+                  right: 1.2.h,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
+                      horizontal: 12,
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: cs.surface.withValues(alpha: 0.95),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      dateStr,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: cs.onSurface,
-                        fontSize: 11.sp,
+                      color: cs.surface.withValues(alpha: 0.96),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: cs.outlineVariant.withValues(alpha: 0.2),
                       ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.08),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.calendar_today_rounded,
+                          size: 12,
+                          color: cs.primary,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          dateStr,
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: cs.onSurface,
+                            fontSize: 10.sp,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -182,9 +330,10 @@ class _NewsCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      height: 1.2,
-                      fontSize: 17.sp,
+                      fontWeight: FontWeight.w700,
+                      height: 1.3,
+                      fontSize: 16.sp,
+                      letterSpacing: -0.2,
                     ),
                   ),
 
@@ -192,35 +341,47 @@ class _NewsCard extends StatelessWidget {
 
                   // Description
                   Text(
-                    news.description, // Mapped from shortDescription
+                    news.description,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: cs.onSurfaceVariant,
-                      fontSize: 13.sp,
+                      fontSize: 12.5.sp,
+                      height: 1.4,
                     ),
                   ),
 
-                  SizedBox(height: 2.h),
+                  SizedBox(height: 1.8.h),
 
-                  // Read More
-                  Row(
-                    children: [
-                      Text(
-                        t.translate('read_more'),
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: cs.primary,
-                          fontSize: 13.sp,
+                  // Read More Button
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: cs.primaryContainer,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          t.translate('read_more'),
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: cs.onPrimaryContainer,
+                            fontSize: 12.sp,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 1.w),
-                      Icon(
-                        Icons.arrow_forward_rounded,
-                        size: 18,
-                        color: cs.primary,
-                      ),
-                    ],
+                        SizedBox(width: 0.5.w),
+                        Icon(
+                          Icons.arrow_forward_rounded,
+                          size: 16,
+                          color: cs.onPrimaryContainer,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

@@ -17,18 +17,9 @@ class ModuleProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    // 1. Load Local Config first (Fast)
-    final localConfig = await _moduleService.getLocalConfig();
-    if (localConfig != null) {
-      _config = localConfig;
-      notifyListeners();
-    }
-
-    // 2. Fetch Remote (Async)
-    final remoteConfig = await _moduleService.fetchConfig();
-    if (remoteConfig != null) {
-      _config = remoteConfig;
-    }
+    // TEMPORARY: Bypass API and use local defaults (all enabled for UI work)
+    // TODO: Revert this to use API values after UI improvements are complete
+    _config = ModuleConfig.defaults();
 
     _isLoading = false;
     notifyListeners();
