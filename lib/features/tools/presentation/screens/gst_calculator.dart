@@ -67,8 +67,8 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    cs.tertiaryContainer,
-                    cs.tertiaryContainer.withValues(alpha: 0.7),
+                    cs.primaryContainer,
+                    cs.primaryContainer.withValues(alpha: 0.7),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(16),
@@ -78,12 +78,12 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: cs.tertiary,
+                      color: cs.primary,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
                       Icons.receipt_long_rounded,
-                      color: cs.onTertiary,
+                      color: cs.onPrimary,
                       size: 28,
                     ),
                   ),
@@ -96,16 +96,14 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
                           'GST Calculator',
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w700,
-                            color: cs.onTertiaryContainer,
+                            color: cs.onPrimaryContainer,
                           ),
                         ),
                         SizedBox(height: 0.3.h),
                         Text(
                           'Calculate tax with multiple rates',
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: cs.onTertiaryContainer.withValues(
-                              alpha: 0.8,
-                            ),
+                            color: cs.onPrimaryContainer.withValues(alpha: 0.8),
                           ),
                         ),
                       ],
@@ -186,11 +184,11 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
                       child: Container(
                         height: 56,
                         decoration: BoxDecoration(
-                          color: isSelected ? cs.tertiary : cs.surface,
+                          color: isSelected ? cs.primary : cs.surface,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color: isSelected
-                                ? cs.tertiary
+                                ? cs.primary
                                 : cs.outlineVariant.withValues(alpha: 0.5),
                             width: isSelected ? 2 : 1,
                           ),
@@ -202,9 +200,7 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
                               '$rate%',
                               style: theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.w700,
-                                color: isSelected
-                                    ? cs.onTertiary
-                                    : cs.onSurface,
+                                color: isSelected ? cs.onPrimary : cs.onSurface,
                               ),
                             ),
                             if (isSelected) ...[
@@ -212,7 +208,7 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
                               Icon(
                                 Icons.check_circle_rounded,
                                 size: 14,
-                                color: cs.onTertiary,
+                                color: cs.onPrimary,
                               ),
                             ],
                           ],
@@ -236,7 +232,7 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
                       children: [
                         Icon(
                           Icons.check_circle_outline_rounded,
-                          color: cs.tertiary,
+                          color: cs.primary,
                           size: 20,
                         ),
                         SizedBox(width: 1.w),
@@ -244,7 +240,7 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
                           'Tax Breakdown',
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w600,
-                            color: cs.tertiary,
+                            color: cs.primary,
                           ),
                         ),
                       ],
@@ -284,11 +280,11 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
     return Container(
       padding: EdgeInsets.all(2.h),
       decoration: BoxDecoration(
-        color: isHighlight ? cs.tertiaryContainer : cs.surface,
+        color: isHighlight ? cs.primaryContainer : cs.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isHighlight
-              ? cs.tertiary.withValues(alpha: 0.3)
+              ? cs.primary.withValues(alpha: 0.3)
               : cs.outlineVariant.withValues(alpha: 0.3),
         ),
       ),
@@ -298,13 +294,13 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: isHighlight
-                  ? cs.tertiary.withValues(alpha: 0.15)
+                  ? cs.primary.withValues(alpha: 0.15)
                   : cs.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
               icon,
-              color: isHighlight ? cs.tertiary : cs.onSurfaceVariant,
+              color: isHighlight ? cs.primary : cs.onSurfaceVariant,
               size: 24,
             ),
           ),
@@ -322,7 +318,7 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
             value,
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w700,
-              color: isHighlight ? cs.tertiary : cs.onSurface,
+              color: isHighlight ? cs.primary : cs.onSurface,
             ),
           ),
         ],

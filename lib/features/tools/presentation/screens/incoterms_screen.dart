@@ -224,8 +224,9 @@ class IncotermsScreen extends StatelessWidget {
                           child: Text(
                             term['category']!,
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: cs.onSurfaceVariant.withValues(alpha: 0.7),
-                              fontSize: 10.sp,
+                              color: cs.onSurfaceVariant,
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),

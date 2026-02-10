@@ -77,8 +77,8 @@ class _ExportPriceCalculatorScreenState
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    cs.secondaryContainer,
-                    cs.secondaryContainer.withValues(alpha: 0.7),
+                    cs.primaryContainer,
+                    cs.primaryContainer.withValues(alpha: 0.7),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(16),
@@ -88,12 +88,12 @@ class _ExportPriceCalculatorScreenState
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: cs.secondary,
+                      color: cs.primary,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
                       Icons.attach_money_rounded,
-                      color: cs.onSecondary,
+                      color: cs.onPrimary,
                       size: 28,
                     ),
                   ),
@@ -106,16 +106,14 @@ class _ExportPriceCalculatorScreenState
                           'Export Pricing',
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w700,
-                            color: cs.onSecondaryContainer,
+                            color: cs.onPrimaryContainer,
                           ),
                         ),
                         SizedBox(height: 0.3.h),
                         Text(
                           'Calculate selling price with profit',
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: cs.onSecondaryContainer.withValues(
-                              alpha: 0.8,
-                            ),
+                            color: cs.onPrimaryContainer.withValues(alpha: 0.8),
                           ),
                         ),
                       ],
@@ -198,7 +196,7 @@ class _ExportPriceCalculatorScreenState
                       children: [
                         Icon(
                           Icons.check_circle_outline_rounded,
-                          color: cs.secondary,
+                          color: cs.primary,
                           size: 20,
                         ),
                         SizedBox(width: 1.w),
@@ -206,7 +204,7 @@ class _ExportPriceCalculatorScreenState
                           'Pricing Breakdown',
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w600,
-                            color: cs.secondary,
+                            color: cs.primary,
                           ),
                         ),
                       ],
@@ -289,11 +287,11 @@ class _ExportPriceCalculatorScreenState
     return Container(
       padding: EdgeInsets.all(2.h),
       decoration: BoxDecoration(
-        color: isHighlight ? cs.secondaryContainer : cs.surface,
+        color: isHighlight ? cs.primaryContainer : cs.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isHighlight
-              ? cs.secondary.withValues(alpha: 0.3)
+              ? cs.primary.withValues(alpha: 0.3)
               : cs.outlineVariant.withValues(alpha: 0.3),
         ),
       ),
@@ -303,13 +301,13 @@ class _ExportPriceCalculatorScreenState
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: isHighlight
-                  ? cs.secondary.withValues(alpha: 0.15)
+                  ? cs.primary.withValues(alpha: 0.15)
                   : cs.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
               icon,
-              color: isHighlight ? cs.secondary : cs.onSurfaceVariant,
+              color: isHighlight ? cs.primary : cs.onSurfaceVariant,
               size: 24,
             ),
           ),
@@ -327,7 +325,7 @@ class _ExportPriceCalculatorScreenState
             value,
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w700,
-              color: isHighlight ? cs.secondary : cs.onSurface,
+              color: isHighlight ? cs.primary : cs.onSurface,
             ),
           ),
         ],
