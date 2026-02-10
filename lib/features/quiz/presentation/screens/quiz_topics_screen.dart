@@ -17,17 +17,23 @@ class QuizTopicsScreen extends StatefulWidget {
 }
 
 class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
+  bool _isInitLoading = true;
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final user = await SharedPrefService().getUser();
-      final userId = user?.id ?? "64f0cccc3333333333333333"; // Fallback for dev
-      if (mounted) {
-        context.read<QuizProvider>().fetchTopics(userId);
-        context.read<AnalyticsService>().logQuizTopicView('General');
-      }
-    });
+    _loadTopics();
+  }
+
+  Future<void> _loadTopics() async {
+    final user = await SharedPrefService().getUser();
+    final userId = user?.id ?? "64f0cccc3333333333333333"; // Fallback for dev
+    if (mounted) {
+      await context.read<QuizProvider>().fetchTopics(userId);
+      context.read<AnalyticsService>().logQuizTopicView('General');
+      setState(() {
+        _isInitLoading = false;
+      });
+    }
   }
 
   @override
@@ -58,20 +64,107 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
         ),
         child: Consumer<QuizProvider>(
           builder: (context, provider, child) {
-            if (provider.isLoading) {
+            if (provider.isLoading || _isInitLoading) {
               return ListView.separated(
                 padding: EdgeInsets.fromLTRB(5.w, 12.h, 5.w, 2.h),
                 itemCount: 3,
                 separatorBuilder: (context, index) => SizedBox(height: 1.5.h),
                 itemBuilder: (context, index) {
-                  return Shimmer.fromColors(
-                    baseColor: cs.surfaceContainerHighest,
-                    highlightColor: cs.surface,
-                    child: Container(
-                      height: 13.h,
-                      decoration: BoxDecoration(
-                        color: cs.surfaceContainerHighest,
-                        borderRadius: BorderRadius.circular(16),
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: cs.surface,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Shimmer.fromColors(
+                      baseColor: cs.surfaceContainerHighest,
+                      highlightColor: cs.surface,
+                      child: Padding(
+                        padding: EdgeInsets.all(2.h),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  width: 6.h,
+                                  height: 6.h,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                SizedBox(width: 3.w),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: 40.w,
+                                        height: 2.h,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 1.h),
+                                      Container(
+                                        width: 30.w,
+                                        height: 1.5.h,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 2.h),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 20.w,
+                                  height: 2.5.h,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                SizedBox(width: 2.w),
+                                Container(
+                                  width: 15.w,
+                                  height: 2.5.h,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                const Spacer(),
+                                Container(
+                                  width: 3.h,
+                                  height: 3.h,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );
