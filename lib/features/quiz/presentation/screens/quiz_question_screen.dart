@@ -91,28 +91,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
             ),
           ),
         ),
-        actions: [
-          // Topic Title Chip
-          Container(
-            margin: const EdgeInsets.only(right: 16),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.3),
-                width: 1,
-              ),
-            ),
-            child: Text(
-              widget.topicTitle,
-              style: theme.textTheme.labelMedium?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
+        actions: const [],
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -216,6 +195,25 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                           color: cs.onSurfaceVariant,
                         ),
                       ),
+                      SizedBox(height: 1.h),
+                      // Topic Title on completion
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: cs.primary.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          widget.topicTitle,
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: cs.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                       SizedBox(height: 4.h),
                       SizedBox(
                         width: double.infinity,
@@ -250,10 +248,49 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                   child: SafeArea(
                     bottom: false,
                     child: Padding(
-                      padding: EdgeInsets.fromLTRB(5.w, 8.h, 5.w, 4.h),
+                      padding: EdgeInsets.fromLTRB(5.w, 2.h, 5.w, 4.h),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          // Topic Badge
+                          FadeInDown(
+                            duration: const Duration(milliseconds: 600),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.15),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.3),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.auto_awesome_rounded,
+                                    size: 14,
+                                    color: Colors.white,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    widget.topicTitle.toUpperCase(),
+                                    style: theme.textTheme.labelMedium
+                                        ?.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 1.5,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 3.h),
                           // Circular Progress
                           Stack(
                             alignment: Alignment.center,
