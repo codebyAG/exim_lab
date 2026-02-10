@@ -265,11 +265,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 elevation: 0,
                               ),
                               child: provider.isLoading
-                                  ? const SizedBox(
+                                  ? SizedBox(
                                       width: 22,
                                       height: 22,
                                       child: CircularProgressIndicator(
-                                        color: Colors.white,
+                                        color: cs.onPrimary,
                                         strokeWidth: 2.5,
                                       ),
                                     )

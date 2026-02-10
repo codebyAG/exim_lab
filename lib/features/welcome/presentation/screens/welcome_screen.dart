@@ -238,7 +238,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 style: const TextStyle(fontSize: 14),
                                 children: [
                                   TextSpan(
-                                    text: 'Already have an account?  ',
+                                    text: '${t.translate('already_account_prefix')}  ',
                                     style: TextStyle(
                                       color: Colors.white.withValues(
                                         alpha: 0.70,
@@ -246,7 +246,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                     ),
                                   ),
                                   TextSpan(
-                                    text: 'Login',
+                                    text: t.translate('already_account_login'),
                                     style: TextStyle(
                                       color: theme.colorScheme.primary,
                                       fontWeight: FontWeight.w700,

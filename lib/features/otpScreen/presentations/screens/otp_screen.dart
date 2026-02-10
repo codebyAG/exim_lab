@@ -166,7 +166,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                   color: cs.onSurface.withValues(alpha: 0.55),
                                 ),
                                 children: [
-                                  const TextSpan(text: 'Code sent to  '),
+                                  TextSpan(text: '${t.translate('otp_sent_to')}  '),
                                   TextSpan(
                                     text: '+91 $phone',
                                     style: TextStyle(
@@ -283,11 +283,11 @@ class _OtpScreenState extends State<OtpScreen> {
                                 elevation: 0,
                               ),
                               child: provider.isLoading
-                                  ? const SizedBox(
+                                  ? SizedBox(
                                       width: 22,
                                       height: 22,
                                       child: CircularProgressIndicator(
-                                        color: Colors.white,
+                                        color: cs.onPrimary,
                                         strokeWidth: 2.5,
                                       ),
                                     )

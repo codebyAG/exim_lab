@@ -161,5 +161,8 @@
   "profile": "प्रोफ़ाइल",
   "shorts": "शॉर्ट्स",
   "views": "दृश्य",
-  "continue_journey": "अपनी यात्रा जारी रखें"
+  "continue_journey": "अपनी यात्रा जारी रखें",
+  "already_account_prefix": "पहले से खाता है?",
+  "already_account_login": "लॉगिन करें",
+  "otp_sent_to": "कोड भेजा गया"
 }

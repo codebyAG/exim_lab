@@ -161,5 +161,8 @@
   "profile": "Profile",
   "shorts": "Shorts",
   "views": "views",
-  "continue_journey": "Continue your journey"
+  "continue_journey": "Continue your journey",
+  "already_account_prefix": "Already have an account?",
+  "already_account_login": "Login",
+  "otp_sent_to": "Code sent to"
 }
