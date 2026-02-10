@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:sizer/sizer.dart';
+import 'package:animate_do/animate_do.dart';
 
 class QuizQuestionScreen extends StatefulWidget {
   final String topicId;
@@ -118,58 +119,155 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
               });
 
               return Center(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 4.h),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        padding: EdgeInsets.all(3.h),
-                        decoration: BoxDecoration(
-                          color: Colors.green.withValues(alpha: 0.1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.check_circle_rounded,
-                          size: 80.sp,
-                          color: Colors.green,
-                        ),
-                      ),
-                      SizedBox(height: 3.h),
-                      Text(
-                        t.translate('quiz_completed'),
-                        style: theme.textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: cs.onSurface,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 1.h),
-                      Text(
-                        'Great job! You\'ve completed this quiz.',
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: cs.onSurfaceVariant,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 4.h),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () => Navigator.pop(context),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: cs.primary,
-                            foregroundColor: cs.onPrimary,
-                            padding: EdgeInsets.symmetric(vertical: 1.8.h),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                      // Animated success icon
+                      Pulse(
+                        duration: const Duration(milliseconds: 1000),
+                        infinite: false,
+                        child: Container(
+                          padding: EdgeInsets.all(2.5.h),
+                          decoration: BoxDecoration(
+                            gradient: RadialGradient(
+                              colors: [
+                                Colors.green.withValues(alpha: 0.2),
+                                Colors.green.withValues(alpha: 0.05),
+                              ],
+                            ),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Container(
+                            padding: EdgeInsets.all(3.h),
+                            decoration: BoxDecoration(
+                              color: Colors.green.withValues(alpha: 0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.emoji_events_rounded,
+                              size: 60.sp,
+                              color: Colors.green.shade600,
                             ),
                           ),
-                          child: Text(
-                            t.translate('back_to_topics'),
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: cs.onPrimary,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+
+                      // Title with fade in
+                      FadeInDown(
+                        duration: const Duration(milliseconds: 500),
+                        delay: const Duration(milliseconds: 300),
+                        child: Text(
+                          t.translate('quiz_completed'),
+                          style: theme.textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: cs.onSurface,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      SizedBox(height: 1.5.h),
+
+                      // Subtitle with fade in
+                      FadeInDown(
+                        duration: const Duration(milliseconds: 500),
+                        delay: const Duration(milliseconds: 400),
+                        child: Text(
+                          'Excellent work! 🎉',
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            color: Colors.green.shade700,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      SizedBox(height: 1.h),
+
+                      FadeInDown(
+                        duration: const Duration(milliseconds: 500),
+                        delay: const Duration(milliseconds: 500),
+                        child: Text(
+                          'You\'ve successfully completed this quiz.\nKeep up the great progress!',
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: cs.onSurfaceVariant,
+                            height: 1.5,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+
+                      SizedBox(height: 5.h),
+
+                      // Decorative stats card (optional)
+                      FadeInUp(
+                        duration: const Duration(milliseconds: 500),
+                        delay: const Duration(milliseconds: 600),
+                        child: Container(
+                          padding: EdgeInsets.all(2.h),
+                          decoration: BoxDecoration(
+                            color: cs.primaryContainer.withValues(alpha: 0.3),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: cs.primary.withValues(alpha: 0.2),
+                              width: 1,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.quiz_rounded,
+                                color: cs.primary,
+                                size: 24.sp,
+                              ),
+                              SizedBox(width: 2.w),
+                              Text(
+                                'Quiz completed successfully',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: cs.primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 4.h),
+
+                      // Back button with animation
+                      FadeInUp(
+                        duration: const Duration(milliseconds: 500),
+                        delay: const Duration(milliseconds: 700),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () => Navigator.pop(context),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: cs.primary,
+                              foregroundColor: cs.onPrimary,
+                              padding: EdgeInsets.symmetric(vertical: 1.8.h),
+                              elevation: 2,
+                              shadowColor: cs.primary.withValues(alpha: 0.4),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.arrow_back_rounded, size: 20.sp),
+                                SizedBox(width: 2.w),
+                                Text(
+                                  t.translate('back_to_topics'),
+                                  style: theme.textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: cs.onPrimary,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),

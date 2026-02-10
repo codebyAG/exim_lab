@@ -81,7 +81,7 @@ void main() async {
     FirebaseMessagingService.firebaseBackgroundMessage,
   );
 
-  final fcmToken = await firebaseMessagingService.getFirebaseToken();
+  await firebaseMessagingService.getFirebaseToken();
   // if (fcmToken != null) { ... }  <-- Removed sync logic, now just saves locally
 
   await firebaseMessagingService.subsScribetoAlltopic();
