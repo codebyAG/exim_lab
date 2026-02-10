@@ -47,25 +47,26 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     final t = AppLocalizations.of(context);
 
     return Scaffold(
-      backgroundColor: cs.surface,
+      backgroundColor: cs.surfaceContainerLowest,
       appBar: AppBar(
         title: Text(t.translate('update_profile_title')),
         centerTitle: true,
-        backgroundColor: cs.surface,
+        backgroundColor: cs.surfaceContainerLowest,
         elevation: 0,
+        scrolledUnderElevation: 0,
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-        child: Form(
-          key: _formKey,
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // AVATAR SECTION
+              // ── AVATAR ────────────────────────────────────────────
               FadeInDown(
                 duration: const Duration(milliseconds: 500),
-                child: Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 2.5.h),
                   child: Stack(
+                    alignment: Alignment.center,
                     children: [
                       Container(
                         decoration: BoxDecoration(
@@ -98,7 +99,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                           decoration: BoxDecoration(
                             color: cs.primary,
                             shape: BoxShape.circle,
-                            border: Border.all(color: cs.surface, width: 2),
+                            border: Border.all(
+                                color: cs.surfaceContainerLowest, width: 2),
                           ),
                           child: Icon(
                             Icons.camera_alt_rounded,
@@ -112,141 +114,150 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                 ),
               ),
 
-              SizedBox(height: 3.5.h),
+              // ── FORM BODY ─────────────────────────────────────────
+              Padding(
+                padding: EdgeInsets.fromLTRB(5.w, 0, 5.w, 2.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // FIELDS CARD
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 400),
+                      delay: const Duration(milliseconds: 80),
+                      child: _FieldCard(
+                        children: [
+                          _buildField(
+                            context: context,
+                            controller: _nameController,
+                            label: t.translate('full_name'),
+                            icon: Icons.person_outline_rounded,
+                            iconColor: cs.primary,
+                            isFirst: true,
+                            validator: (v) => (v == null || v.isEmpty)
+                                ? t.translate('name_required')
+                                : null,
+                          ),
+                          _FieldDivider(),
+                          _buildField(
+                            context: context,
+                            controller: _emailController,
+                            label: t.translate('email_address'),
+                            icon: Icons.email_outlined,
+                            iconColor: Colors.blue,
+                            keyboardType: TextInputType.emailAddress,
+                          ),
+                          _FieldDivider(),
+                          _buildField(
+                            context: context,
+                            controller: _avatarController,
+                            label: t.translate('avatar_url'),
+                            icon: Icons.image_outlined,
+                            iconColor: Colors.teal,
+                            isLast: true,
+                            onChanged: (_) => setState(() {}),
+                          ),
+                        ],
+                      ),
+                    ),
 
-              // FIELDS
-              FadeInUp(
-                duration: const Duration(milliseconds: 400),
-                delay: const Duration(milliseconds: 100),
-                child: _buildField(
-                  context: context,
-                  controller: _nameController,
-                  label: t.translate('full_name'),
-                  icon: Icons.person_outline_rounded,
-                  validator: (v) =>
-                      (v == null || v.isEmpty) ? t.translate('name_required') : null,
-                ),
-              ),
-
-              SizedBox(height: 2.h),
-
-              FadeInUp(
-                duration: const Duration(milliseconds: 400),
-                delay: const Duration(milliseconds: 160),
-                child: _buildField(
-                  context: context,
-                  controller: _emailController,
-                  label: t.translate('email_address'),
-                  icon: Icons.email_outlined,
-                  keyboardType: TextInputType.emailAddress,
-                ),
-              ),
-
-              SizedBox(height: 2.h),
-
-              FadeInUp(
-                duration: const Duration(milliseconds: 400),
-                delay: const Duration(milliseconds: 220),
-                child: _buildField(
-                  context: context,
-                  controller: _avatarController,
-                  label: t.translate('avatar_url'),
-                  icon: Icons.image_outlined,
-                  onChanged: (_) => setState(() {}),
-                ),
-              ),
-
-              if (authProvider.error != null) ...[
-                SizedBox(height: 2.h),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: cs.errorContainer,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.error_outline, color: cs.error, size: 16),
-                      const SizedBox(width: 8),
-                      Flexible(
-                        child: Text(
-                          authProvider.error!,
-                          style: theme.textTheme.bodySmall
-                              ?.copyWith(color: cs.error),
+                    // ERROR
+                    if (authProvider.error != null) ...[
+                      SizedBox(height: 2.h),
+                      FadeInUp(
+                        duration: const Duration(milliseconds: 300),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: cs.errorContainer,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(Icons.error_outline,
+                                  color: cs.error, size: 16),
+                              const SizedBox(width: 8),
+                              Flexible(
+                                child: Text(
+                                  authProvider.error!,
+                                  style: theme.textTheme.bodySmall
+                                      ?.copyWith(color: cs.error),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
-                  ),
-                ),
-              ],
 
-              SizedBox(height: 4.h),
+                    SizedBox(height: 3.5.h),
 
-              // SAVE BUTTON
-              FadeInUp(
-                duration: const Duration(milliseconds: 400),
-                delay: const Duration(milliseconds: 300),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 56,
-                  child: ElevatedButton(
-                    onPressed: isLoading
-                        ? null
-                        : () async {
-                            if (_formKey.currentState!.validate()) {
-                              final messenger = ScaffoldMessenger.of(context);
-                              final navigator = Navigator.of(context);
-                              final success =
-                                  await authProvider.updateProfile({
-                                "name": _nameController.text.trim(),
-                                "email": _emailController.text.trim(),
-                                "avatarUrl": _avatarController.text.trim(),
-                              });
-                              if (success && mounted) {
-                                messenger.showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      t.translate('profile_updated'),
-                                    ),
-                                    backgroundColor: Colors.green,
-                                  ),
-                                );
-                                navigator.pop();
-                              }
-                            }
-                          },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: cs.primary,
-                      foregroundColor: cs.onPrimary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: isLoading
-                        ? SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(
-                              color: cs.onPrimary,
-                              strokeWidth: 2.5,
+                    // SAVE BUTTON
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 400),
+                      delay: const Duration(milliseconds: 160),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 56,
+                        child: ElevatedButton(
+                          onPressed: isLoading
+                              ? null
+                              : () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    final messenger =
+                                        ScaffoldMessenger.of(context);
+                                    final navigator = Navigator.of(context);
+                                    final success =
+                                        await authProvider.updateProfile({
+                                      "name": _nameController.text.trim(),
+                                      "email": _emailController.text.trim(),
+                                      "avatarUrl":
+                                          _avatarController.text.trim(),
+                                    });
+                                    if (success && mounted) {
+                                      messenger.showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                              t.translate('profile_updated')),
+                                          backgroundColor: Colors.green,
+                                        ),
+                                      );
+                                      navigator.pop();
+                                    }
+                                  }
+                                },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: cs.primary,
+                            foregroundColor: cs.onPrimary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
                             ),
-                          )
-                        : Text(
-                            t.translate('save_changes'),
-                            style: const TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w700,
-                            ),
+                            elevation: 0,
                           ),
-                  ),
+                          child: isLoading
+                              ? SizedBox(
+                                  width: 22,
+                                  height: 22,
+                                  child: CircularProgressIndicator(
+                                    color: cs.onPrimary,
+                                    strokeWidth: 2.5,
+                                  ),
+                                )
+                              : Text(
+                                  t.translate('save_changes'),
+                                  style: const TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 2.h),
+                  ],
                 ),
               ),
-
-              SizedBox(height: 2.h),
             ],
           ),
         ),
@@ -259,12 +270,19 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     required TextEditingController controller,
     required String label,
     required IconData icon,
+    required Color iconColor,
     TextInputType? keyboardType,
     String? Function(String?)? validator,
     void Function(String)? onChanged,
+    bool isFirst = false,
+    bool isLast = false,
   }) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final radius = BorderRadius.vertical(
+      top: isFirst ? const Radius.circular(16) : Radius.zero,
+      bottom: isLast ? const Radius.circular(16) : Radius.zero,
+    );
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
@@ -273,40 +291,83 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       style: theme.textTheme.bodyLarge,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Container(
-          margin: const EdgeInsets.all(8),
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: cs.primary.withValues(alpha: 0.10),
-            borderRadius: BorderRadius.circular(8),
+        prefixIcon: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: iconColor.withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(icon, color: iconColor, size: 17),
           ),
-          child: Icon(icon, color: cs.primary, size: 18),
         ),
         filled: true,
-        fillColor: cs.onSurface.withValues(alpha: 0.04),
+        fillColor: cs.surface,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(color: cs.outline.withValues(alpha: 0.5)),
+          borderRadius: radius,
+          borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(color: cs.outline.withValues(alpha: 0.5)),
+          borderRadius: radius,
+          borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: radius,
           borderSide: BorderSide(color: cs.primary, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: radius,
           borderSide: BorderSide(color: cs.error),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: radius,
           borderSide: BorderSide(color: cs.error, width: 1.5),
         ),
         labelStyle: theme.textTheme.bodyMedium
-            ?.copyWith(color: cs.onSurface.withValues(alpha: 0.6)),
+            ?.copyWith(color: cs.onSurface.withValues(alpha: 0.55)),
       ),
+    );
+  }
+}
+
+// ── PRIVATE WIDGETS ──────────────────────────────────────────────────────────
+
+class _FieldCard extends StatelessWidget {
+  final List<Widget> children;
+  const _FieldCard({required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Container(
+      decoration: BoxDecoration(
+        color: cs.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.35)),
+        boxShadow: [
+          BoxShadow(
+            color: cs.shadow.withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(mainAxisSize: MainAxisSize.min, children: children),
+    );
+  }
+}
+
+class _FieldDivider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Divider(
+      height: 1,
+      thickness: 1,
+      indent: 56,
+      color: cs.outlineVariant.withValues(alpha: 0.3),
     );
   }
 }
