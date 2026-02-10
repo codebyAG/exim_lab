@@ -198,36 +198,22 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Icon(Icons.check_circle, color: Colors.white, size: 20),
-          SizedBox(width: 12),
-          Expanded(child: Text('', textAlign: TextAlign.center)),
-        ],
-      ),
-    ).copyWithText(text);
-  }
-}
-
-// 🔹 CLEAN EXTENSION FOR FEATURE TEXT
-extension _FeatureText on Widget {
-  Widget copyWithText(String text) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Icon(Icons.check_circle, color: Colors.white, size: 20),
-        const SizedBox(width: 12),
-        Flexible(
-          child: Text(
-            text,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: Colors.white,
+        children: [
+          const Icon(Icons.check_circle, color: Colors.white, size: 20),
+          const SizedBox(width: 12),
+          Flexible(
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

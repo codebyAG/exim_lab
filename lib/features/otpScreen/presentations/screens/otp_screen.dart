@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:exim_lab/localization/app_localization.dart';
@@ -15,6 +17,47 @@ class OtpScreen extends StatefulWidget {
 
 class _OtpScreenState extends State<OtpScreen> {
   String _otp = "";
+  int _resendSeconds = 30;
+  Timer? _resendTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startResendTimer();
+  }
+
+  @override
+  void dispose() {
+    _resendTimer?.cancel();
+    super.dispose();
+  }
+
+  void _startResendTimer() {
+    _resendSeconds = 30;
+    _resendTimer?.cancel();
+    _resendTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+      setState(() {
+        if (_resendSeconds > 0) {
+          _resendSeconds--;
+        } else {
+          timer.cancel();
+        }
+      });
+    });
+  }
+
+  void _handleResend() async {
+    if (_resendSeconds > 0) return;
+    final authProvider = context.read<AuthProvider>();
+    final success = await authProvider.sendOtp(authProvider.currentMobile ?? '');
+    if (success && mounted) {
+      _startResendTimer();
+    }
+  }
 
   void _handleVerify() async {
     final t = AppLocalizations.of(context);
@@ -51,7 +94,7 @@ class _OtpScreenState extends State<OtpScreen> {
     final t = AppLocalizations.of(context);
 
     return Scaffold(
-      resizeToAvoidBottomInset: true, // ✅ IMPORTANT
+      resizeToAvoidBottomInset: true,
       backgroundColor: theme.colorScheme.surface,
       body: SafeArea(
         child: CustomScrollView(
@@ -64,7 +107,7 @@ class _OtpScreenState extends State<OtpScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 🔹 BACK
+                    // BACK
                     IconButton(
                       onPressed: () => Navigator.pop(context),
                       icon: Icon(
@@ -75,7 +118,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
                     const SizedBox(height: 24),
 
-                    // 🔹 HEADER
+                    // HEADER
                     FadeInDown(
                       duration: const Duration(milliseconds: 800),
                       child: Text(
@@ -104,7 +147,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
                     const SizedBox(height: 40),
 
-                    // 🔹 OTP FIELD
+                    // OTP FIELD
                     FadeInLeft(
                       delay: const Duration(milliseconds: 400),
                       child: PinCodeTextField(
@@ -128,25 +171,32 @@ class _OtpScreenState extends State<OtpScreen> {
                           ),
                         ),
                         onChanged: (value) {
-                          setState(() {
-                            _otp = value;
-                          });
+                          setState(() => _otp = value);
+                          if (value.length == 4) {
+                            _handleVerify();
+                          }
                         },
                       ),
                     ),
 
                     const SizedBox(height: 16),
 
-                    // 🔹 RESEND
+                    // RESEND
                     FadeInLeft(
                       delay: const Duration(milliseconds: 600),
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: _resendSeconds > 0 ? null : _handleResend,
                           child: Text(
-                            t.translate('resend_otp'),
-                            style: theme.textTheme.bodyMedium,
+                            _resendSeconds > 0
+                                ? '${t.translate('resend_otp')} (${_resendSeconds}s)'
+                                : t.translate('resend_otp'),
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: _resendSeconds > 0
+                                  ? theme.colorScheme.onSurface.withValues(alpha: 0.4)
+                                  : theme.colorScheme.primary,
+                            ),
                           ),
                         ),
                       ),
@@ -154,7 +204,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
                     const SizedBox(height: 32),
 
-                    // 🔹 VERIFY BUTTON
+                    // VERIFY BUTTON
                     Consumer<AuthProvider>(
                       builder: (context, provider, child) {
                         return FadeInUp(
@@ -193,7 +243,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
                     const Spacer(),
 
-                    // 🔹 FOOTER
+                    // FOOTER
                     Padding(
                       padding: const EdgeInsets.only(bottom: 20),
                       child: Center(
