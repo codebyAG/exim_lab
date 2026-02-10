@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:sizer/sizer.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:exim_lab/localization/app_localization.dart';
 
 class CbmCalculatorScreen extends StatefulWidget {
   const CbmCalculatorScreen({super.key});
@@ -61,6 +62,7 @@ class _CbmCalculatorScreenState extends State<CbmCalculatorScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final loc = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: cs.surfaceContainerLowest,
@@ -107,7 +109,7 @@ class _CbmCalculatorScreenState extends State<CbmCalculatorScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Calculate Volume',
+                          loc.translate('cbm_calc_title'),
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w700,
                             color: cs.onPrimaryContainer,
@@ -115,7 +117,7 @@ class _CbmCalculatorScreenState extends State<CbmCalculatorScreen> {
                         ),
                         SizedBox(height: 0.3.h),
                         Text(
-                          'Cubic Meters & Volumetric Weight',
+                          loc.translate('cbm_calc_subtitle'),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: cs.onPrimaryContainer.withValues(alpha: 0.8),
                           ),
@@ -131,7 +133,7 @@ class _CbmCalculatorScreenState extends State<CbmCalculatorScreen> {
 
             // Input Section
             Text(
-              'Dimensions (in cm)',
+              loc.translate('cbm_dimensions'),
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: cs.onSurfaceVariant,
@@ -143,7 +145,7 @@ class _CbmCalculatorScreenState extends State<CbmCalculatorScreen> {
               children: [
                 Expanded(
                   child: _inputField(
-                    'Length',
+                    loc.translate('cbm_length'),
                     _lengthCtrl,
                     Icons.straighten_outlined,
                   ),
@@ -151,7 +153,7 @@ class _CbmCalculatorScreenState extends State<CbmCalculatorScreen> {
                 SizedBox(width: 3.w),
                 Expanded(
                   child: _inputField(
-                    'Width',
+                    loc.translate('cbm_width'),
                     _widthCtrl,
                     Icons.width_normal_outlined,
                   ),
@@ -165,7 +167,7 @@ class _CbmCalculatorScreenState extends State<CbmCalculatorScreen> {
               children: [
                 Expanded(
                   child: _inputField(
-                    'Height',
+                    loc.translate('cbm_height'),
                     _heightCtrl,
                     Icons.height_outlined,
                   ),
@@ -173,7 +175,7 @@ class _CbmCalculatorScreenState extends State<CbmCalculatorScreen> {
                 SizedBox(width: 3.w),
                 Expanded(
                   child: _inputField(
-                    'Quantity',
+                    loc.translate('cbm_quantity'),
                     _qtyCtrl,
                     Icons.inventory_2_outlined,
                   ),
@@ -219,7 +221,7 @@ class _CbmCalculatorScreenState extends State<CbmCalculatorScreen> {
                         ),
                         SizedBox(width: 1.w),
                         Text(
-                          'Results',
+                          loc.translate('cbm_results'),
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w600,
                             color: cs.primary,
@@ -228,18 +230,24 @@ class _CbmCalculatorScreenState extends State<CbmCalculatorScreen> {
                       ],
                     ),
                     SizedBox(height: 1.5.h),
-                    _resultCard(
-                      icon: Icons.view_in_ar_rounded,
-                      title: 'Total CBM',
-                      value: '${_totalCbm!.toStringAsFixed(3)} m³',
-                      isHighlight: true,
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 400),
+                      child: _resultCard(
+                        icon: Icons.view_in_ar_rounded,
+                        title: loc.translate('cbm_total'),
+                        value: '${_totalCbm!.toStringAsFixed(4)} m³',
+                        isHighlight: true,
+                      ),
                     ),
-                    SizedBox(height: 1.2.h),
-                    _resultCard(
-                      icon: Icons.scale_outlined,
-                      title: 'Volumetric Weight',
-                      value: '${_volumetricWeight!.toStringAsFixed(2)} Kg',
-                      subtitle: 'Approx. for air freight',
+                    SizedBox(height: 1.5.h),
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 500),
+                      child: _resultCard(
+                        icon: Icons.scale_rounded,
+                        title: loc.translate('cbm_volumetric_weight'),
+                        value: '${_volumetricWeight!.toStringAsFixed(2)} kg',
+                        subtitle: loc.translate('cbm_approx_air'),
+                      ),
                     ),
                   ],
                 ),

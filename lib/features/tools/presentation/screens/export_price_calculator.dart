@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:sizer/sizer.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:exim_lab/localization/app_localization.dart';
 
 class ExportPriceCalculatorScreen extends StatefulWidget {
   const ExportPriceCalculatorScreen({super.key});
@@ -57,11 +58,12 @@ class _ExportPriceCalculatorScreenState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final loc = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: cs.surfaceContainerLowest,
       appBar: AppBar(
-        title: const Text('Export Price Calculator'),
+        title: Text(loc.translate('export_calc_title')),
         backgroundColor: cs.surfaceContainerLowest,
         elevation: 0,
         scrolledUnderElevation: 0,
@@ -103,7 +105,7 @@ class _ExportPriceCalculatorScreenState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Export Pricing',
+                          loc.translate('export_calc_title'),
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w700,
                             color: cs.onPrimaryContainer,
@@ -111,7 +113,7 @@ class _ExportPriceCalculatorScreenState
                         ),
                         SizedBox(height: 0.3.h),
                         Text(
-                          'Calculate selling price with profit',
+                          loc.translate('export_calc_subtitle'),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: cs.onPrimaryContainer.withValues(alpha: 0.8),
                           ),
@@ -127,7 +129,7 @@ class _ExportPriceCalculatorScreenState
 
             // Input Section
             Text(
-              'Cost Breakdown',
+              loc.translate('export_cost_breakdown'),
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: cs.onSurfaceVariant,
@@ -136,30 +138,30 @@ class _ExportPriceCalculatorScreenState
             SizedBox(height: 1.5.h),
 
             _inputField(
-              'Product Cost',
+              loc.translate('export_product_cost'),
               _productCtrl,
               Icons.inventory_outlined,
               '₹',
             ),
             SizedBox(height: 1.5.h),
             _inputField(
-              'Packaging Cost',
+              loc.translate('export_packaging_cost'),
               _packagingCtrl,
               Icons.inventory_2_outlined,
               '₹',
             ),
             SizedBox(height: 1.5.h),
             _inputField(
-              'Freight Cost',
+              loc.translate('export_freight_cost'),
               _freightCtrl,
               Icons.local_shipping_outlined,
               '₹',
             ),
             SizedBox(height: 1.5.h),
             _inputField(
-              'Profit Margin',
+              loc.translate('export_profit_margin'),
               _profitCtrl,
-              Icons.trending_up_rounded,
+              Icons.trending_up_outlined,
               '%',
             ),
 
@@ -172,9 +174,12 @@ class _ExportPriceCalculatorScreenState
               child: FilledButton.icon(
                 onPressed: _calculate,
                 icon: const Icon(Icons.calculate_rounded),
-                label: const Text(
-                  'Calculate Price',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                label: Text(
+                  loc.translate('export_calculate_btn'),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 style: FilledButton.styleFrom(
                   shape: RoundedRectangleBorder(
@@ -201,7 +206,7 @@ class _ExportPriceCalculatorScreenState
                         ),
                         SizedBox(width: 1.w),
                         Text(
-                          'Pricing Breakdown',
+                          loc.translate('export_pricing_breakdown'),
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w600,
                             color: cs.primary,
@@ -212,19 +217,19 @@ class _ExportPriceCalculatorScreenState
                     SizedBox(height: 1.5.h),
                     _resultCard(
                       icon: Icons.receipt_long_outlined,
-                      title: 'Total Cost',
+                      title: loc.translate('export_total_cost'),
                       value: '₹${totalCost!.toStringAsFixed(2)}',
                     ),
                     SizedBox(height: 1.2.h),
                     _resultCard(
                       icon: Icons.add_circle_outline_rounded,
-                      title: 'Profit Amount',
+                      title: loc.translate('export_profit_amount'),
                       value: '₹${profitAmount!.toStringAsFixed(2)}',
                     ),
                     SizedBox(height: 1.2.h),
                     _resultCard(
                       icon: Icons.sell_outlined,
-                      title: 'Selling Price',
+                      title: loc.translate('export_selling_price'),
                       value: '₹${sellingPrice!.toStringAsFixed(2)}',
                       isHighlight: true,
                     ),

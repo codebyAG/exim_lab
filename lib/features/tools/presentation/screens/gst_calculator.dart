@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:sizer/sizer.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:exim_lab/localization/app_localization.dart';
 
 class GstCalculatorScreen extends StatefulWidget {
   const GstCalculatorScreen({super.key});
@@ -47,11 +48,12 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final loc = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: cs.surfaceContainerLowest,
       appBar: AppBar(
-        title: const Text('GST Calculator'),
+        title: Text(loc.translate('gst_calc_title')),
         backgroundColor: cs.surfaceContainerLowest,
         elevation: 0,
         scrolledUnderElevation: 0,
@@ -93,7 +95,7 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'GST Calculator',
+                          loc.translate('gst_calc_title'),
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w700,
                             color: cs.onPrimaryContainer,
@@ -101,7 +103,7 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
                         ),
                         SizedBox(height: 0.3.h),
                         Text(
-                          'Calculate tax with multiple rates',
+                          loc.translate('gst_calc_subtitle'),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: cs.onPrimaryContainer.withValues(alpha: 0.8),
                           ),
@@ -117,7 +119,7 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
 
             // Input Section
             Text(
-              'Base Amount',
+              loc.translate('gst_base_amount'),
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: cs.onSurfaceVariant,
@@ -134,7 +136,7 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
                 fontWeight: FontWeight.w600,
               ),
               decoration: InputDecoration(
-                labelText: 'Amount',
+                labelText: loc.translate('gst_amount_label'),
                 prefixIcon: const Icon(Icons.currency_rupee_rounded, size: 20),
                 suffixText: '₹',
                 filled: true,
@@ -161,7 +163,7 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
 
             // GST Rate Selector
             Text(
-              'Select GST Rate',
+              loc.translate('gst_select_rate'),
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: cs.onSurfaceVariant,
@@ -237,7 +239,7 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
                         ),
                         SizedBox(width: 1.w),
                         Text(
-                          'Tax Breakdown',
+                          loc.translate('gst_tax_breakdown'),
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w600,
                             color: cs.primary,
@@ -248,13 +250,13 @@ class _GstCalculatorScreenState extends State<GstCalculatorScreen> {
                     SizedBox(height: 1.5.h),
                     _resultCard(
                       icon: Icons.percent_rounded,
-                      title: 'GST Amount ($_gstRate%)',
+                      title: '${loc.translate('gst_amount')} ($_gstRate%)',
                       value: '₹${_gstAmount!.toStringAsFixed(2)}',
                     ),
                     SizedBox(height: 1.2.h),
                     _resultCard(
                       icon: Icons.account_balance_wallet_outlined,
-                      title: 'Total Amount',
+                      title: loc.translate('gst_total_amount'),
                       value: '₹${_totalAmount!.toStringAsFixed(2)}',
                       isHighlight: true,
                     ),
