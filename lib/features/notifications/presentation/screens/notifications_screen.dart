@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:exim_lab/features/notifications/data/models/notification_model.dart';
 import 'package:exim_lab/features/notifications/presentation/providers/notifications_provider.dart';
 import 'package:exim_lab/localization/app_localization.dart';
@@ -48,69 +49,108 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     final notifications = provider.notifications;
 
     return Scaffold(
-      backgroundColor: cs.surface,
+      backgroundColor: cs.surfaceContainerLowest,
       appBar: AppBar(
         title: Text(t.translate('notifications')),
         centerTitle: true,
+        backgroundColor: cs.surfaceContainerLowest,
+        elevation: 0,
+        scrolledUnderElevation: 0,
         actions: [
-          IconButton(
-            onPressed: () {
-              context.read<NotificationsProvider>().markAllAsRead();
-            },
-            icon: const Icon(Icons.done_all),
-            tooltip: t.translate('mark_all_read'),
-          ),
+          if (notifications.isNotEmpty)
+            TextButton(
+              onPressed: () =>
+                  context.read<NotificationsProvider>().markAllAsRead(),
+              child: Text(
+                t.translate('mark_all_read'),
+                style: TextStyle(
+                  color: cs.primary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
         ],
       ),
       body: Builder(
         builder: (context) {
+          // LOADING
           if (provider.isLoading && notifications.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: CircularProgressIndicator(color: cs.primary),
+            );
           }
 
+          // EMPTY STATE
           if (notifications.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.notifications_off_outlined,
-                    size: 60,
-                    color: cs.onSurface.withValues(alpha: 0.4),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    t.translate('no_notifications'),
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      color: cs.onSurface.withValues(alpha: 0.6),
+            return FadeIn(
+              duration: const Duration(milliseconds: 500),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(28),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: cs.primary.withValues(alpha: 0.08),
+                      ),
+                      child: Icon(
+                        Icons.notifications_off_outlined,
+                        size: 52,
+                        color: cs.primary.withValues(alpha: 0.6),
+                      ),
                     ),
-                  ),
-                ],
+                    SizedBox(height: 2.h),
+                    Text(
+                      t.translate('no_notifications'),
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(height: 0.6.h),
+                    Text(
+                      t.translate('no_notifications_hint'),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: cs.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           }
 
+          // LIST
           return RefreshIndicator(
+            color: cs.primary,
             onRefresh: () async {
-              await context.read<NotificationsProvider>().fetchNotifications(
-                refresh: true,
-              );
+              await context
+                  .read<NotificationsProvider>()
+                  .fetchNotifications(refresh: true);
             },
             child: ListView.separated(
               controller: _scrollController,
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.fromLTRB(5.w, 1.5.h, 5.w, 2.h),
               itemCount: notifications.length + (provider.hasMore ? 1 : 0),
-              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              separatorBuilder: (context, index) => SizedBox(height: 1.2.h),
               itemBuilder: (context, index) {
                 if (index == notifications.length) {
-                  return const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Center(child: CircularProgressIndicator()),
+                  return Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Center(
+                      child: CircularProgressIndicator(color: cs.primary),
+                    ),
                   );
                 }
 
                 final notification = notifications[index];
-                return _NotificationTile(notification: notification);
+                return FadeInUp(
+                  duration: const Duration(milliseconds: 400),
+                  delay: Duration(
+                      milliseconds: (index < 6 ? index : 5) * 60),
+                  child: _NotificationTile(notification: notification),
+                );
               },
             ),
           );
@@ -124,6 +164,14 @@ class _NotificationTile extends StatelessWidget {
   final NotificationModel notification;
   const _NotificationTile({required this.notification});
 
+  String _formatTime(DateTime dt) {
+    final now = DateTime.now();
+    final diff = now.difference(dt);
+    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
+    if (diff.inHours < 24) return '${diff.inHours}h ago';
+    return DateFormat('dd MMM').format(dt);
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -135,92 +183,140 @@ class _NotificationTile extends StatelessWidget {
         if (!isRead) {
           context.read<NotificationsProvider>().markAsRead(notification.id);
         }
-        // Handle navigation if linkUrl exists
-        // if (notification.linkUrl != null) ...
       },
       child: Container(
-        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isRead
-              ? cs.surface
-              : cs.primaryContainer.withValues(alpha: 0.3),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isRead
-                ? cs.outlineVariant.withValues(alpha: 0.4)
-                : cs.primary.withValues(alpha: 0.2),
-          ),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // ICON
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: isRead
-                    ? cs.surfaceContainerHighest
-                    : cs.primary.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                isRead
-                    ? Icons.notifications_outlined
-                    : Icons.notifications_active,
-                size: 20,
-                color: isRead ? cs.onSurface : cs.primary,
-              ),
+          color: cs.surface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border(
+            left: BorderSide(
+              color: isRead
+                  ? Colors.transparent
+                  : cs.primary,
+              width: 3,
             ),
-            const SizedBox(width: 14),
-
-            // CONTENT
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            top: BorderSide(
+                color: cs.outlineVariant.withValues(alpha: 0.35)),
+            right: BorderSide(
+                color: cs.outlineVariant.withValues(alpha: 0.35)),
+            bottom: BorderSide(
+                color: cs.outlineVariant.withValues(alpha: 0.35)),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: cs.shadow.withValues(alpha: 0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ICON with unread dot overlay
+              Stack(
+                clipBehavior: Clip.none,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: isRead
+                          ? cs.surfaceContainerHighest
+                          : cs.primary.withValues(alpha: 0.10),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      isRead
+                          ? Icons.notifications_outlined
+                          : Icons.notifications_active_rounded,
+                      size: 20,
+                      color: isRead ? cs.onSurfaceVariant : cs.primary,
+                    ),
+                  ),
+                  if (!isRead)
+                    Positioned(
+                      top: -2,
+                      right: -2,
+                      child: Container(
+                        width: 9,
+                        height: 9,
+                        decoration: BoxDecoration(
+                          color: cs.primary,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: cs.surface, width: 1.5),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+
+              const SizedBox(width: 12),
+
+              // CONTENT
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // TITLE + TIME
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            notification.title,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              fontWeight:
+                                  isRead ? FontWeight.w500 : FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          _formatTime(notification.createdAt),
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: cs.onSurface.withValues(alpha: 0.45),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 5),
+
+                    // BODY
+                    Text(
+                      notification.body,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: cs.onSurface.withValues(alpha: 0.65),
+                        height: 1.4,
+                      ),
+                    ),
+
+                    // SOURCE CHIP
+                    if (notification.source.isNotEmpty) ...[
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: cs.primary.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                         child: Text(
-                          notification.title,
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: isRead
-                                ? FontWeight.w500
-                                : FontWeight.bold,
+                          notification.source,
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: cs.primary,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
-                      Text(
-                        DateFormat(
-                          'dd MMM, hh:mm a',
-                        ).format(notification.createdAt),
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          fontSize: 10.sp,
-                          color: cs.onSurface.withValues(alpha: 0.5),
-                        ),
-                      ),
                     ],
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    notification.body,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: cs.onSurface.withValues(alpha: 0.7),
-                      height: 1.4,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-
-            // DOT
-            if (!isRead)
-              Padding(
-                padding: const EdgeInsets.only(left: 8, top: 20),
-                child: CircleAvatar(radius: 4, backgroundColor: cs.primary),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );

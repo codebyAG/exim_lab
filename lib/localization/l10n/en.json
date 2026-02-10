@@ -174,5 +174,6 @@
   "profile_updated": "Profile updated successfully",
   "member_badge": "Member",
   "section_account": "Account",
-  "section_support": "Support"
+  "section_support": "Support",
+  "no_notifications_hint": "You're all caught up!"
 }

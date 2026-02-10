@@ -174,5 +174,6 @@
   "profile_updated": "प्रोफ़ाइल सफलतापूर्वक अपडेट हुई",
   "member_badge": "सदस्य",
   "section_account": "खाता",
-  "section_support": "सहायता"
+  "section_support": "सहायता",
+  "no_notifications_hint": "सब कुछ पढ़ लिया है!"
 }
