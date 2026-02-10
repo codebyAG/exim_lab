@@ -36,193 +36,244 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final authProvider = context.watch<AuthProvider>();
     final user = authProvider.user;
     final t = AppLocalizations.of(context);
+    final topPad = MediaQuery.of(context).padding.top;
 
     return Scaffold(
       backgroundColor: cs.surface,
-      appBar: AppBar(
-        title: Text(t.translate('profile_title')),
-        centerTitle: true,
-        backgroundColor: cs.surface,
-        elevation: 0,
-      ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
         child: Column(
           children: [
-            // USER INFO CARD
-            Container(
-              padding: EdgeInsets.all(3.h),
-              decoration: BoxDecoration(
-                color: cs.primaryContainer,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: FadeInDown(
-                // 🔹 ANIMATION
-                duration: const Duration(milliseconds: 600),
-                child: Row(
+            // GRADIENT HEADER
+            FadeIn(
+              duration: const Duration(milliseconds: 600),
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.fromLTRB(5.w, topPad + 12, 5.w, 3.h),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [cs.primary, cs.primary.withValues(alpha: 0.82)],
+                  ),
+                  borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(32),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: cs.primary.withValues(alpha: 0.30),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                ),
+                child: Column(
                   children: [
-                    Container(
-                      height: 60,
-                      width: 60,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: cs.primary, // Solid background for contrast
-                        border: Border.all(color: Colors.white, width: 2),
-                      ),
-                      child: ClipOval(
-                        child:
-                            (user?.avatarUrl != null &&
-                                user!.avatarUrl!.isNotEmpty)
-                            ? CachedNetworkImage(
-                                // 🔹 CACHED IMAGE
-                                imageUrl: user.avatarUrl!,
-                                fit: BoxFit.cover,
-                                errorWidget: (context, url, error) {
-                                  return const Center(
-                                    child: Icon(
+                    // BACK + TITLE ROW
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () => Navigator.pop(context),
+                          icon: const Icon(
+                            Icons.arrow_back_rounded,
+                            color: Colors.white,
+                          ),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                        ),
+                        const Spacer(),
+                        Text(
+                          t.translate('profile_title'),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const Spacer(),
+                        const SizedBox(width: 40),
+                      ],
+                    ),
+
+                    SizedBox(height: 2.h),
+
+                    // AVATAR
+                    Stack(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 3),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.15),
+                                blurRadius: 16,
+                                offset: const Offset(0, 6),
+                              ),
+                            ],
+                          ),
+                          child: CircleAvatar(
+                            radius: 44,
+                            backgroundColor: Colors.white,
+                            child: ClipOval(
+                              child:
+                                  (user?.avatarUrl != null &&
+                                      user!.avatarUrl!.isNotEmpty)
+                                  ? CachedNetworkImage(
+                                      imageUrl: user.avatarUrl!,
+                                      fit: BoxFit.cover,
+                                      width: 88,
+                                      height: 88,
+                                      errorWidget: (context, url, error) =>
+                                          Icon(
+                                        Icons.person,
+                                        size: 44,
+                                        color: cs.primary,
+                                      ),
+                                      placeholder: (context, url) =>
+                                          const SizedBox(),
+                                    )
+                                  : Icon(
                                       Icons.person,
-                                      size: 35,
-                                      color: Colors.white,
+                                      size: 44,
+                                      color: cs.primary,
                                     ),
-                                  );
-                                },
-                                placeholder: (context, url) => Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : const Center(
-                                child: Icon(
-                                  Icons.person,
-                                  size: 35,
-                                  color: Colors.white,
-                                ),
-                              ),
-                      ),
-                    ),
-                    SizedBox(width: 4.w),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            user?.name ?? t.translate('guest_user'),
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              color: cs.onPrimaryContainer,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 0.5.h),
-                          Text(
-                            user?.email ??
-                                user?.mobile ??
-                                t.translate('no_email'),
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: cs.onPrimaryContainer.withValues(
-                                alpha: 0.8,
+                        ),
+                        // EDIT BADGE
+                        Positioned(
+                          right: 0,
+                          bottom: 0,
+                          child: GestureDetector(
+                            onTap: () => AppNavigator.push(
+                              context,
+                              UpdateProfileScreen(user: user),
+                            ),
+                            child: Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.edit_rounded,
+                                size: 14,
+                                color: cs.primary,
                               ),
                             ),
                           ),
-                        ],
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: 1.5.h),
+
+                    // NAME
+                    Text(
+                      user?.name ?? t.translate('guest_user'),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
-                    IconButton(
-                      onPressed: () {
-                        AppNavigator.push(
-                          context,
-                          UpdateProfileScreen(user: user),
-                        );
-                      },
-                      icon: Icon(Icons.edit, color: cs.onPrimaryContainer),
+
+                    SizedBox(height: 4),
+
+                    // EMAIL / PHONE
+                    Text(
+                      user?.email ?? user?.mobile ?? '',
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.75),
+                        fontSize: 13,
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
-            SizedBox(height: 3.h),
 
-            // STATS ROW
-            if (user?.stats != null)
-              FadeInLeft(
-                // 🔹 ANIMATION
-                duration: const Duration(milliseconds: 700),
-                delay: const Duration(milliseconds: 200),
-                child: Row(
-                  children: [
-                    _StatsCard(
-                      label: t.translate('stats_active'),
-                      value: '${user?.stats?.activeCourses ?? 0}',
-                      icon: Icons.play_circle_outline_rounded,
-                      color: Colors.blue,
-                    ),
-                    SizedBox(width: 3.w),
-                    _StatsCard(
-                      label: t.translate('stats_completed'),
-                      value: '${user?.stats?.completedCourses ?? 0}',
-                      icon: Icons.check_circle_outline_rounded,
-                      color: Colors.green,
-                    ),
-                    SizedBox(width: 3.w),
-                    _StatsCard(
-                      label: t.translate('stats_quizzes'),
-                      value: '${user?.stats?.quizzesTaken ?? 0}',
-                      icon: Icons.quiz_outlined,
-                      color: Colors.orange,
-                    ),
-                  ],
-                ),
-              ),
-            SizedBox(height: 4.h),
-
-            // MENU OPTIONS
-            FadeInUp(
-              // 🔹 ANIMATION - Staggered could be better but this is simple group
-              duration: const Duration(milliseconds: 800),
-              delay: const Duration(milliseconds: 300),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
               child: Column(
                 children: [
-                  _ProfileOption(
-                    icon: Icons.person_outline_rounded,
-                    title: t.translate('menu_my_details'),
-                    onTap: () {
-                      AppNavigator.push(
-                        context,
-                        UpdateProfileScreen(user: user),
-                      );
-                    },
-                  ),
-                  _ProfileOption(
-                    icon: Icons.settings_outlined,
-                    title: t.translate('menu_settings'),
-                    onTap: () {
-                      AppNavigator.push(context, const SettingsScreen());
-                    },
-                  ),
-                  _ProfileOption(
-                    icon: Icons.help_outline_rounded,
-                    title: t.translate('menu_help'),
-                    onTap: () => _showHelpSupportDialog(context),
-                  ),
-                  _ProfileOption(
-                    icon: Icons.privacy_tip_outlined,
-                    title: t.translate('menu_privacy'),
-                    onTap: _launchPrivacyPolicy,
+                  // STATS ROW
+                  if (user?.stats != null)
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 500),
+                      delay: const Duration(milliseconds: 100),
+                      child: Row(
+                        children: [
+                          _StatsCard(
+                            label: t.translate('stats_active'),
+                            value: '${user?.stats?.activeCourses ?? 0}',
+                            icon: Icons.play_circle_outline_rounded,
+                            color: Colors.blue,
+                          ),
+                          SizedBox(width: 3.w),
+                          _StatsCard(
+                            label: t.translate('stats_completed'),
+                            value: '${user?.stats?.completedCourses ?? 0}',
+                            icon: Icons.check_circle_outline_rounded,
+                            color: Colors.green,
+                          ),
+                          SizedBox(width: 3.w),
+                          _StatsCard(
+                            label: t.translate('stats_quizzes'),
+                            value: '${user?.stats?.quizzesTaken ?? 0}',
+                            icon: Icons.quiz_outlined,
+                            color: Colors.orange,
+                          ),
+                        ],
+                      ),
+                    ),
+
+                  SizedBox(height: 3.h),
+
+                  // MENU OPTIONS
+                  FadeInUp(
+                    duration: const Duration(milliseconds: 500),
+                    delay: const Duration(milliseconds: 200),
+                    child: Column(
+                      children: [
+                        _ProfileOption(
+                          icon: Icons.person_outline_rounded,
+                          title: t.translate('menu_my_details'),
+                          onTap: () => AppNavigator.push(
+                            context,
+                            UpdateProfileScreen(user: user),
+                          ),
+                        ),
+                        _ProfileOption(
+                          icon: Icons.settings_outlined,
+                          title: t.translate('menu_settings'),
+                          onTap: () =>
+                              AppNavigator.push(context, const SettingsScreen()),
+                        ),
+                        _ProfileOption(
+                          icon: Icons.help_outline_rounded,
+                          title: t.translate('menu_help'),
+                          onTap: () => _showHelpSupportDialog(context),
+                        ),
+                        _ProfileOption(
+                          icon: Icons.privacy_tip_outlined,
+                          title: t.translate('menu_privacy'),
+                          onTap: _launchPrivacyPolicy,
+                        ),
+
+                        SizedBox(height: 1.5.h),
+
+                        _ProfileOption(
+                          icon: Icons.logout_rounded,
+                          title: t.translate('menu_logout'),
+                          isDestructive: true,
+                          onTap: () => _handleLogout(context),
+                        ),
+                      ],
+                    ),
                   ),
 
                   SizedBox(height: 2.h),
-
-                  // LOGOUT
-                  _ProfileOption(
-                    icon: Icons.logout_rounded,
-                    title: t.translate('menu_logout'),
-                    isDestructive: true,
-                    onTap: () => _handleLogout(context),
-                  ),
                 ],
               ),
             ),
@@ -234,7 +285,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _showHelpSupportDialog(BuildContext context) {
     final t = AppLocalizations.of(context);
-
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -243,19 +293,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildContactRow(
-              context,
-              Icons.phone,
-              t.translate('phone'),
-              '+91 98717 69042',
-            ),
+            _buildContactRow(context, Icons.phone, t.translate('phone'),
+                '+91 98717 69042'),
             SizedBox(height: 1.5.h),
             _buildContactRow(
-              context,
-              Icons.email,
-              t.translate('email'),
-              'info@siiea.in',
-            ),
+                context, Icons.email, t.translate('email'), 'info@siiea.in'),
           ],
         ),
         actions: [
@@ -269,11 +311,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildContactRow(
-    BuildContext context,
-    IconData icon,
-    String label,
-    String value,
-  ) {
+      BuildContext context, IconData icon, String label, String value) {
     final theme = Theme.of(context);
     return Row(
       children: [
@@ -282,18 +320,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              label,
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            Text(
-              value,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            Text(label,
+                style: theme.textTheme.labelSmall
+                    ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+            Text(value,
+                style: theme.textTheme.bodyMedium
+                    ?.copyWith(fontWeight: FontWeight.w600)),
           ],
         ),
       ],
@@ -316,9 +348,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(
-          t.translate('logout_confirm_title'),
-        ), // Default fallback if key missing
+        title: Text(t.translate('logout_confirm_title')),
         content: Text(t.translate('logout_confirm_msg')),
         actions: [
           TextButton(
@@ -327,20 +357,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           TextButton(
             onPressed: () async {
-              Navigator.pop(ctx); // Close dialog
-
-              // Clear session
+              Navigator.pop(ctx);
               await context.read<AuthProvider>().logout();
-
-              // Navigate to Welcome Screen (Clear stack)
               if (context.mounted) {
                 AppNavigator.replace(context, const WelcomeScreen());
               }
             },
-            child: Text(
-              t.translate('menu_logout'),
-              style: const TextStyle(color: Colors.red),
-            ),
+            child: Text(t.translate('menu_logout'),
+                style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -365,35 +389,26 @@ class _StatsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
-
     return Expanded(
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 1.w),
         decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
+          color: color.withValues(alpha: 0.10),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withValues(alpha: 0.2)),
+          border: Border.all(color: color.withValues(alpha: 0.20)),
         ),
         child: Column(
           children: [
             Icon(icon, color: color, size: 24),
             SizedBox(height: 1.h),
-            Text(
-              value,
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
-            ),
+            Text(value,
+                style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold, color: color)),
             SizedBox(height: 0.5.h),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.labelMedium?.copyWith(
-                color: cs.onSurfaceVariant,
-                fontSize: 10.sp,
-              ),
-            ),
+            Text(label,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.labelMedium?.copyWith(
+                    color: cs.onSurfaceVariant, fontSize: 10.sp)),
           ],
         ),
       ),
@@ -432,9 +447,7 @@ class _ProfileOption extends StatelessWidget {
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: isDestructive
-                ? cs.errorContainer
-                : cs.surfaceContainerHighest,
+            color: isDestructive ? cs.errorContainer : cs.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
@@ -443,18 +456,11 @@ class _ProfileOption extends StatelessWidget {
             size: 20,
           ),
         ),
-        title: Text(
-          title,
-          style: theme.textTheme.bodyLarge?.copyWith(
-            color: color,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        trailing: Icon(
-          Icons.arrow_forward_ios_rounded,
-          size: 16,
-          color: color.withValues(alpha: 0.5),
-        ),
+        title: Text(title,
+            style: theme.textTheme.bodyLarge?.copyWith(
+                color: color, fontWeight: FontWeight.w600)),
+        trailing: Icon(Icons.arrow_forward_ios_rounded,
+            size: 16, color: color.withValues(alpha: 0.5)),
       ),
     );
   }

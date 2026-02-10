@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exim_lab/core/theme/theme_provider.dart';
@@ -14,132 +15,175 @@ class SettingsScreen extends StatelessWidget {
     final cs = theme.colorScheme;
     final themeProvider = context.watch<ThemeProvider>();
     final t = AppLocalizations.of(context);
+    final isDark = themeProvider.themeMode == ThemeMode.dark;
 
     return Scaffold(
+      backgroundColor: cs.surface,
       appBar: AppBar(
         title: Text(t.translate('settings_title')),
         centerTitle: true,
+        backgroundColor: cs.surface,
+        elevation: 0,
       ),
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
         children: [
           // APPEARANCE
-          Text(
-            t.translate('appearance_section'),
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: cs.primary,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.2,
+          FadeInUp(
+            duration: const Duration(milliseconds: 400),
+            child: _SectionLabel(t.translate('appearance_section')),
+          ),
+          FadeInUp(
+            duration: const Duration(milliseconds: 400),
+            delay: const Duration(milliseconds: 60),
+            child: _SettingsCard(
+              children: [
+                _SettingsTile(
+                  icon: isDark
+                      ? Icons.dark_mode_rounded
+                      : Icons.light_mode_rounded,
+                  iconColor:
+                      isDark ? Colors.indigo : Colors.amber.shade700,
+                  title: t.translate('dark_mode'),
+                  trailing: Switch(
+                    value: isDark,
+                    onChanged: (val) =>
+                        val ? themeProvider.setDark() : themeProvider.setLight(),
+                    activeTrackColor: cs.primary,
+                    activeThumbColor: cs.onPrimary,
+                  ),
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 1.h),
-          SwitchListTile(
-            value: themeProvider.themeMode == ThemeMode.dark,
-            onChanged: (val) {
-              val ? themeProvider.setDark() : themeProvider.setLight();
-            },
-            title: Text(t.translate('dark_mode')),
-            secondary: const Icon(Icons.dark_mode_outlined),
-            contentPadding: EdgeInsets.zero,
-          ),
 
-          SizedBox(height: 3.h),
+          SizedBox(height: 2.h),
 
           // LANGUAGE
-          Text(
-            t.translate('language_section'),
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: cs.primary,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.2,
+          FadeInUp(
+            duration: const Duration(milliseconds: 400),
+            delay: const Duration(milliseconds: 120),
+            child: _SectionLabel(t.translate('language_section')),
+          ),
+          FadeInUp(
+            duration: const Duration(milliseconds: 400),
+            delay: const Duration(milliseconds: 180),
+            child: Consumer<LocaleProvider>(
+              builder: (context, localeProvider, _) {
+                final isHindi = localeProvider.locale.languageCode == 'hi';
+                return _SettingsCard(
+                  children: [
+                    _SettingsTile(
+                      icon: Icons.language_rounded,
+                      iconColor: Colors.teal,
+                      title: t.translate('change_language'),
+                      subtitle: isHindi ? 'हिन्दी' : 'English',
+                      trailing: Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        size: 14,
+                        color: cs.onSurfaceVariant,
+                      ),
+                      onTap: () =>
+                          _showLanguageDialog(context, localeProvider),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
-          SizedBox(height: 1.h),
-          Consumer<LocaleProvider>(
-            builder: (context, localeProvider, child) {
-              final currentLang = localeProvider.locale.languageCode == 'hi'
-                  ? 'Hindi'
-                  : 'English';
-              return ListTile(
-                leading: const Icon(Icons.language),
-                title: Text(t.translate('change_language')),
-                subtitle: Text(currentLang),
-                contentPadding: EdgeInsets.zero,
-                trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
-                onTap: () {
-                  _showLanguageDialog(context, localeProvider);
-                },
-              );
-            },
-          ),
 
-          SizedBox(height: 3.h),
+          SizedBox(height: 2.h),
 
           // NOTIFICATIONS
-          Text(
-            t.translate('notifications_section'),
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: cs.primary,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.2,
+          FadeInUp(
+            duration: const Duration(milliseconds: 400),
+            delay: const Duration(milliseconds: 240),
+            child: _SectionLabel(t.translate('notifications_section')),
+          ),
+          FadeInUp(
+            duration: const Duration(milliseconds: 400),
+            delay: const Duration(milliseconds: 300),
+            child: _SettingsCard(
+              children: [
+                _SettingsTile(
+                  icon: Icons.notifications_outlined,
+                  iconColor: Colors.deepOrange,
+                  title: t.translate('push_notifications'),
+                  trailing: Switch(
+                    value: true,
+                    onChanged: (_) {},
+                    activeTrackColor: cs.primary,
+                    activeThumbColor: cs.onPrimary,
+                  ),
+                ),
+                Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: cs.outlineVariant.withValues(alpha: 0.3),
+                ),
+                _SettingsTile(
+                  icon: Icons.email_outlined,
+                  iconColor: Colors.blue,
+                  title: t.translate('email_updates'),
+                  trailing: Switch(
+                    value: true,
+                    onChanged: (_) {},
+                    activeTrackColor: cs.primary,
+                    activeThumbColor: cs.onPrimary,
+                  ),
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 1.h),
-          SwitchListTile(
-            value: true,
-            onChanged: (val) {},
-            title: Text(t.translate('push_notifications')),
-            secondary: const Icon(Icons.notifications_outlined),
-            contentPadding: EdgeInsets.zero,
-          ),
-          SwitchListTile(
-            value: true,
-            onChanged: (val) {},
-            title: Text(t.translate('email_updates')),
-            secondary: const Icon(Icons.email_outlined),
-            contentPadding: EdgeInsets.zero,
-          ),
 
-          SizedBox(height: 3.h),
+          SizedBox(height: 2.h),
 
           // OTHER
-          Text(
-            t.translate('other_section'),
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: cs.primary,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.2,
+          FadeInUp(
+            duration: const Duration(milliseconds: 400),
+            delay: const Duration(milliseconds: 360),
+            child: _SectionLabel(t.translate('other_section')),
+          ),
+          FadeInUp(
+            duration: const Duration(milliseconds: 400),
+            delay: const Duration(milliseconds: 420),
+            child: _SettingsCard(
+              children: [
+                _SettingsTile(
+                  icon: Icons.info_outline_rounded,
+                  iconColor: Colors.blueGrey,
+                  title: t.translate('about_app'),
+                  subtitle: '${t.translate('version')} 1.0.0',
+                  trailing: Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 14,
+                    color: cs.onSurfaceVariant,
+                  ),
+                  onTap: () => showAboutDialog(
+                    context: context,
+                    applicationName: 'Exim Lab',
+                    applicationVersion: '1.0.0',
+                    applicationIcon:
+                        const Icon(Icons.school_rounded, size: 50),
+                    children: [const Text('Developed by SIIEA')],
+                  ),
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 1.h),
-          ListTile(
-            leading: const Icon(Icons.info_outline),
-            title: Text(t.translate('about_app')),
-            subtitle: Text('${t.translate('version')} 1.0.0'),
-            contentPadding: EdgeInsets.zero,
-            onTap: () {
-              showAboutDialog(
-                context: context,
-                applicationName: 'Exim Lab',
-                applicationVersion: '1.0.0',
-                applicationIcon: const Icon(Icons.school_rounded, size: 50),
-                children: [const Text('Developed by SIIEA')],
-              );
-            },
-          ),
+
+          SizedBox(height: 2.h),
         ],
       ),
     );
   }
 
   void _showLanguageDialog(
-    BuildContext context,
-    LocaleProvider localeProvider,
-  ) {
+      BuildContext context, LocaleProvider localeProvider) {
+    final t = AppLocalizations.of(context);
     showDialog(
       context: context,
-      builder: (context) {
-        final t = AppLocalizations.of(context);
+      builder: (ctx) {
         return AlertDialog(
           title: Text(t.translate('select_language')),
           content: RadioGroup<String>(
@@ -147,33 +191,115 @@ class SettingsScreen extends StatelessWidget {
             onChanged: (val) {
               if (val != null) {
                 localeProvider.setLocale(val);
-                Navigator.pop(context);
+                Navigator.pop(ctx);
               }
             },
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: [
-                ListTile(
-                  title: const Text('English'),
-                  leading: const Radio<String>(value: 'en'),
-                  onTap: () {
-                    localeProvider.setLocale('en');
-                    Navigator.pop(context);
-                  },
+              children: const [
+                RadioListTile<String>(
+                  title: Text('English'),
+                  value: 'en',
                 ),
-                ListTile(
-                  title: const Text('Hindi'),
-                  leading: const Radio<String>(value: 'hi'),
-                  onTap: () {
-                    localeProvider.setLocale('hi');
-                    Navigator.pop(context);
-                  },
+                RadioListTile<String>(
+                  title: Text('हिन्दी'),
+                  value: 'hi',
                 ),
               ],
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class _SectionLabel extends StatelessWidget {
+  final String text;
+  const _SectionLabel(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(left: 4, bottom: 8),
+      child: Text(
+        text.toUpperCase(),
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: cs.primary,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 1.2,
+            ),
+      ),
+    );
+  }
+}
+
+class _SettingsCard extends StatelessWidget {
+  final List<Widget> children;
+  const _SettingsCard({required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Container(
+      decoration: BoxDecoration(
+        color: cs.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.4)),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(mainAxisSize: MainAxisSize.min, children: children),
+    );
+  }
+}
+
+class _SettingsTile extends StatelessWidget {
+  final IconData icon;
+  final Color iconColor;
+  final String title;
+  final String? subtitle;
+  final Widget trailing;
+  final VoidCallback? onTap;
+
+  const _SettingsTile({
+    required this.icon,
+    required this.iconColor,
+    required this.title,
+    this.subtitle,
+    required this.trailing,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    return ListTile(
+      onTap: onTap,
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: iconColor.withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Icon(icon, color: iconColor, size: 20),
+      ),
+      title: Text(
+        title,
+        style:
+            theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+      ),
+      subtitle: subtitle != null
+          ? Text(
+              subtitle!,
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: cs.onSurfaceVariant),
+            )
+          : null,
+      trailing: trailing,
+      contentPadding:
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
     );
   }
 }

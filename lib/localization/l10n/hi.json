@@ -164,5 +164,12 @@
   "continue_journey": "अपनी यात्रा जारी रखें",
   "already_account_prefix": "पहले से खाता है?",
   "already_account_login": "लॉगिन करें",
-  "otp_sent_to": "कोड भेजा गया"
+  "otp_sent_to": "कोड भेजा गया",
+  "update_profile_title": "प्रोफ़ाइल संपादित करें",
+  "save_changes": "बदलाव सहेजें",
+  "full_name": "पूरा नाम",
+  "email_address": "ईमेल पता",
+  "avatar_url": "अवतार URL",
+  "name_required": "नाम आवश्यक है",
+  "profile_updated": "प्रोफ़ाइल सफलतापूर्वक अपडेट हुई"
 }

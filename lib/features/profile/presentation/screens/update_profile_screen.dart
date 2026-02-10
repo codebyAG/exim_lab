@@ -1,5 +1,7 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:exim_lab/features/login/data/models/user_model.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
+import 'package:exim_lab/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -42,108 +44,209 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     final cs = theme.colorScheme;
     final authProvider = context.watch<AuthProvider>();
     final isLoading = authProvider.isLoading;
+    final t = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: cs.surface,
       appBar: AppBar(
-        title: const Text('Update Profile'),
+        title: Text(t.translate('update_profile_title')),
+        centerTitle: true,
         backgroundColor: cs.surface,
         elevation: 0,
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 3.h),
+        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
         child: Form(
           key: _formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Avatar Preview
-              CircleAvatar(
-                radius: 40,
-                backgroundColor: cs.primaryContainer,
-                backgroundImage: (_avatarController.text.isNotEmpty)
-                    ? NetworkImage(_avatarController.text)
-                    : null,
-                child: (_avatarController.text.isEmpty)
-                    ? Icon(Icons.person, size: 40, color: cs.primary)
-                    : null,
+              // AVATAR SECTION
+              FadeInDown(
+                duration: const Duration(milliseconds: 500),
+                child: Center(
+                  child: Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: cs.primary, width: 2.5),
+                          boxShadow: [
+                            BoxShadow(
+                              color: cs.primary.withValues(alpha: 0.20),
+                              blurRadius: 16,
+                              offset: const Offset(0, 6),
+                            ),
+                          ],
+                        ),
+                        child: CircleAvatar(
+                          radius: 48,
+                          backgroundColor: cs.primaryContainer,
+                          backgroundImage: _avatarController.text.isNotEmpty
+                              ? NetworkImage(_avatarController.text)
+                              : null,
+                          child: _avatarController.text.isEmpty
+                              ? Icon(Icons.person, size: 48, color: cs.primary)
+                              : null,
+                        ),
+                      ),
+                      Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(7),
+                          decoration: BoxDecoration(
+                            color: cs.primary,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: cs.surface, width: 2),
+                          ),
+                          child: Icon(
+                            Icons.camera_alt_rounded,
+                            size: 14,
+                            color: cs.onPrimary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              SizedBox(height: 3.h),
 
-              // Fields - Styled similarly to Login
-              _buildTextField(
-                controller: _nameController,
-                label: 'Full Name',
-                icon: Icons.person_outline,
-                validator: (v) =>
-                    v == null || v.isEmpty ? 'Name required' : null,
+              SizedBox(height: 3.5.h),
+
+              // FIELDS
+              FadeInUp(
+                duration: const Duration(milliseconds: 400),
+                delay: const Duration(milliseconds: 100),
+                child: _buildField(
+                  context: context,
+                  controller: _nameController,
+                  label: t.translate('full_name'),
+                  icon: Icons.person_outline_rounded,
+                  validator: (v) =>
+                      (v == null || v.isEmpty) ? t.translate('name_required') : null,
+                ),
               ),
+
               SizedBox(height: 2.h),
-              _buildTextField(
-                controller: _emailController,
-                label: 'Email Address',
-                icon: Icons.email_outlined,
-                keyboardType: TextInputType.emailAddress,
+
+              FadeInUp(
+                duration: const Duration(milliseconds: 400),
+                delay: const Duration(milliseconds: 160),
+                child: _buildField(
+                  context: context,
+                  controller: _emailController,
+                  label: t.translate('email_address'),
+                  icon: Icons.email_outlined,
+                  keyboardType: TextInputType.emailAddress,
+                ),
               ),
+
               SizedBox(height: 2.h),
-              _buildTextField(
-                controller: _avatarController,
-                label: 'Avatar URL',
-                icon: Icons.image_outlined,
-                onChanged: (v) => setState(() {}), // Update preview
+
+              FadeInUp(
+                duration: const Duration(milliseconds: 400),
+                delay: const Duration(milliseconds: 220),
+                child: _buildField(
+                  context: context,
+                  controller: _avatarController,
+                  label: t.translate('avatar_url'),
+                  icon: Icons.image_outlined,
+                  onChanged: (_) => setState(() {}),
+                ),
               ),
 
               if (authProvider.error != null) ...[
                 SizedBox(height: 2.h),
-                Text(
-                  authProvider.error!,
-                  style: TextStyle(color: cs.error, fontSize: 12.sp),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: cs.errorContainer,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.error_outline, color: cs.error, size: 16),
+                      const SizedBox(width: 8),
+                      Flexible(
+                        child: Text(
+                          authProvider.error!,
+                          style: theme.textTheme.bodySmall
+                              ?.copyWith(color: cs.error),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
 
-              SizedBox(height: 5.h),
+              SizedBox(height: 4.h),
 
-              // Save Button
-              SizedBox(
-                width: double.infinity,
-                height: 6.h,
-                child: ElevatedButton(
-                  onPressed: isLoading
-                      ? null
-                      : () async {
-                          if (_formKey.currentState!.validate()) {
-                            final messenger = ScaffoldMessenger.of(context);
-                            final navigator = Navigator.of(context);
-
-                            final success = await authProvider.updateProfile({
-                              "name": _nameController.text.trim(),
-                              "email": _emailController.text.trim(),
-                              "avatarUrl": _avatarController.text.trim(),
-                            });
-
-                            if (success && mounted) {
-                              messenger.showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Profile updated successfully!',
+              // SAVE BUTTON
+              FadeInUp(
+                duration: const Duration(milliseconds: 400),
+                delay: const Duration(milliseconds: 300),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: isLoading
+                        ? null
+                        : () async {
+                            if (_formKey.currentState!.validate()) {
+                              final messenger = ScaffoldMessenger.of(context);
+                              final navigator = Navigator.of(context);
+                              final success =
+                                  await authProvider.updateProfile({
+                                "name": _nameController.text.trim(),
+                                "email": _emailController.text.trim(),
+                                "avatarUrl": _avatarController.text.trim(),
+                              });
+                              if (success && mounted) {
+                                messenger.showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      t.translate('profile_updated'),
+                                    ),
+                                    backgroundColor: Colors.green,
                                   ),
-                                ),
-                              );
-                              navigator.pop();
+                                );
+                                navigator.pop();
+                              }
                             }
-                          }
-                        },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: cs.primary,
-                    foregroundColor: cs.onPrimary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                          },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: cs.primary,
+                      foregroundColor: cs.onPrimary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      elevation: 0,
                     ),
+                    child: isLoading
+                        ? SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(
+                              color: cs.onPrimary,
+                              strokeWidth: 2.5,
+                            ),
+                          )
+                        : Text(
+                            t.translate('save_changes'),
+                            style: const TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                   ),
-                  child: isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text('Save Changes'),
                 ),
               ),
+
+              SizedBox(height: 2.h),
             ],
           ),
         ),
@@ -151,7 +254,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     );
   }
 
-  Widget _buildTextField({
+  Widget _buildField({
+    required BuildContext context,
     required TextEditingController controller,
     required String label,
     required IconData icon,
@@ -159,19 +263,49 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     String? Function(String?)? validator,
     void Function(String)? onChanged,
   }) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
       validator: validator,
       onChanged: onChanged,
+      style: theme.textTheme.bodyLarge,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey.shade400),
+        prefixIcon: Container(
+          margin: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: cs.primary.withValues(alpha: 0.10),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, color: cs.primary, size: 18),
         ),
+        filled: true,
+        fillColor: cs.onSurface.withValues(alpha: 0.04),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(color: cs.outline.withValues(alpha: 0.5)),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(color: cs.outline.withValues(alpha: 0.5)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(color: cs.primary, width: 1.5),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(color: cs.error),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(color: cs.error, width: 1.5),
+        ),
+        labelStyle: theme.textTheme.bodyMedium
+            ?.copyWith(color: cs.onSurface.withValues(alpha: 0.6)),
       ),
     );
   }

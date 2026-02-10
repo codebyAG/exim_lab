@@ -164,5 +164,12 @@
   "continue_journey": "Continue your journey",
   "already_account_prefix": "Already have an account?",
   "already_account_login": "Login",
-  "otp_sent_to": "Code sent to"
+  "otp_sent_to": "Code sent to",
+  "update_profile_title": "Edit Profile",
+  "save_changes": "Save Changes",
+  "full_name": "Full Name",
+  "email_address": "Email Address",
+  "avatar_url": "Avatar URL",
+  "name_required": "Name is required",
+  "profile_updated": "Profile updated successfully"
 }
