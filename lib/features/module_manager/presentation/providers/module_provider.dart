@@ -17,9 +17,22 @@ class ModuleProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    // TEMPORARY: Bypass API and use local defaults (all enabled for UI work)
-    // TODO: Revert this to use API values after UI improvements are complete
-    _config = ModuleConfig.defaults();
+    try {
+      // 1. Try API first
+      final apiConfig = await _moduleService.fetchConfig();
+
+      if (apiConfig != null) {
+        _config = apiConfig;
+      } else {
+        // 2. Fallback to local storage
+        final localConfig = await _moduleService.getLocalConfig();
+        // 3. Last resort: Defaults
+        _config = localConfig ?? ModuleConfig.defaults();
+      }
+    } catch (e) {
+      // Safety fallback
+      _config ??= ModuleConfig.defaults();
+    }
 
     _isLoading = false;
     notifyListeners();

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:exim_lab/features/news/data/models/news_model.dart';
 import 'package:sizer/sizer.dart';
-import 'package:exim_lab/localization/app_localization.dart';
 
 class NewsDetailScreen extends StatelessWidget {
   final NewsModel news;
@@ -13,7 +12,7 @@ class NewsDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
-    final t = AppLocalizations.of(context);
+    // final t = AppLocalizations.of(context); // Unused
     final dateStr =
         "${news.createdAt.day}/${news.createdAt.month}/${news.createdAt.year}";
 

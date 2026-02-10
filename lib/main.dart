@@ -30,9 +30,10 @@ import 'package:exim_lab/features/news/data/services/news_service.dart';
 import 'package:exim_lab/features/news/presentation/providers/news_provider.dart';
 import 'package:exim_lab/features/notifications/presentation/providers/notifications_provider.dart';
 import 'package:exim_lab/features/module_manager/presentation/providers/module_provider.dart';
+import 'package:exim_lab/features/module_manager/data/services/module_service.dart';
 import 'package:exim_lab/features/shorts/data/services/shorts_service.dart';
 import 'package:exim_lab/features/shorts/presentation/providers/shorts_provider.dart';
-import 'package:exim_lab/features/module_manager/data/services/module_service.dart';
+
 import 'package:exim_lab/features/dashboard/data/services/referrer_service.dart';
 
 void main() async {
