@@ -171,5 +171,8 @@
   "email_address": "ईमेल पता",
   "avatar_url": "अवतार URL",
   "name_required": "नाम आवश्यक है",
-  "profile_updated": "प्रोफ़ाइल सफलतापूर्वक अपडेट हुई"
+  "profile_updated": "प्रोफ़ाइल सफलतापूर्वक अपडेट हुई",
+  "member_badge": "सदस्य",
+  "section_account": "खाता",
+  "section_support": "सहायता"
 }

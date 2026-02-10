@@ -171,5 +171,8 @@
   "email_address": "Email Address",
   "avatar_url": "Avatar URL",
   "name_required": "Name is required",
-  "profile_updated": "Profile updated successfully"
+  "profile_updated": "Profile updated successfully",
+  "member_badge": "Member",
+  "section_account": "Account",
+  "section_support": "Support"
 }
