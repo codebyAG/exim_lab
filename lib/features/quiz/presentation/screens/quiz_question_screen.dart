@@ -115,11 +115,11 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
         ],
       ),
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF4A00E0), Color(0xFF8E2DE2)], // Deep Purple
+            colors: [cs.primary, cs.secondary], // Theme colors
           ),
         ),
         child: Consumer<QuizProvider>(
@@ -222,8 +222,8 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                         child: ElevatedButton(
                           onPressed: () => Navigator.pop(context),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF8E2DE2),
-                            foregroundColor: Colors.white,
+                            backgroundColor: cs.primary,
+                            foregroundColor: cs.onPrimary,
                             padding: EdgeInsets.symmetric(vertical: 2.h),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),

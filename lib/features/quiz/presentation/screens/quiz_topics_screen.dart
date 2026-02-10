@@ -42,14 +42,12 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
     final cs = theme.colorScheme;
     final t = AppLocalizations.of(context);
 
-    // Modern Gradient Palette
+    // Dynamic Gradient Palette based on Theme
     final gradients = [
-      [const Color(0xFF6A11CB), const Color(0xFF2575FC)], // Purple-Blue
-      [const Color(0xFFFF9A9E), const Color(0xFFFECFEF)], // Pink-Rose
-      [const Color(0xFFFBAB7E), const Color(0xFFF7CE68)], // Orange-Gold
-      [const Color(0xFF85FFBD), const Color(0xFFFFFB7D)], // Green-Yellow
-      [const Color(0xFFFF3CAC), const Color(0xFF784BA0)], // Pink-Purple
-      [const Color(0xFF0093E9), const Color(0xFF80D0C7)], // Blue-Cyan
+      [cs.primary, cs.secondary],
+      [cs.secondary, cs.secondary.withOpacity(0.8)],
+      [cs.primary.withOpacity(0.85), cs.primary],
+      [cs.secondary, cs.primary.withOpacity(0.7)],
     ];
 
     return Scaffold(
@@ -87,8 +85,8 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                     ),
                     delegate: SliverChildBuilderDelegate((context, index) {
                       return Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
+                        baseColor: cs.outline.withOpacity(0.3),
+                        highlightColor: cs.outline.withOpacity(0.1),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -111,6 +109,7 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                   Icon(Icons.error_outline, size: 40.sp, color: cs.error),
                   SizedBox(height: 2.h),
                   Text("${t.translate('generic_error')}\n${provider.error}"),
+                  SizedBox(height: 2.h),
                   ElevatedButton(
                     onPressed: _loadTopics,
                     child: Text(t.translate('retry')),
@@ -151,7 +150,7 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                       Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: cs.primaryContainer,
+                          color: cs.primary.withOpacity(0.1),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -165,7 +164,7 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                   background: Align(
                     alignment: Alignment.topRight,
                     child: Opacity(
-                      opacity: 0.1,
+                      opacity: 0.05,
                       child: Transform.translate(
                         offset: const Offset(50, -50),
                         child: Icon(
@@ -191,6 +190,7 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                   ),
                   delegate: SliverChildBuilderDelegate((context, index) {
                     final topic = provider.topics[index];
+                    // Use modulo to cycle through warm gradients
                     final gradient = gradients[index % gradients.length];
                     final isAttempted = topic.hasAttempted;
 
@@ -219,7 +219,7 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                             borderRadius: BorderRadius.circular(24),
                             boxShadow: [
                               BoxShadow(
-                                color: gradient[0].withValues(alpha: 0.4),
+                                color: gradient[0].withOpacity(0.3),
                                 blurRadius: 15,
                                 offset: const Offset(0, 8),
                               ),
@@ -234,7 +234,7 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                                 child: Icon(
                                   Icons.extension_rounded,
                                   size: 80.sp,
-                                  color: Colors.white.withValues(alpha: 0.1),
+                                  color: Colors.white.withOpacity(0.1),
                                 ),
                               ),
 
@@ -248,14 +248,10 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                                     Container(
                                       padding: EdgeInsets.all(1.2.h),
                                       decoration: BoxDecoration(
-                                        color: Colors.white.withValues(
-                                          alpha: 0.2,
-                                        ),
+                                        color: Colors.white.withOpacity(0.2),
                                         shape: BoxShape.circle,
                                         border: Border.all(
-                                          color: Colors.white.withValues(
-                                            alpha: 0.4,
-                                          ),
+                                          color: Colors.white.withOpacity(0.4),
                                           width: 1,
                                         ),
                                       ),
@@ -284,8 +280,8 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                                       "${topic.totalQuestions} Questions",
                                       style: theme.textTheme.bodyMedium
                                           ?.copyWith(
-                                            color: Colors.white.withValues(
-                                              alpha: 0.8,
+                                            color: Colors.white.withOpacity(
+                                              0.8,
                                             ),
                                           ),
                                     ),
@@ -308,7 +304,8 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                                             style: theme.textTheme.labelMedium
                                                 ?.copyWith(
                                                   fontWeight: FontWeight.bold,
-                                                  color: gradient[0],
+                                                  color:
+                                                      gradient[0], // Match card color
                                                 ),
                                           ),
                                           SizedBox(width: 0.5.w),
