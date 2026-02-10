@@ -69,22 +69,25 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                 padding: EdgeInsets.fromLTRB(5.w, 12.h, 5.w, 2.h),
                 itemCount: 3,
                 separatorBuilder: (context, index) => SizedBox(height: 1.5.h),
+
                 itemBuilder: (context, index) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: cs.surface,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.05),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Shimmer.fromColors(
-                      baseColor: cs.surfaceContainerHighest,
-                      highlightColor: cs.surface,
+                  // Matches logic from dashboard_shimmer.dart
+                  final isDark = theme.brightness == Brightness.dark;
+                  final baseColor = isDark
+                      ? Colors.grey[900]!
+                      : Colors.grey[300]!;
+                  final highlightColor = isDark
+                      ? Colors.grey[800]!
+                      : Colors.grey[100]!;
+
+                  return Shimmer.fromColors(
+                    baseColor: baseColor,
+                    highlightColor: highlightColor,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                       child: Padding(
                         padding: EdgeInsets.all(2.h),
                         child: Column(
@@ -98,6 +101,9 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: Colors.grey[300]!,
+                                    ),
                                   ),
                                 ),
                                 SizedBox(width: 3.w),
@@ -109,23 +115,13 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                                       Container(
                                         width: 40.w,
                                         height: 2.h,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(
-                                            4,
-                                          ),
-                                        ),
+                                        color: Colors.white,
                                       ),
                                       SizedBox(height: 1.h),
                                       Container(
                                         width: 30.w,
                                         height: 1.5.h,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(
-                                            4,
-                                          ),
-                                        ),
+                                        color: Colors.white,
                                       ),
                                     ],
                                   ),
