@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../data/models/module_config.dart';
-import '../../data/services/module_service.dart';
 
 export '../../data/models/module_config.dart';
 
 class ModuleProvider extends ChangeNotifier {
-  final ModuleService _moduleService;
   ModuleConfig? _config;
   bool _isLoading = true;
 
-  ModuleProvider(this._moduleService);
+  ModuleProvider();
 
   bool get isLoading => _isLoading;
 
@@ -17,23 +15,27 @@ class ModuleProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    try {
-      // 1. Try API first
-      final apiConfig = await _moduleService.fetchConfig();
+    // try {
+    //   // 1. Try API first
+    //   final apiConfig = await _moduleService.fetchConfig();
 
-      if (apiConfig != null) {
-        _config = apiConfig;
-      } else {
-        // 2. Fallback to local storage
-        final localConfig = await _moduleService.getLocalConfig();
-        // 3. Last resort: Defaults
-        _config = localConfig ?? ModuleConfig.defaults();
-      }
-    } catch (e) {
-      // Safety fallback
-      _config ??= ModuleConfig.defaults();
-    }
+    //   if (apiConfig != null) {
+    //     _config = apiConfig;
+    //   } else {
+    //     // 2. Fallback to local storage
+    //     final localConfig = await _moduleService.getLocalConfig();
+    //     // 3. Last resort: Defaults
+    //     _config = localConfig ?? ModuleConfig.defaults();
+    //   }
+    // } catch (e) {
+    //   // Safety fallback
+    //   if (_config == null) {
+    //     _config = ModuleConfig.defaults();
+    //   }
+    // }
 
+    // TEMPORARY: Bypass API and use local defaults (all enabled for UI work)
+    _config = ModuleConfig.defaults();
     _isLoading = false;
     notifyListeners();
   }

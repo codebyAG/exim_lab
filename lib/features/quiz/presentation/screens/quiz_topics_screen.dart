@@ -67,9 +67,8 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
             if (provider.isLoading || _isInitLoading) {
               return ListView.separated(
                 padding: EdgeInsets.fromLTRB(5.w, 12.h, 5.w, 2.h),
-                itemCount: 3,
+                itemCount: 6,
                 separatorBuilder: (context, index) => SizedBox(height: 1.5.h),
-
                 itemBuilder: (context, index) {
                   // Matches logic from dashboard_shimmer.dart
                   final isDark = theme.brightness == Brightness.dark;
@@ -84,83 +83,84 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                     baseColor: baseColor,
                     highlightColor: highlightColor,
                     child: Container(
+                      padding: EdgeInsets.all(2.h),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.white),
                       ),
-                      child: Padding(
-                        padding: EdgeInsets.all(2.h),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  width: 6.h,
-                                  height: 6.h,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: Colors.grey[300]!,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 6.h,
+                                height: 6.h,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                              ),
+                              SizedBox(width: 3.w),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: 40.w,
+                                      height: 2.h,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                SizedBox(width: 3.w),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        width: 40.w,
-                                        height: 2.h,
+                                    SizedBox(height: 1.h),
+                                    Container(
+                                      width: 25.w,
+                                      height: 1.5.h,
+                                      decoration: BoxDecoration(
                                         color: Colors.white,
+                                        borderRadius: BorderRadius.circular(4),
                                       ),
-                                      SizedBox(height: 1.h),
-                                      Container(
-                                        width: 30.w,
-                                        height: 1.5.h,
-                                        color: Colors.white,
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            SizedBox(height: 2.h),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 20.w,
-                                  height: 2.5.h,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 2.h),
+                          Row(
+                            children: [
+                              Container(
+                                width: 22.w,
+                                height: 3.5.h,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
-                                SizedBox(width: 2.w),
-                                Container(
-                                  width: 15.w,
-                                  height: 2.5.h,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
+                              ),
+                              SizedBox(width: 2.w),
+                              Container(
+                                width: 12.w,
+                                height: 3.5.h,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
-                                const Spacer(),
-                                Container(
-                                  width: 3.h,
-                                  height: 3.h,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                  ),
+                              ),
+                              const Spacer(),
+                              Container(
+                                width: 4.h,
+                                height: 4.h,
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   );
@@ -170,46 +170,89 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
 
             if (provider.error != null) {
               return Center(
-                child: Text(
-                  "${t.translate('generic_error')}: ${provider.error}",
+                child: Padding(
+                  padding: EdgeInsets.all(2.h),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.error_outline_rounded,
+                        size: 48.sp,
+                        color: cs.error,
+                      ),
+                      SizedBox(height: 2.h),
+                      Text(
+                        "${t.translate('generic_error')}\n${provider.error}",
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          color: cs.error,
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      ElevatedButton.icon(
+                        onPressed: () => _loadTopics(),
+                        icon: const Icon(Icons.refresh_rounded),
+                        label: Text(t.translate('retry')),
+                      ),
+                    ],
+                  ),
                 ),
               );
             }
 
             if (provider.topics.isEmpty) {
-              return Center(child: Text(t.translate('no_quizzes')));
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.quiz_outlined,
+                      size: 60.sp,
+                      color: cs.outlineVariant,
+                    ),
+                    SizedBox(height: 2.h),
+                    Text(
+                      t.translate('no_quizzes'),
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        color: cs.onSurfaceVariant,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              );
             }
 
             return ListView.separated(
-              padding: EdgeInsets.fromLTRB(5.w, 12.h, 5.w, 2.h),
+              padding: EdgeInsets.fromLTRB(5.w, 12.h, 5.w, 5.h),
               itemCount: provider.topics.length,
-              separatorBuilder: (context, index) => SizedBox(height: 1.5.h),
+              separatorBuilder: (context, index) => SizedBox(height: 2.h),
               itemBuilder: (context, index) {
                 final topic = provider.topics[index];
+                final isAttempted = topic.hasAttempted;
+
                 return FadeInUp(
-                  duration: const Duration(milliseconds: 400),
-                  delay: Duration(milliseconds: (index < 6 ? index : 5) * 70),
+                  duration: const Duration(milliseconds: 500),
+                  delay: Duration(milliseconds: (index < 5 ? index : 4) * 80),
                   child: Container(
                     decoration: BoxDecoration(
                       color: cs.surface,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: cs.outlineVariant.withValues(alpha: 0.4),
+                      ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
-                        ),
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.05),
-                          blurRadius: 5,
-                          offset: const Offset(0, 2),
+                          color: Colors.black.withValues(alpha: 0.03),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
                         ),
                       ],
                     ),
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(20),
                         onTap: () {
                           Navigator.push(
                             context,
@@ -229,19 +272,23 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  // Icon Container
                                   Container(
-                                    padding: EdgeInsets.all(1.2.h),
+                                    padding: EdgeInsets.all(1.5.h),
                                     decoration: BoxDecoration(
-                                      color: cs.primaryContainer,
-                                      borderRadius: BorderRadius.circular(12),
+                                      color: cs.primaryContainer.withValues(
+                                        alpha: 0.4,
+                                      ),
+                                      borderRadius: BorderRadius.circular(16),
                                     ),
                                     child: Icon(
                                       Icons.quiz_rounded,
                                       color: cs.primary,
-                                      size: 24.sp,
+                                      size: 22.sp,
                                     ),
                                   ),
                                   SizedBox(width: 3.w),
+                                  // Text Content
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
@@ -251,15 +298,19 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                                           topic.title,
                                           style: theme.textTheme.titleMedium
                                               ?.copyWith(
-                                                fontWeight: FontWeight.bold,
+                                                fontWeight: FontWeight.w700,
+                                                height: 1.2,
                                               ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                        SizedBox(height: 0.4.h),
+                                        SizedBox(height: 0.5.h),
                                         Text(
                                           topic.description,
-                                          style: theme.textTheme.bodyMedium
+                                          style: theme.textTheme.bodySmall
                                               ?.copyWith(
                                                 color: cs.onSurfaceVariant,
+                                                height: 1.4,
                                               ),
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
@@ -269,94 +320,105 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 1.5.h),
+                              SizedBox(height: 2.h),
+                              // Bottom Row
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 2.5.w,
-                                          vertical: 0.6.h,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: topic.hasAttempted
-                                              ? Colors.green.withValues(
-                                                  alpha: 0.1,
-                                                )
-                                              : cs.surfaceContainerHighest,
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              topic.hasAttempted
-                                                  ? Icons.check_circle_outline
-                                                  : Icons.circle_outlined,
-                                              size: 14.sp,
-                                              color: topic.hasAttempted
-                                                  ? Colors.green
-                                                  : cs.onSurfaceVariant,
-                                            ),
-                                            SizedBox(width: 1.w),
-                                            Text(
-                                              topic.hasAttempted
-                                                  ? t.translate('attempted')
-                                                  : t.translate('not_started'),
-                                              style: theme.textTheme.labelSmall
-                                                  ?.copyWith(
-                                                    color: topic.hasAttempted
-                                                        ? Colors.green
-                                                        : cs.onSurfaceVariant,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
+                                  // Status Badge
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 2.5.w,
+                                      vertical: 0.8.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: isAttempted
+                                          ? Colors.green.withValues(alpha: 0.1)
+                                          : cs.surfaceContainerHighest
+                                                .withValues(alpha: 0.5),
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                        color: isAttempted
+                                            ? Colors.green.withValues(
+                                                alpha: 0.2,
+                                              )
+                                            : Colors.transparent,
                                       ),
-                                      SizedBox(width: 2.w),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 2.5.w,
-                                          vertical: 0.6.h,
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          isAttempted
+                                              ? Icons.check_circle_rounded
+                                              : Icons.circle_outlined,
+                                          size: 12.sp,
+                                          color: isAttempted
+                                              ? Colors.green
+                                              : cs.onSurfaceVariant,
                                         ),
-                                        decoration: BoxDecoration(
-                                          color: cs.primaryContainer.withValues(
-                                            alpha: 0.3,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
+                                        SizedBox(width: 1.5.w),
+                                        Text(
+                                          isAttempted
+                                              ? t.translate('attempted')
+                                              : t.translate('not_started'),
+                                          style: theme.textTheme.labelSmall
+                                              ?.copyWith(
+                                                color: isAttempted
+                                                    ? Colors.green.shade700
+                                                    : cs.onSurfaceVariant,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                         ),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.quiz_outlined,
-                                              size: 14.sp,
-                                              color: cs.primary,
-                                            ),
-                                            SizedBox(width: 1.w),
-                                            Text(
-                                              '${topic.totalQuestions}',
-                                              style: theme.textTheme.labelSmall
-                                                  ?.copyWith(
-                                                    color: cs.primary,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                  Icon(
-                                    Icons.arrow_forward_rounded,
-                                    color: cs.primary,
-                                    size: 20.sp,
+                                  SizedBox(width: 2.w),
+                                  // Count Badge
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 2.5.w,
+                                      vertical: 0.8.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: cs.surfaceContainerHighest
+                                          .withValues(alpha: 0.5),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.format_list_numbered_rounded,
+                                          size: 12.sp,
+                                          color: cs.onSurfaceVariant,
+                                        ),
+                                        SizedBox(width: 1.5.w),
+                                        Text(
+                                          '${topic.totalQuestions}',
+                                          style: theme.textTheme.labelSmall
+                                              ?.copyWith(
+                                                color: cs.onSurfaceVariant,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  // Action Button
+                                  Container(
+                                    padding: EdgeInsets.all(1.h),
+                                    decoration: BoxDecoration(
+                                      color: cs.primaryContainer.withValues(
+                                        alpha: 0.3,
+                                      ),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      Icons.arrow_forward_rounded,
+                                      size: 18.sp,
+                                      color: cs.primary,
+                                    ),
                                   ),
                                 ],
                               ),

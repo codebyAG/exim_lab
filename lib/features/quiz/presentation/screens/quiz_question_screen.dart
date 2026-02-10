@@ -72,11 +72,27 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text(widget.topicTitle),
+        title: Text(
+          widget.topicTitle,
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: Colors.transparent,
         foregroundColor: cs.onSurface,
         elevation: 0,
         centerTitle: true,
+        leading: IconButton(
+          icon: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: cs.surface.withValues(alpha: 0.5),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -97,8 +113,24 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
 
             if (provider.error != null) {
               return Center(
-                child: Text(
-                  "${t.translate('generic_error')}: ${provider.error}",
+                child: Padding(
+                  padding: EdgeInsets.all(3.h),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.error_outline_rounded,
+                        size: 48.sp,
+                        color: cs.error,
+                      ),
+                      SizedBox(height: 2.h),
+                      Text(
+                        "${t.translate('generic_error')}\n${provider.error}",
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodyLarge,
+                      ),
+                    ],
+                  ),
                 ),
               );
             }
@@ -129,7 +161,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                         duration: const Duration(milliseconds: 1000),
                         infinite: false,
                         child: Container(
-                          padding: EdgeInsets.all(2.5.h),
+                          padding: EdgeInsets.all(3.h),
                           decoration: BoxDecoration(
                             gradient: RadialGradient(
                               colors: [
@@ -155,7 +187,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                       ),
                       SizedBox(height: 4.h),
 
-                      // Title with fade in
+                      // Title
                       FadeInDown(
                         duration: const Duration(milliseconds: 500),
                         delay: const Duration(milliseconds: 300),
@@ -170,7 +202,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                       ),
                       SizedBox(height: 1.5.h),
 
-                      // Subtitle with fade in
+                      // Subtitle
                       FadeInDown(
                         duration: const Duration(milliseconds: 500),
                         delay: const Duration(milliseconds: 400),
@@ -200,34 +232,42 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
 
                       SizedBox(height: 5.h),
 
-                      // Decorative stats card (optional)
+                      // Stats Card
                       FadeInUp(
                         duration: const Duration(milliseconds: 500),
                         delay: const Duration(milliseconds: 600),
                         child: Container(
-                          padding: EdgeInsets.all(2.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 3.h,
+                            vertical: 2.h,
+                          ),
                           decoration: BoxDecoration(
-                            color: cs.primaryContainer.withValues(alpha: 0.3),
+                            color: cs.surface,
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: cs.primary.withValues(alpha: 0.2),
-                              width: 1,
+                              color: cs.outlineVariant.withValues(alpha: 0.5),
                             ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.quiz_rounded,
-                                color: cs.primary,
-                                size: 24.sp,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.05),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
                               ),
-                              SizedBox(width: 2.w),
+                            ],
+                          ),
+                          child: Column(
+                            children: [
                               Text(
-                                'Quiz completed successfully',
-                                style: theme.textTheme.bodyMedium?.copyWith(
+                                '${questions.length}',
+                                style: theme.textTheme.headlineLarge?.copyWith(
+                                  fontWeight: FontWeight.bold,
                                   color: cs.primary,
-                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                'Total Questions',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: cs.onSurfaceVariant,
                                 ),
                               ),
                             ],
@@ -237,7 +277,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
 
                       SizedBox(height: 4.h),
 
-                      // Back button with animation
+                      // Back button
                       FadeInUp(
                         duration: const Duration(milliseconds: 500),
                         delay: const Duration(milliseconds: 700),
@@ -248,11 +288,10 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: cs.primary,
                               foregroundColor: cs.onPrimary,
-                              padding: EdgeInsets.symmetric(vertical: 1.8.h),
-                              elevation: 2,
-                              shadowColor: cs.primary.withValues(alpha: 0.4),
+                              padding: EdgeInsets.symmetric(vertical: 2.h),
+                              elevation: 0,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(16),
                               ),
                             ),
                             child: Row(
@@ -282,59 +321,75 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
             final currentQuestion = questions[currentQuestionIndex];
 
             return SingleChildScrollView(
-              padding: EdgeInsets.fromLTRB(5.w, 10.h, 5.w, 2.h),
+              padding: EdgeInsets.fromLTRB(5.w, 12.h, 5.w, 2.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Progress Bar
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: LinearProgressIndicator(
-                      value: (currentQuestionIndex + 1) / questions.length,
-                      color: cs.primary,
-                      backgroundColor: cs.surfaceContainerHighest,
-                      minHeight: 8,
-                    ),
+                  // Segmented Progress Bar
+                  Row(
+                    children: List.generate(questions.length, (index) {
+                      final isActive = index == currentQuestionIndex;
+                      final isPast = index < currentQuestionIndex;
+                      return Expanded(
+                        child: Container(
+                          height: 6,
+                          margin: EdgeInsets.symmetric(horizontal: 0.5.w),
+                          decoration: BoxDecoration(
+                            color: isActive
+                                ? cs.primary
+                                : isPast
+                                ? cs.primary.withValues(alpha: 0.3)
+                                : cs.surfaceContainerHighest,
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                        ),
+                      );
+                    }),
                   ),
-                  SizedBox(height: 1.2.h),
+                  SizedBox(height: 1.5.h),
                   Text(
                     "${t.translate('question_label')} ${currentQuestionIndex + 1}/${questions.length}",
                     style: theme.textTheme.labelLarge?.copyWith(
                       color: cs.onSurfaceVariant,
+                      fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 3.h),
+                  SizedBox(height: 4.h),
 
                   // Question Card
                   Container(
-                    padding: EdgeInsets.all(2.5.h),
+                    padding: EdgeInsets.all(3.h),
                     decoration: BoxDecoration(
                       color: cs.surface,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          blurRadius: 30,
-                          offset: const Offset(0, 10),
-                        ),
-                      ],
+                      borderRadius: BorderRadius.circular(24),
                       border: Border.all(
                         color: cs.outlineVariant.withValues(alpha: 0.5),
                         width: 1,
                       ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.05),
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
                     ),
-                    child: Text(
-                      currentQuestion.prompt,
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        height: 1.4,
-                        color: cs.onSurface,
-                      ),
-                      textAlign: TextAlign.center,
+                    child: Column(
+                      children: [
+                        Text(
+                          currentQuestion.prompt,
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            height: 1.3,
+                            color: cs.onSurface,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 3.h),
+                  SizedBox(height: 4.h),
 
                   // Options
                   ...List.generate(currentQuestion.options.length, (index) {
@@ -343,100 +398,135 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                         index == currentQuestion.correctOptionIndex;
 
                     Color tileColor = cs.surface;
-                    Color borderColor = cs.outlineVariant;
+                    Color borderColor = cs.outlineVariant.withValues(
+                      alpha: 0.5,
+                    );
                     Color dotColor = cs.surfaceContainerHighest.withValues(
                       alpha: 0.5,
                     );
-                    Color charColor = cs.primary;
+                    Color charColor = cs.onSurfaceVariant;
+                    double scale = 1.0;
 
                     if (selectedIndex != null) {
                       if (isSelected) {
                         tileColor = isCorrect
-                            ? Colors.green.withValues(alpha: 0.12)
-                            : Colors.red.withValues(alpha: 0.12);
+                            ? Colors.green.withValues(alpha: 0.1)
+                            : Colors.red.withValues(alpha: 0.1);
                         borderColor = isCorrect ? Colors.green : Colors.red;
                         dotColor = isCorrect ? Colors.green : Colors.red;
                         charColor = Colors.white;
+                        scale = 1.02;
                       } else if (isCorrect) {
                         tileColor = Colors.green.withValues(alpha: 0.05);
                         borderColor = Colors.green.withValues(alpha: 0.5);
+                        dotColor = Colors.green;
+                        charColor = Colors.white;
                       }
                     }
 
-                    return Padding(
-                      padding: EdgeInsets.only(bottom: 1.5.h),
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () => _handleOptionTap(
-                            index,
-                            currentQuestion.id,
-                            currentQuestion.correctOptionIndex,
-                          ),
-                          borderRadius: BorderRadius.circular(14),
-                          child: Ink(
-                            padding: EdgeInsets.all(2.h),
-                            decoration: BoxDecoration(
-                              color: tileColor,
-                              borderRadius: BorderRadius.circular(14),
-                              border: Border.all(
-                                color: borderColor,
-                                width: isSelected ? 2.5 : 1.5,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.08),
-                                  blurRadius: 15,
-                                  offset: const Offset(0, 6),
+                    return TweenAnimationBuilder<double>(
+                      tween: Tween(begin: 1.0, end: scale),
+                      duration: const Duration(milliseconds: 200),
+                      builder: (context, value, child) {
+                        return Transform.scale(
+                          scale: value,
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 2.h),
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                onTap: () => _handleOptionTap(
+                                  index,
+                                  currentQuestion.id,
+                                  currentQuestion.correctOptionIndex,
                                 ),
-                              ],
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 42,
-                                  height: 42,
+                                borderRadius: BorderRadius.circular(16),
+                                child: Ink(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 2.h,
+                                    vertical: 2.h,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: dotColor,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    String.fromCharCode(65 + index),
-                                    style: theme.textTheme.titleMedium
-                                        ?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: charColor,
-                                        ),
-                                  ),
-                                ),
-                                SizedBox(width: 3.w),
-                                Expanded(
-                                  child: Text(
-                                    currentQuestion.options[index],
-                                    style: theme.textTheme.bodyLarge?.copyWith(
-                                      color: cs.onSurface,
-                                      fontWeight: isSelected
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
+                                    color: tileColor,
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                      color: borderColor,
+                                      width: isSelected ? 2 : 1,
                                     ),
                                   ),
-                                ),
-                                if (selectedIndex != null && isSelected)
-                                  Icon(
-                                    isCorrect
-                                        ? Icons.check_circle_rounded
-                                        : Icons.cancel_rounded,
-                                    color: isCorrect
-                                        ? Colors.green
-                                        : Colors.red,
-                                    size: 24.sp,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 12.w,
+                                        height: 12.w,
+                                        constraints: BoxConstraints(
+                                          maxWidth: 48,
+                                          maxHeight: 48,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: dotColor.withValues(
+                                            alpha:
+                                                selectedIndex != null &&
+                                                    (isSelected ||
+                                                        (isCorrect &&
+                                                            selectedIndex !=
+                                                                null))
+                                                ? 1
+                                                : 0.5,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                        ),
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          String.fromCharCode(65 + index),
+                                          style: theme.textTheme.titleMedium
+                                              ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color:
+                                                    selectedIndex != null &&
+                                                        (isSelected ||
+                                                            (isCorrect &&
+                                                                selectedIndex !=
+                                                                    null))
+                                                    ? Colors.white
+                                                    : charColor,
+                                              ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 4.w),
+                                      Expanded(
+                                        child: Text(
+                                          currentQuestion.options[index],
+                                          style: theme.textTheme.bodyLarge
+                                              ?.copyWith(
+                                                color: cs.onSurface,
+                                                fontWeight: isSelected
+                                                    ? FontWeight.bold
+                                                    : FontWeight.w500,
+                                                fontSize: 16.sp,
+                                              ),
+                                        ),
+                                      ),
+                                      if (selectedIndex != null && isSelected)
+                                        Icon(
+                                          isCorrect
+                                              ? Icons.check_circle_rounded
+                                              : Icons.cancel_rounded,
+                                          color: isCorrect
+                                              ? Colors.green
+                                              : Colors.red,
+                                          size: 24.sp,
+                                        ),
+                                    ],
                                   ),
-                              ],
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     );
                   }),
                 ],
