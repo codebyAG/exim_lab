@@ -39,68 +39,6 @@ class NotificationsProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
 
-    // ── MOCK DATA (remove when API is ready) ──────────────────
-    // ignore: dead_code
-    const useMock = true;
-    // ignore: dead_code
-    if (useMock) {
-      await Future.delayed(const Duration(milliseconds: 600));
-      final now = DateTime.now();
-      _notifications = [
-        NotificationModel(
-          id: '1',
-          userId: 'u1',
-          title: 'New course available!',
-          body: 'Introduction to Import-Export is now live. Start learning today.',
-          source: 'Courses',
-          read: false,
-          createdAt: now.subtract(const Duration(minutes: 12)),
-        ),
-        NotificationModel(
-          id: '2',
-          userId: 'u1',
-          title: 'Quiz result posted',
-          body: 'You scored 85% on the HS Code Classification Quiz. Great job!',
-          source: 'Quizzes',
-          read: false,
-          createdAt: now.subtract(const Duration(hours: 2)),
-        ),
-        NotificationModel(
-          id: '3',
-          userId: 'u1',
-          title: 'Profile updated successfully',
-          body: 'Your profile information has been saved.',
-          source: 'Account',
-          read: true,
-          createdAt: now.subtract(const Duration(hours: 6)),
-        ),
-        NotificationModel(
-          id: '4',
-          userId: 'u1',
-          title: 'New export guide published',
-          body: 'A new guide on finding international buyers is now available in Resources.',
-          source: 'Resources',
-          read: false,
-          createdAt: now.subtract(const Duration(days: 1)),
-        ),
-        NotificationModel(
-          id: '5',
-          userId: 'u1',
-          title: 'Welcome to Exim Lab!',
-          body: 'Start your import-export journey with our expert-curated courses.',
-          source: 'System',
-          read: true,
-          createdAt: now.subtract(const Duration(days: 3)),
-        ),
-      ];
-      _hasMore = false;
-      _unreadCount = _notifications.where((n) => !n.read).length;
-      _isLoading = false;
-      notifyListeners();
-      return;
-    }
-    // ── END MOCK ───────────────────────────────────────────────
-
     try {
       final response = await _repository.fetchNotifications(
         page: _page,
