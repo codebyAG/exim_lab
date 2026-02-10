@@ -147,7 +147,8 @@ class _CoursesListScreenState extends State<CoursesListScreen>
       itemBuilder: (context, index) {
         final course = state.courses[index];
         return FadeInUp(
-          // 🔹 LIST ANIMATION
+          duration: const Duration(milliseconds: 400),
+          delay: Duration(milliseconds: (index < 6 ? index : 5) * 70),
           child: _CourseTile(
             title: course.title,
             subtitle: course.description,

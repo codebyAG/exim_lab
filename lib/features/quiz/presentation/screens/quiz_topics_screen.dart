@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:exim_lab/features/quiz/presentation/screens/quiz_question_screen.dart';
 import 'package:exim_lab/features/quiz/presentation/states/quiz_provider.dart';
 import 'package:flutter/material.dart';
@@ -77,7 +78,10 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
               separatorBuilder: (context, index) => const SizedBox(height: 16),
               itemBuilder: (context, index) {
                 final topic = provider.topics[index];
-                return Container(
+                return FadeInUp(
+                  duration: const Duration(milliseconds: 400),
+                  delay: Duration(milliseconds: (index < 6 ? index : 5) * 70),
+                  child: Container(
                   decoration: BoxDecoration(
                     color: cs.surface,
                     borderRadius: BorderRadius.circular(20),
@@ -211,6 +215,7 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                       ),
                     ),
                   ),
+                ),
                 );
               },
             );

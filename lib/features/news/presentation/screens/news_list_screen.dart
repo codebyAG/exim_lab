@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:exim_lab/features/news/presentation/providers/news_provider.dart';
 import 'package:exim_lab/features/news/presentation/screens/news_details_screen.dart';
 import 'package:exim_lab/features/news/data/models/news_model.dart';
@@ -68,7 +69,11 @@ class _NewsListScreenState extends State<NewsListScreen> {
             separatorBuilder: (context, index) => SizedBox(height: 2.h),
             itemBuilder: (context, index) {
               final news = newsProvider.newsList[index];
-              return _NewsCard(news: news);
+              return FadeInUp(
+                duration: const Duration(milliseconds: 400),
+                delay: Duration(milliseconds: (index < 6 ? index : 5) * 70),
+                child: _NewsCard(news: news),
+              );
             },
           );
         },
