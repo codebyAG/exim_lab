@@ -42,217 +42,162 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
     final cs = theme.colorScheme;
     final t = AppLocalizations.of(context);
 
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: Text(t.translate('quizzes_title')),
-        backgroundColor: Colors.transparent,
-        foregroundColor: cs.onSurface,
-        elevation: 0,
-        centerTitle: true,
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              cs.surfaceContainerHighest.withValues(alpha: 0.5),
-              cs.surface,
-            ],
-          ),
-        ),
-        child: Consumer<QuizProvider>(
-          builder: (context, provider, child) {
-            if (provider.isLoading || _isInitLoading) {
-              return ListView.separated(
-                padding: EdgeInsets.fromLTRB(5.w, 12.h, 5.w, 2.h),
-                itemCount: 6,
-                separatorBuilder: (context, index) => SizedBox(height: 1.5.h),
-                itemBuilder: (context, index) {
-                  // Matches logic from dashboard_shimmer.dart
-                  final isDark = theme.brightness == Brightness.dark;
-                  final baseColor = isDark
-                      ? Colors.grey[900]!
-                      : Colors.grey[300]!;
-                  final highlightColor = isDark
-                      ? Colors.grey[800]!
-                      : Colors.grey[100]!;
+    // Modern Gradient Palette
+    final gradients = [
+      [const Color(0xFF6A11CB), const Color(0xFF2575FC)], // Purple-Blue
+      [const Color(0xFFFF9A9E), const Color(0xFFFECFEF)], // Pink-Rose
+      [const Color(0xFFFBAB7E), const Color(0xFFF7CE68)], // Orange-Gold
+      [const Color(0xFF85FFBD), const Color(0xFFFFFB7D)], // Green-Yellow
+      [const Color(0xFFFF3CAC), const Color(0xFF784BA0)], // Pink-Purple
+      [const Color(0xFF0093E9), const Color(0xFF80D0C7)], // Blue-Cyan
+    ];
 
-                  return Shimmer.fromColors(
-                    baseColor: baseColor,
-                    highlightColor: highlightColor,
-                    child: Container(
-                      padding: EdgeInsets.all(2.h),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.white),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 6.h,
-                                height: 6.h,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                              ),
-                              SizedBox(width: 3.w),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: 40.w,
-                                      height: 2.h,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                    ),
-                                    SizedBox(height: 1.h),
-                                    Container(
-                                      width: 25.w,
-                                      height: 1.5.h,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 2.h),
-                          Row(
-                            children: [
-                              Container(
-                                width: 22.w,
-                                height: 3.5.h,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              SizedBox(width: 2.w),
-                              Container(
-                                width: 12.w,
-                                height: 3.5.h,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              const Spacer(),
-                              Container(
-                                width: 4.h,
-                                height: 4.h,
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+    return Scaffold(
+      backgroundColor: cs.surface,
+      body: Consumer<QuizProvider>(
+        builder: (context, provider, child) {
+          if (provider.isLoading || _isInitLoading) {
+            return CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  expandedHeight: 18.h,
+                  floating: false,
+                  pinned: true,
+                  backgroundColor: cs.surface,
+                  surfaceTintColor: Colors.transparent,
+                  flexibleSpace: FlexibleSpaceBar(
+                    titlePadding: EdgeInsets.only(left: 5.w, bottom: 2.h),
+                    title: Text(
+                      t.translate('quizzes_title'),
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        color: cs.onSurface,
+                        fontWeight: FontWeight.w900,
                       ),
                     ),
-                  );
-                },
-              );
-            }
+                  ),
+                ),
+                SliverPadding(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                  sliver: SliverGrid(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 4.w,
+                      mainAxisSpacing: 2.h,
+                      childAspectRatio: 0.8,
+                    ),
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                        ),
+                      );
+                    }, childCount: 6),
+                  ),
+                ),
+              ],
+            );
+          }
 
-            if (provider.error != null) {
-              return Center(
-                child: Padding(
-                  padding: EdgeInsets.all(2.h),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+          if (provider.error != null) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error_outline, size: 40.sp, color: cs.error),
+                  SizedBox(height: 2.h),
+                  Text("${t.translate('generic_error')}\n${provider.error}"),
+                  ElevatedButton(
+                    onPressed: _loadTopics,
+                    child: Text(t.translate('retry')),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          if (provider.topics.isEmpty) {
+            return Center(child: Text(t.translate('no_quizzes')));
+          }
+
+          return CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              // Large Header
+              SliverAppBar(
+                expandedHeight: 18.h,
+                floating: false,
+                pinned: true,
+                backgroundColor: cs.surface,
+                surfaceTintColor: Colors.transparent,
+                flexibleSpace: FlexibleSpaceBar(
+                  expandedTitleScale: 1.5,
+                  titlePadding: EdgeInsets.only(left: 5.w, bottom: 2.h),
+                  title: Row(
                     children: [
-                      Icon(
-                        Icons.error_outline_rounded,
-                        size: 48.sp,
-                        color: cs.error,
-                      ),
-                      SizedBox(height: 2.h),
                       Text(
-                        "${t.translate('generic_error')}\n${provider.error}",
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: cs.error,
+                        t.translate('quizzes_title'),
+                        style: theme.textTheme.headlineLarge?.copyWith(
+                          color: cs.onSurface,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: -1,
                         ),
                       ),
-                      SizedBox(height: 2.h),
-                      ElevatedButton.icon(
-                        onPressed: () => _loadTopics(),
-                        icon: const Icon(Icons.refresh_rounded),
-                        label: Text(t.translate('retry')),
+                      SizedBox(width: 2.w),
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: cs.primaryContainer,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.local_fire_department_rounded,
+                          color: cs.primary,
+                          size: 14.sp,
+                        ),
                       ),
                     ],
                   ),
-                ),
-              );
-            }
-
-            if (provider.topics.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.quiz_outlined,
-                      size: 60.sp,
-                      color: cs.outlineVariant,
-                    ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      t.translate('no_quizzes'),
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        color: cs.onSurfaceVariant,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }
-
-            return ListView.separated(
-              padding: EdgeInsets.fromLTRB(5.w, 12.h, 5.w, 5.h),
-              itemCount: provider.topics.length,
-              separatorBuilder: (context, index) => SizedBox(height: 2.h),
-              itemBuilder: (context, index) {
-                final topic = provider.topics[index];
-                final isAttempted = topic.hasAttempted;
-
-                return FadeInUp(
-                  duration: const Duration(milliseconds: 500),
-                  delay: Duration(milliseconds: (index < 5 ? index : 4) * 80),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: cs.surface,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: cs.outlineVariant.withValues(alpha: 0.4),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.03),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
+                  background: Align(
+                    alignment: Alignment.topRight,
+                    child: Opacity(
+                      opacity: 0.1,
+                      child: Transform.translate(
+                        offset: const Offset(50, -50),
+                        child: Icon(
+                          Icons.quiz_rounded,
+                          size: 150.sp,
+                          color: cs.primary,
                         ),
-                      ],
+                      ),
                     ),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+              ),
+
+              // Grid Content
+              SliverPadding(
+                padding: EdgeInsets.fromLTRB(5.w, 1.h, 5.w, 5.h),
+                sliver: SliverGrid(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 4.w,
+                    mainAxisSpacing: 2.5.h,
+                    childAspectRatio: 0.75, // Taller cards
+                  ),
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final topic = provider.topics[index];
+                    final gradient = gradients[index % gradients.length];
+                    final isAttempted = topic.hasAttempted;
+
+                    return FadeInUp(
+                      duration: const Duration(milliseconds: 600),
+                      delay: Duration(milliseconds: index * 100),
+                      child: GestureDetector(
                         onTap: () {
                           Navigator.push(
                             context,
@@ -264,175 +209,131 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                             ),
                           );
                         },
-                        child: Padding(
-                          padding: EdgeInsets.all(2.h),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Icon Container
-                                  Container(
-                                    padding: EdgeInsets.all(1.5.h),
-                                    decoration: BoxDecoration(
-                                      color: cs.primaryContainer.withValues(
-                                        alpha: 0.4,
-                                      ),
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    child: Icon(
-                                      Icons.quiz_rounded,
-                                      color: cs.primary,
-                                      size: 22.sp,
-                                    ),
-                                  ),
-                                  SizedBox(width: 3.w),
-                                  // Text Content
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          topic.title,
-                                          style: theme.textTheme.titleMedium
-                                              ?.copyWith(
-                                                fontWeight: FontWeight.w700,
-                                                height: 1.2,
-                                              ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        SizedBox(height: 0.5.h),
-                                        Text(
-                                          topic.description,
-                                          style: theme.textTheme.bodySmall
-                                              ?.copyWith(
-                                                color: cs.onSurfaceVariant,
-                                                height: 1.4,
-                                              ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: gradient,
+                            ),
+                            borderRadius: BorderRadius.circular(24),
+                            boxShadow: [
+                              BoxShadow(
+                                color: gradient[0].withValues(alpha: 0.4),
+                                blurRadius: 15,
+                                offset: const Offset(0, 8),
                               ),
-                              SizedBox(height: 2.h),
-                              // Bottom Row
-                              Row(
-                                children: [
-                                  // Status Badge
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 2.5.w,
-                                      vertical: 0.8.h,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: isAttempted
-                                          ? Colors.green.withValues(alpha: 0.1)
-                                          : cs.surfaceContainerHighest
-                                                .withValues(alpha: 0.5),
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(
-                                        color: isAttempted
-                                            ? Colors.green.withValues(
-                                                alpha: 0.2,
-                                              )
-                                            : Colors.transparent,
+                            ],
+                          ),
+                          child: Stack(
+                            children: [
+                              // Background Pattern
+                              Positioned(
+                                right: -20,
+                                top: -20,
+                                child: Icon(
+                                  Icons.extension_rounded,
+                                  size: 80.sp,
+                                  color: Colors.white.withValues(alpha: 0.1),
+                                ),
+                              ),
+
+                              // Content
+                              Padding(
+                                padding: EdgeInsets.all(2.h),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Icon
+                                    Container(
+                                      padding: EdgeInsets.all(1.2.h),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withValues(
+                                          alpha: 0.2,
+                                        ),
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: Colors.white.withValues(
+                                            alpha: 0.4,
+                                          ),
+                                          width: 1,
+                                        ),
+                                      ),
+                                      child: Icon(
+                                        Icons.school_rounded,
+                                        color: Colors.white,
+                                        size: 20.sp,
                                       ),
                                     ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          isAttempted
-                                              ? Icons.check_circle_rounded
-                                              : Icons.circle_outlined,
-                                          size: 12.sp,
-                                          color: isAttempted
-                                              ? Colors.green
-                                              : cs.onSurfaceVariant,
-                                        ),
-                                        SizedBox(width: 1.5.w),
-                                        Text(
-                                          isAttempted
-                                              ? t.translate('attempted')
-                                              : t.translate('not_started'),
-                                          style: theme.textTheme.labelSmall
-                                              ?.copyWith(
-                                                color: isAttempted
-                                                    ? Colors.green.shade700
-                                                    : cs.onSurfaceVariant,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                        ),
-                                      ],
+                                    const Spacer(),
+                                    // Title
+                                    Text(
+                                      topic.title,
+                                      style: theme.textTheme.titleLarge
+                                          ?.copyWith(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            height: 1.1,
+                                          ),
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                  ),
-                                  SizedBox(width: 2.w),
-                                  // Count Badge
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 2.5.w,
-                                      vertical: 0.8.h,
+                                    SizedBox(height: 0.5.h),
+                                    // Questions Count
+                                    Text(
+                                      "${topic.totalQuestions} Questions",
+                                      style: theme.textTheme.bodyMedium
+                                          ?.copyWith(
+                                            color: Colors.white.withValues(
+                                              alpha: 0.8,
+                                            ),
+                                          ),
                                     ),
-                                    decoration: BoxDecoration(
-                                      color: cs.surfaceContainerHighest
-                                          .withValues(alpha: 0.5),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          Icons.format_list_numbered_rounded,
-                                          size: 12.sp,
-                                          color: cs.onSurfaceVariant,
-                                        ),
-                                        SizedBox(width: 1.5.w),
-                                        Text(
-                                          '${topic.totalQuestions}',
-                                          style: theme.textTheme.labelSmall
-                                              ?.copyWith(
-                                                color: cs.onSurfaceVariant,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  // Action Button
-                                  Container(
-                                    padding: EdgeInsets.all(1.h),
-                                    decoration: BoxDecoration(
-                                      color: cs.primaryContainer.withValues(
-                                        alpha: 0.3,
+                                    SizedBox(height: 1.5.h),
+                                    // Status / Button
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 1.5.h,
+                                        vertical: 0.8.h,
                                       ),
-                                      shape: BoxShape.circle,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            isAttempted ? "Retake" : "Start",
+                                            style: theme.textTheme.labelMedium
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: gradient[0],
+                                                ),
+                                          ),
+                                          SizedBox(width: 0.5.w),
+                                          Icon(
+                                            Icons.play_arrow_rounded,
+                                            size: 14.sp,
+                                            color: gradient[0],
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                    child: Icon(
-                                      Icons.arrow_forward_rounded,
-                                      size: 18.sp,
-                                      color: cs.primary,
-                                    ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ],
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                );
-              },
-            );
-          },
-        ),
+                    );
+                  }, childCount: provider.topics.length),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
