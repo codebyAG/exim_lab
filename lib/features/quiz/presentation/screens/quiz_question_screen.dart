@@ -323,14 +323,22 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                           ),
                           SizedBox(height: 4.h),
                           // Question Text
-                          Text(
-                            currentQuestion.prompt,
-                            style: theme.textTheme.headlineSmall?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              height: 1.3,
+                          Expanded(
+                            child: Center(
+                              child: SingleChildScrollView(
+                                physics: const BouncingScrollPhysics(),
+                                child: Text(
+                                  currentQuestion.prompt,
+                                  style: theme.textTheme.headlineSmall
+                                      ?.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        height: 1.3,
+                                      ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
                             ),
-                            textAlign: TextAlign.center,
                           ),
                         ],
                       ),
