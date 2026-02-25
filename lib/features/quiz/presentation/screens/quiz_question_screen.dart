@@ -244,11 +244,11 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
               children: [
                 // Top Section (Question & Progress)
                 Expanded(
-                  flex: 4,
+                  flex: 5,
                   child: SafeArea(
                     bottom: false,
                     child: Padding(
-                      padding: EdgeInsets.fromLTRB(5.w, 2.h, 5.w, 4.h),
+                      padding: EdgeInsets.fromLTRB(5.w, 1.h, 5.w, 2.h),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -290,19 +290,19 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 3.h),
+                          SizedBox(height: 2.h),
                           // Circular Progress
                           Stack(
                             alignment: Alignment.center,
                             children: [
                               SizedBox(
-                                width: 8.h,
-                                height: 8.h,
+                                width: 7.h,
+                                height: 7.h,
                                 child: CircularProgressIndicator(
                                   value:
                                       (currentQuestionIndex + 1) /
                                       questions.length,
-                                  strokeWidth: 6,
+                                  strokeWidth: 5,
                                   backgroundColor: Colors.white.withValues(
                                     alpha: 0.2,
                                   ),
@@ -321,7 +321,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 4.h),
+                          SizedBox(height: 2.h),
                           // Question Text
                           Expanded(
                             child: Center(
@@ -348,7 +348,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
 
                 // Bottom Section (Options)
                 Expanded(
-                  flex: 6,
+                  flex: 5,
                   child: Container(
                     width: double.infinity,
                     decoration: const BoxDecoration(
