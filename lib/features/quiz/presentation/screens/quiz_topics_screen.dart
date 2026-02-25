@@ -140,7 +140,7 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                     children: [
                       Text(
                         t.translate('quizzes_title'),
-                        style: theme.textTheme.headlineLarge?.copyWith(
+                        style: theme.textTheme.headlineMedium?.copyWith(
                           color: cs.onSurface,
                           fontWeight: FontWeight.w900,
                           letterSpacing: -1,
