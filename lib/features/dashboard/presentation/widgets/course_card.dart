@@ -28,66 +28,156 @@ class CourseCard extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          width: 58.w, // 🔹 responsive width
+          width: 58.w,
           padding: EdgeInsets.all(3.w),
           decoration: BoxDecoration(
             color: cs.surface,
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: cs.shadow.withValues(alpha: 0.12),
-                blurRadius: 14,
-                offset: const Offset(0, 6),
+                color: cs.shadow.withValues(alpha: 0.1),
+                blurRadius: 18,
+                offset: const Offset(0, 8),
+              ),
+              BoxShadow(
+                color: cs.primary.withValues(alpha: 0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
               ),
             ],
             border: Border.all(
-              color: cs.outlineVariant.withValues(alpha: 0.15),
-              width: 1.5,
+              color: cs.outlineVariant.withValues(alpha: 0.12),
+              width: 1,
             ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 🔹 IMAGE
-              Container(
-                height:
-                    13.h, // 🔹 fixed responsive height (no Expanded overflow)
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                    image: image.startsWith('http')
-                        ? CachedNetworkImageProvider(image)
-                        : AssetImage(image) as ImageProvider,
-                    fit: BoxFit.cover,
-                    onError: (context, error) {
-                      // Fallback if network fails, or could be handled by image provider error builder context not available here easily for DecorationImage
-                    },
+              // IMAGE with rating chip overlay
+              Stack(
+                children: [
+                  Container(
+                    height: 13.h,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(14),
+                      color: cs.surfaceContainerHighest,
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child: image.startsWith('http')
+                        ? CachedNetworkImage(
+                            imageUrl: image,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    cs.primary.withValues(alpha: 0.1),
+                                    cs.secondary.withValues(alpha: 0.1),
+                                  ],
+                                ),
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.play_circle_outline_rounded,
+                                  size: 32,
+                                  color: cs.primary.withValues(alpha: 0.4),
+                                ),
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    cs.primary.withValues(alpha: 0.15),
+                                    cs.secondary.withValues(alpha: 0.15),
+                                  ],
+                                ),
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.play_circle_outline_rounded,
+                                  size: 32,
+                                  color: cs.primary.withValues(alpha: 0.5),
+                                ),
+                              ),
+                            ),
+                          )
+                        : Image.asset(image, fit: BoxFit.cover),
                   ),
-                ),
+                  // Rating chip
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.6),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.star_rounded,
+                            size: 14,
+                            color: Colors.amber,
+                          ),
+                          const SizedBox(width: 3),
+                          Text(
+                            rating,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
 
               SizedBox(height: 1.h),
 
-              // 🔹 TITLE
+              // TITLE
               Text(
                 title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w700,
                   color: cs.onSurface,
                 ),
               ),
 
-              SizedBox(height: 0.8.h),
+              SizedBox(height: 0.5.h),
 
-              // 🔹 META
-              Text(
-                '$rating • $learners',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  fontSize: 14.sp,
-                  color: cs.onSurface.withValues(alpha: 0.6),
-                ),
+              // META
+              Row(
+                children: [
+                  Icon(
+                    Icons.people_outline_rounded,
+                    size: 14,
+                    color: cs.onSurfaceVariant,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    learners,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      fontSize: 12.sp,
+                      color: cs.onSurfaceVariant,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

@@ -88,22 +88,45 @@ class _HomeShortsSectionState extends State<HomeShortsSection> {
                       );
                     },
                     child: Container(
-                      width: 35.w, // Increased width (was dynamic)
+                      width: 35.w,
                       decoration: BoxDecoration(
                         color: Colors.black,
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(18),
                         image: thumbnailUrl.isNotEmpty
                             ? DecorationImage(
                                 image: CachedNetworkImageProvider(thumbnailUrl),
                                 fit: BoxFit.cover,
-                                onError: (exception, stackTrace) {
-                                  // log("Error loading thumbnail: $exception");
-                                },
+                                onError: (exception, stackTrace) {},
                               )
                             : null,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.15),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
                       ),
                       child: Stack(
                         children: [
+                          // Gradient overlay for text readability
+                          Positioned.fill(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(18),
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Colors.transparent,
+                                    Colors.transparent,
+                                    Colors.black.withValues(alpha: 0.7),
+                                  ],
+                                  stops: const [0.0, 0.4, 1.0],
+                                ),
+                              ),
+                            ),
+                          ),
                           Positioned(
                             bottom: 1.5.h,
                             left: 2.w,
@@ -122,14 +145,22 @@ class _HomeShortsSectionState extends State<HomeShortsSection> {
                               ),
                             ),
                           ),
-                          const Center(
-                            child: Icon(
-                              Icons.play_circle_fill,
-                              color: Colors.white,
-                              size: 40, // Increased size
-                              shadows: [
-                                Shadow(blurRadius: 5, color: Colors.black45),
-                              ],
+                          // Play button with translucent backdrop
+                          Center(
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.2),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.play_arrow_rounded,
+                                color: Colors.white,
+                                size: 32,
+                                shadows: [
+                                  Shadow(blurRadius: 5, color: Colors.black45),
+                                ],
+                              ),
                             ),
                           ),
                         ],

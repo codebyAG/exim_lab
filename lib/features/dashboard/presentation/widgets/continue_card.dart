@@ -14,27 +14,40 @@ class ContinueCard extends StatelessWidget {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final progress = (course.completionPercentage ?? 0) / 100.0;
+    final progressPercent = (course.completionPercentage ?? 0).toInt();
 
     return Padding(
       padding: EdgeInsets.only(right: 3.w, bottom: 1.5.h),
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          width: 80.w, // Fixed width for horizontal scrolling
+          width: 80.w,
           padding: EdgeInsets.all(2.h),
           decoration: BoxDecoration(
             color: cs.surface,
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(20),
             boxShadow: appCardShadow(context),
+            border: Border.all(
+              color: cs.outlineVariant.withValues(alpha: 0.1),
+              width: 1,
+            ),
           ),
           child: Row(
             children: [
-              // 🔹 COURSE IMAGE
+              // COURSE IMAGE
               Container(
                 height: 7.h,
                 width: 7.h,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(14),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      cs.primary.withValues(alpha: 0.1),
+                      cs.secondary.withValues(alpha: 0.1),
+                    ],
+                  ),
                   image: DecorationImage(
                     image:
                         (course.imageUrl != null &&
@@ -49,7 +62,7 @@ class ContinueCard extends StatelessWidget {
 
               SizedBox(width: 3.w),
 
-              // 🔹 TEXT + PROGRESS
+              // TEXT + PROGRESS
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,23 +72,57 @@ class ContinueCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
                         color: cs.onSurface,
                       ),
                     ),
 
                     SizedBox(height: 0.8.h),
 
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: LinearProgressIndicator(
-                        value: progress,
-                        minHeight: 0.8.h,
-                        backgroundColor: cs.surfaceContainerHighest,
-                        color: cs.primary,
-                      ),
+                    // Progress bar with percentage
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: LinearProgressIndicator(
+                              value: progress,
+                              minHeight: 0.8.h,
+                              backgroundColor: cs.surfaceContainerHighest,
+                              color: cs.primary,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 2.w),
+                        Text(
+                          '$progressPercent%',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: cs.primary,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
+                ),
+              ),
+
+              SizedBox(width: 2.w),
+
+              // Continue pill
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: cs.primary,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Icon(
+                  Icons.play_arrow_rounded,
+                  size: 18,
+                  color: cs.onPrimary,
                 ),
               ),
             ],

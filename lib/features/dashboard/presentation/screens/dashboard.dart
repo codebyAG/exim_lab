@@ -439,19 +439,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           child: CtaCarousel(banners: data.addons.carousel),
                         ),
                       ),
-                      SizedBox(height: 1.h),
+                      SizedBox(height: 2.h),
                     ],
 
                     // SHORTS SECTION
                     ModuleVisibility(
                       module: 'shortVideos',
                       child: FadeInRight(
-                        // 🔹 SLIDE IN SHORTS
                         delay: const Duration(milliseconds: 200),
                         child: const HomeShortsSection(),
                       ),
                     ),
-                    SizedBox(height: 5.h),
+                    SizedBox(height: 2.h),
 
                     // 4. QUICK ACTIONS (Static)
                     Padding(
@@ -506,7 +505,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 4.h),
+                    SizedBox(height: 3.h),
 
                     // 6. DYNAMIC SECTIONS LOOP
                     ...data.sections.map((section) {
@@ -628,7 +627,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 4.h),
+                    SizedBox(height: 3.h),
                   ],
                 );
               },
@@ -639,35 +638,42 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
+          color: cs.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           boxShadow: [
             BoxShadow(
-              color: cs.shadow.withValues(alpha: 0.05),
-              blurRadius: 20,
-              offset: const Offset(0, -5),
+              color: cs.shadow.withValues(alpha: 0.08),
+              blurRadius: 24,
+              offset: const Offset(0, -4),
             ),
           ],
         ),
-        child: BottomNavigationBar(
-          backgroundColor: cs.surface,
-          elevation: 0,
-          selectedItemColor: cs.primary,
-          unselectedItemColor: cs.onSurfaceVariant.withValues(alpha: 0.6),
-          selectedLabelStyle: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 13.sp,
+        child: ClipRRect(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          child: BottomNavigationBar(
+            backgroundColor: cs.surface,
+            elevation: 0,
+            selectedItemColor: cs.primary,
+            unselectedItemColor: cs.onSurfaceVariant.withValues(alpha: 0.5),
+            selectedLabelStyle: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 12.sp,
+            ),
+            unselectedLabelStyle: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 12.sp,
+            ),
+            selectedIconTheme: const IconThemeData(size: 26),
+            unselectedIconTheme: const IconThemeData(size: 24),
+            currentIndex: 0,
+            type: BottomNavigationBarType.fixed,
+            onTap: (index) {
+              if (index < navActions.length && navActions[index] != null) {
+                navActions[index]!();
+              }
+            },
+            items: navItems,
           ),
-          unselectedLabelStyle: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: 13.sp,
-          ),
-          currentIndex: 0,
-          type: BottomNavigationBarType.fixed,
-          onTap: (index) {
-            if (index < navActions.length && navActions[index] != null) {
-              navActions[index]!();
-            }
-          },
-          items: navItems,
         ),
       ),
     );
