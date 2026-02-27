@@ -29,6 +29,7 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
     final userId = user?.id ?? "64f0cccc3333333333333333"; // Fallback for dev
     if (mounted) {
       await context.read<QuizProvider>().fetchTopics(userId);
+      if (!mounted) return;
       context.read<AnalyticsService>().logQuizTopicView('General');
       setState(() {
         _isInitLoading = false;
@@ -45,9 +46,9 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
     // Dynamic Gradient Palette based on Theme
     final gradients = [
       [cs.primary, cs.secondary],
-      [cs.secondary, cs.secondary.withOpacity(0.8)],
-      [cs.primary.withOpacity(0.85), cs.primary],
-      [cs.secondary, cs.primary.withOpacity(0.7)],
+      [cs.secondary, cs.secondary.withValues(alpha: 0.8)],
+      [cs.primary.withValues(alpha: 0.85), cs.primary],
+      [cs.secondary, cs.primary.withValues(alpha: 0.7)],
     ];
 
     return Scaffold(
@@ -85,8 +86,8 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                     ),
                     delegate: SliverChildBuilderDelegate((context, index) {
                       return Shimmer.fromColors(
-                        baseColor: cs.outline.withOpacity(0.3),
-                        highlightColor: cs.outline.withOpacity(0.1),
+                        baseColor: cs.outline.withValues(alpha: 0.3),
+                        highlightColor: cs.outline.withValues(alpha: 0.1),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -150,7 +151,7 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                       Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: cs.primary.withOpacity(0.1),
+                          color: cs.primary.withValues(alpha: 0.1),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -219,7 +220,7 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                             borderRadius: BorderRadius.circular(24),
                             boxShadow: [
                               BoxShadow(
-                                color: gradient[0].withOpacity(0.3),
+                                color: gradient[0].withValues(alpha: 0.3),
                                 blurRadius: 15,
                                 offset: const Offset(0, 8),
                               ),
@@ -234,7 +235,7 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                                 child: Icon(
                                   Icons.extension_rounded,
                                   size: 80.sp,
-                                  color: Colors.white.withOpacity(0.1),
+                                  color: Colors.white.withValues(alpha: 0.1),
                                 ),
                               ),
 
@@ -248,10 +249,14 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                                     Container(
                                       padding: EdgeInsets.all(1.2.h),
                                       decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.2),
+                                        color: Colors.white.withValues(
+                                          alpha: 0.2,
+                                        ),
                                         shape: BoxShape.circle,
                                         border: Border.all(
-                                          color: Colors.white.withOpacity(0.4),
+                                          color: Colors.white.withValues(
+                                            alpha: 0.4,
+                                          ),
                                           width: 1,
                                         ),
                                       ),
@@ -280,8 +285,8 @@ class _QuizTopicsScreenState extends State<QuizTopicsScreen> {
                                       "${topic.totalQuestions} Questions",
                                       style: theme.textTheme.bodyMedium
                                           ?.copyWith(
-                                            color: Colors.white.withOpacity(
-                                              0.8,
+                                            color: Colors.white.withValues(
+                                              alpha: 0.8,
                                             ),
                                           ),
                                     ),
