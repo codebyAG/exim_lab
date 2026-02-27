@@ -16,7 +16,7 @@ class CtaCarousel extends StatefulWidget {
 }
 
 class CtaCarouselState extends State<CtaCarousel> {
-  final PageController _controller = PageController();
+  final PageController _controller = PageController(viewportFraction: 0.92);
   int _currentIndex = 0;
 
   @override
@@ -49,15 +49,13 @@ class CtaCarouselState extends State<CtaCarousel> {
   Widget build(BuildContext context) {
     if (widget.banners.isEmpty) return const SizedBox();
 
-    if (widget.banners.isEmpty) return const SizedBox();
-
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
 
     return Column(
       children: [
         AspectRatio(
-          aspectRatio: 16 / 9,
+          aspectRatio: 16 / 8,
           child: PageView.builder(
             controller: _controller,
             itemCount: widget.banners.length,
@@ -68,45 +66,87 @@ class CtaCarouselState extends State<CtaCarousel> {
               final banner = widget.banners[index];
 
               return Padding(
-                padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
-                child: Container(
-                  padding: EdgeInsets.all(2.h),
-                  decoration: BoxDecoration(
-                    color: cs.surface,
-                    borderRadius: BorderRadius.circular(20), // More rounded
-                    boxShadow: [
-                      BoxShadow(
-                        color: cs.shadow.withValues(
-                          alpha: 0.08,
-                        ), // Softer shadow
-                        blurRadius: 16,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
-                    image: DecorationImage(
-                      image: CachedNetworkImageProvider(banner.imageUrl),
-                      fit: BoxFit.cover, // Better fit
-                      // opacity: 0.4,
+                padding: EdgeInsets.symmetric(horizontal: 1.5.w, vertical: 1.h),
+                child: GestureDetector(
+                  onTap: () {
+                    context.read<AnalyticsService>().logBannerClick(
+                      ctaUrl: banner.ctaUrl,
+                      imageUrl: banner.imageUrl,
+                    );
+                    if (banner.ctaUrl.isNotEmpty) {
+                      launchUrlString(banner.ctaUrl);
+                    }
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(22),
+                      boxShadow: [
+                        BoxShadow(
+                          color: cs.shadow.withValues(alpha: 0.12),
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
+                        ),
+                        BoxShadow(
+                          color: cs.primary.withValues(alpha: 0.06),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
-                  ),
-                  child: InkWell(
-                    onTap: () {
-                      context.read<AnalyticsService>().logBannerClick(
-                        ctaUrl: banner.ctaUrl,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(22),
+                      child: CachedNetworkImage(
                         imageUrl: banner.imageUrl,
-                      );
-                      if (banner.ctaUrl.isNotEmpty) {
-                        launchUrlString(banner.ctaUrl);
-                      }
-                    },
-                    borderRadius: BorderRadius.circular(20),
-                    child: const SizedBox.expand(),
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                        placeholder: (context, url) => Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                cs.primary.withValues(alpha: 0.1),
+                                cs.secondary.withValues(alpha: 0.1),
+                              ],
+                            ),
+                          ),
+                          child: Center(
+                            child: Icon(
+                              Icons.image_rounded,
+                              size: 40,
+                              color: cs.primary.withValues(alpha: 0.3),
+                            ),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                cs.primary.withValues(alpha: 0.15),
+                                cs.secondary.withValues(alpha: 0.15),
+                              ],
+                            ),
+                          ),
+                          child: Center(
+                            child: Icon(
+                              Icons.broken_image_rounded,
+                              size: 40,
+                              color: cs.primary.withValues(alpha: 0.4),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               );
             },
           ),
         ),
+        SizedBox(height: 1.h),
         DotsIndicator(
           count: widget.banners.length,
           currentIndex: _currentIndex,
