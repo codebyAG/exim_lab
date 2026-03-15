@@ -238,5 +238,7 @@
   "incoterms_cfr": "Cost and Freight",
   "incoterms_cfr_desc": "Seller delivers goods on board the vessel. Seller pays for costs and freight to the port of destination.",
   "incoterms_cif": "Cost, Insurance and Freight",
-  "incoterms_cif_desc": "Same as CFR, but seller also pays for insurance coverage."
+  "incoterms_cif_desc": "Same as CFR, but seller also pays for insurance coverage.",
+  "ai_expert": "AI Trade Expert",
+  "ai_expert_sub": "Instant trade answers"
 }

@@ -16,81 +16,84 @@ class PremiumUnlockDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      child: Padding(
-        padding: EdgeInsets.all(24.w),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close, color: Colors.grey),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close, color: Colors.grey),
+                  ),
+                ],
+              ),
+              Container(
+                height: 80,
+                width: 80,
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade50,
+                  shape: BoxShape.circle,
                 ),
-              ],
-            ),
-            Container(
-              height: 100.h,
-              width: 100.h,
-              decoration: BoxDecoration(
-                color: Colors.orange.shade50,
-                shape: BoxShape.circle,
+                child: const Center(
+                  child: Text("👨‍💻", style: TextStyle(fontSize: 40)),
+                ),
               ),
-              child: const Center(
-                child: Text("👨‍💻", style: TextStyle(fontSize: 40)),
+              const SizedBox(height: 20),
+              Text(
+                "Hello there! 👋",
+                style: TextStyle(
+                  fontSize: 22.sp,
+                  fontWeight: FontWeight.w800,
+                  color: Colors.black,
+                ),
               ),
-            ),
-            SizedBox(height: 20.h),
-            Text(
-              "Hello there! 👋",
-              style: TextStyle(
-                fontSize: 22.sp,
-                fontWeight: FontWeight.w800,
-                color: Colors.black,
+              const SizedBox(height: 10),
+              Text(
+                "To unlock all features or new features,\nplease buy premium.",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: Colors.black54,
+                  height: 1.4,
+                ),
               ),
-            ),
-            SizedBox(height: 10.h),
-            Text(
-              "To unlock all features or new features,\nplease buy premium.",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16.sp,
-                color: Colors.black54,
-                height: 1.4,
-              ),
-            ),
-            SizedBox(height: 30.h),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _launchWhatsApp,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
-                  foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(vertical: 16.h),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _launchWhatsApp,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(
+                    "Buy Now",
+                    style: TextStyle(
+                        fontSize: 16.sp, fontWeight: FontWeight.bold),
                   ),
                 ),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
                 child: Text(
-                  "Buy Now",
-                  style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                  "Buy Later",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(
-                "Buy Later",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

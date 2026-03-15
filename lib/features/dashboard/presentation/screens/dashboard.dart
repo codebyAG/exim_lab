@@ -34,6 +34,10 @@ import 'package:sizer/sizer.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/premium_dialog.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/onboarding_dialog.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -43,6 +47,15 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  final GlobalKey _headerKey = GlobalKey();
+  final GlobalKey _actionsKey = GlobalKey();
+  final GlobalKey _continueKey = GlobalKey();
+  final GlobalKey _toolsKey = GlobalKey();
+  final GlobalKey _bottomNavKey = GlobalKey();
+
+  late TutorialCoachMark tutorialCoachMark;
+  List<TargetFocus> targets = [];
+
   @override
   void initState() {
     super.initState();
@@ -61,9 +74,180 @@ class _DashboardScreenState extends State<DashboardScreen> {
           if (data?.addons.popup != null) {
             _showPromoBanner(data!.addons.popup!);
           }
+
+          // PHASE 2: Check for onboarding status
+          _checkOnboarding();
         }
+        // Show Tutorial if not seen
+        _checkTourStatus();
       }
     });
+  }
+
+  Future<void> _checkTourStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final tourSeen = prefs.getBool('dashboard_v2_tour_seen') ?? false;
+    if (!tourSeen && mounted) {
+      _initTargets();
+      _showTutorial();
+    }
+  }
+
+  void _markTourSeen() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('dashboard_v2_tour_seen', true);
+  }
+
+  void _initTargets() {
+    final t = AppLocalizations.of(context);
+    targets.clear();
+    targets.add(
+      TargetFocus(
+        identify: "header",
+        keyTarget: _headerKey,
+        alignSkip: Alignment.topRight,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    t.translate('welcome_to_hub'),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                  SizedBox(height: 2.h),
+                  Text(
+                    t.translate('hub_description'),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "actions",
+        keyTarget: _actionsKey,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return const Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Quick Resources",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Quickly access product galleries and latest industry news from here.",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "tools",
+        keyTarget: _toolsKey,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) {
+              return const Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Business Tools",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Powerful calculators for Export Price, CBM, Duty, and Profit.",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "nav",
+        keyTarget: _bottomNavKey,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) {
+              return const Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Explore More",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Navigate through Courses, Updates, and your Profile easily.",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showTutorial() {
+    tutorialCoachMark = TutorialCoachMark(
+      targets: targets,
+      colorShadow: Colors.black,
+      textSkip: "SKIP",
+      paddingFocus: 10,
+      opacityShadow: 0.8,
+      onFinish: _markTourSeen,
+      onSkip: () {
+        _markTourSeen();
+        return true;
+      },
+    )..show(context: context);
   }
 
   void _showPromoBanner(BannerModel popup) {
@@ -81,6 +265,42 @@ class _DashboardScreenState extends State<DashboardScreen> {
         link: popup.ctaUrl, // mapped from 'link' in json
       ),
     );
+  }
+
+  void _checkOnboarding() {
+    final auth = context.read<AuthProvider>();
+    final user = auth.user;
+
+    // Show onboarding if name is missing or generic, or if interest is missing
+    if (user != null &&
+        (user.interest == null ||
+            user.name == null ||
+            user.name!.contains("User"))) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => OnboardingDialog(
+          onContinue: (name, interest) async {
+            try {
+              final success = await auth.updateProfile({
+                'name': name,
+                'interest': interest,
+              });
+              if (success && mounted) {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Profile updated! Welcome aboard."),
+                  ),
+                );
+              }
+            } catch (e) {
+              // Handle updating error
+            }
+          },
+        ),
+      );
+    }
   }
 
   @override
@@ -155,6 +375,120 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return Scaffold(
       backgroundColor: cs.surface,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: false,
+        actions: [
+          // Gallery
+          _HeaderPill(
+            icon: Icons.auto_awesome_motion_rounded,
+            label: "Gallery",
+            onTap: () {},
+          ),
+          SizedBox(width: 1.w),
+          // News
+          _HeaderPill(
+            icon: Icons.newspaper_rounded,
+            label: "News",
+            onTap: () => AppNavigator.push(context, const NewsListScreen()),
+          ),
+          SizedBox(width: 1.w),
+          // Notifications
+          Consumer<NotificationsProvider>(
+            builder: (context, notifProvider, child) {
+              return Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  IconButton(
+                    onPressed: () =>
+                        AppNavigator.push(context, const NotificationsScreen()),
+                    icon: const Icon(
+                      Icons.notifications_outlined,
+                      color: Colors.white,
+                      size: 22,
+                    ),
+                    tooltip: 'Notifications',
+                  ),
+                  if (notifProvider.unreadCount > 0)
+                    Positioned(
+                      right: 8,
+                      top: 8,
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: cs.error,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: cs.primary, width: 1.5),
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 14,
+                          minHeight: 14,
+                        ),
+                        child: Text(
+                          '${notifProvider.unreadCount}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 8,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
+          // Profile
+          InkWell(
+            onTap: () => AppNavigator.push(context, const ProfileScreen()),
+            child: Container(
+              margin: EdgeInsets.only(right: 4.w, left: 1.w),
+              padding: const EdgeInsets.all(2),
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white24,
+              ),
+              child: Container(
+                height: 32,
+                width: 32,
+                decoration: const BoxDecoration(shape: BoxShape.circle),
+                clipBehavior: Clip.antiAlias,
+                child: Consumer<AuthProvider>(
+                  builder: (context, auth, _) {
+                    final user = auth.user;
+                    if (user?.avatarUrl != null &&
+                        user!.avatarUrl!.isNotEmpty) {
+                      return CachedNetworkImage(
+                        imageUrl: user.avatarUrl!,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) =>
+                            Container(color: Colors.white10),
+                        errorWidget: (context, url, error) => Icon(
+                          Icons.person_rounded,
+                          size: 18,
+                          color: cs.primary,
+                        ),
+                      );
+                    }
+                    return CircleAvatar(
+                      radius: 16,
+                      backgroundColor: cs.primaryContainer,
+                      child: Icon(
+                        Icons.person_rounded,
+                        size: 18,
+                        color: cs.primary,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      extendBodyBehindAppBar: true,
 
       // Floating AI Support Button
       floatingActionButton: moduleProvider.isEnabled('aiChat')
@@ -166,7 +500,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 borderRadius: BorderRadius.circular(16),
               ),
               onPressed: () {
-                AppNavigator.push(context, const AiChatScreen());
+                final isPremium =
+                    context.read<AuthProvider>().user?.isPremium ?? false;
+                if (isPremium) {
+                  AppNavigator.push(context, const AiChatScreen());
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (_) => const PremiumUnlockDialog(),
+                  );
+                }
               },
               child: Icon(Icons.support_agent, color: cs.onPrimary, size: 28),
             )
@@ -179,6 +522,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             // 1. PREMIUM FLOATING HEADER
             Container(
+              key: _headerKey,
               margin: EdgeInsets.only(bottom: 2.h),
               padding: EdgeInsets.fromLTRB(5.w, 6.h, 5.w, 3.h),
               decoration: BoxDecoration(
@@ -319,179 +663,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ],
                             ),
                           ),
-                          // NOTIFICATION BELL (GLASSMORPHIC)
-                          Consumer<NotificationsProvider>(
-                            builder: (context, notifProvider, child) {
-                              return Stack(
-                                clipBehavior: Clip.none,
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withValues(
-                                        alpha: 0.15,
-                                      ),
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: Colors.white.withValues(
-                                          alpha: 0.25,
-                                        ),
-                                        width: 1.5,
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withValues(
-                                            alpha: 0.08,
-                                          ),
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 4),
-                                        ),
-                                      ],
-                                    ),
-                                    child: IconButton(
-                                      onPressed: () {
-                                        AppNavigator.push(
-                                          context,
-                                          const NotificationsScreen(),
-                                        );
-                                      },
-                                      icon: const Icon(
-                                        Icons.notifications_outlined,
-                                        color: Colors.white,
-                                        size: 22,
-                                      ),
-                                      padding: EdgeInsets.zero,
-                                      constraints: const BoxConstraints(
-                                        minWidth: 42,
-                                        minHeight: 42,
-                                      ),
-                                    ),
-                                  ),
-                                  if (notifProvider.unreadCount > 0)
-                                    Positioned(
-                                      right: -2,
-                                      top: -2,
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 6,
-                                          vertical: 3,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: cs.error,
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                          border: Border.all(
-                                            color: cs.primary,
-                                            width: 2,
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: cs.error.withValues(
-                                                alpha: 0.4,
-                                              ),
-                                              blurRadius: 6,
-                                              offset: const Offset(0, 2),
-                                            ),
-                                          ],
-                                        ),
-                                        constraints: const BoxConstraints(
-                                          minWidth: 20,
-                                          minHeight: 20,
-                                        ),
-                                        child: Text(
-                                          '${notifProvider.unreadCount}',
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              );
-                            },
-                          ),
-                          SizedBox(width: 3.w),
-
-                          // PROFILE (Gradient border ring)
-                          InkWell(
-                            onTap: () {
-                              AppNavigator.push(context, const ProfileScreen());
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(2.5),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    Colors.white,
-                                    Colors.white.withValues(alpha: 0.5),
-                                  ],
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.12),
-                                    blurRadius: 12,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: Container(
-                                height: 38,
-                                width: 38,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                ),
-                                clipBehavior: Clip.antiAlias,
-                                child:
-                                    (context
-                                                .watch<AuthProvider>()
-                                                .user
-                                                ?.avatarUrl !=
-                                            null &&
-                                        context
-                                            .watch<AuthProvider>()
-                                            .user!
-                                            .avatarUrl!
-                                            .isNotEmpty)
-                                    ? CachedNetworkImage(
-                                        imageUrl: context
-                                            .watch<AuthProvider>()
-                                            .user!
-                                            .avatarUrl!,
-                                        fit: BoxFit.cover,
-                                        errorWidget: (context, url, error) {
-                                          return Container(
-                                            color: Colors.white,
-                                            child: Center(
-                                              child: Icon(
-                                                Icons.person_rounded,
-                                                size: 24,
-                                                color: cs.primary,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        placeholder: (context, url) =>
-                                            Container(color: Colors.white),
-                                      )
-                                    : Container(
-                                        color: Colors.white,
-                                        child: Center(
-                                          child: Icon(
-                                            Icons.person_rounded,
-                                            size: 20,
-                                            color: cs.primary,
-                                          ),
-                                        ),
-                                      ),
-                              ),
-                            ),
-                          ),
                         ],
                       ),
                     ],
@@ -543,54 +714,118 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     // 4. QUICK ACTIONS (Static)
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 5.w),
-                      child: FadeInUp(
-                        // 🔹 FADE UP QUICK ACTIONS
-                        delay: const Duration(milliseconds: 300),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: QuickCard(
-                                icon: Icons.video_library_rounded,
-                                title: t.translate('my_courses'),
-                                subtitle: t.translate('completed_status'),
-                                onTap: () {
-                                  context.read<AnalyticsService>().logButtonTap(
-                                    buttonName: 'my_courses_card',
-                                    screenName: 'dashboard',
-                                  );
-                                  AppNavigator.push(
-                                    context,
-                                    const CoursesListScreen(),
-                                  );
-                                },
-                              ),
-                            ),
-                            SizedBox(width: 3.w),
-                            Expanded(
-                              child: ModuleVisibility(
-                                module: 'quizzes',
-                                child: QuickCard(
-                                  icon: Icons.quiz_rounded,
-                                  title: t.translate('quizzes_title'),
-                                  subtitle: t.translate('quizzes_subtitle'),
-                                  onTap: () {
-                                    context
-                                        .read<AnalyticsService>()
-                                        .logButtonTap(
-                                          buttonName: 'quizzes_card',
-                                          screenName: 'dashboard',
-                                        );
-                                    AppNavigator.push(
-                                      context,
-                                      const QuizTopicsScreen(),
-                                    );
-                                  },
+                      child: Column(
+                        children: [
+                          FadeInUp(
+                            delay: const Duration(milliseconds: 300),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: QuickCard(
+                                    icon: Icons.video_library_rounded,
+                                    title: t.translate('my_courses'),
+                                    subtitle: t.translate('completed_status'),
+                                    onTap: () {
+                                      context
+                                          .read<AnalyticsService>()
+                                          .logButtonTap(
+                                            buttonName: 'my_courses_card',
+                                            screenName: 'dashboard',
+                                          );
+                                      AppNavigator.push(
+                                        context,
+                                        const CoursesListScreen(),
+                                      );
+                                    },
+                                  ),
                                 ),
-                              ),
+                                SizedBox(width: 3.w),
+                                Expanded(
+                                  child: ModuleVisibility(
+                                    module: 'quizzes',
+                                    child: QuickCard(
+                                      icon: Icons.quiz_rounded,
+                                      title: t.translate('quizzes_title'),
+                                      subtitle: t.translate('quizzes_subtitle'),
+                                      onTap: () {
+                                        context
+                                            .read<AnalyticsService>()
+                                            .logButtonTap(
+                                              buttonName: 'quizzes_card',
+                                              screenName: 'dashboard',
+                                            );
+                                        final isPremium =
+                                            context
+                                                .read<AuthProvider>()
+                                                .user
+                                                ?.isPremium ??
+                                            false;
+                                        if (isPremium) {
+                                          AppNavigator.push(
+                                            context,
+                                            const QuizTopicsScreen(),
+                                          );
+                                        } else {
+                                          showDialog(
+                                            context: context,
+                                            builder: (_) =>
+                                                const PremiumUnlockDialog(),
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                          SizedBox(height: 2.h),
+                          FadeInUp(
+                            delay: const Duration(milliseconds: 400),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: QuickCard(
+                                    icon: Icons.smart_toy_rounded,
+                                    title: t.translate('ai_expert'),
+                                    subtitle: t.translate('ai_expert_sub'),
+                                    onTap: () {
+                                      final isPremium =
+                                          context
+                                              .read<AuthProvider>()
+                                              .user
+                                              ?.isPremium ??
+                                          false;
+                                      if (isPremium) {
+                                        AppNavigator.push(
+                                          context,
+                                          const AiChatScreen(),
+                                        );
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          builder: (_) =>
+                                              const PremiumUnlockDialog(),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ),
+                                SizedBox(width: 3.w),
+                                Expanded(
+                                  child: QuickCard(
+                                    icon: Icons.folder_shared_rounded,
+                                    title: "Resources",
+                                    subtitle: "Books & PDFs",
+                                    onTap: () {},
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(height: 3.h),
@@ -605,6 +840,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         return ModuleVisibility(
                           module: 'continueLearning',
                           child: Column(
+                            key: _continueKey,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SectionHeader(
@@ -705,13 +941,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ModuleVisibility(
                       module: 'tools',
                       child: Column(
+                        key: _toolsKey,
                         children: [
                           SectionHeader(
                             title: t.translate('tools_section_title'),
                             subtitle: t.translate('tools_section_subtitle'),
                           ),
                           SizedBox(height: 1.5.h),
-                          const ToolsSection(),
+                          Consumer<AuthProvider>(
+                            builder: (context, auth, _) {
+                              return ToolsSection(
+                                isPremium: auth.user?.isPremium ?? false,
+                              );
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -741,6 +984,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
 
       bottomNavigationBar: Container(
+        key: _bottomNavKey,
         decoration: BoxDecoration(
           color: cs.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -812,7 +1056,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     "Free Import Export Guide",
                     style: TextStyle(
                       fontWeight: FontWeight.w800,
-                      fontSize: 13.sp,
+                      fontSize: 15.sp,
                       color: cs.onSurface,
                     ),
                   ),
@@ -821,7 +1065,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     "Complete beginner guide to start business",
                     style: TextStyle(
                       color: cs.onSurfaceVariant,
-                      fontSize: 10.sp,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -843,7 +1087,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         "Download Free PDF →",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 11.sp,
+                          fontSize: 13.sp,
                         ),
                       ),
                     ),
@@ -897,7 +1141,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             padding: EdgeInsets.symmetric(horizontal: 5.w),
             scrollDirection: Axis.horizontal,
             itemCount: testimonials.length,
-            separatorBuilder: (_, __) => SizedBox(width: 4.w),
+            separatorBuilder: (_, _) => SizedBox(width: 4.w),
             itemBuilder: (context, index) {
               final t = testimonials[index];
               return Container(
@@ -969,7 +1213,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       style: TextStyle(
                         fontStyle: FontStyle.italic,
                         color: cs.onSurfaceVariant,
-                        fontSize: 11.sp,
+                        fontSize: 13.sp,
                         height: 1.4,
                       ),
                       maxLines: 3,
@@ -1080,7 +1324,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w900,
-                fontSize: 20,
+                fontSize: 22,
               ),
             ),
             const Text(
@@ -1088,7 +1332,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
-                fontSize: 16,
+                fontSize: 18,
               ),
             ),
             SizedBox(height: 1.h),
@@ -1096,7 +1340,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               "Book a 1:1 session with our industry experts",
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.85),
-                fontSize: 12,
+                fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
               textAlign: TextAlign.center,
@@ -1122,13 +1366,65 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
-                child: const Text(
+                child: Text(
                   "Book Now →",
-                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15.sp,
+                  ),
                 ),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _HeaderPill extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  const _HeaderPill({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.2),
+              width: 1,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: Colors.white, size: 16),
+              const SizedBox(width: 4),
+              Text(
+                label,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

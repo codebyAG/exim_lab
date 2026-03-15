@@ -7,6 +7,7 @@ class UserModel {
   final String? email;
   final String? avatarUrl;
   final bool isPremium;
+  final String? interest;
   final UserStats? stats;
 
   UserModel({
@@ -18,6 +19,7 @@ class UserModel {
     this.email,
     this.avatarUrl,
     this.isPremium = false,
+    this.interest,
     this.stats,
   });
 
@@ -31,6 +33,7 @@ class UserModel {
       email: json['email'],
       avatarUrl: json['avatarUrl'],
       isPremium: json['isPremium'] ?? false,
+      interest: json['interest'],
       stats: json['stats'] != null ? UserStats.fromJson(json['stats']) : null,
     );
   }
@@ -45,6 +48,7 @@ class UserModel {
       'email': email,
       'avatarUrl': avatarUrl,
       'isPremium': isPremium,
+      'interest': interest,
       'stats': stats?.toJson(),
     };
   }
