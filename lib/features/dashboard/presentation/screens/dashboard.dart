@@ -66,6 +66,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         if (mounted) {
           await context.read<NotificationsProvider>().fetchUnreadCount();
         }
+        if (mounted) {
+          await context.read<AuthProvider>().refreshMembershipStatus();
+        }
 
         // Show Promo Banner if available
         if (mounted) {
@@ -335,121 +338,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return Scaffold(
       backgroundColor: cs.surface,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: false,
-        actions: [
-          // Gallery
-          _HeaderPill(
-            icon: Icons.auto_awesome_motion_rounded,
-            label: "Gallery",
-            onTap: () {},
-          ),
-          SizedBox(width: 1.w),
-          // News
-          _HeaderPill(
-            icon: Icons.newspaper_rounded,
-            label: "News",
-            onTap: () => AppNavigator.push(context, const NewsListScreen()),
-          ),
-          SizedBox(width: 1.w),
-          // Notifications
-          Consumer<NotificationsProvider>(
-            builder: (context, notifProvider, child) {
-              return Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  IconButton(
-                    onPressed: () =>
-                        AppNavigator.push(context, const NotificationsScreen()),
-                    icon: const Icon(
-                      Icons.notifications_outlined,
-                      color: Colors.white,
-                      size: 22,
-                    ),
-                    tooltip: 'Notifications',
-                  ),
-                  if (notifProvider.unreadCount > 0)
-                    Positioned(
-                      right: 8,
-                      top: 8,
-                      child: Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          color: cs.error,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: cs.primary, width: 1.5),
-                        ),
-                        constraints: const BoxConstraints(
-                          minWidth: 14,
-                          minHeight: 14,
-                        ),
-                        child: Text(
-                          '${notifProvider.unreadCount}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 8,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                ],
-              );
-            },
-          ),
-          // Profile
-          InkWell(
-            onTap: () => AppNavigator.push(context, const ProfileScreen()),
-            child: Container(
-              margin: EdgeInsets.only(right: 4.w, left: 1.w),
-              padding: const EdgeInsets.all(2),
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white24,
-              ),
-              child: Container(
-                height: 32,
-                width: 32,
-                decoration: const BoxDecoration(shape: BoxShape.circle),
-                clipBehavior: Clip.antiAlias,
-                child: Consumer<AuthProvider>(
-                  builder: (context, auth, _) {
-                    final user = auth.user;
-                    if (user?.avatarUrl != null &&
-                        user!.avatarUrl!.isNotEmpty) {
-                      return CachedNetworkImage(
-                        imageUrl: user.avatarUrl!,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) =>
-                            Container(color: Colors.white10),
-                        errorWidget: (context, url, error) => Icon(
-                          Icons.person_rounded,
-                          size: 18,
-                          color: cs.primary,
-                        ),
-                      );
-                    }
-                    return CircleAvatar(
-                      radius: 16,
-                      backgroundColor: cs.primaryContainer,
-                      child: Icon(
-                        Icons.person_rounded,
-                        size: 18,
-                        color: cs.primary,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-      extendBodyBehindAppBar: true,
-
       // Floating AI Support Button
       floatingActionButton: moduleProvider.isEnabled('aiChat')
           ? FloatingActionButton(
@@ -474,7 +362,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: Icon(Icons.support_agent, color: cs.onPrimary, size: 28),
             )
           : null,
-
       body: RefreshIndicator(
         onRefresh: () => context.read<DashboardProvider>().fetchDashboardData(),
         child: ListView(
@@ -484,7 +371,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Container(
               key: _headerKey,
               margin: EdgeInsets.only(bottom: 2.h),
-              padding: EdgeInsets.fromLTRB(5.w, 6.h, 5.w, 3.h),
+              padding: EdgeInsets.fromLTRB(
+                5.w,
+                6.h,
+                5.w,
+                4.h,
+              ), // Increased top padding to push greeting down
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
@@ -514,113 +406,221 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               child: Stack(
                 children: [
-                  // Decorative circle top-right
-                  Positioned(
-                    top: -20,
-                    right: -20,
-                    child: Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white.withValues(alpha: 0.06),
-                      ),
-                    ),
-                  ),
-                  // Decorative circle bottom-left
-                  Positioned(
-                    bottom: -30,
-                    left: -15,
-                    child: Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white.withValues(alpha: 0.04),
-                      ),
-                    ),
-                  ),
                   // Main content
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // LAYER 1: Welcome & Name
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      '👋 ',
-                                      style: TextStyle(fontSize: 14.sp),
-                                    ),
-                                    Text(
-                                      t.translate('welcome_back'),
-                                      style: theme.textTheme.bodyMedium
-                                          ?.copyWith(
-                                            color: Colors.white.withValues(
-                                              alpha: 0.85,
-                                            ),
-                                            letterSpacing: 0.5,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 6),
-                                Text(
-                                  context.watch<AuthProvider>().user?.name ??
-                                      t.translate('guest_user'),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: theme.textTheme.headlineSmall
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.white,
-                                        letterSpacing: -0.5,
-                                      ),
-                                ),
-                                const SizedBox(height: 8),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 5,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    '👋 ',
+                                    style: TextStyle(fontSize: 14.sp),
                                   ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withValues(alpha: 0.18),
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
+                                  Text(
+                                    t.translate('welcome_back'),
+                                    style: theme.textTheme.bodyMedium?.copyWith(
                                       color: Colors.white.withValues(
-                                        alpha: 0.15,
+                                        alpha: 0.85,
                                       ),
-                                      width: 1,
+                                      letterSpacing: 0.5,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.auto_awesome_rounded,
-                                        size: 13,
-                                        color: Colors.white.withValues(
-                                          alpha: 0.9,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 5),
-                                      Text(
-                                        t.translate('continue_journey'),
-                                        style: theme.textTheme.labelSmall
-                                            ?.copyWith(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                      ),
-                                    ],
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                context.watch<AuthProvider>().user?.name ??
+                                    t.translate('guest_user'),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: theme.textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white,
+                                  letterSpacing: -0.5,
+                                  fontSize: 22.sp,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+
+                      // LAYER 2: Gallery & News (Expanded)
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _HeaderPill(
+                              icon: Icons.auto_awesome_motion_rounded,
+                              label: "Gallery",
+                              onTap: () {},
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _HeaderPill(
+                              icon: Icons.newspaper_rounded,
+                              label: "News",
+                              onTap: () => AppNavigator.push(
+                                context,
+                                const NewsListScreen(),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+
+                      // LAYER 3: Journey, Notifications, Profile
+                      Row(
+                        children: [
+                          // Journey Pill
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.18),
+                              borderRadius: BorderRadius.circular(24),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.15),
+                                width: 1,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.auto_awesome_rounded,
+                                  size: 14,
+                                  color: Colors.white,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  t.translate('continue_journey'),
+                                  style: theme.textTheme.labelMedium?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 0.2,
                                   ),
                                 ),
                               ],
+                            ),
+                          ),
+                          const Spacer(),
+                          // Notifications icon
+                          Consumer<NotificationsProvider>(
+                            builder: (context, notifProvider, child) {
+                              return Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  IconButton(
+                                    onPressed: () => AppNavigator.push(
+                                      context,
+                                      const NotificationsScreen(),
+                                    ),
+                                    icon: const Icon(
+                                      Icons.notifications_outlined,
+                                      color: Colors.white,
+                                      size: 24,
+                                    ),
+                                    tooltip: 'Notifications',
+                                    visualDensity: VisualDensity.compact,
+                                  ),
+                                  if (notifProvider.unreadCount > 0)
+                                    Positioned(
+                                      right: 4,
+                                      top: 4,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(2),
+                                        decoration: BoxDecoration(
+                                          color: cs.error,
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: cs.primary,
+                                            width: 1.5,
+                                          ),
+                                        ),
+                                        constraints: const BoxConstraints(
+                                          minWidth: 16,
+                                          minHeight: 16,
+                                        ),
+                                        child: Text(
+                                          '${notifProvider.unreadCount}',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 9,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              );
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                          // Profile Circle
+                          InkWell(
+                            onTap: () => AppNavigator.push(
+                              context,
+                              const ProfileScreen(),
+                            ),
+                            child: Container(
+                              padding: const EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.3),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Container(
+                                height: 36,
+                                width: 36,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                ),
+                                clipBehavior: Clip.antiAlias,
+                                child: Consumer<AuthProvider>(
+                                  builder: (context, auth, _) {
+                                    final user = auth.user;
+                                    if (user?.avatarUrl != null &&
+                                        user!.avatarUrl!.isNotEmpty) {
+                                      return CachedNetworkImage(
+                                        imageUrl: user.avatarUrl!,
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) =>
+                                            Container(color: Colors.white10),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(
+                                              Icons.person_rounded,
+                                              size: 20,
+                                              color: cs.onPrimary,
+                                            ),
+                                      );
+                                    }
+                                    return CircleAvatar(
+                                      radius: 18,
+                                      backgroundColor: Colors.white24,
+                                      child: Icon(
+                                        Icons.person_rounded,
+                                        size: 20,
+                                        color: Colors.white,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
                             ),
                           ),
                         ],
@@ -1356,31 +1356,33 @@ class _HeaderPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 8),
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      width: double.infinity,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(12),
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: Colors.white.withValues(alpha: 0.2),
+              color: Colors.white.withValues(alpha: 0.18),
               width: 1,
             ),
           ),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: Colors.white, size: 16),
-              const SizedBox(width: 4),
+              Icon(icon, color: Colors.white, size: 18),
+              const SizedBox(width: 8),
               Text(
                 label,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.3,
                 ),
               ),
             ],

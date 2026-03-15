@@ -98,6 +98,7 @@ class AuthProvider extends ChangeNotifier {
       if (response['user'] != null) {
         _user = UserModel.fromJson(response['user']);
         await _sharedPrefService.saveUser(_user!);
+        await refreshMembershipStatus(); // Refresh premium status on login
       }
 
       if (response['token'] != null) {
@@ -143,6 +144,7 @@ class AuthProvider extends ChangeNotifier {
       if (response['data'] != null) {
         _user = UserModel.fromJson(response['data']);
         await _sharedPrefService.saveUser(_user!);
+        await refreshMembershipStatus(); // Refresh premium status
         notifyListeners();
       } else if (response['_id'] != null) {
         // Direct object
@@ -154,6 +156,7 @@ class AuthProvider extends ChangeNotifier {
           name: AnalyticsConstants.phoneNumber,
           value: _user!.mobile,
         );
+        await refreshMembershipStatus(); // Refresh premium status
         notifyListeners();
       }
     } catch (e) {
@@ -190,11 +193,8 @@ class AuthProvider extends ChangeNotifier {
   Future<void> refreshMembershipStatus() async {
     try {
       if (_user == null) return;
-      final response = await _dataSource.checkMembership(
-        mobile: _user!.mobile,
-        organizationId: _user!.organizationId,
-      );
-      if (response['isPremium'] != null && _user != null) {
+      final response = await _dataSource.checkMembership();
+      if (response['active'] != null && _user != null) {
         final updatedUser = UserModel(
           id: _user!.id,
           name: _user!.name,
@@ -203,8 +203,9 @@ class AuthProvider extends ChangeNotifier {
           organizationId: _user!.organizationId,
           email: _user!.email,
           avatarUrl: _user!.avatarUrl,
-          isPremium: response['isPremium'] == true,
+          isPremium: response['active'] == true,
           stats: _user!.stats,
+          interest: _user!.interest,
         );
         _user = updatedUser;
         await _sharedPrefService.saveUser(_user!);
