@@ -98,11 +98,11 @@ class AuthProvider extends ChangeNotifier {
       if (response['user'] != null) {
         _user = UserModel.fromJson(response['user']);
         await _sharedPrefService.saveUser(_user!);
-        await refreshMembershipStatus(); // Refresh premium status on login
       }
 
       if (response['token'] != null) {
         await _sharedPrefService.saveToken(response['token']);
+        await refreshMembershipStatus(); // Refresh premium status on login
       }
 
       // 📊 ANALYTICS
