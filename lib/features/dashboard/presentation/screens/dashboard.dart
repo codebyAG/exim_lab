@@ -37,7 +37,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/premium_dialog.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/onboarding_dialog.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -74,9 +73,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           if (data?.addons.popup != null) {
             _showPromoBanner(data!.addons.popup!);
           }
-
-          // PHASE 2: Check for onboarding status
-          _checkOnboarding();
         }
         // Show Tutorial if not seen
         _checkTourStatus();
@@ -265,42 +261,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         link: popup.ctaUrl, // mapped from 'link' in json
       ),
     );
-  }
-
-  void _checkOnboarding() {
-    final auth = context.read<AuthProvider>();
-    final user = auth.user;
-
-    // Show onboarding if name is missing or generic, or if interest is missing
-    if (user != null &&
-        (user.interest == null ||
-            user.name == null ||
-            user.name!.contains("User"))) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => OnboardingDialog(
-          onContinue: (name, interest) async {
-            try {
-              final success = await auth.updateProfile({
-                'name': name,
-                'interest': interest,
-              });
-              if (success && mounted) {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Profile updated! Welcome aboard."),
-                  ),
-                );
-              }
-            } catch (e) {
-              // Handle updating error
-            }
-          },
-        ),
-      );
-    }
   }
 
   @override
