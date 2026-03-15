@@ -6,6 +6,7 @@ class UserModel {
   final String organizationId;
   final String? email;
   final String? avatarUrl;
+  final bool isPremium;
   final UserStats? stats;
 
   UserModel({
@@ -16,6 +17,7 @@ class UserModel {
     required this.organizationId,
     this.email,
     this.avatarUrl,
+    this.isPremium = false,
     this.stats,
   });
 
@@ -28,6 +30,7 @@ class UserModel {
       organizationId: json['organizationId'] ?? '',
       email: json['email'],
       avatarUrl: json['avatarUrl'],
+      isPremium: json['isPremium'] ?? false,
       stats: json['stats'] != null ? UserStats.fromJson(json['stats']) : null,
     );
   }
@@ -41,6 +44,7 @@ class UserModel {
       'organizationId': organizationId,
       'email': email,
       'avatarUrl': avatarUrl,
+      'isPremium': isPremium,
       'stats': stats?.toJson(),
     };
   }

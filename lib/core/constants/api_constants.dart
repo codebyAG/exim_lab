@@ -28,6 +28,7 @@ class ApiConstants {
   static const String shortVideos = '$baseUrl/api/short-videos';
   static const String logAnalytics = '$baseUrl/api/analytics/log-event';
   static const String logInstall = '$baseUrl/api/analytics/log-install';
+  static const String checkMembership = '$baseUrl/api/user/membership';
 
   // ⏱ TIMEOUTS
   static const int connectTimeout = 15000;

@@ -33,6 +33,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -715,6 +716,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ),
                     SizedBox(height: 3.h),
+
+                    // 9. FREE PDF PROMO (New)
+                    _buildFreePdfPromo(context, cs),
+                    SizedBox(height: 3.h),
+
+                    // 10. TESTIMONIALS (New)
+                    _buildTestimonials(context, cs, theme),
+                    SizedBox(height: 3.h),
+
+                    // 11. SOCIAL CONNECT (New)
+                    _buildSocialConnect(context, cs, theme),
+                    SizedBox(height: 3.h),
+
+                    // 12. FREE COUNSELING (New)
+                    _buildFreeCounseling(context, cs),
+                    SizedBox(height: 3.h),
                   ],
                 );
               },
@@ -761,6 +778,357 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
             items: navItems,
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFreePdfPromo(BuildContext context, ColorScheme cs) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5.w),
+      child: Container(
+        padding: EdgeInsets.all(5.w),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFF8F0),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: cs.primary.withValues(alpha: 0.15)),
+          boxShadow: [
+            BoxShadow(
+              color: cs.primary.withValues(alpha: 0.05),
+              blurRadius: 15,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            const Text("🎁", style: TextStyle(fontSize: 40)),
+            SizedBox(width: 4.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Free Import Export Guide",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 13.sp,
+                      color: cs.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    "Complete beginner guide to start business",
+                    style: TextStyle(
+                      color: cs.onSurfaceVariant,
+                      fontSize: 10.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(height: 2.h),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: cs.primary,
+                        foregroundColor: cs.onPrimary,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      child: Text(
+                        "Download Free PDF →",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 11.sp,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTestimonials(
+    BuildContext context,
+    ColorScheme cs,
+    ThemeData theme,
+  ) {
+    final testimonials = [
+      {
+        "name": "John Doe",
+        "text":
+            "This course helped me start my export business in just 30 days! Highly recommended.",
+        "rating": "5.0",
+      },
+      {
+        "name": "Sarah Smith",
+        "text":
+            "The industry insights are incredible. Best investment for my career.",
+        "rating": "4.9",
+      },
+      {
+        "name": "Rahul Verma",
+        "text":
+            "Detailed content and great support. Finally understood the tax laws.",
+        "rating": "5.0",
+      },
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SectionHeader(
+          title: "Student Success Stories",
+          subtitle: "Real results from our premium members",
+        ),
+        SizedBox(height: 2.h),
+        SizedBox(
+          height: 24.h,
+          child: ListView.separated(
+            padding: EdgeInsets.symmetric(horizontal: 5.w),
+            scrollDirection: Axis.horizontal,
+            itemCount: testimonials.length,
+            separatorBuilder: (_, __) => SizedBox(width: 4.w),
+            itemBuilder: (context, index) {
+              final t = testimonials[index];
+              return Container(
+                width: 80.w,
+                padding: EdgeInsets.all(5.w),
+                decoration: BoxDecoration(
+                  color: cs.surface,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: cs.outlineVariant),
+                  boxShadow: [
+                    BoxShadow(
+                      color: cs.shadow.withValues(alpha: 0.04),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundColor: cs.primary.withValues(alpha: 0.1),
+                          child: Icon(
+                            Icons.person,
+                            color: cs.primary,
+                            size: 24,
+                          ),
+                        ),
+                        SizedBox(width: 3.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                t["name"]!,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Icon(Icons.star, color: cs.primary, size: 14),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    t["rating"]!,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(
+                          Icons.format_quote_rounded,
+                          color: Colors.grey,
+                          size: 30,
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                    Text(
+                      "\"${t["text"]}\"",
+                      style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        color: cs.onSurfaceVariant,
+                        fontSize: 11.sp,
+                        height: 1.4,
+                      ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSocialConnect(
+    BuildContext context,
+    ColorScheme cs,
+    ThemeData theme,
+  ) {
+    return Column(
+      children: [
+        const SectionHeader(
+          title: "Connect With Us",
+          subtitle: "Join our growing trade community",
+        ),
+        SizedBox(height: 2.h),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5.w),
+          child: Container(
+            padding: EdgeInsets.all(5.w),
+            decoration: BoxDecoration(
+              color: Colors.blue.withValues(alpha: 0.04),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.blue.withValues(alpha: 0.1)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _socialIcon(Icons.video_collection_rounded, Colors.red),
+                _socialIcon(Icons.camera_alt_rounded, Colors.purple),
+                _socialIcon(Icons.facebook_rounded, Colors.blue),
+                _socialIcon(Icons.message_rounded, Colors.green),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _socialIcon(IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Icon(icon, color: color, size: 28),
+    );
+  }
+
+  Widget _buildFreeCounseling(BuildContext context, ColorScheme cs) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5.w),
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(6.w),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [cs.primary, const Color(0xFFFFB703)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: cs.primary.withValues(alpha: 0.35),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.2),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.support_agent_rounded,
+                color: Colors.white,
+                size: 36,
+              ),
+            ),
+            SizedBox(height: 2.h),
+            const Text(
+              "Still Confused?",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+                fontSize: 20,
+              ),
+            ),
+            const Text(
+              "Get Free Expert Counseling",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+                fontSize: 16,
+              ),
+            ),
+            SizedBox(height: 1.h),
+            Text(
+              "Book a 1:1 session with our industry experts",
+              style: TextStyle(
+                color: Colors.white.withValues(alpha: 0.85),
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 3.h),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () async {
+                  final url = Uri.parse(
+                    "https://wa.me/919871769042?text=I%20need%20free%20counseling%20for%20Import%20Export%20business",
+                  );
+                  if (await canLaunchUrl(url)) {
+                    await launchUrl(url, mode: LaunchMode.externalApplication);
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: cs.primary,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+                child: const Text(
+                  "Book Now →",
+                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -53,4 +53,19 @@ class AuthDataSource {
       methodType: MethodType.put,
     );
   }
+
+  Future<Map<String, dynamic>> checkMembership({
+    required String mobile,
+    required String organizationId,
+  }) async {
+    return await callApi(
+      ApiConstants.checkMembership,
+      requestData: {
+        "mobile": mobile,
+        "organizationId": organizationId,
+      },
+      parser: (json) => json as Map<String, dynamic>,
+      methodType: MethodType.get,
+    );
+  }
 }

@@ -186,4 +186,32 @@ class AuthProvider extends ChangeNotifier {
       return false;
     }
   }
+
+  Future<void> refreshMembershipStatus() async {
+    try {
+      if (_user == null) return;
+      final response = await _dataSource.checkMembership(
+        mobile: _user!.mobile,
+        organizationId: _user!.organizationId,
+      );
+      if (response['isPremium'] != null && _user != null) {
+        final updatedUser = UserModel(
+          id: _user!.id,
+          name: _user!.name,
+          mobile: _user!.mobile,
+          role: _user!.role,
+          organizationId: _user!.organizationId,
+          email: _user!.email,
+          avatarUrl: _user!.avatarUrl,
+          isPremium: response['isPremium'] == true,
+          stats: _user!.stats,
+        );
+        _user = updatedUser;
+        await _sharedPrefService.saveUser(_user!);
+        notifyListeners();
+      }
+    } catch (e) {
+      // Membership Check Error
+    }
+  }
 }
