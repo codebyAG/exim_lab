@@ -39,14 +39,29 @@ import 'package:showcaseview/showcaseview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/premium_dialog.dart';
 
-class DashboardScreen extends StatefulWidget {
+class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
+  Widget build(BuildContext context) {
+    return ShowCaseWidget(
+      onFinish: () async {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('dashboard_v3_tour_seen', true);
+      },
+      builder: (context) => const _DashboardBody(),
+    );
+  }
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _DashboardBody extends StatefulWidget {
+  const _DashboardBody();
+
+  @override
+  State<_DashboardBody> createState() => _DashboardBodyState();
+}
+
+class _DashboardBodyState extends State<_DashboardBody> {
   final GlobalKey _headerKey = GlobalKey();
   final GlobalKey _galleryHeaderKey = GlobalKey();
   final GlobalKey _carouselKey = GlobalKey();
@@ -289,9 +304,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       AppNavigator.push(context, const ProfileScreen());
     });
 
-    return ShowCaseWidget(
-      onFinish: () => _markTourSeen(),
-      builder: (context) => Scaffold(
+    return Scaffold(
         backgroundColor: cs.surface,
         floatingActionButton: moduleProvider.isEnabled('aiChat')
             ? FloatingActionButton(
@@ -951,7 +964,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
           ),
         ),
-      ),
     );
   }
 
