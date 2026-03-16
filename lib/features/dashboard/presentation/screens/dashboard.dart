@@ -271,9 +271,17 @@ class _DashboardBodyState extends State<_DashboardBody> {
           label: t.translate('shorts'),
         ),
       );
-      navActions.add(
-        () => AppNavigator.push(context, const ShortsFeedScreen()),
-      );
+      navActions.add(() {
+        final isPremium = context.read<AuthProvider>().user?.isPremium ?? false;
+        if (isPremium) {
+          AppNavigator.push(context, const ShortsFeedScreen());
+        } else {
+          showDialog(
+            context: context,
+            builder: (_) => const PremiumUnlockDialog(),
+          );
+        }
+      });
     }
 
     if (moduleProvider.isEnabled('courses')) {
@@ -285,7 +293,15 @@ class _DashboardBodyState extends State<_DashboardBody> {
         ),
       );
       navActions.add(() {
-        AppNavigator.push(context, const CoursesListScreen());
+        final isPremium = context.read<AuthProvider>().user?.isPremium ?? false;
+        if (isPremium) {
+          AppNavigator.push(context, const CoursesListScreen());
+        } else {
+          showDialog(
+            context: context,
+            builder: (_) => const PremiumUnlockDialog(),
+          );
+        }
       });
     }
 
@@ -447,10 +463,25 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                 child: _HeaderPill(
                                   icon: Icons.auto_awesome_motion_rounded,
                                   label: t.translate('gallery'),
-                                  onTap: () => AppNavigator.push(
-                                    context,
-                                    const GalleryScreen(),
-                                  ),
+                                  onTap: () {
+                                    final isPremium = context
+                                            .read<AuthProvider>()
+                                            .user
+                                            ?.isPremium ??
+                                        false;
+                                    if (isPremium) {
+                                      AppNavigator.push(
+                                        context,
+                                        const GalleryScreen(),
+                                      );
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (_) =>
+                                            const PremiumUnlockDialog(),
+                                      );
+                                    }
+                                  },
                                 ),
                               ),
                             ),
@@ -672,7 +703,30 @@ class _DashboardBodyState extends State<_DashboardBody> {
                           key: _shortsKey,
                           title: 'tut_shorts_title',
                           description: 'tut_shorts_desc',
-                          child: const HomeShortsSection(),
+                          child: Consumer<AuthProvider>(
+                            builder: (context, auth, _) {
+                              final isPremium = auth.user?.isPremium ?? false;
+                              return InkWell(
+                                onTap: () {
+                                  if (isPremium) {
+                                    AppNavigator.push(
+                                      context,
+                                      const ShortsFeedScreen(),
+                                    );
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (_) =>
+                                          const PremiumUnlockDialog(),
+                                    );
+                                  }
+                                },
+                                child: const IgnorePointer(
+                                  child: HomeShortsSection(),
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -692,20 +746,36 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                     key: _coursesCardKey,
                                     title: 'tut_my_courses_title',
                                     description: 'tut_my_courses_desc',
-                                    child: QuickCard(
-                                      icon: Icons.video_library_rounded,
-                                      title: t.translate('my_courses'),
-                                      subtitle: t.translate('completed_status'),
-                                      onTap: () {
-                                        context
-                                            .read<AnalyticsService>()
-                                            .logButtonTap(
-                                              buttonName: 'my_courses_card',
-                                              screenName: 'dashboard',
-                                            );
-                                        AppNavigator.push(
-                                          context,
-                                          const CoursesListScreen(),
+                                    child: Consumer<AuthProvider>(
+                                      builder: (context, auth, _) {
+                                        final isPremium =
+                                            auth.user?.isPremium ?? false;
+                                        return QuickCard(
+                                          icon: Icons.video_library_rounded,
+                                          title: t.translate('my_courses'),
+                                          subtitle:
+                                              t.translate('completed_status'),
+                                          isLocked: !isPremium,
+                                          onTap: () {
+                                            context
+                                                .read<AnalyticsService>()
+                                                .logButtonTap(
+                                                  buttonName: 'my_courses_card',
+                                                  screenName: 'dashboard',
+                                                );
+                                            if (isPremium) {
+                                              AppNavigator.push(
+                                                context,
+                                                const CoursesListScreen(),
+                                              );
+                                            } else {
+                                              showDialog(
+                                                context: context,
+                                                builder: (_) =>
+                                                    const PremiumUnlockDialog(),
+                                              );
+                                            }
+                                          },
                                         );
                                       },
                                     ),
@@ -719,35 +789,38 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                       key: _quizzesCardKey,
                                       title: 'tut_quizzes_title',
                                       description: 'tut_quizzes_desc',
-                                      child: QuickCard(
-                                        icon: Icons.quiz_rounded,
-                                        title: t.translate('quizzes_title'),
-                                        subtitle: t.translate(
-                                          'quizzes_subtitle',
-                                        ),
-                                        onTap: () {
-                                          context
-                                              .read<AnalyticsService>()
-                                              .logButtonTap(
-                                                buttonName: 'quizzes_card',
-                                                screenName: 'dashboard',
-                                              );
-                                          if (context
-                                                  .read<AuthProvider>()
-                                                  .user
-                                                  ?.isPremium ??
-                                              false) {
-                                            AppNavigator.push(
-                                              context,
-                                              const QuizTopicsScreen(),
-                                            );
-                                          } else {
-                                            showDialog(
-                                              context: context,
-                                              builder: (_) =>
-                                                  const PremiumUnlockDialog(),
-                                            );
-                                          }
+                                      child: Consumer<AuthProvider>(
+                                        builder: (context, auth, _) {
+                                          final isPremium =
+                                              auth.user?.isPremium ?? false;
+                                          return QuickCard(
+                                            icon: Icons.quiz_rounded,
+                                            title: t.translate('quizzes_title'),
+                                            subtitle: t.translate(
+                                              'quizzes_subtitle',
+                                            ),
+                                            isLocked: !isPremium,
+                                            onTap: () {
+                                              context
+                                                  .read<AnalyticsService>()
+                                                  .logButtonTap(
+                                                    buttonName: 'quizzes_card',
+                                                    screenName: 'dashboard',
+                                                  );
+                                              if (isPremium) {
+                                                AppNavigator.push(
+                                                  context,
+                                                  const QuizTopicsScreen(),
+                                                );
+                                              } else {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (_) =>
+                                                      const PremiumUnlockDialog(),
+                                                );
+                                              }
+                                            },
+                                          );
                                         },
                                       ),
                                     ),
@@ -766,27 +839,30 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                     key: _aiExpertCardKey,
                                     title: 'tut_ai_expert_title',
                                     description: 'tut_ai_expert_desc',
-                                    child: QuickCard(
-                                      icon: Icons.smart_toy_rounded,
-                                      title: t.translate('ai_expert'),
-                                      subtitle: t.translate('ai_expert_sub'),
-                                      onTap: () {
-                                        if (context
-                                                .read<AuthProvider>()
-                                                .user
-                                                ?.isPremium ??
-                                            false) {
-                                          AppNavigator.push(
-                                            context,
-                                            const AiChatScreen(),
-                                          );
-                                        } else {
-                                          showDialog(
-                                            context: context,
-                                            builder: (_) =>
-                                                const PremiumUnlockDialog(),
-                                          );
-                                        }
+                                    child: Consumer<AuthProvider>(
+                                      builder: (context, auth, _) {
+                                        final isPremium =
+                                            auth.user?.isPremium ?? false;
+                                        return QuickCard(
+                                          icon: Icons.smart_toy_rounded,
+                                          title: t.translate('ai_expert'),
+                                          subtitle: t.translate('ai_expert_sub'),
+                                          isLocked: !isPremium,
+                                          onTap: () {
+                                            if (isPremium) {
+                                              AppNavigator.push(
+                                                context,
+                                                const AiChatScreen(),
+                                              );
+                                            } else {
+                                              showDialog(
+                                                context: context,
+                                                builder: (_) =>
+                                                    const PremiumUnlockDialog(),
+                                              );
+                                            }
+                                          },
+                                        );
                                       },
                                     ),
                                   ),
@@ -797,14 +873,32 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                     key: _galleryCardKey,
                                     title: 'tut_gallery_card_title',
                                     description: 'tut_gallery_card_desc',
-                                    child: QuickCard(
-                                      icon: Icons.collections_rounded,
-                                      title: t.translate('gallery'),
-                                      subtitle: t.translate('gallery_subtitle'),
-                                      onTap: () => AppNavigator.push(
-                                        context,
-                                        const GalleryScreen(),
-                                      ),
+                                    child: Consumer<AuthProvider>(
+                                      builder: (context, auth, _) {
+                                        final isPremium =
+                                            auth.user?.isPremium ?? false;
+                                        return QuickCard(
+                                          icon: Icons.collections_rounded,
+                                          title: t.translate('gallery'),
+                                          subtitle:
+                                              t.translate('gallery_subtitle'),
+                                          isLocked: !isPremium,
+                                          onTap: () {
+                                            if (isPremium) {
+                                              AppNavigator.push(
+                                                context,
+                                                const GalleryScreen(),
+                                              );
+                                            } else {
+                                              showDialog(
+                                                context: context,
+                                                builder: (_) =>
+                                                    const PremiumUnlockDialog(),
+                                              );
+                                            }
+                                          },
+                                        );
+                                      },
                                     ),
                                   ),
                                 ),
@@ -844,14 +938,30 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                   child: Row(
                                     children: courses
                                         .map(
-                                          (c) => ContinueCard(
-                                            course: c,
-                                            onTap: () => AppNavigator.push(
-                                              context,
-                                              CourseDetailsScreen(
-                                                courseId: c.id,
-                                              ),
-                                            ),
+                                          (c) => Consumer<AuthProvider>(
+                                            builder: (context, auth, _) {
+                                              final isPremium = auth.user?.isPremium ?? false;
+                                              return ContinueCard(
+                                                course: c,
+                                                isLocked: !isPremium,
+                                                onTap: () {
+                                                  if (isPremium) {
+                                                    AppNavigator.push(
+                                                      context,
+                                                      CourseDetailsScreen(
+                                                        courseId: c.id,
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (_) =>
+                                                          const PremiumUnlockDialog(),
+                                                    );
+                                                  }
+                                                },
+                                              );
+                                            },
                                           ),
                                         )
                                         .toList(),
@@ -883,7 +993,14 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                   subtitle: section.subtitle,
                                 ),
                                 SizedBox(height: 1.5.h),
-                                HorizontalCourses(courses: courses),
+                                 HorizontalCourses(
+                                   courses: courses,
+                                   isPremium: context
+                                           .read<AuthProvider>()
+                                           .user
+                                           ?.isPremium ??
+                                       false,
+                                 ),
                                 SizedBox(height: 2.h),
                               ],
                             ),

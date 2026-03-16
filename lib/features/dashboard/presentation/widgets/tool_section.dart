@@ -35,6 +35,7 @@ class ToolsSection extends StatelessWidget {
             icon: Icons.calculate,
             title: t.translate('tool_export_calc'),
             subtitle: t.translate('tool_export_calc_sub'),
+            isLocked: !isPremium,
             onTap:
                 () => _onToolTap(context, const ExportPriceCalculatorScreen()),
           ),
@@ -45,7 +46,8 @@ class ToolsSection extends StatelessWidget {
             icon: Icons.aspect_ratio_rounded,
             title: t.translate('tool_cbm_calc'),
             subtitle: t.translate('tool_cbm_calc_sub'),
-            onTap: () => _onToolTap(context, const CbmCalculatorScreen()),
+            isLocked: false, // Always unlocked as per user request (one free tool)
+            onTap: () => AppNavigator.push(context, const CbmCalculatorScreen()),
           ),
 
           SizedBox(width: 3.w),
@@ -54,6 +56,7 @@ class ToolsSection extends StatelessWidget {
             icon: Icons.percent_rounded,
             title: t.translate('tool_gst_calc'),
             subtitle: t.translate('tool_gst_calc_sub'),
+            isLocked: !isPremium,
             onTap: () => _onToolTap(context, const GstCalculatorScreen()),
           ),
 
@@ -63,6 +66,7 @@ class ToolsSection extends StatelessWidget {
             icon: Icons.menu_book_rounded,
             title: t.translate('tool_incoterms'),
             subtitle: t.translate('tool_incoterms_sub'),
+            isLocked: !isPremium,
             onTap: () => _onToolTap(context, const IncotermsScreen()),
           ),
         ],

@@ -2,12 +2,19 @@ import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/courses/data/models/course_model.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_details_screen.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/course_card.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/premium_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 class HorizontalCourses extends StatelessWidget {
   final List<CourseModel> courses;
-  const HorizontalCourses({super.key, required this.courses});
+  final bool isPremium;
+
+  const HorizontalCourses({
+    super.key,
+    required this.courses,
+    this.isPremium = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +40,19 @@ class HorizontalCourses extends StatelessWidget {
             rating: (course.rating ?? 4.5).toString(),
             learners: '${course.learnersCount ?? 0} Learners',
             image: course.imageUrl ?? 'assets/course1.png',
+            isLocked: !isPremium,
             onTap: () {
-              AppNavigator.push(
-                context,
-                CourseDetailsScreen(courseId: course.id),
-              );
+              if (isPremium) {
+                AppNavigator.push(
+                  context,
+                  CourseDetailsScreen(courseId: course.id),
+                );
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (_) => const PremiumUnlockDialog(),
+                );
+              }
             },
           );
         },

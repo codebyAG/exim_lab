@@ -9,6 +9,8 @@ class CourseCard extends StatelessWidget {
   final String image;
   final VoidCallback? onTap;
 
+  final bool isLocked;
+
   const CourseCard({
     super.key,
     required this.title,
@@ -16,6 +18,7 @@ class CourseCard extends StatelessWidget {
     required this.learners,
     required this.image,
     this.onTap,
+    this.isLocked = false,
   });
 
   @override
@@ -119,20 +122,22 @@ class CourseCard extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.6),
+                        color: isLocked
+                            ? Colors.red.withValues(alpha: 0.8)
+                            : Colors.black.withValues(alpha: 0.6),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(
-                            Icons.star_rounded,
+                          Icon(
+                            isLocked ? Icons.lock_rounded : Icons.star_rounded,
                             size: 14,
-                            color: Colors.amber,
+                            color: isLocked ? Colors.white : Colors.amber,
                           ),
                           const SizedBox(width: 3),
                           Text(
-                            rating,
+                            isLocked ? "LOCK" : rating,
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 11,

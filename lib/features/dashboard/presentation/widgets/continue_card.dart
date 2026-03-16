@@ -7,7 +7,14 @@ class ContinueCard extends StatelessWidget {
   final CourseModel course;
   final VoidCallback? onTap;
 
-  const ContinueCard({super.key, required this.course, this.onTap});
+  final bool isLocked;
+
+  const ContinueCard({
+    super.key,
+    required this.course,
+    this.onTap,
+    this.isLocked = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -116,13 +123,13 @@ class ContinueCard extends StatelessWidget {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: cs.primary,
+                  color: isLocked ? cs.error : cs.primary,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Icon(
-                  Icons.play_arrow_rounded,
+                  isLocked ? Icons.lock_rounded : Icons.play_arrow_rounded,
                   size: 18,
-                  color: cs.onPrimary,
+                  color: isLocked ? Colors.white : cs.onPrimary,
                 ),
               ),
             ],

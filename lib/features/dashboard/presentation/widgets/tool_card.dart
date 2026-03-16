@@ -6,6 +6,7 @@ class ToolCard extends StatelessWidget {
   final String title;
   final String subtitle;
   final VoidCallback onTap;
+  final bool isLocked;
 
   const ToolCard({
     super.key,
@@ -13,6 +14,7 @@ class ToolCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.onTap,
+    this.isLocked = false,
   });
 
   @override
@@ -114,16 +116,39 @@ class ToolCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                // Arrow hint
+                // Arrow hint or Lock
                 Positioned(
                   bottom: 0,
                   right: 0,
-                  child: Icon(
-                    Icons.arrow_forward_rounded,
-                    size: 16,
-                    color: cs.primary.withValues(alpha: 0.5),
-                  ),
+                  child: isLocked
+                      ? Icon(
+                          Icons.lock_outline_rounded,
+                          size: 16,
+                          color: cs.error.withValues(alpha: 0.7),
+                        )
+                      : Icon(
+                          Icons.arrow_forward_rounded,
+                          size: 16,
+                          color: cs.primary.withValues(alpha: 0.5),
+                        ),
                 ),
+                if (isLocked)
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: cs.error.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.lock_rounded,
+                        size: 14,
+                        color: cs.error.withValues(alpha: 0.8),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
