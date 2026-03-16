@@ -99,6 +99,7 @@ flutter:
   assets:
     - assets/
     - assets/icons/
+    - assets/pdf/
     - lib/localization/l10n/
 
   # An image asset can refer to one or more resolution-specific "variants", see
