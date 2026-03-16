@@ -141,7 +141,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
     final tourSeen = prefs.getBool('dashboard_v3_tour_seen') ?? false;
     if (!tourSeen && mounted) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ShowCaseWidget.of(context).startShowCase([
+        final List<GlobalKey> showcaseList = [
           _headerKey,
           _notifKey,
           _userProfileKey,
@@ -165,7 +165,16 @@ class _DashboardBodyState extends State<_DashboardBody> {
           _navCoursesKey,
           _navNewsKey,
           _navProfileKey,
-        ]);
+        ];
+
+        // Filter out keys that are not present in the widget tree (e.g. empty sections)
+        final List<GlobalKey> activeKeys = showcaseList.where((key) {
+          return key.currentContext != null;
+        }).toList();
+
+        if (activeKeys.isNotEmpty && mounted) {
+          ShowCaseWidget.of(context).startShowCase(activeKeys);
+        }
       });
       _markTourSeen();
     } else {
@@ -334,6 +343,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
         onRefresh: () => context.read<DashboardProvider>().fetchDashboardData(),
         child: ListView(
           controller: _scrollController,
+          cacheExtent: 1000,
           padding: EdgeInsets.zero,
           children: [
             // 1. PREMIUM FLOATING HEADER
@@ -879,7 +889,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             ),
                           ),
                         );
-                      } else if (section.key == 'freeVideos' && !assignedFreeVideos) {
+                      } else if (section.key == 'freeVideos' &&
+                          !assignedFreeVideos) {
                         final videos = section.data.cast<FreeVideoModel>();
                         if (videos.isEmpty) return const SizedBox();
                         assignedFreeVideos = true;
