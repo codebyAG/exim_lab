@@ -1267,6 +1267,24 @@ class _DashboardBodyState extends State<_DashboardBody> {
             "Finally understood the complexities of DGFT and custom clearance. The support group is very helpful.",
         "rating": "5.0",
       },
+      {
+        "name": "Vikram Singh",
+        "text":
+            "Cleared my first export shipment to Dubai with ease. The logistics module is very detailed and practical.",
+        "rating": "4.8",
+      },
+      {
+        "name": "Sneha Gupta",
+        "text":
+            "Best platform for women entrepreneurs. Very easy to follow and the mobile app UI is truly premium!",
+        "rating": "5.0",
+      },
+      {
+        "name": "Arjun Mehra",
+        "text":
+            "Quality courses and highly knowledgeable instructors. Learnt about shipping documents in just 2 days.",
+        "rating": "4.9",
+      },
     ];
 
     return Column(
