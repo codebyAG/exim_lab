@@ -1250,21 +1250,21 @@ class _DashboardBodyState extends State<_DashboardBody> {
   ) {
     final testimonials = [
       {
-        "name": "John Doe",
+        "name": "Amit Sharma",
         "text":
-            "This course helped me start my export business in just 30 days! Highly recommended.",
+            "The step-by-step guide on IEC registration and GST for exports was a lifesaver. Started my journey in weeks!",
         "rating": "5.0",
       },
       {
-        "name": "Sarah Smith",
+        "name": "Priya Patel",
         "text":
-            "The industry insights are incredible. Best investment for my career.",
+            "The industry insights on documentation are incredible. Best practical learning for Indian exporters.",
         "rating": "4.9",
       },
       {
         "name": "Rahul Verma",
         "text":
-            "Detailed content and great support. Finally understood the tax laws.",
+            "Finally understood the complexities of DGFT and custom clearance. The support group is very helpful.",
         "rating": "5.0",
       },
     ];
