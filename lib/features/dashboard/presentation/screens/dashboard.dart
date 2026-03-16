@@ -52,8 +52,8 @@ class DashboardScreen extends StatelessWidget {
       onFinish: () async {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool('dashboard_v3_tour_seen', true);
-        // Show promo banner after the full tutorial finishes
-        _bodyKey.currentState?.triggerPromoBanner();
+        // Run post-tour logic (Interest Dialog etc.)
+        _bodyKey.currentState?._checkTourStatus();
       },
       builder: (context) => _DashboardBody(key: _bodyKey),
     );
