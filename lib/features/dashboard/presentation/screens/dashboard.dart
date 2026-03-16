@@ -1192,7 +1192,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: GridView.count(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 3,
+              crossAxisCount: 4,
               mainAxisSpacing: 16,
               crossAxisSpacing: 16,
               childAspectRatio: 0.85,
@@ -1225,26 +1225,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   color: const Color(0xFFE4405F),
                   onTap: () => launchUrl(
                     Uri.parse("https://www.instagram.com/siieadigital"),
-                    mode: LaunchMode.externalApplication,
-                  ),
-                ),
-                _socialIcon(
-                  assetPath: 'assets/icons/facebook.png',
-                  label: "Facebook",
-                  color: const Color(0xFF1877F2),
-                  onTap: () => launchUrl(
-                    Uri.parse("https://www.facebook.com/siiea.in"),
-                    mode: LaunchMode.externalApplication,
-                  ),
-                ),
-                _socialIcon(
-                  assetPath: 'assets/icons/twitter.png',
-                  label: "Twitter",
-                  color: const Color(0xFF1DA1F2),
-                  onTap: () => launchUrl(
-                    Uri.parse(
-                      "https://twitter.com/siiea_in",
-                    ), // Placeholder or actual if known
                     mode: LaunchMode.externalApplication,
                   ),
                 ),
