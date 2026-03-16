@@ -64,14 +64,30 @@ class _DashboardBody extends StatefulWidget {
 class _DashboardBodyState extends State<_DashboardBody> {
   final GlobalKey _headerKey = GlobalKey();
   final GlobalKey _galleryHeaderKey = GlobalKey();
+  final GlobalKey _notifKey = GlobalKey();
+  final GlobalKey _userProfileKey = GlobalKey();
+
   final GlobalKey _carouselKey = GlobalKey();
-  final GlobalKey _actionsKey = GlobalKey();
   final GlobalKey _shortsKey = GlobalKey();
+
+  final GlobalKey _coursesCardKey = GlobalKey();
+  final GlobalKey _quizzesCardKey = GlobalKey();
+  final GlobalKey _aiExpertCardKey = GlobalKey();
+  final GlobalKey _galleryCardKey = GlobalKey();
+
   final GlobalKey _continueKey = GlobalKey();
   final GlobalKey _toolsKey = GlobalKey();
   final GlobalKey _newsKey = GlobalKey();
+  final GlobalKey _pdfPromoKey = GlobalKey();
+  final GlobalKey _testimonialsKey = GlobalKey();
   final GlobalKey _socialKey = GlobalKey();
-  final GlobalKey _bottomNavKey = GlobalKey();
+  final GlobalKey _counselingKey = GlobalKey();
+
+  final GlobalKey _navHomeKey = GlobalKey();
+  final GlobalKey _navShortsKey = GlobalKey();
+  final GlobalKey _navCoursesKey = GlobalKey();
+  final GlobalKey _navNewsKey = GlobalKey();
+  final GlobalKey _navProfileKey = GlobalKey();
 
   @override
   void initState() {
@@ -108,15 +124,27 @@ class _DashboardBodyState extends State<_DashboardBody> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ShowCaseWidget.of(context).startShowCase([
           _headerKey,
+          _notifKey,
+          _userProfileKey,
           _galleryHeaderKey,
           _carouselKey,
           _shortsKey,
-          _actionsKey,
+          _coursesCardKey,
+          _quizzesCardKey,
+          _aiExpertCardKey,
+          _galleryCardKey,
           _continueKey,
           _toolsKey,
           _newsKey,
+          _pdfPromoKey,
+          _testimonialsKey,
           _socialKey,
-          _bottomNavKey,
+          _counselingKey,
+          _navHomeKey,
+          _navShortsKey,
+          _navCoursesKey,
+          _navNewsKey,
+          _navProfileKey,
         ]);
       });
       _markTourSeen();
@@ -143,74 +171,85 @@ class _DashboardBodyState extends State<_DashboardBody> {
     return Showcase.withWidget(
       key: key,
       height: 180,
-      width: 85.w,
+      width: 80.w,
       targetShapeBorder: shapeBorder,
-      container: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: cs.primary,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              t.translate(title),
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
+      container: Center(
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 5.w),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          decoration: BoxDecoration(
+            color: cs.primary,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.25),
+                blurRadius: 15,
+                offset: const Offset(0, 8),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              t.translate(description),
-              style: const TextStyle(color: Colors.white, fontSize: 14),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    ShowCaseWidget.of(context).dismiss();
-                  },
-                  child: Text(
-                    t.translate('skip'),
-                    style: const TextStyle(color: Colors.white70),
-                  ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                t.translate(title),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    ShowCaseWidget.of(context).next();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: cs.primary,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 8,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Text(
-                    t.translate('tut_next'),
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                t.translate(description),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  height: 1.3,
                 ),
-              ],
-            ),
-          ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      ShowCaseWidget.of(context).dismiss();
+                    },
+                    child: Text(
+                      t.translate('skip'),
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      ShowCaseWidget.of(context).next();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: cs.primary,
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(
+                      t.translate('tut_next'),
+                      style: const TextStyle(fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       child: child,
@@ -494,101 +533,116 @@ class _DashboardBodyState extends State<_DashboardBody> {
                               ),
                             ),
                             const Spacer(),
-                            Consumer<NotificationsProvider>(
-                              builder: (context, notifProvider, child) {
-                                return Stack(
-                                  clipBehavior: Clip.none,
-                                  children: [
-                                    IconButton(
-                                      onPressed: () => AppNavigator.push(
-                                        context,
-                                        const NotificationsScreen(),
-                                      ),
-                                      icon: const Icon(
-                                        Icons.notifications_outlined,
-                                        color: Colors.white,
-                                        size: 24,
-                                      ),
-                                    ),
-                                    if (notifProvider.unreadCount > 0)
-                                      Positioned(
-                                        right: 4,
-                                        top: 4,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(2),
-                                          decoration: BoxDecoration(
-                                            color: cs.error,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          constraints: const BoxConstraints(
-                                            minWidth: 16,
-                                            minHeight: 16,
-                                          ),
-                                          child: Text(
-                                            '${notifProvider.unreadCount}',
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 9,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
+                            _buildShowcase(
+                              key: _notifKey,
+                              title: 'tut_notif_title',
+                              description: 'tut_notif_desc',
+                              child: Consumer<NotificationsProvider>(
+                                builder: (context, notifProvider, child) {
+                                  return Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      IconButton(
+                                        onPressed: () => AppNavigator.push(
+                                          context,
+                                          const NotificationsScreen(),
+                                        ),
+                                        icon: const Icon(
+                                          Icons.notifications_outlined,
+                                          color: Colors.white,
+                                          size: 24,
                                         ),
                                       ),
-                                  ],
-                                );
-                              },
+                                      if (notifProvider.unreadCount > 0)
+                                        Positioned(
+                                          right: 4,
+                                          top: 4,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(2),
+                                            decoration: BoxDecoration(
+                                              color: cs.error,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            constraints: const BoxConstraints(
+                                              minWidth: 16,
+                                              minHeight: 16,
+                                            ),
+                                            child: Text(
+                                              '${notifProvider.unreadCount}',
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 9,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  );
+                                },
+                              ),
                             ),
                             const SizedBox(width: 8),
-                            InkWell(
-                              onTap: () => AppNavigator.push(
-                                context,
-                                const ProfileScreen(),
-                              ),
-                              child: Container(
-                                padding: const EdgeInsets.all(2),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.white.withValues(alpha: 0.3),
-                                    width: 1,
-                                  ),
+                            _buildShowcase(
+                              key: _userProfileKey,
+                              title: 'tut_profile_title',
+                              description: 'tut_profile_desc',
+                              child: InkWell(
+                                onTap: () => AppNavigator.push(
+                                  context,
+                                  const ProfileScreen(),
                                 ),
                                 child: Container(
-                                  height: 36,
-                                  width: 36,
-                                  decoration: const BoxDecoration(
+                                  padding: const EdgeInsets.all(2),
+                                  decoration: BoxDecoration(
                                     shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.3,
+                                      ),
+                                      width: 1,
+                                    ),
                                   ),
-                                  clipBehavior: Clip.antiAlias,
-                                  child: Consumer<AuthProvider>(
-                                    builder: (context, auth, _) {
-                                      final user = auth.user;
-                                      if (user?.avatarUrl != null &&
-                                          user!.avatarUrl!.isNotEmpty) {
-                                        return CachedNetworkImage(
-                                          imageUrl: user.avatarUrl!,
-                                          fit: BoxFit.cover,
-                                          placeholder: (context, url) =>
-                                              Container(color: Colors.white10),
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(
-                                                Icons.person_rounded,
-                                                size: 20,
-                                                color: Colors.white,
-                                              ),
+                                  child: Container(
+                                    height: 36,
+                                    width: 36,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                    ),
+                                    clipBehavior: Clip.antiAlias,
+                                    child: Consumer<AuthProvider>(
+                                      builder: (context, auth, _) {
+                                        final user = auth.user;
+                                        if (user?.avatarUrl != null &&
+                                            user!.avatarUrl!.isNotEmpty) {
+                                          return CachedNetworkImage(
+                                            imageUrl: user.avatarUrl!,
+                                            fit: BoxFit.cover,
+                                            placeholder: (context, url) =>
+                                                Container(
+                                                  color: Colors.white10,
+                                                ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(
+                                                      Icons.person_rounded,
+                                                      size: 20,
+                                                      color: Colors.white,
+                                                    ),
+                                          );
+                                        }
+                                        return const CircleAvatar(
+                                          radius: 18,
+                                          backgroundColor: Colors.white24,
+                                          child: Icon(
+                                            Icons.person_rounded,
+                                            size: 20,
+                                            color: Colors.white,
+                                          ),
                                         );
-                                      }
-                                      return const CircleAvatar(
-                                        radius: 18,
-                                        backgroundColor: Colors.white24,
-                                        child: Icon(
-                                          Icons.person_rounded,
-                                          size: 20,
-                                          color: Colors.white,
-                                        ),
-                                      );
-                                    },
+                                      },
+                                    ),
                                   ),
                                 ),
                               ),
@@ -652,19 +706,19 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     SizedBox(height: 2.h),
 
                     // QUICK ACTIONS
-                    _buildShowcase(
-                      key: _actionsKey,
-                      title: 'tut_actions_title',
-                      description: 'tut_actions_desc',
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 5.w),
-                        child: Column(
-                          children: [
-                            FadeInUp(
-                              delay: const Duration(milliseconds: 300),
-                              child: Row(
-                                children: [
-                                  Expanded(
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 5.w),
+                      child: Column(
+                        children: [
+                          FadeInUp(
+                            delay: const Duration(milliseconds: 300),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: _buildShowcase(
+                                    key: _coursesCardKey,
+                                    title: 'tut_my_courses_title',
+                                    description: 'tut_my_courses_desc',
                                     child: QuickCard(
                                       icon: Icons.video_library_rounded,
                                       title: t.translate('my_courses'),
@@ -683,10 +737,15 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                       },
                                     ),
                                   ),
-                                  SizedBox(width: 3.w),
-                                  Expanded(
-                                    child: ModuleVisibility(
-                                      module: 'quizzes',
+                                ),
+                                SizedBox(width: 3.w),
+                                Expanded(
+                                  child: ModuleVisibility(
+                                    module: 'quizzes',
+                                    child: _buildShowcase(
+                                      key: _quizzesCardKey,
+                                      title: 'tut_quizzes_title',
+                                      description: 'tut_quizzes_desc',
                                       child: QuickCard(
                                         icon: Icons.quiz_rounded,
                                         title: t.translate('quizzes_title'),
@@ -720,15 +779,20 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 12),
-                            FadeInUp(
-                              delay: const Duration(milliseconds: 350),
-                              child: Row(
-                                children: [
-                                  Expanded(
+                          ),
+                          const SizedBox(height: 12),
+                          FadeInUp(
+                            delay: const Duration(milliseconds: 350),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: _buildShowcase(
+                                    key: _aiExpertCardKey,
+                                    title: 'tut_ai_expert_title',
+                                    description: 'tut_ai_expert_desc',
                                     child: QuickCard(
                                       icon: Icons.smart_toy_rounded,
                                       title: t.translate('ai_expert'),
@@ -753,8 +817,13 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                       },
                                     ),
                                   ),
-                                  SizedBox(width: 3.w),
-                                  Expanded(
+                                ),
+                                SizedBox(width: 3.w),
+                                Expanded(
+                                  child: _buildShowcase(
+                                    key: _galleryCardKey,
+                                    title: 'tut_gallery_card_title',
+                                    description: 'tut_gallery_card_desc',
                                     child: QuickCard(
                                       icon: Icons.collections_rounded,
                                       title: t.translate('gallery'),
@@ -765,11 +834,11 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(height: 3.h),
@@ -905,11 +974,21 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     SizedBox(height: 3.h),
 
                     // 9. FREE PDF PROMO (New)
-                    _buildFreePdfPromo(context, cs),
+                    _buildShowcase(
+                      key: _pdfPromoKey,
+                      title: 'tut_pdf_promo_title',
+                      description: 'tut_pdf_promo_desc',
+                      child: _buildFreePdfPromo(context, cs),
+                    ),
                     SizedBox(height: 3.h),
 
                     // 10. TESTIMONIALS (New)
-                    _buildTestimonials(context, cs, theme),
+                    _buildShowcase(
+                      key: _testimonialsKey,
+                      title: 'tut_testimonials_title',
+                      description: 'tut_testimonials_desc',
+                      child: _buildTestimonials(context, cs, theme),
+                    ),
                     SizedBox(height: 3.h),
 
                     // 11. SOCIAL CONNECT (New)
@@ -922,7 +1001,12 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     SizedBox(height: 3.h),
 
                     // 12. FREE COUNSELING (New)
-                    _buildFreeCounseling(context, cs),
+                    _buildShowcase(
+                      key: _counselingKey,
+                      title: 'tut_counseling_title',
+                      description: 'tut_counseling_desc',
+                      child: _buildFreeCounseling(context, cs),
+                    ),
                     SizedBox(height: 3.h),
                   ],
                 );
@@ -931,28 +1015,62 @@ class _DashboardBodyState extends State<_DashboardBody> {
           ],
         ),
       ),
-      bottomNavigationBar: _buildShowcase(
-        key: _bottomNavKey,
-        title: 'tut_nav_title',
-        description: 'tut_nav_desc',
-        shapeBorder: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: NavigationBar(
-          destinations: navItems.map((item) {
-            return NavigationDestination(
-              icon: item.icon,
-              selectedIcon: item.activeIcon,
-              label: item.label!,
+      bottomNavigationBar: NavigationBar(
+        destinations: List.generate(navItems.length, (index) {
+          final item = navItems[index];
+
+          // Determine which key to use based on the label/order
+          // Since items are dynamic, we need to match carefully
+          final label = item.label!.toLowerCase();
+          GlobalKey? key;
+          String title = '';
+          String desc = '';
+
+          if (label == t.translate('home').toLowerCase()) {
+            key = _navHomeKey;
+            title = 'tut_nav_home_title';
+            desc = 'tut_nav_home_desc';
+          } else if (label == t.translate('shorts').toLowerCase()) {
+            key = _navShortsKey;
+            title = 'tut_nav_shorts_title';
+            desc = 'tut_nav_shorts_desc';
+          } else if (label == t.translate('courses').toLowerCase()) {
+            key = _navCoursesKey;
+            title = 'tut_nav_courses_title';
+            desc = 'tut_nav_courses_desc';
+          } else if (label == t.translate('news').toLowerCase()) {
+            key = _navNewsKey;
+            title = 'tut_nav_news_title';
+            desc = 'tut_nav_news_desc';
+          } else if (label == t.translate('profile').toLowerCase()) {
+            key = _navProfileKey;
+            title = 'tut_nav_profile_title';
+            desc = 'tut_nav_profile_desc';
+          }
+
+          final destination = NavigationDestination(
+            icon: item.icon,
+            selectedIcon: item.activeIcon,
+            label: item.label!,
+          );
+
+          if (key != null) {
+            return _buildShowcase(
+              key: key,
+              title: title,
+              description: desc,
+              child: destination,
             );
-          }).toList(),
-          selectedIndex: 0,
-          onDestinationSelected: (index) {
-            if (index < navActions.length && navActions[index] != null) {
-              navActions[index]!();
-            }
-          },
-        ),
+          }
+
+          return destination;
+        }),
+        selectedIndex: 0,
+        onDestinationSelected: (index) {
+          if (index < navActions.length && navActions[index] != null) {
+            navActions[index]!();
+          }
+        },
       ),
     );
   }
