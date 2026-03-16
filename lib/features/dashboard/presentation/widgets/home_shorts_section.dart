@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:exim_lab/localization/app_localization.dart';
-import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 
 class HomeShortsSection extends StatefulWidget {
   const HomeShortsSection({super.key});
