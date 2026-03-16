@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:open_file_plus/open_file_plus.dart';
+import 'package:open_filex/open_filex.dart';
 
 class PdfUtils {
   static Future<void> openAssetPdf(String assetPath) async {
@@ -21,7 +21,7 @@ class PdfUtils {
       await file.writeAsBytes(bytes, flush: true);
 
       // 5. Open the file
-      await OpenFile.open(file.path);
+      await OpenFilex.open(file.path);
     } catch (e) {
       throw 'Could not open PDF: $e';
     }
