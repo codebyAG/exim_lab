@@ -828,10 +828,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 SizedBox(width: 3.w),
                                 Expanded(
                                   child: QuickCard(
-                                    icon: Icons.folder_shared_rounded,
-                                    title: "Resources",
-                                    subtitle: "Books & PDFs",
-                                    onTap: () {},
+                                    icon: Icons.collections_rounded,
+                                    title: t.translate('gallery'),
+                                    subtitle: t.translate('gallery_subtitle'),
+                                    onTap: () {
+                                      AppNavigator.push(
+                                        context,
+                                        const GalleryScreen(),
+                                      );
+                                    },
                                   ),
                                 ),
                               ],
