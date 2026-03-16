@@ -1480,7 +1480,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
           Text(
             label,
             style: TextStyle(
-              fontSize: 10.sp,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
               color: Colors.black87,
             ),
