@@ -381,19 +381,19 @@ class _DashboardBodyState extends State<_DashboardBody> {
             // 1 & 2. ORANGE TOP HEADER SECTION
             Container(
               width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    const Color(0xFFFF8A00), // vivid orange
-                    const Color(0xFFFFB703), // soft peach accent
-                  ],
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(24),
+                  bottomRight: Radius.circular(24),
                 ),
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(32),
-                  bottomRight: Radius.circular(32),
-                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0x0A000000),
+                    blurRadius: 20,
+                    offset: Offset(0, 4),
+                  ),
+                ],
               ),
               child: Column(
                 children: [
@@ -403,9 +403,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     title: 'tut_header_title',
                     description: 'tut_header_desc',
                     child: Container(
-                      padding: EdgeInsets.fromLTRB(5.w, 5.5.h, 5.w, 2.h),
+                      padding: EdgeInsets.fromLTRB(5.w, 4.5.h, 5.w, 0.5.h),
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
                             child: Column(
@@ -413,23 +413,21 @@ class _DashboardBodyState extends State<_DashboardBody> {
                               children: [
                                 Row(
                                   children: [
-                                    const Text(
+                                    Text(
                                       '👋 ',
-                                      style: TextStyle(fontSize: 20),
+                                      style: TextStyle(fontSize: 16.sp),
                                     ),
                                     Text(
-                                      t.translate('welcome_back'),
-                                      style: theme.textTheme.bodyMedium
+                                      '${t.translate('welcome_back')},',
+                                      style: theme.textTheme.bodyLarge
                                           ?.copyWith(
-                                            color: Colors.white.withValues(
-                                              alpha: 0.85,
-                                            ),
-                                            fontWeight: FontWeight.w600,
+                                            color: const Color(0xFF1D1F33),
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 15.sp,
                                           ),
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 2),
                                 Text(
                                   context.watch<AuthProvider>().user?.name ??
                                       t.translate('guest_user'),
@@ -437,18 +435,11 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                   overflow: TextOverflow.ellipsis,
                                   style: theme.textTheme.headlineSmall
                                       ?.copyWith(
-                                        fontWeight: FontWeight.w900,
-                                        color: Colors.white,
-                                        letterSpacing: -0.3,
+                                        fontWeight: FontWeight.w800,
+                                        color: const Color(0xFF1D1F33),
+                                        fontSize: 22.sp,
+                                        letterSpacing: -0.5,
                                       ),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  'What would you like to learn today?',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: Colors.white.withValues(alpha: 0.75),
-                                    fontWeight: FontWeight.w500,
-                                  ),
                                 ),
                               ],
                             ),
@@ -470,8 +461,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                       ),
                                       icon: const Icon(
                                         Icons.notifications_outlined,
-                                        color: Colors.white,
-                                        size: 26,
+                                        color: Color(0xFF1D1F33),
+                                        size: 24,
                                       ),
                                     ),
                                     if (notifProvider.unreadCount > 0)
@@ -522,8 +513,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                    color: Colors.white.withValues(alpha: 0.5),
-                                    width: 2,
+                                    color: Colors.grey.withValues(alpha: 0.1),
+                                    width: 1,
                                   ),
                                 ),
                                 child: Container(
@@ -574,7 +565,23 @@ class _DashboardBodyState extends State<_DashboardBody> {
 
                   // 2. GALLERY / NEWS PILL ROW
                   Padding(
-                    padding: EdgeInsets.fromLTRB(5.w, 0, 5.w, 3.h),
+                    padding: EdgeInsets.fromLTRB(5.w, 1.h, 5.w, 0.5.h),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'What would you like to learn today?',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: const Color(0xFF6B7280),
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // 3. GALLERY / NEWS CARD ROW
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(5.w, 2.h, 5.w, 3.h),
                     child: Row(
                       children: [
                         Expanded(
@@ -586,10 +593,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
                               builder: (context, auth, _) {
                                 final isPremium = auth.user?.isPremium ?? false;
                                 return _DashboardPillChip(
-                                  icon: Icons.auto_awesome_motion_rounded,
+                                  icon: Icons.image_rounded,
                                   label: t.translate('gallery'),
                                   isLocked: !isPremium,
-                                  onDarkTheme: true,
                                   onTap: () {
                                     if (isPremium) {
                                       AppNavigator.push(
@@ -616,9 +622,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
                               final isPremium = auth.user?.isPremium ?? false;
                               return _DashboardPillChip(
                                 icon: Icons.newspaper_rounded,
-                                label: t.translate('news'),
+                                label: 'Latest News',
                                 isLocked: !isPremium,
-                                onDarkTheme: true,
                                 onTap: () {
                                   if (isPremium) {
                                     AppNavigator.push(
@@ -1612,72 +1617,67 @@ class _DashboardPillChip extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
   final bool isLocked;
-  final bool onDarkTheme;
 
   const _DashboardPillChip({
     required this.icon,
     required this.label,
     required this.onTap,
     this.isLocked = false,
-    this.onDarkTheme = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final cs = theme.colorScheme;
 
     return Material(
-      color: onDarkTheme
-          ? Colors.white.withValues(alpha: 0.1)
-          : cs.primaryContainer.withValues(alpha: 0.35),
+      color: Colors.white,
       borderRadius: BorderRadius.circular(16),
+      elevation: 2,
+      shadowColor: Colors.black.withValues(alpha: 0.1),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: isLocked
-                  ? (onDarkTheme ? Colors.white70 : cs.error).withValues(
-                      alpha: 0.3,
-                    )
-                  : (onDarkTheme ? Colors.white : cs.primary).withValues(
-                      alpha: 0.15,
-                    ),
-              width: 1.5,
+              color: Colors.grey.withValues(alpha: 0.1),
+              width: 1,
             ),
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                isLocked ? Icons.lock_outline_rounded : icon,
-                color: isLocked
-                    ? (onDarkTheme
-                          ? Colors.white.withValues(alpha: 0.8)
-                          : cs.error)
-                    : (onDarkTheme ? Colors.white : cs.primary),
-                size: 20,
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFF8A00).withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  isLocked ? Icons.lock_outline_rounded : icon,
+                  color: const Color(0xFFFF8A00),
+                  size: 22,
+                ),
               ),
-              const SizedBox(width: 8),
-              Flexible(
+              const SizedBox(width: 12),
+              Expanded(
                 child: Text(
                   label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.labelLarge?.copyWith(
-                    color: isLocked
-                        ? (onDarkTheme
-                              ? Colors.white.withValues(alpha: 0.8)
-                              : cs.error)
-                        : (onDarkTheme ? Colors.white : cs.onPrimaryContainer),
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 0.2,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: const Color(0xFF1D1F33),
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13.sp,
+                    letterSpacing: 0,
                   ),
                 ),
+              ),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: Colors.grey.withValues(alpha: 0.8),
+                size: 20,
               ),
             ],
           ),
