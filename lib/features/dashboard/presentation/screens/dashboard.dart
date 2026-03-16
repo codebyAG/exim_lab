@@ -141,6 +141,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
     final prefs = await SharedPreferences.getInstance();
     final tourSeen = prefs.getBool('dashboard_v3_tour_seen') ?? false;
 
+    if (!mounted) return;
+    
     // Check interest status
     final user = context.read<AuthProvider>().user;
     final interestDialogShown = prefs.getBool('interest_dialog_shown') ?? false;
@@ -541,7 +543,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                           placeholder: (_, _) => Container(
                                             color: cs.primaryContainer,
                                           ),
-                                          errorWidget: (_, __, ___) => Icon(
+                                           errorWidget: (context, url, error) => Icon(
                                             Icons.person_rounded,
                                             size: 22,
                                             color: cs.primary,
