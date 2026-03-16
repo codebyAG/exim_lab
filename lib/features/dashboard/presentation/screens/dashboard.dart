@@ -15,6 +15,7 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/continue_card.d
 import 'package:exim_lab/features/dashboard/presentation/widgets/home_shorts_section.dart';
 import 'package:exim_lab/features/shorts/presentation/screens/shorts_feed_screen.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/cta_carasoul.dart';
+import 'package:exim_lab/features/gallery/presentation/screens/gallery_screen.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/horizontal_courses.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/inline_banner.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/quick_card.dart';
@@ -49,6 +50,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey _headerKey = GlobalKey();
   final GlobalKey _actionsKey = GlobalKey();
   final GlobalKey _continueKey = GlobalKey();
+  final GlobalKey _shortsKey = GlobalKey();
   final GlobalKey _toolsKey = GlobalKey();
   final GlobalKey _bottomNavKey = GlobalKey();
 
@@ -114,7 +116,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    t.translate('welcome_to_hub'),
+                    t.translate('tut_header_title'),
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -123,7 +125,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   SizedBox(height: 2.h),
                   Text(
-                    t.translate('hub_description'),
+                    t.translate('tut_header_desc'),
                     style: const TextStyle(color: Colors.white),
                   ),
                 ],
@@ -142,22 +144,55 @@ class _DashboardScreenState extends State<DashboardScreen> {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (context, controller) {
-              return const Column(
+              return Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Quick Resources",
-                    style: TextStyle(
+                    t.translate('tut_actions_title'),
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                       fontSize: 20,
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
-                    "Quickly access product galleries and latest industry news from here.",
-                    style: TextStyle(color: Colors.white),
+                    t.translate('tut_actions_desc'),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "shorts",
+        keyTarget: _shortsKey,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    t.translate('tut_shorts_title'),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    t.translate('tut_shorts_desc'),
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ],
               );
@@ -175,22 +210,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
           TargetContent(
             align: ContentAlign.top,
             builder: (context, controller) {
-              return const Column(
+              return Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Business Tools",
-                    style: TextStyle(
+                   Text(
+                    t.translate('tut_tools_title'),
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                       fontSize: 20,
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
-                    "Powerful calculators for Export Price, CBM, Duty, and Profit.",
-                    style: TextStyle(color: Colors.white),
+                    t.translate('tut_tools_desc'),
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ],
               );
@@ -208,22 +243,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
           TargetContent(
             align: ContentAlign.top,
             builder: (context, controller) {
-              return const Column(
+              return Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Explore More",
-                    style: TextStyle(
+                    t.translate('tut_nav_title'),
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                       fontSize: 20,
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
-                    "Navigate through Courses, Updates, and your Profile easily.",
-                    style: TextStyle(color: Colors.white),
+                    t.translate('tut_nav_desc'),
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ],
               );
@@ -235,17 +270,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void _showTutorial() {
+    final t = AppLocalizations.of(context);
+    final theme = Theme.of(context);
     tutorialCoachMark = TutorialCoachMark(
       targets: targets,
-      colorShadow: Colors.black,
-      textSkip: "SKIP",
+      colorShadow: theme.colorScheme.primary,
+      textSkip: t.translate('skip_tour'),
       paddingFocus: 10,
-      opacityShadow: 0.8,
+      opacityShadow: 0.85,
       onFinish: _markTourSeen,
       onSkip: () {
         _markTourSeen();
         return true;
       },
+      skipWidget: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Text(
+          t.translate('skip_tour'),
+          style: TextStyle(
+            color: theme.colorScheme.primary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
     )..show(context: context);
   }
 
@@ -665,6 +716,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ModuleVisibility(
                       module: 'shortVideos',
                       child: FadeInRight(
+                        key: _shortsKey,
                         delay: const Duration(milliseconds: 200),
                         child: const HomeShortsSection(),
                       ),
@@ -1194,29 +1246,64 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ColorScheme cs,
     ThemeData theme,
   ) {
+    final t = AppLocalizations.of(context);
+
     return Column(
       children: [
-        const SectionHeader(
-          title: "Connect With Us",
-          subtitle: "Join our growing trade community",
+        SectionHeader(
+          title: t.translate('follow_us'),
+          subtitle: t.translate('join_trade_community'),
         ),
-        SizedBox(height: 2.h),
+        SizedBox(height: 1.5.h),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 5.w),
           child: Container(
-            padding: EdgeInsets.all(5.w),
+            padding: EdgeInsets.symmetric(vertical: 2.5.h, horizontal: 2.w),
             decoration: BoxDecoration(
-              color: Colors.blue.withValues(alpha: 0.04),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.blue.withValues(alpha: 0.1)),
+              color: cs.surface,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.5)),
+              boxShadow: [
+                BoxShadow(
+                  color: cs.shadow.withValues(alpha: 0.03),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _socialIcon(Icons.video_collection_rounded, Colors.red),
-                _socialIcon(Icons.camera_alt_rounded, Colors.purple),
-                _socialIcon(Icons.facebook_rounded, Colors.blue),
-                _socialIcon(Icons.message_rounded, Colors.green),
+                _socialIcon(
+                  assetPath: 'assets/icons/youtube.png',
+                  color: Colors.red,
+                  onTap: () => launchUrl(Uri.parse("https://youtu.be/f7eSa2jkUZM?si=Krq_Ke-2fPaj6obO"), mode: LaunchMode.externalApplication),
+                ),
+                _socialIcon(
+                  assetPath: 'assets/icons/youtube.png',
+                  color: Colors.redAccent,
+                  onTap: () => launchUrl(Uri.parse("https://youtu.be/HiyHpVwbGgw?si=XcdW0LDkUDaRZoB8"), mode: LaunchMode.externalApplication),
+                ),
+                _socialIcon(
+                  assetPath: 'assets/icons/instagram.png',
+                  color: const Color(0xFFE4405F),
+                  onTap: () => launchUrl(Uri.parse("https://www.instagram.com/siieadigital"), mode: LaunchMode.externalApplication),
+                ),
+                _socialIcon(
+                  assetPath: 'assets/icons/facebook.png',
+                  color: const Color(0xFF1877F2),
+                  onTap: () => launchUrl(Uri.parse("https://www.facebook.com/siiea.in"), mode: LaunchMode.externalApplication),
+                ),
+                _socialIcon(
+                  icon: Icons.language_rounded,
+                  color: Colors.blueGrey,
+                  onTap: () => launchUrl(Uri.parse("https://www.siiea.in"), mode: LaunchMode.externalApplication),
+                ),
+                _socialIcon(
+                  icon: Icons.collections_rounded,
+                  color: Colors.orange,
+                  onTap: () => AppNavigator.push(context, const GalleryScreen()),
+                ),
               ],
             ),
           ),
@@ -1225,21 +1312,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _socialIcon(IconData icon, Color color) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: color.withValues(alpha: 0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+  Widget _socialIcon({
+    IconData? icon,
+    String? assetPath,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(30),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.08),
+          shape: BoxShape.circle,
+        ),
+        child: assetPath != null
+            ? Image.asset(
+                assetPath,
+                width: 24,
+                height: 24,
+                color: color,
+              )
+            : Icon(icon, color: color, size: 24),
       ),
-      child: Icon(icon, color: color, size: 28),
     );
   }
 
