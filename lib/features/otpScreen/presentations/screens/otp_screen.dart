@@ -75,7 +75,7 @@ class _OtpScreenState extends State<OtpScreen> {
     if (success && mounted) {
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (_) => const DashboardScreen()),
+        MaterialPageRoute(builder: (_) => DashboardScreen()),
         (route) => false,
       );
     } else if (mounted) {

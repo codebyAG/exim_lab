@@ -219,7 +219,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _finishOnboarding() {
-    AppNavigator.push(context, const DashboardScreen());
+    AppNavigator.push(context, DashboardScreen());
   }
 }
 

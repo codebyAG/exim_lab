@@ -87,7 +87,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     // 3. NAVIGATE
     if (isLoggedIn) {
-      AppNavigator.replace(context, const DashboardScreen());
+      AppNavigator.replace(context, DashboardScreen());
     } else {
       AppNavigator.replace(context, const WelcomeScreen());
     }

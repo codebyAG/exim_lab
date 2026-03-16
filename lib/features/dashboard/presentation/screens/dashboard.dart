@@ -40,22 +40,27 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/premium_dialog.dart';
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+  DashboardScreen({super.key});
+
+  final GlobalKey<_DashboardBodyState> _bodyKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     return ShowCaseWidget(
+      enableAutoScroll: true,
       onFinish: () async {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool('dashboard_v3_tour_seen', true);
+        // Show promo banner after the full tutorial finishes
+        _bodyKey.currentState?.triggerPromoBanner();
       },
-      builder: (context) => const _DashboardBody(),
+      builder: (context) => _DashboardBody(key: _bodyKey),
     );
   }
 }
 
 class _DashboardBody extends StatefulWidget {
-  const _DashboardBody();
+  const _DashboardBody({super.key});
 
   @override
   State<_DashboardBody> createState() => _DashboardBodyState();
@@ -89,6 +94,14 @@ class _DashboardBodyState extends State<_DashboardBody> {
   final GlobalKey _navNewsKey = GlobalKey();
   final GlobalKey _navProfileKey = GlobalKey();
 
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -104,17 +117,21 @@ class _DashboardBodyState extends State<_DashboardBody> {
           await context.read<AuthProvider>().refreshMembershipStatus();
         }
 
-        // Show Promo Banner if available
+        // Show Tutorial if not seen, otherwise show Promo Banner immediately
         if (mounted) {
-          final data = context.read<DashboardProvider>().data;
-          if (data?.addons.popup != null) {
-            _showPromoBanner(data!.addons.popup!);
-          }
+          _checkTourStatus();
         }
-        // Show Tutorial if not seen
-        _checkTourStatus();
       }
     });
+  }
+
+  void triggerPromoBanner() {
+    if (mounted) {
+      final data = context.read<DashboardProvider>().data;
+      if (data?.addons.popup != null) {
+        _showPromoBanner(data!.addons.popup!);
+      }
+    }
   }
 
   Future<void> _checkTourStatus() async {
@@ -148,6 +165,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
         ]);
       });
       _markTourSeen();
+    } else {
+      // If tour was already seen, show the promo banner immediately
+      triggerPromoBanner();
     }
   }
 
@@ -165,92 +185,25 @@ class _DashboardBodyState extends State<_DashboardBody> {
       borderRadius: BorderRadius.all(Radius.circular(12)),
     ),
   }) {
-    final t = AppLocalizations.of(context);
-    final cs = Theme.of(context).colorScheme;
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return Showcase.withWidget(
       key: key,
-      height: 180,
-      width: 80.w,
+      height: 280,
+      width: screenWidth, // Full width overlay to allow centering tooltip
       targetShapeBorder: shapeBorder,
-      container: Center(
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 5.w),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          decoration: BoxDecoration(
-            color: cs.primary,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.25),
-                blurRadius: 15,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                t.translate(title),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                t.translate(description),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  height: 1.3,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      ShowCaseWidget.of(context).dismiss();
-                    },
-                    child: Text(
-                      t.translate('skip'),
-                      style: const TextStyle(
-                        color: Colors.white70,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      ShowCaseWidget.of(context).next();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: cs.primary,
-                      elevation: 0,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 10,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: Text(
-                      t.translate('tut_next'),
-                      style: const TextStyle(fontWeight: FontWeight.w800),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+      container: Builder(
+        builder: (tooltipContext) {
+          // Providing local context to the tooltip content via callbacks
+          // to avoid 'ShowCaseView context not found' error in detached overlays
+          return _TutorialStepContent(
+            targetKey: key,
+            title: title,
+            description: description,
+            onNext: () => ShowCaseWidget.of(context).next(),
+            onSkip: () => ShowCaseWidget.of(context).dismiss(),
+          );
+        },
       ),
       child: child,
     );
@@ -371,6 +324,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
       body: RefreshIndicator(
         onRefresh: () => context.read<DashboardProvider>().fetchDashboardData(),
         child: ListView(
+          controller: _scrollController,
           padding: EdgeInsets.zero,
           children: [
             // 1. PREMIUM FLOATING HEADER
@@ -1540,6 +1494,127 @@ class _HeaderPill extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _TutorialStepContent extends StatefulWidget {
+  final GlobalKey targetKey;
+  final String title;
+  final String description;
+  final VoidCallback onNext;
+  final VoidCallback onSkip;
+
+  const _TutorialStepContent({
+    required this.targetKey,
+    required this.title,
+    required this.description,
+    required this.onNext,
+    required this.onSkip,
+  });
+
+  @override
+  State<_TutorialStepContent> createState() => _TutorialStepContentState();
+}
+
+class _TutorialStepContentState extends State<_TutorialStepContent> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final context = widget.targetKey.currentContext;
+      if (context != null) {
+        Scrollable.ensureVisible(
+          context,
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeInOut,
+          alignment: 0.5,
+        );
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return Center(
+      child: Container(
+        width: screenWidth * 0.85, // Constrain tooltip width
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: cs.primary,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.3),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              t.translate(widget.title),
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              t.translate(widget.description),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                height: 1.4,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: widget.onSkip,
+                  child: Text(
+                    t.translate('skip'),
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: widget.onNext,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: cs.primary,
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(
+                    t.translate('tut_next'),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
