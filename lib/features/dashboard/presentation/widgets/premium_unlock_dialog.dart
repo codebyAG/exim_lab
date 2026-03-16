@@ -33,162 +33,164 @@ class PremiumUnlockDialog extends StatelessWidget {
             ),
           ],
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // ── Header ──────────────────────────────
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(28),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // ── Header ──────────────────────────────
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(28),
+                  ),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      const Color(0xFFF6862A),
+                      const Color(0xFFFF5722).withValues(alpha: 0.85),
+                    ],
+                  ),
                 ),
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    const Color(0xFFF6862A),
-                    const Color(0xFFFF5722).withValues(alpha: 0.85),
+                child: Column(
+                  children: [
+                    // Crown emoji badge
+                    Container(
+                      width: 72,
+                      height: 72,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withValues(alpha: 0.15),
+                      ),
+                      child: const Center(
+                        child: Text('👑', style: TextStyle(fontSize: 38)),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    const Text(
+                      'Unlock All Features',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                        letterSpacing: 0.2,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'Get full access to everything in\nImport Export Premium',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 13.5,
+                        color: Colors.white.withValues(alpha: 0.88),
+                        height: 1.5,
+                      ),
+                    ),
                   ],
                 ),
               ),
-              child: Column(
-                children: [
-                  // Crown emoji badge
-                  Container(
-                    width: 72,
-                    height: 72,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white.withValues(alpha: 0.15),
-                    ),
-                    child: const Center(
-                      child: Text('👑', style: TextStyle(fontSize: 38)),
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-                  const Text(
-                    'Unlock All Features',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                      letterSpacing: 0.2,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    'Get full access to everything in\nImport Export Premium',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 13.5,
-                      color: Colors.white.withValues(alpha: 0.88),
-                      height: 1.5,
-                    ),
-                  ),
-                ],
-              ),
-            ),
 
-            // ── Features List ────────────────────────
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
-              child: Column(
-                children: [
-                  _PremiumFeatureTile(
-                    icon: '🎓',
-                    title: 'Full Course Library',
-                    subtitle:
-                        'Unlimited access to all import-export courses & lessons',
-                  ),
-                  _PremiumFeatureTile(
-                    icon: '🤖',
-                    title: 'AI Trade Expert',
-                    subtitle:
-                        'Get instant answers from our AI on any trade query',
-                  ),
-                  _PremiumFeatureTile(
-                    icon: '⚡',
-                    title: 'All Business Tools',
-                    subtitle:
-                        'Export Price, GST, Incoterms & advanced calculators',
-                  ),
-                  _PremiumFeatureTile(
-                    icon: '📽️',
-                    title: 'Shorts & Quizzes',
-                    subtitle:
-                        'Bite-sized videos & skill-testing quizzes, anytime',
-                  ),
-                  _PremiumFeatureTile(
-                    icon: '🏆',
-                    title: 'Certificates & Gallery',
-                    subtitle: 'Earn certificates & exclusive event gallery',
-                    isLast: true,
-                  ),
-                ],
+              // ── Features List ────────────────────────
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+                child: Column(
+                  children: [
+                    _PremiumFeatureTile(
+                      icon: '🎓',
+                      title: 'Full Course Library',
+                      subtitle:
+                          'Unlimited access to all import-export courses & lessons',
+                    ),
+                    _PremiumFeatureTile(
+                      icon: '🤖',
+                      title: 'AI Trade Expert',
+                      subtitle:
+                          'Get instant answers from our AI on any trade query',
+                    ),
+                    _PremiumFeatureTile(
+                      icon: '⚡',
+                      title: 'All Business Tools',
+                      subtitle:
+                          'Export Price, GST, Incoterms & advanced calculators',
+                    ),
+                    _PremiumFeatureTile(
+                      icon: '📽️',
+                      title: 'Shorts & Quizzes',
+                      subtitle:
+                          'Bite-sized videos & skill-testing quizzes, anytime',
+                    ),
+                    _PremiumFeatureTile(
+                      icon: '🏆',
+                      title: 'Certificates & Gallery',
+                      subtitle: 'Earn certificates & exclusive event gallery',
+                      isLast: true,
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            // ── Buttons ──────────────────────────────
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
-              child: Column(
-                children: [
-                  // Unlock button
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () => _launchWhatsApp(context),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFF6862A),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        elevation: 0,
-                        shadowColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Text(
-                            '🔓  Unlock Premium',
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: 0.3,
-                            ),
+              // ── Buttons ──────────────────────────────
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+                child: Column(
+                  children: [
+                    // Unlock button
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () => _launchWhatsApp(context),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFF6862A),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          elevation: 0,
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  // Maybe later
-                  InkWell(
-                    borderRadius: BorderRadius.circular(12),
-                    onTap: () => Navigator.pop(context),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      child: Text(
-                        'Maybe later',
-                        style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.5),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Text(
+                              '🔓  Unlock Premium',
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: 0.3,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 12),
+                    // Maybe later
+                    InkWell(
+                      borderRadius: BorderRadius.circular(12),
+                      onTap: () => Navigator.pop(context),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        child: Text(
+                          'Maybe later',
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.5),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
