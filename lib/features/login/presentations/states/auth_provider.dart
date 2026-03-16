@@ -4,6 +4,7 @@ import 'package:exim_lab/features/login/data/models/user_model.dart';
 import 'package:exim_lab/core/services/shared_pref_service.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:exim_lab/core/constants/analytics_constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider extends ChangeNotifier {
   final AuthDataSource _dataSource = AuthDataSource();
@@ -98,6 +99,12 @@ class AuthProvider extends ChangeNotifier {
       if (response['user'] != null) {
         _user = UserModel.fromJson(response['user']);
         await _sharedPrefService.saveUser(_user!);
+      }
+
+      // 💡 Prevent tour for existing users
+      if (response['userExists'] == true) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('dashboard_v3_tour_seen', true);
       }
 
       if (response['token'] != null) {

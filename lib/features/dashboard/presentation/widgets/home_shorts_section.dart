@@ -146,36 +146,25 @@ class _HomeShortsSectionState extends State<HomeShortsSection> {
                               ),
                             ),
                           ),
-                          // Play or Lock button
-                          Consumer<AuthProvider>(
-                            builder: (context, auth, _) {
-                              final isLocked = !(auth.user?.isPremium ?? false);
-                              return Center(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: (isLocked ? Colors.red : Colors.white)
-                                        .withValues(alpha: 0.2),
-                                    shape: BoxShape.circle,
+                          Center(
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.2),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.play_arrow_rounded,
+                                color: Colors.white,
+                                size: 32,
+                                shadows: [
+                                  Shadow(
+                                    blurRadius: 5,
+                                    color: Colors.black45,
                                   ),
-                                  child: Icon(
-                                    isLocked
-                                        ? Icons.lock_rounded
-                                        : Icons.play_arrow_rounded,
-                                    color: Colors.white,
-                                    size: 32,
-                                    shadows: [
-                                      Shadow(
-                                        blurRadius: 5,
-                                        color: isLocked
-                                            ? Colors.black54
-                                            : Colors.black45,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),
