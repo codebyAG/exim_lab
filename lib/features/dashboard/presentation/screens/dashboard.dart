@@ -403,7 +403,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     title: 'tut_header_title',
                     description: 'tut_header_desc',
                     child: Container(
-                      padding: EdgeInsets.fromLTRB(5.w, 4.5.h, 5.w, 0.5.h),
+                      padding: EdgeInsets.fromLTRB(5.w, 3.5.h, 5.w, 0),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -428,19 +428,25 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                     ),
                                   ],
                                 ),
-                                Text(
-                                  context.watch<AuthProvider>().user?.name ??
-                                      t.translate('guest_user'),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: theme.textTheme.headlineSmall
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.w800,
-                                        color: const Color(0xFF1D1F33),
-                                        fontSize: 22.sp,
-                                        letterSpacing: -0.5,
-                                      ),
-                                ),
+                                if (context.watch<AuthProvider>().user?.name !=
+                                        null &&
+                                    context
+                                        .watch<AuthProvider>()
+                                        .user!
+                                        .name!
+                                        .isNotEmpty)
+                                  Text(
+                                    context.read<AuthProvider>().user!.name!,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: theme.textTheme.headlineSmall
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.w800,
+                                          color: const Color(0xFF1D1F33),
+                                          fontSize: 22.sp,
+                                          letterSpacing: -0.5,
+                                        ),
+                                  ),
                               ],
                             ),
                           ),
@@ -565,7 +571,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
 
                   // 2. GALLERY / NEWS PILL ROW
                   Padding(
-                    padding: EdgeInsets.fromLTRB(5.w, 1.h, 5.w, 0.5.h),
+                    padding: EdgeInsets.fromLTRB(5.w, 0.5.h, 5.w, 0),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -581,7 +587,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
 
                   // 3. GALLERY / NEWS CARD ROW
                   Padding(
-                    padding: EdgeInsets.fromLTRB(5.w, 2.h, 5.w, 3.h),
+                    padding: EdgeInsets.fromLTRB(5.w, 1.5.h, 5.w, 2.5.h),
                     child: Row(
                       children: [
                         Expanded(
@@ -1632,8 +1638,8 @@ class _DashboardPillChip extends StatelessWidget {
     return Material(
       color: Colors.white,
       borderRadius: BorderRadius.circular(16),
-      elevation: 2,
-      shadowColor: Colors.black.withValues(alpha: 0.1),
+      elevation: 5,
+      shadowColor: Colors.black.withValues(alpha: 0.2),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
