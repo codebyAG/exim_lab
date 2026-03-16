@@ -11,20 +11,17 @@ import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart'
 import 'package:exim_lab/features/dashboard/presentation/providers/dashboard_provider.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/continue_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/home_shorts_section.dart';
 import 'package:exim_lab/features/shorts/presentation/screens/shorts_feed_screen.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/cta_carasoul.dart';
 import 'package:exim_lab/features/gallery/presentation/screens/gallery_screen.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/horizontal_courses.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/inline_banner.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/quick_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/section_header.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/tool_section.dart';
 import 'package:exim_lab/features/freevideos/data/models/free_videos_model.dart';
 import 'package:exim_lab/features/freevideos/presentation/widgets/free_video_section.dart';
 import 'package:exim_lab/features/news/presentation/screens/news_list_screen.dart';
-import 'package:exim_lab/features/quiz/presentation/screens/quiz_topics_screen.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:exim_lab/features/profile/presentation/screens/profile_screen.dart';
 import 'package:exim_lab/features/module_manager/presentation/widgets/module_visibility.dart';
@@ -38,6 +35,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/premium_unlock_dialog.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_continue_hero.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_journey_bar.dart';
 
 class DashboardScreen extends StatelessWidget {
   DashboardScreen({super.key});
@@ -245,12 +244,6 @@ class _DashboardBodyState extends State<_DashboardBody> {
     final cs = theme.colorScheme;
     final moduleProvider = Provider.of<ModuleProvider>(context);
 
-    // Track which tutorial keys have been assigned in this build
-    // to prevent "Multiple widgets used the same GlobalKey" error
-    bool assignedContinue = false;
-    bool assignedPopular = false;
-    bool assignedFreeVideos = false;
-
     // Prepare Bottom Navigation Items dynamically
     List<BottomNavigationBarItem> navItems = [
       BottomNavigationBarItem(
@@ -362,322 +355,342 @@ class _DashboardBodyState extends State<_DashboardBody> {
           cacheExtent: 1000,
           padding: EdgeInsets.zero,
           children: [
-            // 1. PREMIUM FLOATING HEADER
+            // 1. PLAIN HEADER
             _buildShowcase(
               key: _headerKey,
               title: 'tut_header_title',
               description: 'tut_header_desc',
-              shapeBorder: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(32),
-                ),
-              ),
               child: Container(
-                margin: EdgeInsets.only(bottom: 2.h),
-                padding: EdgeInsets.fromLTRB(5.w, 6.h, 5.w, 4.h),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      cs.primary,
-                      cs.primary.withValues(alpha: 0.9),
-                      Color.lerp(cs.primary, cs.secondary, 0.3)!,
-                    ],
-                    stops: const [0.0, 0.5, 1.0],
-                  ),
-                  borderRadius: const BorderRadius.vertical(
-                    bottom: Radius.circular(32),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: cs.primary.withValues(alpha: 0.35),
-                      blurRadius: 24,
-                      offset: const Offset(0, 12),
-                    ),
-                    BoxShadow(
-                      color: cs.primary.withValues(alpha: 0.15),
-                      blurRadius: 40,
-                      offset: const Offset(0, 20),
-                    ),
-                  ],
-                ),
-                child: Stack(
+                color: cs.surface,
+                padding: EdgeInsets.fromLTRB(5.w, 5.5.h, 5.w, 2.h),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Welcome & Name
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      '👋 ',
-                                      style: TextStyle(fontSize: 14.sp),
-                                    ),
-                                    Text(
-                                      t.translate('welcome_back'),
-                                      style: theme.textTheme.bodyMedium
-                                          ?.copyWith(
-                                            color: Colors.white.withValues(
-                                              alpha: 0.85,
-                                            ),
-                                            letterSpacing: 0.5,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  context.watch<AuthProvider>().user?.name ??
-                                      t.translate('guest_user'),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: theme.textTheme.headlineSmall
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.w900,
-                                        color: Colors.white,
-                                        letterSpacing: -0.5,
-                                        fontSize: 22.sp,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        // Gallery & News Pillars
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _buildShowcase(
-                                key: _galleryHeaderKey,
-                                title: 'tut_gallery_title',
-                                description: 'tut_gallery_desc',
-                                child: _HeaderPill(
-                                  icon: Icons.auto_awesome_motion_rounded,
-                                  label: t.translate('gallery'),
-                                  onTap: () {
-                                    final isPremium = context
-                                            .read<AuthProvider>()
-                                            .user
-                                            ?.isPremium ??
-                                        false;
-                                    if (isPremium) {
-                                      AppNavigator.push(
-                                        context,
-                                        const GalleryScreen(),
-                                      );
-                                    } else {
-                                      showDialog(
-                                        context: context,
-                                        builder: (_) =>
-                                            const PremiumUnlockDialog(),
-                                      );
-                                    }
-                                  },
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Text('👋 ', style: TextStyle(fontSize: 20)),
+                              Text(
+                                t.translate('welcome_back'),
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: cs.onSurfaceVariant,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
+                            ],
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            context.watch<AuthProvider>().user?.name ??
+                                t.translate('guest_user'),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.w900,
+                              color: cs.onSurface,
+                              letterSpacing: -0.3,
                             ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: _HeaderPill(
-                                icon: Icons.newspaper_rounded,
-                                label: t.translate('news'),
-                                onTap: () => AppNavigator.push(
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'What would you like to learn today?',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: cs.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    _buildShowcase(
+                      key: _notifKey,
+                      title: 'tut_notif_title',
+                      description: 'tut_notif_desc',
+                      child: Consumer<NotificationsProvider>(
+                        builder: (context, notifProvider, child) {
+                          return Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              IconButton(
+                                onPressed: () => AppNavigator.push(
                                   context,
-                                  const NewsListScreen(),
+                                  const NotificationsScreen(),
+                                ),
+                                icon: Icon(
+                                  Icons.notifications_outlined,
+                                  color: cs.onSurface,
+                                  size: 26,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        // Bottom icons row
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 14,
-                                vertical: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.18),
-                                borderRadius: BorderRadius.circular(24),
-                                border: Border.all(
-                                  color: Colors.white.withValues(alpha: 0.15),
-                                  width: 1,
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(
-                                    Icons.auto_awesome_rounded,
-                                    size: 14,
-                                    color: Colors.white,
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    t.translate('continue_journey'),
-                                    style: theme.textTheme.labelMedium
-                                        ?.copyWith(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w700,
-                                          letterSpacing: 0.2,
-                                        ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const Spacer(),
-                            _buildShowcase(
-                              key: _notifKey,
-                              title: 'tut_notif_title',
-                              description: 'tut_notif_desc',
-                              child: Consumer<NotificationsProvider>(
-                                builder: (context, notifProvider, child) {
-                                  return Stack(
-                                    clipBehavior: Clip.none,
-                                    children: [
-                                      IconButton(
-                                        onPressed: () => AppNavigator.push(
-                                          context,
-                                          const NotificationsScreen(),
-                                        ),
-                                        icon: const Icon(
-                                          Icons.notifications_outlined,
-                                          color: Colors.white,
-                                          size: 24,
-                                        ),
-                                      ),
-                                      if (notifProvider.unreadCount > 0)
-                                        Positioned(
-                                          right: 4,
-                                          top: 4,
-                                          child: Container(
-                                            padding: const EdgeInsets.all(2),
-                                            decoration: BoxDecoration(
-                                              color: cs.error,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            constraints: const BoxConstraints(
-                                              minWidth: 16,
-                                              minHeight: 16,
-                                            ),
-                                            child: Text(
-                                              '${notifProvider.unreadCount}',
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 9,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        ),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            _buildShowcase(
-                              key: _userProfileKey,
-                              title: 'tut_profile_title',
-                              description: 'tut_profile_desc',
-                              child: InkWell(
-                                onTap: () => AppNavigator.push(
-                                  context,
-                                  const ProfileScreen(),
-                                ),
-                                child: Container(
-                                  padding: const EdgeInsets.all(2),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: Colors.white.withValues(
-                                        alpha: 0.3,
-                                      ),
-                                      width: 1,
-                                    ),
-                                  ),
+                              if (notifProvider.unreadCount > 0)
+                                Positioned(
+                                  right: 4,
+                                  top: 4,
                                   child: Container(
-                                    height: 36,
-                                    width: 36,
-                                    decoration: const BoxDecoration(
+                                    padding: const EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                      color: cs.error,
                                       shape: BoxShape.circle,
                                     ),
-                                    clipBehavior: Clip.antiAlias,
-                                    child: Consumer<AuthProvider>(
-                                      builder: (context, auth, _) {
-                                        final user = auth.user;
-                                        if (user?.avatarUrl != null &&
-                                            user!.avatarUrl!.isNotEmpty) {
-                                          return CachedNetworkImage(
-                                            imageUrl: user.avatarUrl!,
-                                            fit: BoxFit.cover,
-                                            placeholder: (context, url) =>
-                                                Container(
-                                                  color: Colors.white10,
-                                                ),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    const Icon(
-                                                      Icons.person_rounded,
-                                                      size: 20,
-                                                      color: Colors.white,
-                                                    ),
-                                          );
-                                        }
-                                        return const CircleAvatar(
-                                          radius: 18,
-                                          backgroundColor: Colors.white24,
-                                          child: Icon(
-                                            Icons.person_rounded,
-                                            size: 20,
-                                            color: Colors.white,
-                                          ),
-                                        );
-                                      },
+                                    constraints: const BoxConstraints(
+                                      minWidth: 16,
+                                      minHeight: 16,
+                                    ),
+                                    child: Text(
+                                      '${notifProvider.unreadCount}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ],
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    _buildShowcase(
+                      key: _userProfileKey,
+                      title: 'tut_profile_title',
+                      description: 'tut_profile_desc',
+                      child: InkWell(
+                        onTap: () => AppNavigator.push(
+                          context,
+                          const ProfileScreen(),
                         ),
-                      ],
+                        borderRadius: BorderRadius.circular(40),
+                        child: Container(
+                          padding: const EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: cs.primary.withValues(alpha: 0.45),
+                              width: 2,
+                            ),
+                          ),
+                          child: Container(
+                            height: 38,
+                            width: 38,
+                            clipBehavior: Clip.antiAlias,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                            ),
+                            child: Consumer<AuthProvider>(
+                              builder: (context, auth, _) {
+                                final user = auth.user;
+                                if (user?.avatarUrl != null &&
+                                    user!.avatarUrl!.isNotEmpty) {
+                                  return CachedNetworkImage(
+                                    imageUrl: user.avatarUrl!,
+                                    fit: BoxFit.cover,
+                                    placeholder: (_, __) => Container(
+                                      color: cs.primaryContainer,
+                                    ),
+                                    errorWidget: (_, __, ___) => Icon(
+                                      Icons.person_rounded,
+                                      size: 22,
+                                      color: cs.primary,
+                                    ),
+                                  );
+                                }
+                                return CircleAvatar(
+                                  radius: 19,
+                                  backgroundColor: cs.primaryContainer,
+                                  child: Icon(
+                                    Icons.person_rounded,
+                                    size: 22,
+                                    color: cs.primary,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
 
-            // DYNAMIC CONTENT
-            Consumer<DashboardProvider>(
-              builder: (context, dashboard, child) {
-                if (dashboard.isLoading) {
-                  return const DashboardShimmer();
-                }
+            // 2. GALLERY / NEWS PILL ROW
+            Padding(
+              padding: EdgeInsets.fromLTRB(5.w, 1.h, 5.w, 0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _buildShowcase(
+                      key: _galleryHeaderKey,
+                      title: 'tut_gallery_title',
+                      description: 'tut_gallery_desc',
+                      child: _DashboardPillChip(
+                        icon: Icons.auto_awesome_motion_rounded,
+                        label: t.translate('gallery'),
+                        onTap: () {
+                          final isPremium =
+                              context.read<AuthProvider>().user?.isPremium ??
+                                  false;
+                          if (isPremium) {
+                            AppNavigator.push(context, const GalleryScreen());
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (_) => const PremiumUnlockDialog(),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 3.w),
+                  Expanded(
+                    child: _DashboardPillChip(
+                      icon: Icons.newspaper_rounded,
+                      label: t.translate('news'),
+                      onTap: () => AppNavigator.push(
+                        context,
+                        const NewsListScreen(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
+            // 3-END. DYNAMIC CONTENT
+            Consumer<DashboardProvider>(
+              builder: (context, dashboard, _) {
+                if (dashboard.isLoading) return const DashboardShimmer();
                 if (dashboard.error != null) {
                   return Center(child: Text('Error: ${dashboard.error}'));
                 }
-
                 final data = dashboard.data;
                 if (data == null) return const SizedBox();
+
+                bool assignedPopular = false;
+                bool assignedFreeVideos = false;
+
+                final continueSection =
+                    data.sections.where((s) => s.key == 'continue').firstOrNull;
+                final continueCourses = continueSection != null
+                    ? continueSection.data.cast<CourseModel>()
+                    : <CourseModel>[];
 
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // CAROUSEL
+                    SizedBox(height: 2.h),
+
+                    // 3. CONTINUE LEARNING HERO
+                    if (continueCourses.isNotEmpty)
+                      ModuleVisibility(
+                        module: 'continueLearning',
+                        child: _buildShowcase(
+                          key: _continueKey,
+                          title: 'tut_continue_title',
+                          description: 'tut_continue_desc',
+                          child: Consumer<AuthProvider>(
+                            builder: (context, auth, _) {
+                              final isPremium = auth.user?.isPremium ?? false;
+                              return DashboardContinueHero(
+                                course: continueCourses.first,
+                                isLocked: !isPremium,
+                                onTap: () {
+                                  if (isPremium) {
+                                    AppNavigator.push(
+                                      context,
+                                      CourseDetailsScreen(
+                                        courseId: continueCourses.first.id,
+                                      ),
+                                    );
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (_) =>
+                                          const PremiumUnlockDialog(),
+                                    );
+                                  }
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    if (continueCourses.isNotEmpty) SizedBox(height: 2.h),
+
+                    // 4. YOUR LEARNING JOURNEY
+                    Consumer<AuthProvider>(
+                      builder: (context, auth, _) {
+                        final isPremium = auth.user?.isPremium ?? false;
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 5.w),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Your Learning Journey',
+                                    style: theme.textTheme.titleMedium
+                                        ?.copyWith(fontWeight: FontWeight.w800),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      if (isPremium) {
+                                        AppNavigator.push(
+                                          context,
+                                          const CoursesListScreen(),
+                                        );
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          builder: (_) =>
+                                              const PremiumUnlockDialog(),
+                                        );
+                                      }
+                                    },
+                                    child: Text(
+                                      'View All',
+                                      style: TextStyle(
+                                        color: cs.primary,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            DashboardJourneyBar(
+                              completedCourses:
+                                  continueCourses.length.clamp(0, 10),
+                              totalCourses: 10,
+                              streakDays: 4,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                    SizedBox(height: 2.h),
+
+                    // 5. FREE GUIDE BANNER
+                    _buildShowcase(
+                      key: _pdfPromoKey,
+                      title: 'tut_pdf_promo_title',
+                      description: 'tut_pdf_promo_desc',
+                      child: _buildFreePdfPromo(context, cs),
+                    ),
+                    SizedBox(height: 2.h),
+
+                    // 6. CAROUSEL
                     if (data.addons.carousel.isNotEmpty) ...[
                       ModuleVisibility(
                         module: 'carousel',
@@ -694,285 +707,135 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       SizedBox(height: 2.h),
                     ],
 
-                    // SHORTS
+                    // 7. SHORTS
                     ModuleVisibility(
                       module: 'shortVideos',
-                      child: FadeInRight(
-                        delay: const Duration(milliseconds: 200),
-                        child: _buildShowcase(
-                          key: _shortsKey,
-                          title: 'tut_shorts_title',
-                          description: 'tut_shorts_desc',
-                          child: Consumer<AuthProvider>(
-                            builder: (context, auth, _) {
-                              final isPremium = auth.user?.isPremium ?? false;
-                              return InkWell(
-                                onTap: () {
-                                  if (isPremium) {
-                                    AppNavigator.push(
-                                      context,
-                                      const ShortsFeedScreen(),
-                                    );
-                                  } else {
-                                    showDialog(
-                                      context: context,
-                                      builder: (_) =>
-                                          const PremiumUnlockDialog(),
-                                    );
-                                  }
-                                },
-                                child: const IgnorePointer(
-                                  child: HomeShortsSection(),
+                      child: _buildShowcase(
+                        key: _shortsKey,
+                        title: 'tut_shorts_title',
+                        description: 'tut_shorts_desc',
+                        child: Consumer<AuthProvider>(
+                          builder: (context, auth, _) {
+                            final isPremium = auth.user?.isPremium ?? false;
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 5.w),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Short Learning Videos',
+                                        style: theme.textTheme.titleMedium
+                                            ?.copyWith(
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          if (isPremium) {
+                                            AppNavigator.push(
+                                              context,
+                                              const ShortsFeedScreen(),
+                                            );
+                                          } else {
+                                            showDialog(
+                                              context: context,
+                                              builder: (_) =>
+                                                  const PremiumUnlockDialog(),
+                                            );
+                                          }
+                                        },
+                                        child: Text(
+                                          'See All',
+                                          style: TextStyle(
+                                            color: cs.primary,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              );
-                            },
-                          ),
+                                InkWell(
+                                  onTap: () {
+                                    if (isPremium) {
+                                      AppNavigator.push(
+                                        context,
+                                        const ShortsFeedScreen(),
+                                      );
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (_) =>
+                                            const PremiumUnlockDialog(),
+                                      );
+                                    }
+                                  },
+                                  child: const IgnorePointer(
+                                    child: HomeShortsSection(),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
                         ),
                       ),
                     ),
                     SizedBox(height: 2.h),
 
-                    // QUICK ACTIONS
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5.w),
-                      child: Column(
-                        children: [
-                          FadeInUp(
-                            delay: const Duration(milliseconds: 300),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: _buildShowcase(
-                                    key: _coursesCardKey,
-                                    title: 'tut_my_courses_title',
-                                    description: 'tut_my_courses_desc',
-                                    child: Consumer<AuthProvider>(
-                                      builder: (context, auth, _) {
-                                        final isPremium =
-                                            auth.user?.isPremium ?? false;
-                                        return QuickCard(
-                                          icon: Icons.video_library_rounded,
-                                          title: t.translate('my_courses'),
-                                          subtitle:
-                                              t.translate('completed_status'),
-                                          isLocked: !isPremium,
-                                          onTap: () {
-                                            context
-                                                .read<AnalyticsService>()
-                                                .logButtonTap(
-                                                  buttonName: 'my_courses_card',
-                                                  screenName: 'dashboard',
-                                                );
-                                            if (isPremium) {
-                                              AppNavigator.push(
-                                                context,
-                                                const CoursesListScreen(),
-                                              );
-                                            } else {
-                                              showDialog(
-                                                context: context,
-                                                builder: (_) =>
-                                                    const PremiumUnlockDialog(),
-                                              );
-                                            }
-                                          },
-                                        );
-                                      },
-                                    ),
+                    // 8. TOOLS
+                    ModuleVisibility(
+                      module: 'tools',
+                      child: _buildShowcase(
+                        key: _toolsKey,
+                        title: 'tut_tools_title',
+                        description: 'tut_tools_desc',
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding:
+                                  EdgeInsets.symmetric(horizontal: 5.w),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    t.translate('tools_section_title'),
+                                    style: theme.textTheme.titleMedium
+                                        ?.copyWith(fontWeight: FontWeight.w800),
                                   ),
-                                ),
-                                SizedBox(width: 3.w),
-                                Expanded(
-                                  child: ModuleVisibility(
-                                    module: 'quizzes',
-                                    child: _buildShowcase(
-                                      key: _quizzesCardKey,
-                                      title: 'tut_quizzes_title',
-                                      description: 'tut_quizzes_desc',
-                                      child: Consumer<AuthProvider>(
-                                        builder: (context, auth, _) {
-                                          final isPremium =
-                                              auth.user?.isPremium ?? false;
-                                          return QuickCard(
-                                            icon: Icons.quiz_rounded,
-                                            title: t.translate('quizzes_title'),
-                                            subtitle: t.translate(
-                                              'quizzes_subtitle',
-                                            ),
-                                            isLocked: !isPremium,
-                                            onTap: () {
-                                              context
-                                                  .read<AnalyticsService>()
-                                                  .logButtonTap(
-                                                    buttonName: 'quizzes_card',
-                                                    screenName: 'dashboard',
-                                                  );
-                                              if (isPremium) {
-                                                AppNavigator.push(
-                                                  context,
-                                                  const QuizTopicsScreen(),
-                                                );
-                                              } else {
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (_) =>
-                                                      const PremiumUnlockDialog(),
-                                                );
-                                              }
-                                            },
-                                          );
-                                        },
+                                  TextButton(
+                                    onPressed: () {},
+                                    child: Text(
+                                      'See All',
+                                      style: TextStyle(
+                                        color: cs.primary,
+                                        fontWeight: FontWeight.w700,
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 12),
-                          FadeInUp(
-                            delay: const Duration(milliseconds: 350),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: _buildShowcase(
-                                    key: _aiExpertCardKey,
-                                    title: 'tut_ai_expert_title',
-                                    description: 'tut_ai_expert_desc',
-                                    child: Consumer<AuthProvider>(
-                                      builder: (context, auth, _) {
-                                        final isPremium =
-                                            auth.user?.isPremium ?? false;
-                                        return QuickCard(
-                                          icon: Icons.smart_toy_rounded,
-                                          title: t.translate('ai_expert'),
-                                          subtitle: t.translate('ai_expert_sub'),
-                                          isLocked: !isPremium,
-                                          onTap: () {
-                                            if (isPremium) {
-                                              AppNavigator.push(
-                                                context,
-                                                const AiChatScreen(),
-                                              );
-                                            } else {
-                                              showDialog(
-                                                context: context,
-                                                builder: (_) =>
-                                                    const PremiumUnlockDialog(),
-                                              );
-                                            }
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 3.w),
-                                Expanded(
-                                  child: _buildShowcase(
-                                    key: _galleryCardKey,
-                                    title: 'tut_gallery_card_title',
-                                    description: 'tut_gallery_card_desc',
-                                    child: Consumer<AuthProvider>(
-                                      builder: (context, auth, _) {
-                                        final isPremium =
-                                            auth.user?.isPremium ?? false;
-                                        return QuickCard(
-                                          icon: Icons.collections_rounded,
-                                          title: t.translate('gallery'),
-                                          subtitle:
-                                              t.translate('gallery_subtitle'),
-                                          isLocked: !isPremium,
-                                          onTap: () {
-                                            if (isPremium) {
-                                              AppNavigator.push(
-                                                context,
-                                                const GalleryScreen(),
-                                              );
-                                            } else {
-                                              showDialog(
-                                                context: context,
-                                                builder: (_) =>
-                                                    const PremiumUnlockDialog(),
-                                              );
-                                            }
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            SizedBox(height: 1.h),
+                            Consumer<AuthProvider>(
+                              builder: (context, auth, _) => ToolsSection(
+                                isPremium: auth.user?.isPremium ?? false,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                    SizedBox(height: 3.h),
+                    SizedBox(height: 2.h),
 
-                    // DYNAMIC SECTIONS
+                    // 9. DYNAMIC SECTIONS
                     ...data.sections.map((section) {
-                      if (section.key == 'continue' && !assignedContinue) {
-                        final courses = section.data.cast<CourseModel>();
-                        if (courses.isEmpty) return const SizedBox();
-                        assignedContinue = true;
-                        return ModuleVisibility(
-                          module: 'continueLearning',
-                          child: _buildShowcase(
-                            key: _continueKey,
-                            title: 'tut_continue_title',
-                            description: 'tut_continue_desc',
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SectionHeader(
-                                  title: section.title,
-                                  subtitle: section.subtitle,
-                                ),
-                                SizedBox(height: 1.5.h),
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 5.w,
-                                  ),
-                                  child: Row(
-                                    children: courses
-                                        .map(
-                                          (c) => Consumer<AuthProvider>(
-                                            builder: (context, auth, _) {
-                                              final isPremium = auth.user?.isPremium ?? false;
-                                              return ContinueCard(
-                                                course: c,
-                                                isLocked: !isPremium,
-                                                onTap: () {
-                                                  if (isPremium) {
-                                                    AppNavigator.push(
-                                                      context,
-                                                      CourseDetailsScreen(
-                                                        courseId: c.id,
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (_) =>
-                                                          const PremiumUnlockDialog(),
-                                                    );
-                                                  }
-                                                },
-                                              );
-                                            },
-                                          ),
-                                        )
-                                        .toList(),
-                                  ),
-                                ),
-                                SizedBox(height: 2.h),
-                              ],
-                            ),
-                          ),
-                        );
-                      } else if ((section.key == 'course' ||
+                      if ((section.key == 'course' ||
                               section.key.contains('Popular') ||
                               section.key.contains('Recommended')) &&
                           !assignedPopular) {
@@ -988,19 +851,61 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SectionHeader(
-                                  title: section.title,
-                                  subtitle: section.subtitle,
+                                Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 5.w),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        section.title,
+                                        style: theme.textTheme.titleMedium
+                                            ?.copyWith(
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                      Consumer<AuthProvider>(
+                                        builder: (context, auth, _) {
+                                          final isPremium =
+                                              auth.user?.isPremium ?? false;
+                                          return TextButton(
+                                            onPressed: () {
+                                              if (isPremium) {
+                                                AppNavigator.push(
+                                                  context,
+                                                  const CoursesListScreen(),
+                                                );
+                                              } else {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (_) =>
+                                                      const PremiumUnlockDialog(),
+                                                );
+                                              }
+                                            },
+                                            child: Text(
+                                              'See All',
+                                              style: TextStyle(
+                                                color: cs.primary,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                SizedBox(height: 1.5.h),
-                                 HorizontalCourses(
-                                   courses: courses,
-                                   isPremium: context
-                                           .read<AuthProvider>()
-                                           .user
-                                           ?.isPremium ??
-                                       false,
-                                 ),
+                                SizedBox(height: 1.h),
+                                HorizontalCourses(
+                                  courses: courses,
+                                  isPremium: context
+                                          .read<AuthProvider>()
+                                          .user
+                                          ?.isPremium ??
+                                      false,
+                                ),
                                 SizedBox(height: 2.h),
                               ],
                             ),
@@ -1034,7 +939,6 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       } else if (section.key == 'banner') {
                         final banners = section.data.cast<BannerModel>();
                         if (banners.isEmpty) return const SizedBox();
-
                         return ModuleVisibility(
                           module: 'banners',
                           child: Column(
@@ -1048,41 +952,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       return const SizedBox();
                     }),
 
-                    // TOOLS
-                    ModuleVisibility(
-                      module: 'tools',
-                      child: _buildShowcase(
-                        key: _toolsKey,
-                        title: 'tut_tools_title',
-                        description: 'tut_tools_desc',
-                        child: Column(
-                          children: [
-                            SectionHeader(
-                              title: t.translate('tools_section_title'),
-                              subtitle: t.translate('tools_section_subtitle'),
-                            ),
-                            SizedBox(height: 1.5.h),
-                            Consumer<AuthProvider>(
-                              builder: (context, auth, _) => ToolsSection(
-                                isPremium: auth.user?.isPremium ?? false,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 3.h),
-
-                    // 9. FREE PDF PROMO (New)
-                    _buildShowcase(
-                      key: _pdfPromoKey,
-                      title: 'tut_pdf_promo_title',
-                      description: 'tut_pdf_promo_desc',
-                      child: _buildFreePdfPromo(context, cs),
-                    ),
-                    SizedBox(height: 3.h),
-
-                    // 10. TESTIMONIALS (New)
+                    // 10. TESTIMONIALS
                     _buildShowcase(
                       key: _testimonialsKey,
                       title: 'tut_testimonials_title',
@@ -1091,7 +961,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     ),
                     SizedBox(height: 3.h),
 
-                    // 11. SOCIAL CONNECT (New)
+                    // 11. SOCIAL
                     _buildShowcase(
                       key: _socialKey,
                       title: 'tut_social_title',
@@ -1100,7 +970,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     ),
                     SizedBox(height: 3.h),
 
-                    // 12. FREE COUNSELING (New)
+                    // 12. FREE COUNSELING
                     _buildShowcase(
                       key: _counselingKey,
                       title: 'tut_counseling_title',
@@ -1595,12 +1465,12 @@ class _DashboardBodyState extends State<_DashboardBody> {
   }
 }
 
-class _HeaderPill extends StatelessWidget {
+class _DashboardPillChip extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
 
-  const _HeaderPill({
+  const _DashboardPillChip({
     required this.icon,
     required this.label,
     required this.onTap,
@@ -1608,34 +1478,39 @@ class _HeaderPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      width: double.infinity,
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
+    return Material(
+      color: cs.primaryContainer.withValues(alpha: 0.35),
+      borderRadius: BorderRadius.circular(16),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: Colors.white.withValues(alpha: 0.18),
-              width: 1,
+              color: cs.primary.withValues(alpha: 0.15),
+              width: 1.5,
             ),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: Colors.white, size: 18),
-              const SizedBox(width: 8),
-              Text(
-                label,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.3,
+              Icon(icon, color: cs.primary, size: 22),
+              const SizedBox(width: 10),
+              Flexible(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: cs.onPrimaryContainer,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.2,
+                  ),
                 ),
               ),
             ],
