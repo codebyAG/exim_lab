@@ -154,7 +154,7 @@ class GalleryScreen extends StatelessWidget {
                               imageUrl: item.imageUrl,
                               fit: BoxFit.cover,
                               placeholder: (context, url) => Container(
-                                color: cs.surfaceVariant,
+                                color: cs.surfaceContainerHighest,
                                 child: Center(
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,

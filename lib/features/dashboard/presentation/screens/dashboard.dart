@@ -35,7 +35,7 @@ import 'package:sizer/sizer.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/premium_dialog.dart';
 
@@ -48,14 +48,15 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey _headerKey = GlobalKey();
+  final GlobalKey _galleryHeaderKey = GlobalKey();
+  final GlobalKey _carouselKey = GlobalKey();
   final GlobalKey _actionsKey = GlobalKey();
-  final GlobalKey _continueKey = GlobalKey();
   final GlobalKey _shortsKey = GlobalKey();
+  final GlobalKey _continueKey = GlobalKey();
   final GlobalKey _toolsKey = GlobalKey();
+  final GlobalKey _newsKey = GlobalKey();
+  final GlobalKey _socialKey = GlobalKey();
   final GlobalKey _bottomNavKey = GlobalKey();
-
-  late TutorialCoachMark tutorialCoachMark;
-  List<TargetFocus> targets = [];
 
   @override
   void initState() {
@@ -87,217 +88,118 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<void> _checkTourStatus() async {
     final prefs = await SharedPreferences.getInstance();
-    final tourSeen = prefs.getBool('dashboard_v2_tour_seen') ?? false;
+    final tourSeen = prefs.getBool('dashboard_v3_tour_seen') ?? false;
     if (!tourSeen && mounted) {
-      _initTargets();
-      _showTutorial();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ShowCaseWidget.of(context).startShowCase([
+          _headerKey,
+          _galleryHeaderKey,
+          _carouselKey,
+          _shortsKey,
+          _actionsKey,
+          _continueKey,
+          _toolsKey,
+          _newsKey,
+          _socialKey,
+          _bottomNavKey,
+        ]);
+      });
+      _markTourSeen();
     }
   }
 
   void _markTourSeen() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('dashboard_v2_tour_seen', true);
+    await prefs.setBool('dashboard_v3_tour_seen', true);
   }
 
-  void _initTargets() {
+  Widget _buildShowcase({
+    required GlobalKey key,
+    required String title,
+    required String description,
+    required Widget child,
+    ShapeBorder shapeBorder = const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(12)),
+    ),
+  }) {
     final t = AppLocalizations.of(context);
-    targets.clear();
-    targets.add(
-      TargetFocus(
-        identify: "header",
-        keyTarget: _headerKey,
-        alignSkip: Alignment.topRight,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (context, controller) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    t.translate('tut_header_title'),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
-                  SizedBox(height: 2.h),
-                  Text(
-                    t.translate('tut_header_desc'),
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ],
-              );
-            },
-          ),
-        ],
-      ),
-    );
+    final cs = Theme.of(context).colorScheme;
 
-    targets.add(
-      TargetFocus(
-        identify: "actions",
-        keyTarget: _actionsKey,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (context, controller) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    t.translate('tut_actions_title'),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    t.translate('tut_actions_desc'),
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ],
-              );
-            },
-          ),
-        ],
-      ),
-    );
-
-    targets.add(
-      TargetFocus(
-        identify: "shorts",
-        keyTarget: _shortsKey,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (context, controller) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    t.translate('tut_shorts_title'),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    t.translate('tut_shorts_desc'),
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ],
-              );
-            },
-          ),
-        ],
-      ),
-    );
-
-    targets.add(
-      TargetFocus(
-        identify: "tools",
-        keyTarget: _toolsKey,
-        contents: [
-          TargetContent(
-            align: ContentAlign.top,
-            builder: (context, controller) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                   Text(
-                    t.translate('tut_tools_title'),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    t.translate('tut_tools_desc'),
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ],
-              );
-            },
-          ),
-        ],
-      ),
-    );
-
-    targets.add(
-      TargetFocus(
-        identify: "nav",
-        keyTarget: _bottomNavKey,
-        contents: [
-          TargetContent(
-            align: ContentAlign.top,
-            builder: (context, controller) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    t.translate('tut_nav_title'),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    t.translate('tut_nav_desc'),
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ],
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showTutorial() {
-    final t = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    tutorialCoachMark = TutorialCoachMark(
-      targets: targets,
-      colorShadow: theme.colorScheme.primary,
-      textSkip: t.translate('skip_tour'),
-      paddingFocus: 10,
-      opacityShadow: 0.85,
-      onFinish: _markTourSeen,
-      onSkip: () {
-        _markTourSeen();
-        return true;
-      },
-      skipWidget: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    return Showcase.withWidget(
+      key: key,
+      height: 180,
+      width: 85.w,
+      targetShapeBorder: shapeBorder,
+      container: Container(
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
+          color: cs.primary,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.2),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
         ),
-        child: Text(
-          t.translate('skip_tour'),
-          style: TextStyle(
-            color: theme.colorScheme.primary,
-            fontWeight: FontWeight.bold,
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              t.translate(title),
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              t.translate(description),
+              style: const TextStyle(color: Colors.white, fontSize: 14),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    ShowCaseWidget.of(context).dismiss();
+                  },
+                  child: Text(
+                    t.translate('skip'),
+                    style: const TextStyle(color: Colors.white70),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    ShowCaseWidget.of(context).next();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: cs.primary,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 8,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text(
+                    t.translate('tut_next'),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
-    )..show(context: context);
+      child: child,
+    );
   }
 
   void _showPromoBanner(BannerModel popup) {
@@ -333,7 +235,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     ];
 
-    // Parallel list of actions for each tab (index 0 is null/no-op)
+    // Parallel list of actions for each tab
     List<VoidCallback?> navActions = [null];
 
     if (moduleProvider.isEnabled('shortVideos')) {
@@ -387,657 +289,666 @@ class _DashboardScreenState extends State<DashboardScreen> {
       AppNavigator.push(context, const ProfileScreen());
     });
 
-    return Scaffold(
-      backgroundColor: cs.surface,
-      // Floating AI Support Button
-      floatingActionButton: moduleProvider.isEnabled('aiChat')
-          ? FloatingActionButton(
-              backgroundColor: cs.primary,
-              tooltip: t.translate('ai_support'),
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              onPressed: () {
-                final isPremium =
-                    context.read<AuthProvider>().user?.isPremium ?? false;
-                if (isPremium) {
-                  AppNavigator.push(context, const AiChatScreen());
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (_) => const PremiumUnlockDialog(),
-                  );
-                }
-              },
-              child: Icon(Icons.support_agent, color: cs.onPrimary, size: 28),
-            )
-          : null,
-      body: RefreshIndicator(
-        onRefresh: () => context.read<DashboardProvider>().fetchDashboardData(),
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            // 1. PREMIUM FLOATING HEADER
-            Container(
-              key: _headerKey,
-              margin: EdgeInsets.only(bottom: 2.h),
-              padding: EdgeInsets.fromLTRB(
-                5.w,
-                6.h,
-                5.w,
-                4.h,
-              ), // Increased top padding to push greeting down
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    cs.primary,
-                    cs.primary.withValues(alpha: 0.9),
-                    Color.lerp(cs.primary, cs.secondary, 0.3)!,
-                  ],
-                  stops: const [0.0, 0.5, 1.0],
+    return ShowCaseWidget(
+      onFinish: () => _markTourSeen(),
+      builder: (context) => Scaffold(
+        backgroundColor: cs.surface,
+        floatingActionButton: moduleProvider.isEnabled('aiChat')
+            ? FloatingActionButton(
+                backgroundColor: cs.primary,
+                tooltip: t.translate('ai_support'),
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                borderRadius: const BorderRadius.vertical(
-                  bottom: Radius.circular(32),
+                onPressed: () {
+                  final isPremium =
+                      context.read<AuthProvider>().user?.isPremium ?? false;
+                  if (isPremium) {
+                    AppNavigator.push(context, const AiChatScreen());
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (_) => const PremiumUnlockDialog(),
+                    );
+                  }
+                },
+                child: Icon(Icons.support_agent, color: cs.onPrimary, size: 28),
+              )
+            : null,
+        body: RefreshIndicator(
+          onRefresh: () =>
+              context.read<DashboardProvider>().fetchDashboardData(),
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              // 1. PREMIUM FLOATING HEADER
+              _buildShowcase(
+                key: _headerKey,
+                title: 'tut_header_title',
+                description: 'tut_header_desc',
+                shapeBorder: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(32),
+                  ),
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: cs.primary.withValues(alpha: 0.35),
-                    blurRadius: 24,
-                    offset: const Offset(0, 12),
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 2.h),
+                  padding: EdgeInsets.fromLTRB(5.w, 6.h, 5.w, 4.h),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        cs.primary,
+                        cs.primary.withValues(alpha: 0.9),
+                        Color.lerp(cs.primary, cs.secondary, 0.3)!,
+                      ],
+                      stops: const [0.0, 0.5, 1.0],
+                    ),
+                    borderRadius: const BorderRadius.vertical(
+                      bottom: Radius.circular(32),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: cs.primary.withValues(alpha: 0.35),
+                        blurRadius: 24,
+                        offset: const Offset(0, 12),
+                      ),
+                      BoxShadow(
+                        color: cs.primary.withValues(alpha: 0.15),
+                        blurRadius: 40,
+                        offset: const Offset(0, 20),
+                      ),
+                    ],
                   ),
-                  BoxShadow(
-                    color: cs.primary.withValues(alpha: 0.15),
-                    blurRadius: 40,
-                    offset: const Offset(0, 20),
-                  ),
-                ],
-              ),
-              child: Stack(
-                children: [
-                  // Main content
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Stack(
                     children: [
-                      // LAYER 1: Welcome & Name
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          // Welcome & Name
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    '👋 ',
-                                    style: TextStyle(fontSize: 14.sp),
-                                  ),
-                                  Text(
-                                    t.translate('welcome_back'),
-                                    style: theme.textTheme.bodyMedium?.copyWith(
-                                      color: Colors.white.withValues(
-                                        alpha: 0.85,
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '👋 ',
+                                        style: TextStyle(fontSize: 14.sp),
                                       ),
-                                      letterSpacing: 0.5,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                      Text(
+                                        t.translate('welcome_back'),
+                                        style: theme.textTheme.bodyMedium
+                                            ?.copyWith(
+                                              color: Colors.white.withValues(
+                                                alpha: 0.85,
+                                              ),
+                                              letterSpacing: 0.5,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    context.watch<AuthProvider>().user?.name ??
+                                        t.translate('guest_user'),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: theme.textTheme.headlineSmall
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.w900,
+                                          color: Colors.white,
+                                          letterSpacing: -0.5,
+                                          fontSize: 22.sp,
+                                        ),
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 4),
-                              Text(
-                                context.watch<AuthProvider>().user?.name ??
-                                    t.translate('guest_user'),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: theme.textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.white,
-                                  letterSpacing: -0.5,
-                                  fontSize: 22.sp,
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          // Gallery & News Pillars
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _buildShowcase(
+                                  key: _galleryHeaderKey,
+                                  title: 'tut_gallery_title',
+                                  description: 'tut_gallery_desc',
+                                  child: _HeaderPill(
+                                    icon: Icons.auto_awesome_motion_rounded,
+                                    label: t.translate('gallery'),
+                                    onTap: () => AppNavigator.push(
+                                      context,
+                                      const GalleryScreen(),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: _HeaderPill(
+                                  icon: Icons.newspaper_rounded,
+                                  label: t.translate('news'),
+                                  onTap: () => AppNavigator.push(
+                                    context,
+                                    const NewsListScreen(),
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                        ],
-                      ),
-
-                      // LAYER 2: Gallery & News (Expanded)
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _HeaderPill(
-                              icon: Icons.auto_awesome_motion_rounded,
-                              label: "Gallery",
-                              onTap: () {},
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: _HeaderPill(
-                              icon: Icons.newspaper_rounded,
-                              label: "News",
-                              onTap: () => AppNavigator.push(
-                                context,
-                                const NewsListScreen(),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-
-                      // LAYER 3: Journey, Notifications, Profile
-                      Row(
-                        children: [
-                          // Journey Pill
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 14,
-                              vertical: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.18),
-                              borderRadius: BorderRadius.circular(24),
-                              border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.15),
-                                width: 1,
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(
-                                  Icons.auto_awesome_rounded,
-                                  size: 14,
-                                  color: Colors.white,
+                          const SizedBox(height: 12),
+                          // Bottom icons row
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 14,
+                                  vertical: 8,
                                 ),
-                                const SizedBox(width: 6),
-                                Text(
-                                  t.translate('continue_journey'),
-                                  style: theme.textTheme.labelMedium?.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: 0.2,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.18),
+                                  borderRadius: BorderRadius.circular(24),
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.15),
+                                    width: 1,
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                          const Spacer(),
-                          // Notifications icon
-                          Consumer<NotificationsProvider>(
-                            builder: (context, notifProvider, child) {
-                              return Stack(
-                                clipBehavior: Clip.none,
-                                children: [
-                                  IconButton(
-                                    onPressed: () => AppNavigator.push(
-                                      context,
-                                      const NotificationsScreen(),
-                                    ),
-                                    icon: const Icon(
-                                      Icons.notifications_outlined,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(
+                                      Icons.auto_awesome_rounded,
+                                      size: 14,
                                       color: Colors.white,
-                                      size: 24,
                                     ),
-                                    tooltip: 'Notifications',
-                                    visualDensity: VisualDensity.compact,
-                                  ),
-                                  if (notifProvider.unreadCount > 0)
-                                    Positioned(
-                                      right: 4,
-                                      top: 4,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(2),
-                                        decoration: BoxDecoration(
-                                          color: cs.error,
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                            color: cs.primary,
-                                            width: 1.5,
-                                          ),
-                                        ),
-                                        constraints: const BoxConstraints(
-                                          minWidth: 16,
-                                          minHeight: 16,
-                                        ),
-                                        child: Text(
-                                          '${notifProvider.unreadCount}',
-                                          style: const TextStyle(
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      t.translate('continue_journey'),
+                                      style: theme.textTheme.labelMedium
+                                          ?.copyWith(
                                             color: Colors.white,
-                                            fontSize: 9,
-                                            fontWeight: FontWeight.bold,
+                                            fontWeight: FontWeight.w700,
+                                            letterSpacing: 0.2,
                                           ),
-                                          textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Spacer(),
+                              Consumer<NotificationsProvider>(
+                                builder: (context, notifProvider, child) {
+                                  return Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      IconButton(
+                                        onPressed: () => AppNavigator.push(
+                                          context,
+                                          const NotificationsScreen(),
+                                        ),
+                                        icon: const Icon(
+                                          Icons.notifications_outlined,
+                                          color: Colors.white,
+                                          size: 24,
                                         ),
                                       ),
-                                    ),
-                                ],
-                              );
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                          // Profile Circle
-                          InkWell(
-                            onTap: () => AppNavigator.push(
-                              context,
-                              const ProfileScreen(),
-                            ),
-                            child: Container(
-                              padding: const EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: Colors.white.withValues(alpha: 0.3),
-                                  width: 1,
-                                ),
-                              ),
-                              child: Container(
-                                height: 36,
-                                width: 36,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                ),
-                                clipBehavior: Clip.antiAlias,
-                                child: Consumer<AuthProvider>(
-                                  builder: (context, auth, _) {
-                                    final user = auth.user;
-                                    if (user?.avatarUrl != null &&
-                                        user!.avatarUrl!.isNotEmpty) {
-                                      return CachedNetworkImage(
-                                        imageUrl: user.avatarUrl!,
-                                        fit: BoxFit.cover,
-                                        placeholder: (context, url) =>
-                                            Container(color: Colors.white10),
-                                        errorWidget: (context, url, error) =>
-                                            Icon(
-                                              Icons.person_rounded,
-                                              size: 20,
-                                              color: cs.onPrimary,
+                                      if (notifProvider.unreadCount > 0)
+                                        Positioned(
+                                          right: 4,
+                                          top: 4,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(2),
+                                            decoration: BoxDecoration(
+                                              color: cs.error,
+                                              shape: BoxShape.circle,
                                             ),
-                                      );
-                                    }
-                                    return CircleAvatar(
-                                      radius: 18,
-                                      backgroundColor: Colors.white24,
-                                      child: Icon(
-                                        Icons.person_rounded,
-                                        size: 20,
-                                        color: Colors.white,
-                                      ),
-                                    );
-                                  },
-                                ),
+                                            constraints: const BoxConstraints(
+                                              minWidth: 16,
+                                              minHeight: 16,
+                                            ),
+                                            child: Text(
+                                              '${notifProvider.unreadCount}',
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 9,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  );
+                                },
                               ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            // DYNAMIC CONTENT
-            Consumer<DashboardProvider>(
-              builder: (context, dashboard, child) {
-                if (dashboard.isLoading) {
-                  return const DashboardShimmer();
-                }
-
-                if (dashboard.error != null) {
-                  return Center(child: Text('Error: ${dashboard.error}'));
-                }
-
-                final data = dashboard.data;
-                if (data == null) return const SizedBox();
-
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // 3. CAROUSEL (From Addons)
-                    if (data.addons.carousel.isNotEmpty) ...[
-                      ModuleVisibility(
-                        module: 'carousel',
-                        child: FadeIn(
-                          // 🔹 FADE IN CAROUSEL
-                          duration: const Duration(milliseconds: 800),
-                          child: CtaCarousel(banners: data.addons.carousel),
-                        ),
-                      ),
-                      SizedBox(height: 2.h),
-                    ],
-
-                    // SHORTS SECTION
-                    ModuleVisibility(
-                      module: 'shortVideos',
-                      child: FadeInRight(
-                        key: _shortsKey,
-                        delay: const Duration(milliseconds: 200),
-                        child: const HomeShortsSection(),
-                      ),
-                    ),
-                    SizedBox(height: 2.h),
-
-                    // 4. QUICK ACTIONS (Static)
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5.w),
-                      child: Column(
-                        children: [
-                          FadeInUp(
-                            delay: const Duration(milliseconds: 300),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: QuickCard(
-                                    icon: Icons.video_library_rounded,
-                                    title: t.translate('my_courses'),
-                                    subtitle: t.translate('completed_status'),
-                                    onTap: () {
-                                      context
-                                          .read<AnalyticsService>()
-                                          .logButtonTap(
-                                            buttonName: 'my_courses_card',
-                                            screenName: 'dashboard',
-                                          );
-                                      AppNavigator.push(
-                                        context,
-                                        const CoursesListScreen(),
-                                      );
-                                    },
-                                  ),
+                              const SizedBox(width: 8),
+                              InkWell(
+                                onTap: () => AppNavigator.push(
+                                  context,
+                                  const ProfileScreen(),
                                 ),
-                                SizedBox(width: 3.w),
-                                Expanded(
-                                  child: ModuleVisibility(
-                                    module: 'quizzes',
-                                    child: QuickCard(
-                                      icon: Icons.quiz_rounded,
-                                      title: t.translate('quizzes_title'),
-                                      subtitle: t.translate('quizzes_subtitle'),
-                                      onTap: () {
-                                        context
-                                            .read<AnalyticsService>()
-                                            .logButtonTap(
-                                              buttonName: 'quizzes_card',
-                                              screenName: 'dashboard',
-                                            );
-                                        final isPremium =
-                                            context
-                                                .read<AuthProvider>()
-                                                .user
-                                                ?.isPremium ??
-                                            false;
-                                        if (isPremium) {
-                                          AppNavigator.push(
-                                            context,
-                                            const QuizTopicsScreen(),
-                                          );
-                                        } else {
-                                          showDialog(
-                                            context: context,
-                                            builder: (_) =>
-                                                const PremiumUnlockDialog(),
+                                child: Container(
+                                  padding: const EdgeInsets.all(2),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.3,
+                                      ),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Container(
+                                    height: 36,
+                                    width: 36,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                    ),
+                                    clipBehavior: Clip.antiAlias,
+                                    child: Consumer<AuthProvider>(
+                                      builder: (context, auth, _) {
+                                        final user = auth.user;
+                                        if (user?.avatarUrl != null &&
+                                            user!.avatarUrl!.isNotEmpty) {
+                                          return CachedNetworkImage(
+                                            imageUrl: user.avatarUrl!,
+                                            fit: BoxFit.cover,
+                                            placeholder: (context, url) =>
+                                                Container(
+                                                  color: Colors.white10,
+                                                ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(
+                                                      Icons.person_rounded,
+                                                      size: 20,
+                                                      color: Colors.white,
+                                                    ),
                                           );
                                         }
+                                        return const CircleAvatar(
+                                          radius: 18,
+                                          backgroundColor: Colors.white24,
+                                          child: Icon(
+                                            Icons.person_rounded,
+                                            size: 20,
+                                            color: Colors.white,
+                                          ),
+                                        );
                                       },
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 2.h),
-                          FadeInUp(
-                            delay: const Duration(milliseconds: 400),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: QuickCard(
-                                    icon: Icons.smart_toy_rounded,
-                                    title: t.translate('ai_expert'),
-                                    subtitle: t.translate('ai_expert_sub'),
-                                    onTap: () {
-                                      final isPremium =
-                                          context
-                                              .read<AuthProvider>()
-                                              .user
-                                              ?.isPremium ??
-                                          false;
-                                      if (isPremium) {
-                                        AppNavigator.push(
-                                          context,
-                                          const AiChatScreen(),
-                                        );
-                                      } else {
-                                        showDialog(
-                                          context: context,
-                                          builder: (_) =>
-                                              const PremiumUnlockDialog(),
-                                        );
-                                      }
-                                    },
-                                  ),
-                                ),
-                                SizedBox(width: 3.w),
-                                Expanded(
-                                  child: QuickCard(
-                                    icon: Icons.collections_rounded,
-                                    title: t.translate('gallery'),
-                                    subtitle: t.translate('gallery_subtitle'),
-                                    onTap: () {
-                                      AppNavigator.push(
-                                        context,
-                                        const GalleryScreen(),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ),
-                    SizedBox(height: 3.h),
+                    ],
+                  ),
+                ),
+              ),
 
-                    // 6. DYNAMIC SECTIONS LOOP
-                    ...data.sections.map((section) {
-                      // CONTINUE WATCHING
-                      if (section.key == 'continue') {
-                        final courses = section.data.cast<CourseModel>();
-                        if (courses.isEmpty) return const SizedBox();
+              // DYNAMIC CONTENT
+              Consumer<DashboardProvider>(
+                builder: (context, dashboard, child) {
+                  if (dashboard.isLoading) {
+                    return const DashboardShimmer();
+                  }
 
-                        return ModuleVisibility(
-                          module: 'continueLearning',
+                  if (dashboard.error != null) {
+                    return Center(child: Text('Error: ${dashboard.error}'));
+                  }
+
+                  final data = dashboard.data;
+                  if (data == null) return const SizedBox();
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // CAROUSEL
+                      if (data.addons.carousel.isNotEmpty) ...[
+                        ModuleVisibility(
+                          module: 'carousel',
+                          child: FadeIn(
+                            duration: const Duration(milliseconds: 800),
+                            child: _buildShowcase(
+                              key: _carouselKey,
+                              title: 'tut_carousel_title',
+                              description: 'tut_carousel_desc',
+                              child: CtaCarousel(banners: data.addons.carousel),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 2.h),
+                      ],
+
+                      // SHORTS
+                      ModuleVisibility(
+                        module: 'shortVideos',
+                        child: FadeInRight(
+                          delay: const Duration(milliseconds: 200),
+                          child: _buildShowcase(
+                            key: _shortsKey,
+                            title: 'tut_shorts_title',
+                            description: 'tut_shorts_desc',
+                            child: const HomeShortsSection(),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+
+                      // QUICK ACTIONS
+                      _buildShowcase(
+                        key: _actionsKey,
+                        title: 'tut_actions_title',
+                        description: 'tut_actions_desc',
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5.w),
                           child: Column(
-                            key: _continueKey,
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SectionHeader(
-                                title: section.title,
-                                subtitle: section.subtitle,
-                              ),
-                              SizedBox(height: 1.5.h),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                padding: EdgeInsets.symmetric(horizontal: 5.w),
+                              FadeInUp(
+                                delay: const Duration(milliseconds: 300),
                                 child: Row(
-                                  children: courses
-                                      .map(
-                                        (course) => ContinueCard(
-                                          course: course,
+                                  children: [
+                                    Expanded(
+                                      child: QuickCard(
+                                        icon: Icons.video_library_rounded,
+                                        title: t.translate('my_courses'),
+                                        subtitle: t.translate(
+                                          'completed_status',
+                                        ),
+                                        onTap: () {
+                                          context
+                                              .read<AnalyticsService>()
+                                              .logButtonTap(
+                                                buttonName: 'my_courses_card',
+                                                screenName: 'dashboard',
+                                              );
+                                          AppNavigator.push(
+                                            context,
+                                            const CoursesListScreen(),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(width: 3.w),
+                                    Expanded(
+                                      child: ModuleVisibility(
+                                        module: 'quizzes',
+                                        child: QuickCard(
+                                          icon: Icons.quiz_rounded,
+                                          title: t.translate('quizzes_title'),
+                                          subtitle: t.translate(
+                                            'quizzes_subtitle',
+                                          ),
                                           onTap: () {
-                                            AppNavigator.push(
-                                              context,
-                                              CourseDetailsScreen(
-                                                courseId: course.id,
-                                              ),
-                                            );
+                                            context
+                                                .read<AnalyticsService>()
+                                                .logButtonTap(
+                                                  buttonName: 'quizzes_card',
+                                                  screenName: 'dashboard',
+                                                );
+                                            if (context
+                                                    .read<AuthProvider>()
+                                                    .user
+                                                    ?.isPremium ??
+                                                false) {
+                                              AppNavigator.push(
+                                                context,
+                                                const QuizTopicsScreen(),
+                                              );
+                                            } else {
+                                              showDialog(
+                                                context: context,
+                                                builder: (_) =>
+                                                    const PremiumUnlockDialog(),
+                                              );
+                                            }
                                           },
                                         ),
-                                      )
-                                      .toList(),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              SizedBox(height: 2.h),
-                            ],
-                          ),
-                        );
-                      }
-
-                      // COURSES
-                      if (section.key == 'course' ||
-                          section.key.contains('Popular') ||
-                          section.key.contains('Recommended')) {
-                        final courses = section.data.cast<CourseModel>();
-                        if (courses.isEmpty) return const SizedBox();
-
-                        return ModuleVisibility(
-                          module: 'courses',
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SectionHeader(
-                                title: section.title,
-                                subtitle: section.subtitle,
+                              const SizedBox(height: 12),
+                              FadeInUp(
+                                delay: const Duration(milliseconds: 350),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: QuickCard(
+                                        icon: Icons.smart_toy_rounded,
+                                        title: t.translate('ai_expert'),
+                                        subtitle: t.translate('ai_expert_sub'),
+                                        onTap: () {
+                                          if (context
+                                                  .read<AuthProvider>()
+                                                  .user
+                                                  ?.isPremium ??
+                                              false) {
+                                            AppNavigator.push(
+                                              context,
+                                              const AiChatScreen(),
+                                            );
+                                          } else {
+                                            showDialog(
+                                              context: context,
+                                              builder: (_) =>
+                                                  const PremiumUnlockDialog(),
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(width: 3.w),
+                                    Expanded(
+                                      child: QuickCard(
+                                        icon: Icons.collections_rounded,
+                                        title: t.translate('gallery'),
+                                        subtitle: t.translate(
+                                          'gallery_subtitle',
+                                        ),
+                                        onTap: () => AppNavigator.push(
+                                          context,
+                                          const GalleryScreen(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              SizedBox(height: 1.5.h),
-                              HorizontalCourses(courses: courses),
-                              SizedBox(height: 2.h),
                             ],
                           ),
-                        );
-                      }
-                      // FREE VIDEOS
-                      else if (section.key == 'freeVideos') {
-                        final videos = section.data.cast<FreeVideoModel>();
-                        if (videos.isEmpty) return const SizedBox();
-
-                        return ModuleVisibility(
-                          module: 'freeVideos',
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SectionHeader(
-                                title: section.title,
-                                subtitle: section.subtitle,
-                              ),
-                              SizedBox(height: 1.5.h),
-                              FreeVideosSection(videos: videos),
-                              SizedBox(height: 2.h),
-                            ],
-                          ),
-                        );
-                      }
-                      // BANNERS
-                      else if (section.key == 'banner') {
-                        final banners = section.data.cast<BannerModel>();
-                        if (banners.isEmpty) return const SizedBox();
-
-                        return ModuleVisibility(
-                          module: 'banners',
-                          child: Column(
-                            children: [
-                              InlineBanner(banners: banners),
-                              SizedBox(height: 2.h),
-                            ],
-                          ),
-                        );
-                      }
-                      return const SizedBox();
-                    }),
-
-                    // 8. TOOLS
-                    ModuleVisibility(
-                      module: 'tools',
-                      child: Column(
-                        key: _toolsKey,
-                        children: [
-                          SectionHeader(
-                            title: t.translate('tools_section_title'),
-                            subtitle: t.translate('tools_section_subtitle'),
-                          ),
-                          SizedBox(height: 1.5.h),
-                          Consumer<AuthProvider>(
-                            builder: (context, auth, _) {
-                              return ToolsSection(
-                                isPremium: auth.user?.isPremium ?? false,
-                              );
-                            },
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 3.h),
+                      SizedBox(height: 3.h),
 
-                    // 9. FREE PDF PROMO (New)
-                    _buildFreePdfPromo(context, cs),
-                    SizedBox(height: 3.h),
+                      // DYNAMIC SECTIONS
+                      ...data.sections.map((section) {
+                        if (section.key == 'continue') {
+                          final courses = section.data.cast<CourseModel>();
+                          if (courses.isEmpty) return const SizedBox();
+                          return ModuleVisibility(
+                            module: 'continueLearning',
+                            child: _buildShowcase(
+                              key: _continueKey,
+                              title: 'tut_continue_title',
+                              description: 'tut_continue_desc',
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SectionHeader(
+                                    title: section.title,
+                                    subtitle: section.subtitle,
+                                  ),
+                                  SizedBox(height: 1.5.h),
+                                  SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 5.w,
+                                    ),
+                                    child: Row(
+                                      children: courses
+                                          .map(
+                                            (c) => ContinueCard(
+                                              course: c,
+                                              onTap: () => AppNavigator.push(
+                                                context,
+                                                CourseDetailsScreen(
+                                                  courseId: c.id,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
+                                  ),
+                                  SizedBox(height: 2.h),
+                                ],
+                              ),
+                            ),
+                          );
+                        } else if (section.key == 'course' ||
+                            section.key.contains('Popular') ||
+                            section.key.contains('Recommended')) {
+                          final courses = section.data.cast<CourseModel>();
+                          if (courses.isEmpty) return const SizedBox();
+                          return ModuleVisibility(
+                            module: 'courses',
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SectionHeader(
+                                  title: section.title,
+                                  subtitle: section.subtitle,
+                                ),
+                                SizedBox(height: 1.5.h),
+                                HorizontalCourses(courses: courses),
+                                SizedBox(height: 2.h),
+                              ],
+                            ),
+                          );
+                        } else if (section.key == 'freeVideos') {
+                          final videos = section.data.cast<FreeVideoModel>();
+                          if (videos.isEmpty) return const SizedBox();
+                          return ModuleVisibility(
+                            module: 'freeVideos',
+                            child: _buildShowcase(
+                              key: _newsKey,
+                              title: 'tut_news_title',
+                              description: 'tut_news_desc',
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SectionHeader(
+                                    title: section.title,
+                                    subtitle: section.subtitle,
+                                  ),
+                                  SizedBox(height: 1.5.h),
+                                  FreeVideosSection(videos: videos),
+                                  SizedBox(height: 2.h),
+                                ],
+                              ),
+                            ),
+                          );
+                        } else if (section.key == 'banner') {
+                          final banners = section.data.cast<BannerModel>();
+                          if (banners.isEmpty) return const SizedBox();
 
-                    // 10. TESTIMONIALS (New)
-                    _buildTestimonials(context, cs, theme),
-                    SizedBox(height: 3.h),
+                          return ModuleVisibility(
+                            module: 'banners',
+                            child: Column(
+                              children: [
+                                InlineBanner(banners: banners),
+                                SizedBox(height: 2.h),
+                              ],
+                            ),
+                          );
+                        }
+                        return const SizedBox();
+                      }),
 
-                    // 11. SOCIAL CONNECT (New)
-                    _buildSocialConnect(context, cs, theme),
-                    SizedBox(height: 3.h),
+                      // TOOLS
+                      ModuleVisibility(
+                        module: 'tools',
+                        child: _buildShowcase(
+                          key: _toolsKey,
+                          title: 'tut_tools_title',
+                          description: 'tut_tools_desc',
+                          child: Column(
+                            children: [
+                              SectionHeader(
+                                title: t.translate('tools_section_title'),
+                                subtitle: t.translate('tools_section_subtitle'),
+                              ),
+                              SizedBox(height: 1.5.h),
+                              Consumer<AuthProvider>(
+                                builder: (context, auth, _) => ToolsSection(
+                                  isPremium: auth.user?.isPremium ?? false,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 3.h),
 
-                    // 12. FREE COUNSELING (New)
-                    _buildFreeCounseling(context, cs),
-                    SizedBox(height: 3.h),
-                  ],
-                );
-              },
-            ),
-          ],
+                      // 9. FREE PDF PROMO (New)
+                      _buildFreePdfPromo(context, cs),
+                      SizedBox(height: 3.h),
+
+                      // 10. TESTIMONIALS (New)
+                      _buildTestimonials(context, cs, theme),
+                      SizedBox(height: 3.h),
+
+                      // 11. SOCIAL CONNECT (New)
+                      _buildShowcase(
+                        key: _socialKey,
+                        title: 'tut_social_title',
+                        description: 'tut_social_desc',
+                        child: _buildSocialConnect(context, cs, theme),
+                      ),
+                      SizedBox(height: 3.h),
+
+                      // 12. FREE COUNSELING (New)
+                      _buildFreeCounseling(context, cs),
+                      SizedBox(height: 3.h),
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
         ),
-      ),
-
-      bottomNavigationBar: Container(
-        key: _bottomNavKey,
-        decoration: BoxDecoration(
-          color: cs.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          boxShadow: [
-            BoxShadow(
-              color: cs.shadow.withValues(alpha: 0.08),
-              blurRadius: 24,
-              offset: const Offset(0, -4),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          child: BottomNavigationBar(
-            backgroundColor: cs.surface,
-            elevation: 0,
-            selectedItemColor: cs.primary,
-            unselectedItemColor: cs.onSurfaceVariant.withValues(alpha: 0.5),
-            selectedLabelStyle: TextStyle(
-              fontWeight: FontWeight.w700,
-              fontSize: 12.sp,
-            ),
-            unselectedLabelStyle: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 12.sp,
-            ),
-            selectedIconTheme: const IconThemeData(size: 26),
-            unselectedIconTheme: const IconThemeData(size: 24),
-            currentIndex: 0,
-            type: BottomNavigationBarType.fixed,
-            onTap: (index) {
+        bottomNavigationBar: _buildShowcase(
+          key: _bottomNavKey,
+          title: 'tut_nav_title',
+          description: 'tut_nav_desc',
+          shapeBorder: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: NavigationBar(
+            destinations: navItems.map((item) {
+              return NavigationDestination(
+                icon: item.icon,
+                selectedIcon: item.activeIcon,
+                label: item.label!,
+              );
+            }).toList(),
+            selectedIndex: 0,
+            onDestinationSelected: (index) {
               if (index < navActions.length && navActions[index] != null) {
                 navActions[index]!();
               }
             },
-            items: navItems,
           ),
         ),
       ),
@@ -1263,51 +1174,88 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 5.w),
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 2.5.h, horizontal: 2.w),
+            padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 4.w),
             decoration: BoxDecoration(
               color: cs.surface,
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.5)),
+              border: Border.all(
+                color: cs.outlineVariant.withValues(alpha: 0.5),
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: cs.shadow.withValues(alpha: 0.03),
+                  color: cs.shadow.withValues(alpha: 0.05),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),
               ],
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            child: GridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: 3,
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+              childAspectRatio: 0.85,
               children: [
                 _socialIcon(
                   assetPath: 'assets/icons/youtube.png',
-                  color: Colors.red,
-                  onTap: () => launchUrl(Uri.parse("https://youtu.be/f7eSa2jkUZM?si=Krq_Ke-2fPaj6obO"), mode: LaunchMode.externalApplication),
+                  label: "Youtube 1",
+                  color: const Color(0xFFFF0000),
+                  onTap: () => launchUrl(
+                    Uri.parse(
+                      "https://youtu.be/f7eSa2jkUZM?si=Krq_Ke-2fPaj6obO",
+                    ),
+                    mode: LaunchMode.externalApplication,
+                  ),
                 ),
                 _socialIcon(
                   assetPath: 'assets/icons/youtube.png',
-                  color: Colors.redAccent,
-                  onTap: () => launchUrl(Uri.parse("https://youtu.be/HiyHpVwbGgw?si=XcdW0LDkUDaRZoB8"), mode: LaunchMode.externalApplication),
+                  label: "Youtube 2",
+                  color: const Color(0xFFFF0000),
+                  onTap: () => launchUrl(
+                    Uri.parse(
+                      "https://youtu.be/HiyHpVwbGgw?si=XcdW0LDkUDaRZoB8",
+                    ),
+                    mode: LaunchMode.externalApplication,
+                  ),
                 ),
                 _socialIcon(
                   assetPath: 'assets/icons/instagram.png',
+                  label: "Instagram",
                   color: const Color(0xFFE4405F),
-                  onTap: () => launchUrl(Uri.parse("https://www.instagram.com/siieadigital"), mode: LaunchMode.externalApplication),
+                  onTap: () => launchUrl(
+                    Uri.parse("https://www.instagram.com/siieadigital"),
+                    mode: LaunchMode.externalApplication,
+                  ),
                 ),
                 _socialIcon(
                   assetPath: 'assets/icons/facebook.png',
+                  label: "Facebook",
                   color: const Color(0xFF1877F2),
-                  onTap: () => launchUrl(Uri.parse("https://www.facebook.com/siiea.in"), mode: LaunchMode.externalApplication),
+                  onTap: () => launchUrl(
+                    Uri.parse("https://www.facebook.com/siiea.in"),
+                    mode: LaunchMode.externalApplication,
+                  ),
+                ),
+                _socialIcon(
+                  assetPath: 'assets/icons/twitter.png',
+                  label: "Twitter",
+                  color: const Color(0xFF1DA1F2),
+                  onTap: () => launchUrl(
+                    Uri.parse(
+                      "https://twitter.com/siiea_in",
+                    ), // Placeholder or actual if known
+                    mode: LaunchMode.externalApplication,
+                  ),
                 ),
                 _socialIcon(
                   icon: Icons.language_rounded,
-                  color: Colors.blueGrey,
-                  onTap: () => launchUrl(Uri.parse("https://www.siiea.in"), mode: LaunchMode.externalApplication),
-                ),
-                _socialIcon(
-                  icon: Icons.collections_rounded,
-                  color: Colors.orange,
-                  onTap: () => AppNavigator.push(context, const GalleryScreen()),
+                  label: t.translate('website'),
+                  color: const Color(0xFF0077B5),
+                  onTap: () => launchUrl(
+                    Uri.parse("https://www.siiea.in"),
+                    mode: LaunchMode.externalApplication,
+                  ),
                 ),
               ],
             ),
@@ -1320,26 +1268,37 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _socialIcon({
     IconData? icon,
     String? assetPath,
+    required String label,
     required Color color,
     required VoidCallback onTap,
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(30),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.08),
-          shape: BoxShape.circle,
-        ),
-        child: assetPath != null
-            ? Image.asset(
-                assetPath,
-                width: 24,
-                height: 24,
-                color: color,
-              )
-            : Icon(icon, color: color, size: 24),
+      borderRadius: BorderRadius.circular(16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
+            ),
+            child: assetPath != null
+                ? Image.asset(assetPath, width: 28, height: 28, color: color)
+                : Icon(icon, color: color, size: 28),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10.sp,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
+          ),
+        ],
       ),
     );
   }

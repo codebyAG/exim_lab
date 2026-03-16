@@ -59,7 +59,7 @@ dependencies:
   shimmer: ^3.0.0
   android_play_install_referrer: ^0.4.0
   package_info_plus: ^9.0.0
-  tutorial_coach_mark: ^1.3.3
+  showcaseview: ^3.0.0
 
 dev_dependencies:
   flutter_test:
