@@ -205,7 +205,7 @@ class AuthProvider extends ChangeNotifier {
           avatarUrl: _user!.avatarUrl,
           isPremium: response['active'] == true,
           stats: _user!.stats,
-          interest: _user!.interest,
+          interestedIn: _user!.interestedIn,
         );
         _user = updatedUser;
         await _sharedPrefService.saveUser(_user!);

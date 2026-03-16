@@ -37,6 +37,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/premium_unlock_dialog.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_continue_hero.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_journey_bar.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/interest_dialog.dart';
 
 class DashboardScreen extends StatelessWidget {
   DashboardScreen({super.key});
@@ -138,6 +139,11 @@ class _DashboardBodyState extends State<_DashboardBody> {
   Future<void> _checkTourStatus() async {
     final prefs = await SharedPreferences.getInstance();
     final tourSeen = prefs.getBool('dashboard_v3_tour_seen') ?? false;
+
+    // Check interest status
+    final user = context.read<AuthProvider>().user;
+    final interestDialogShown = prefs.getBool('interest_dialog_shown') ?? false;
+
     if (!tourSeen && mounted) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final List<GlobalKey> showcaseList = [
@@ -177,8 +183,21 @@ class _DashboardBodyState extends State<_DashboardBody> {
       });
       _markTourSeen();
     } else {
-      // If tour was already seen, show the promo banner immediately
-      triggerPromoBanner();
+      // Tour already seen, now check interest status or show promo banner
+      final hasNoInterest = user?.interestedIn == null ||
+          user!.interestedIn!.isEmpty ||
+          user.interestedIn == '';
+
+      if (hasNoInterest && !interestDialogShown && mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const InterestCaptureDialog(),
+        );
+        prefs.setBool('interest_dialog_shown', true);
+      } else {
+        triggerPromoBanner();
+      }
     }
   }
 
@@ -729,9 +748,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             DashboardJourneyBar(
                               completedCourses:
                                   auth.user?.stats?.completedCourses ?? 0,
-                              totalCourses: 10,
-                              streakDays:
-                                  4, // Placeholder until backend support
+                              totalCourses: auth.user?.stats?.totalCourses ?? 10,
+                              streakDays: auth.user?.stats?.learningStreak ?? 0,
                             ),
                           ],
                         );

@@ -1,7 +1,6 @@
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class InterestCaptureDialog extends StatefulWidget {
   const InterestCaptureDialog({super.key});
@@ -14,6 +13,8 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
   final TextEditingController _nameController = TextEditingController();
   String? _selectedInterest = "Import";
 
+  bool _isSubmitting = false;
+
   @override
   void initState() {
     super.initState();
@@ -23,19 +24,43 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
       if (user?.name != null && !user!.name!.contains("User")) {
         _nameController.text = user.name!;
       }
-      if (user?.interest != null) {
-        setState(() => _selectedInterest = user?.interest);
+      if (user?.interestedIn != null) {
+        setState(() => _selectedInterest = user?.interestedIn);
       }
     });
   }
 
-  void _launchWhatsApp() async {
-    final name = _nameController.text;
-    final interest = _selectedInterest ?? "None";
-    final url = "https://wa.me/919871769042?text=I%20am%20$name.%20Interested%20in%20$interest.%20I%20want%20to%20buy%20Import%20Export%20Premium";
-    
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+  Future<void> _submitInterest() async {
+    final name = _nameController.text.trim();
+    final interest = _selectedInterest?.toLowerCase() ?? "import";
+
+    if (name.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter your name")),
+      );
+      return;
+    }
+
+    setState(() => _isSubmitting = true);
+
+    final success = await context.read<AuthProvider>().updateProfile({
+      "name": name,
+      "interestedIn": interest,
+    });
+
+    if (mounted) {
+      setState(() => _isSubmitting = false);
+      if (success) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Profile updated successfully")),
+        );
+      } else {
+        final error = context.read<AuthProvider>().error;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error ?? "Failed to update profile")),
+        );
+      }
     }
   }
 
@@ -95,14 +120,16 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                     controller: _nameController,
                     decoration: InputDecoration(
                       hintText: "Your Name",
-                      prefixIcon: const Icon(Icons.person, color: Color(0xFFF6862A), size: 22),
+                      prefixIcon: const Icon(Icons.person,
+                          color: Color(0xFFF6862A), size: 22),
                       filled: true,
                       fillColor: const Color(0xFFF7F7F7),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 16),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -112,7 +139,8 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                   const SizedBox(height: 8),
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 14),
                     decoration: BoxDecoration(
                       color: const Color(0xFFF7F7F7),
                       borderRadius: BorderRadius.circular(16),
@@ -128,12 +156,13 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        Icon(Icons.keyboard_arrow_down_rounded, color: const Color(0xFFF6862A), size: 28),
+                        Icon(Icons.keyboard_arrow_down_rounded,
+                            color: const Color(0xFFF6862A), size: 28),
                       ],
                     ),
                   ),
                   const SizedBox(height: 8),
-                  
+
                   Container(
                     decoration: BoxDecoration(
                       color: const Color(0xFFF7F7F7),
@@ -142,7 +171,11 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                     child: Column(
                       children: [
                         _buildInterestItem("Import"),
-                        Divider(height: 1, color: Colors.grey.shade200, indent: 16, endIndent: 16),
+                        Divider(
+                            height: 1,
+                            color: Colors.grey.shade200,
+                            indent: 16,
+                            endIndent: 16),
                         _buildInterestItem("Export"),
                       ],
                     ),
@@ -154,7 +187,7 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: _launchWhatsApp,
+                      onPressed: _isSubmitting ? null : _submitInterest,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFF6862A),
                         foregroundColor: Colors.white,
@@ -164,15 +197,23 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                         ),
                         elevation: 0,
                       ),
-                      child: const Text(
-                        "Continue",
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
-                      ),
+                      child: _isSubmitting
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                  color: Colors.white, strokeWidth: 2),
+                            )
+                          : const Text(
+                              "Continue",
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w800),
+                            ),
                     ),
                   ),
                   const SizedBox(height: 12),
                   InkWell(
-                    onTap: () => Navigator.pop(context),
+                    onTap: _isSubmitting ? null : () => Navigator.pop(context),
                     child: const Text(
                       "Skip",
                       style: TextStyle(

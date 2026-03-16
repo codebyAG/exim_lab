@@ -7,7 +7,7 @@ class UserModel {
   final String? email;
   final String? avatarUrl;
   final bool isPremium;
-  final String? interest;
+  final String? interestedIn;
   final UserStats? stats;
 
   UserModel({
@@ -19,7 +19,7 @@ class UserModel {
     this.email,
     this.avatarUrl,
     this.isPremium = false,
-    this.interest,
+    this.interestedIn,
     this.stats,
   });
 
@@ -33,7 +33,7 @@ class UserModel {
       email: json['email'],
       avatarUrl: json['avatarUrl'],
       isPremium: json['isPremium'] ?? false,
-      interest: json['interest'],
+      interestedIn: json['interestedIn'] ?? json['interest'],
       stats: json['stats'] != null ? UserStats.fromJson(json['stats']) : null,
     );
   }
@@ -48,7 +48,7 @@ class UserModel {
       'email': email,
       'avatarUrl': avatarUrl,
       'isPremium': isPremium,
-      'interest': interest,
+      'interestedIn': interestedIn,
       'stats': stats?.toJson(),
     };
   }
@@ -57,11 +57,15 @@ class UserModel {
 class UserStats {
   final int activeCourses;
   final int completedCourses;
+  final int totalCourses;
+  final int learningStreak;
   final int quizzesTaken;
 
   UserStats({
     this.activeCourses = 0,
     this.completedCourses = 0,
+    this.totalCourses = 0,
+    this.learningStreak = 0,
     this.quizzesTaken = 0,
   });
 
@@ -69,6 +73,8 @@ class UserStats {
     return UserStats(
       activeCourses: json['activeCourses'] ?? 0,
       completedCourses: json['completedCourses'] ?? 0,
+      totalCourses: json['totalCourses'] ?? 0,
+      learningStreak: json['learningStreak'] ?? 0,
       quizzesTaken: json['quizzesTaken'] ?? 0,
     );
   }
@@ -77,6 +83,8 @@ class UserStats {
     return {
       'activeCourses': activeCourses,
       'completedCourses': completedCourses,
+      'totalCourses': totalCourses,
+      'learningStreak': learningStreak,
       'quizzesTaken': quizzesTaken,
     };
   }
