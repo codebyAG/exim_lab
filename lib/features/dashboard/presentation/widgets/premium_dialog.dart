@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class PremiumUnlockDialog extends StatefulWidget {
-  const PremiumUnlockDialog({super.key});
+class InterestCaptureDialog extends StatefulWidget {
+  const InterestCaptureDialog({super.key});
 
   @override
-  State<PremiumUnlockDialog> createState() => _PremiumUnlockDialogState();
+  State<InterestCaptureDialog> createState() => _InterestCaptureDialogState();
 }
 
-class _PremiumUnlockDialogState extends State<PremiumUnlockDialog> {
+class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
   final TextEditingController _nameController = TextEditingController();
   String? _selectedInterest = "Import";
 
@@ -32,7 +32,7 @@ class _PremiumUnlockDialogState extends State<PremiumUnlockDialog> {
   void _launchWhatsApp() async {
     final name = _nameController.text;
     final interest = _selectedInterest ?? "None";
-    final url = "https://wa.me/919871769042?text=I%20am%20$name.%20Interested%20in%20$interest.%20I%20want%20to%20buy%20EXIM%20Lab%20Premium";
+    final url = "https://wa.me/919871769042?text=I%20am%20$name.%20Interested%20in%20$interest.%20I%20want%20to%20buy%20Import%20Export%20Premium";
     
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);

@@ -2,7 +2,7 @@ import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/courses/data/models/course_model.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_details_screen.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/course_card.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/premium_dialog.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/premium_unlock_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 

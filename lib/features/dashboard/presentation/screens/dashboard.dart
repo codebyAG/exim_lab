@@ -37,7 +37,7 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_shimm
 import 'package:url_launcher/url_launcher.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/premium_dialog.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/premium_unlock_dialog.dart';
 
 class DashboardScreen extends StatelessWidget {
   DashboardScreen({super.key});

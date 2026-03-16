@@ -3,7 +3,7 @@ import 'package:exim_lab/features/tools/presentation/screens/cbm_calculator.dart
 import 'package:exim_lab/features/tools/presentation/screens/export_price_calculator.dart';
 import 'package:exim_lab/features/tools/presentation/screens/gst_calculator.dart';
 import 'package:exim_lab/features/tools/presentation/screens/incoterms_screen.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/premium_dialog.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/premium_unlock_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:exim_lab/localization/app_localization.dart';
