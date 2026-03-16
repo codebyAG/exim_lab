@@ -671,9 +671,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             ),
                             DashboardJourneyBar(
                               completedCourses:
-                                  continueCourses.length.clamp(0, 10),
+                                  auth.user?.stats?.completedCourses ?? 0,
                               totalCourses: 10,
-                              streakDays: 4,
+                              streakDays: 4, // Placeholder until backend support
                             ),
                           ],
                         );
@@ -1051,9 +1051,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
       child: Container(
         padding: EdgeInsets.all(5.w),
         decoration: BoxDecoration(
-          color: const Color(0xFFFFF8F0),
+          color: cs.primaryContainer.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: cs.primary.withValues(alpha: 0.15)),
+          border: Border.all(color: cs.primary.withValues(alpha: 0.1)),
           boxShadow: [
             BoxShadow(
               color: cs.primary.withValues(alpha: 0.05),
@@ -1374,7 +1374,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
         padding: EdgeInsets.all(6.w),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [cs.primary, const Color(0xFFFFB703)],
+            colors: [cs.primary, cs.primary.withValues(alpha: 0.7)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),

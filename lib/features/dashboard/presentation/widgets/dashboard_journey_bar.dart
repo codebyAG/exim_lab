@@ -47,9 +47,10 @@ class DashboardJourneyBar extends StatelessWidget {
                   Text(
                     'Your Learning Journey',
                     style: TextStyle(
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.w700,
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w800,
                       color: cs.onSurface,
+                      letterSpacing: -0.2,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -58,8 +59,8 @@ class DashboardJourneyBar extends StatelessWidget {
                       Text(
                         '$completedCourses / $totalCourses Courses',
                         style: TextStyle(
-                          fontSize: 11.sp,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w700,
                           color: cs.primary,
                         ),
                       ),
@@ -87,10 +88,10 @@ class DashboardJourneyBar extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
-                color: const Color(0xFFFFF3E0),
+                color: cs.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: const Color(0xFFFFB74D).withValues(alpha: 0.5),
+                  color: cs.primary.withValues(alpha: 0.2),
                 ),
               ),
               child: Row(
@@ -100,10 +101,10 @@ class DashboardJourneyBar extends StatelessWidget {
                   const SizedBox(width: 4),
                   Text(
                     '$streakDays Day Streak',
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFFE65100),
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w800,
+                      color: cs.primary,
                     ),
                   ),
                   const SizedBox(width: 2),
