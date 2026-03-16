@@ -82,7 +82,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
 
   final GlobalKey _continueKey = GlobalKey();
   final GlobalKey _toolsKey = GlobalKey();
-  final GlobalKey _newsKey = GlobalKey();
+  final GlobalKey _freeVideosKey = GlobalKey();
   final GlobalKey _pdfPromoKey = GlobalKey();
   final GlobalKey _testimonialsKey = GlobalKey();
   final GlobalKey _socialKey = GlobalKey();
@@ -93,6 +93,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
   final GlobalKey _navCoursesKey = GlobalKey();
   final GlobalKey _navNewsKey = GlobalKey();
   final GlobalKey _navProfileKey = GlobalKey();
+
+  final GlobalKey _popularCoursesKey = GlobalKey();
 
   final ScrollController _scrollController = ScrollController();
 
@@ -151,8 +153,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
           _aiExpertCardKey,
           _galleryCardKey,
           _continueKey,
+          _popularCoursesKey,
           _toolsKey,
-          _newsKey,
+          _freeVideosKey,
           _pdfPromoKey,
           _testimonialsKey,
           _socialKey,
@@ -849,17 +852,22 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         if (courses.isEmpty) return const SizedBox();
                         return ModuleVisibility(
                           module: 'courses',
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SectionHeader(
-                                title: section.title,
-                                subtitle: section.subtitle,
-                              ),
-                              SizedBox(height: 1.5.h),
-                              HorizontalCourses(courses: courses),
-                              SizedBox(height: 2.h),
-                            ],
+                          child: _buildShowcase(
+                            key: _popularCoursesKey,
+                            title: 'tut_popular_courses_title',
+                            description: 'tut_popular_courses_desc',
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SectionHeader(
+                                  title: section.title,
+                                  subtitle: section.subtitle,
+                                ),
+                                SizedBox(height: 1.5.h),
+                                HorizontalCourses(courses: courses),
+                                SizedBox(height: 2.h),
+                              ],
+                            ),
                           ),
                         );
                       } else if (section.key == 'freeVideos') {
@@ -868,9 +876,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         return ModuleVisibility(
                           module: 'freeVideos',
                           child: _buildShowcase(
-                            key: _newsKey,
-                            title: 'tut_news_title',
-                            description: 'tut_news_desc',
+                            key: _freeVideosKey,
+                            title: 'tut_free_videos_title',
+                            description: 'tut_free_videos_desc',
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
