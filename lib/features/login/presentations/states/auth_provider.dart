@@ -64,6 +64,13 @@ class AuthProvider extends ChangeNotifier {
     try {
       final response = await _dataSource.sendOtp(mobile);
       _otpMessage = response['message'];
+
+      // 💡 Prevent tour for existing users
+      if (response['userExists'] == true) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('dashboard_v3_tour_seen', true);
+      }
+
       _isLoading = false;
       notifyListeners();
       return true;
@@ -101,11 +108,7 @@ class AuthProvider extends ChangeNotifier {
         await _sharedPrefService.saveUser(_user!);
       }
 
-      // 💡 Prevent tour for existing users
-      if (response['userExists'] == true) {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setBool('dashboard_v3_tour_seen', true);
-      }
+
 
       if (response['token'] != null) {
         await _sharedPrefService.saveToken(response['token']);
