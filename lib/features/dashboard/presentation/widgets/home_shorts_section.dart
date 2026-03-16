@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:exim_lab/localization/app_localization.dart';
+import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 
 class HomeShortsSection extends StatefulWidget {
   const HomeShortsSection({super.key});
@@ -145,23 +146,36 @@ class _HomeShortsSectionState extends State<HomeShortsSection> {
                               ),
                             ),
                           ),
-                          // Play button with translucent backdrop
-                          Center(
-                            child: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.2),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.play_arrow_rounded,
-                                color: Colors.white,
-                                size: 32,
-                                shadows: [
-                                  Shadow(blurRadius: 5, color: Colors.black45),
-                                ],
-                              ),
-                            ),
+                          // Play or Lock button
+                          Consumer<AuthProvider>(
+                            builder: (context, auth, _) {
+                              final isLocked = !(auth.user?.isPremium ?? false);
+                              return Center(
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: (isLocked ? Colors.red : Colors.white)
+                                        .withValues(alpha: 0.2),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    isLocked
+                                        ? Icons.lock_rounded
+                                        : Icons.play_arrow_rounded,
+                                    color: Colors.white,
+                                    size: 32,
+                                    shadows: [
+                                      Shadow(
+                                        blurRadius: 5,
+                                        color: isLocked
+                                            ? Colors.black54
+                                            : Colors.black45,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),

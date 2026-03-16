@@ -131,17 +131,18 @@ class CourseCard extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            isLocked ? Icons.lock_rounded : Icons.star_rounded,
+                            isLocked ? Icons.lock_rounded : Icons.lock_open_rounded,
                             size: 14,
-                            color: isLocked ? Colors.white : Colors.amber,
+                            color: Colors.white,
                           ),
-                          const SizedBox(width: 3),
+                          const SizedBox(width: 4),
                           Text(
-                            isLocked ? "LOCK" : rating,
+                            isLocked ? "LOCKED" : "UNLOCKED",
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 0.5,
                             ),
                           ),
                         ],

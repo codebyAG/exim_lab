@@ -355,209 +355,265 @@ class _DashboardBodyState extends State<_DashboardBody> {
           cacheExtent: 1000,
           padding: EdgeInsets.zero,
           children: [
-            // 1. PLAIN HEADER
-            _buildShowcase(
-              key: _headerKey,
-              title: 'tut_header_title',
-              description: 'tut_header_desc',
-              child: Container(
-                color: cs.surface,
-                padding: EdgeInsets.fromLTRB(5.w, 5.5.h, 5.w, 2.h),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+            // 1 & 2. ORANGE TOP HEADER SECTION
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    const Color(0xFFFF8A00), // vivid orange
+                    const Color(0xFFFFB703), // soft peach accent
+                  ],
+                ),
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(32),
+                  bottomRight: Radius.circular(32),
+                ),
+              ),
+              child: Column(
+                children: [
+                  // 1. HEADER
+                  _buildShowcase(
+                    key: _headerKey,
+                    title: 'tut_header_title',
+                    description: 'tut_header_desc',
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(5.w, 5.5.h, 5.w, 2.h),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Row(
-                            children: [
-                              const Text('👋 ', style: TextStyle(fontSize: 20)),
-                              Text(
-                                t.translate('welcome_back'),
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: cs.onSurfaceVariant,
-                                  fontWeight: FontWeight.w500,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Text(
+                                      '👋 ',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    Text(
+                                      t.translate('welcome_back'),
+                                      style: theme.textTheme.bodyMedium
+                                          ?.copyWith(
+                                            color: Colors.white.withValues(
+                                              alpha: 0.85,
+                                            ),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            context.watch<AuthProvider>().user?.name ??
-                                t.translate('guest_user'),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: theme.textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.w900,
-                              color: cs.onSurface,
-                              letterSpacing: -0.3,
+                                const SizedBox(height: 2),
+                                Text(
+                                  context.watch<AuthProvider>().user?.name ??
+                                      t.translate('guest_user'),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: theme.textTheme.headlineSmall
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.white,
+                                        letterSpacing: -0.3,
+                                      ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  'What would you like to learn today?',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: Colors.white.withValues(alpha: 0.75),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(height: 2),
-                          Text(
-                            'What would you like to learn today?',
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: cs.onSurfaceVariant,
+                          const SizedBox(width: 12),
+                          _buildShowcase(
+                            key: _notifKey,
+                            title: 'tut_notif_title',
+                            description: 'tut_notif_desc',
+                            child: Consumer<NotificationsProvider>(
+                              builder: (context, notifProvider, child) {
+                                return Stack(
+                                  clipBehavior: Clip.none,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () => AppNavigator.push(
+                                        context,
+                                        const NotificationsScreen(),
+                                      ),
+                                      icon: const Icon(
+                                        Icons.notifications_outlined,
+                                        color: Colors.white,
+                                        size: 26,
+                                      ),
+                                    ),
+                                    if (notifProvider.unreadCount > 0)
+                                      Positioned(
+                                        right: 4,
+                                        top: 4,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(2),
+                                          decoration: BoxDecoration(
+                                            color: Colors.black.withValues(
+                                              alpha: 0.6,
+                                            ),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          constraints: const BoxConstraints(
+                                            minWidth: 16,
+                                            minHeight: 16,
+                                          ),
+                                          child: Text(
+                                            '${notifProvider.unreadCount}',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 9,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          _buildShowcase(
+                            key: _userProfileKey,
+                            title: 'tut_profile_title',
+                            description: 'tut_profile_desc',
+                            child: InkWell(
+                              onTap: () => AppNavigator.push(
+                                context,
+                                const ProfileScreen(),
+                              ),
+                              borderRadius: BorderRadius.circular(40),
+                              child: Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.5),
+                                    width: 2,
+                                  ),
+                                ),
+                                child: Container(
+                                  height: 38,
+                                  width: 38,
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Consumer<AuthProvider>(
+                                    builder: (context, auth, _) {
+                                      final user = auth.user;
+                                      if (user?.avatarUrl != null &&
+                                          user!.avatarUrl!.isNotEmpty) {
+                                        return CachedNetworkImage(
+                                          imageUrl: user.avatarUrl!,
+                                          fit: BoxFit.cover,
+                                          placeholder: (_, __) => Container(
+                                            color: cs.primaryContainer,
+                                          ),
+                                          errorWidget: (_, __, ___) => Icon(
+                                            Icons.person_rounded,
+                                            size: 22,
+                                            color: cs.primary,
+                                          ),
+                                        );
+                                      }
+                                      return CircleAvatar(
+                                        radius: 19,
+                                        backgroundColor: cs.primaryContainer,
+                                        child: Icon(
+                                          Icons.person_rounded,
+                                          size: 22,
+                                          color: cs.primary,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    _buildShowcase(
-                      key: _notifKey,
-                      title: 'tut_notif_title',
-                      description: 'tut_notif_desc',
-                      child: Consumer<NotificationsProvider>(
-                        builder: (context, notifProvider, child) {
-                          return Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              IconButton(
-                                onPressed: () => AppNavigator.push(
-                                  context,
-                                  const NotificationsScreen(),
-                                ),
-                                icon: Icon(
-                                  Icons.notifications_outlined,
-                                  color: cs.onSurface,
-                                  size: 26,
-                                ),
-                              ),
-                              if (notifProvider.unreadCount > 0)
-                                Positioned(
-                                  right: 4,
-                                  top: 4,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(2),
-                                    decoration: BoxDecoration(
-                                      color: cs.error,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    constraints: const BoxConstraints(
-                                      minWidth: 16,
-                                      minHeight: 16,
-                                    ),
-                                    child: Text(
-                                      '${notifProvider.unreadCount}',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 9,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    _buildShowcase(
-                      key: _userProfileKey,
-                      title: 'tut_profile_title',
-                      description: 'tut_profile_desc',
-                      child: InkWell(
-                        onTap: () => AppNavigator.push(
-                          context,
-                          const ProfileScreen(),
-                        ),
-                        borderRadius: BorderRadius.circular(40),
-                        child: Container(
-                          padding: const EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: cs.primary.withValues(alpha: 0.45),
-                              width: 2,
-                            ),
-                          ),
-                          child: Container(
-                            height: 38,
-                            width: 38,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                            ),
+                  ),
+
+                  // 2. GALLERY / NEWS PILL ROW
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(5.w, 0, 5.w, 3.h),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: _buildShowcase(
+                            key: _galleryHeaderKey,
+                            title: 'tut_gallery_title',
+                            description: 'tut_gallery_desc',
                             child: Consumer<AuthProvider>(
                               builder: (context, auth, _) {
-                                final user = auth.user;
-                                if (user?.avatarUrl != null &&
-                                    user!.avatarUrl!.isNotEmpty) {
-                                  return CachedNetworkImage(
-                                    imageUrl: user.avatarUrl!,
-                                    fit: BoxFit.cover,
-                                    placeholder: (_, __) => Container(
-                                      color: cs.primaryContainer,
-                                    ),
-                                    errorWidget: (_, __, ___) => Icon(
-                                      Icons.person_rounded,
-                                      size: 22,
-                                      color: cs.primary,
-                                    ),
-                                  );
-                                }
-                                return CircleAvatar(
-                                  radius: 19,
-                                  backgroundColor: cs.primaryContainer,
-                                  child: Icon(
-                                    Icons.person_rounded,
-                                    size: 22,
-                                    color: cs.primary,
-                                  ),
+                                final isPremium = auth.user?.isPremium ?? false;
+                                return _DashboardPillChip(
+                                  icon: Icons.auto_awesome_motion_rounded,
+                                  label: t.translate('gallery'),
+                                  isLocked: !isPremium,
+                                  onDarkTheme: true,
+                                  onTap: () {
+                                    if (isPremium) {
+                                      AppNavigator.push(
+                                        context,
+                                        const GalleryScreen(),
+                                      );
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (_) =>
+                                            const PremiumUnlockDialog(),
+                                      );
+                                    }
+                                  },
                                 );
                               },
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            // 2. GALLERY / NEWS PILL ROW
-            Padding(
-              padding: EdgeInsets.fromLTRB(5.w, 1.h, 5.w, 0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: _buildShowcase(
-                      key: _galleryHeaderKey,
-                      title: 'tut_gallery_title',
-                      description: 'tut_gallery_desc',
-                      child: _DashboardPillChip(
-                        icon: Icons.auto_awesome_motion_rounded,
-                        label: t.translate('gallery'),
-                        onTap: () {
-                          final isPremium =
-                              context.read<AuthProvider>().user?.isPremium ??
-                                  false;
-                          if (isPremium) {
-                            AppNavigator.push(context, const GalleryScreen());
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (_) => const PremiumUnlockDialog(),
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 3.w),
-                  Expanded(
-                    child: _DashboardPillChip(
-                      icon: Icons.newspaper_rounded,
-                      label: t.translate('news'),
-                      onTap: () => AppNavigator.push(
-                        context,
-                        const NewsListScreen(),
-                      ),
+                        SizedBox(width: 3.w),
+                        Expanded(
+                          child: Consumer<AuthProvider>(
+                            builder: (context, auth, _) {
+                              final isPremium = auth.user?.isPremium ?? false;
+                              return _DashboardPillChip(
+                                icon: Icons.newspaper_rounded,
+                                label: t.translate('news'),
+                                isLocked: !isPremium,
+                                onDarkTheme: true,
+                                onTap: () {
+                                  if (isPremium) {
+                                    AppNavigator.push(
+                                      context,
+                                      const NewsListScreen(),
+                                    );
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (_) =>
+                                          const PremiumUnlockDialog(),
+                                    );
+                                  }
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -577,8 +633,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
                 bool assignedPopular = false;
                 bool assignedFreeVideos = false;
 
-                final continueSection =
-                    data.sections.where((s) => s.key == 'continue').firstOrNull;
+                final continueSection = data.sections
+                    .where((s) => s.key == 'continue')
+                    .firstOrNull;
                 final continueCourses = continueSection != null
                     ? continueSection.data.cast<CourseModel>()
                     : <CourseModel>[];
@@ -673,7 +730,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
                               completedCourses:
                                   auth.user?.stats?.completedCourses ?? 0,
                               totalCourses: 10,
-                              streakDays: 4, // Placeholder until backend support
+                              streakDays:
+                                  4, // Placeholder until backend support
                             ),
                           ],
                         );
@@ -721,8 +779,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 5.w),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 5.w,
+                                  ),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -731,8 +790,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                         'Short Learning Videos',
                                         style: theme.textTheme.titleMedium
                                             ?.copyWith(
-                                          fontWeight: FontWeight.w800,
-                                        ),
+                                              fontWeight: FontWeight.w800,
+                                            ),
                                       ),
                                       TextButton(
                                         onPressed: () {
@@ -797,8 +856,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         child: Column(
                           children: [
                             Padding(
-                              padding:
-                                  EdgeInsets.symmetric(horizontal: 5.w),
+                              padding: EdgeInsets.symmetric(horizontal: 5.w),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -852,8 +910,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 5.w),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 5.w,
+                                  ),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -862,8 +921,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                         section.title,
                                         style: theme.textTheme.titleMedium
                                             ?.copyWith(
-                                          fontWeight: FontWeight.w800,
-                                        ),
+                                              fontWeight: FontWeight.w800,
+                                            ),
                                       ),
                                       Consumer<AuthProvider>(
                                         builder: (context, auth, _) {
@@ -900,7 +959,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                 SizedBox(height: 1.h),
                                 HorizontalCourses(
                                   courses: courses,
-                                  isPremium: context
+                                  isPremium:
+                                      context
                                           .read<AuthProvider>()
                                           .user
                                           ?.isPremium ??
@@ -1469,11 +1529,15 @@ class _DashboardPillChip extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
+  final bool isLocked;
+  final bool onDarkTheme;
 
   const _DashboardPillChip({
     required this.icon,
     required this.label,
     required this.onTap,
+    this.isLocked = false,
+    this.onDarkTheme = false,
   });
 
   @override
@@ -1482,7 +1546,9 @@ class _DashboardPillChip extends StatelessWidget {
     final cs = theme.colorScheme;
 
     return Material(
-      color: cs.primaryContainer.withValues(alpha: 0.35),
+      color: onDarkTheme
+          ? Colors.white.withValues(alpha: 0.1)
+          : cs.primaryContainer.withValues(alpha: 0.35),
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         onTap: onTap,
@@ -1492,22 +1558,40 @@ class _DashboardPillChip extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: cs.primary.withValues(alpha: 0.15),
+              color: isLocked
+                  ? (onDarkTheme ? Colors.white70 : cs.error).withValues(
+                      alpha: 0.3,
+                    )
+                  : (onDarkTheme ? Colors.white : cs.primary).withValues(
+                      alpha: 0.15,
+                    ),
               width: 1.5,
             ),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: cs.primary, size: 22),
-              const SizedBox(width: 10),
+              Icon(
+                isLocked ? Icons.lock_outline_rounded : icon,
+                color: isLocked
+                    ? (onDarkTheme
+                          ? Colors.white.withValues(alpha: 0.8)
+                          : cs.error)
+                    : (onDarkTheme ? Colors.white : cs.primary),
+                size: 20,
+              ),
+              const SizedBox(width: 8),
               Flexible(
                 child: Text(
                   label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.labelLarge?.copyWith(
-                    color: cs.onPrimaryContainer,
+                    color: isLocked
+                        ? (onDarkTheme
+                              ? Colors.white.withValues(alpha: 0.8)
+                              : cs.error)
+                        : (onDarkTheme ? Colors.white : cs.onPrimaryContainer),
                     fontWeight: FontWeight.w800,
                     letterSpacing: 0.2,
                   ),
