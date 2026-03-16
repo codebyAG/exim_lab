@@ -305,443 +305,401 @@ class _DashboardBodyState extends State<_DashboardBody> {
     });
 
     return Scaffold(
-        backgroundColor: cs.surface,
-        floatingActionButton: moduleProvider.isEnabled('aiChat')
-            ? FloatingActionButton(
-                backgroundColor: cs.primary,
-                tooltip: t.translate('ai_support'),
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+      backgroundColor: cs.surface,
+      floatingActionButton: moduleProvider.isEnabled('aiChat')
+          ? FloatingActionButton(
+              backgroundColor: cs.primary,
+              tooltip: t.translate('ai_support'),
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              onPressed: () {
+                final isPremium =
+                    context.read<AuthProvider>().user?.isPremium ?? false;
+                if (isPremium) {
+                  AppNavigator.push(context, const AiChatScreen());
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (_) => const PremiumUnlockDialog(),
+                  );
+                }
+              },
+              child: Icon(Icons.support_agent, color: cs.onPrimary, size: 28),
+            )
+          : null,
+      body: RefreshIndicator(
+        onRefresh: () => context.read<DashboardProvider>().fetchDashboardData(),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            // 1. PREMIUM FLOATING HEADER
+            _buildShowcase(
+              key: _headerKey,
+              title: 'tut_header_title',
+              description: 'tut_header_desc',
+              shapeBorder: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(32),
                 ),
-                onPressed: () {
-                  final isPremium =
-                      context.read<AuthProvider>().user?.isPremium ?? false;
-                  if (isPremium) {
-                    AppNavigator.push(context, const AiChatScreen());
-                  } else {
-                    showDialog(
-                      context: context,
-                      builder: (_) => const PremiumUnlockDialog(),
-                    );
-                  }
-                },
-                child: Icon(Icons.support_agent, color: cs.onPrimary, size: 28),
-              )
-            : null,
-        body: RefreshIndicator(
-          onRefresh: () =>
-              context.read<DashboardProvider>().fetchDashboardData(),
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              // 1. PREMIUM FLOATING HEADER
-              _buildShowcase(
-                key: _headerKey,
-                title: 'tut_header_title',
-                description: 'tut_header_desc',
-                shapeBorder: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(
+              ),
+              child: Container(
+                margin: EdgeInsets.only(bottom: 2.h),
+                padding: EdgeInsets.fromLTRB(5.w, 6.h, 5.w, 4.h),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      cs.primary,
+                      cs.primary.withValues(alpha: 0.9),
+                      Color.lerp(cs.primary, cs.secondary, 0.3)!,
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
+                  ),
+                  borderRadius: const BorderRadius.vertical(
                     bottom: Radius.circular(32),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: cs.primary.withValues(alpha: 0.35),
+                      blurRadius: 24,
+                      offset: const Offset(0, 12),
+                    ),
+                    BoxShadow(
+                      color: cs.primary.withValues(alpha: 0.15),
+                      blurRadius: 40,
+                      offset: const Offset(0, 20),
+                    ),
+                  ],
                 ),
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 2.h),
-                  padding: EdgeInsets.fromLTRB(5.w, 6.h, 5.w, 4.h),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        cs.primary,
-                        cs.primary.withValues(alpha: 0.9),
-                        Color.lerp(cs.primary, cs.secondary, 0.3)!,
-                      ],
-                      stops: const [0.0, 0.5, 1.0],
-                    ),
-                    borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(32),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: cs.primary.withValues(alpha: 0.35),
-                        blurRadius: 24,
-                        offset: const Offset(0, 12),
-                      ),
-                      BoxShadow(
-                        color: cs.primary.withValues(alpha: 0.15),
-                        blurRadius: 40,
-                        offset: const Offset(0, 20),
-                      ),
-                    ],
-                  ),
-                  child: Stack(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Welcome & Name
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        '👋 ',
-                                        style: TextStyle(fontSize: 14.sp),
-                                      ),
-                                      Text(
-                                        t.translate('welcome_back'),
-                                        style: theme.textTheme.bodyMedium
-                                            ?.copyWith(
-                                              color: Colors.white.withValues(
-                                                alpha: 0.85,
-                                              ),
-                                              letterSpacing: 0.5,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    context.watch<AuthProvider>().user?.name ??
-                                        t.translate('guest_user'),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: theme.textTheme.headlineSmall
-                                        ?.copyWith(
-                                          fontWeight: FontWeight.w900,
-                                          color: Colors.white,
-                                          letterSpacing: -0.5,
-                                          fontSize: 22.sp,
-                                        ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          // Gallery & News Pillars
-                          Row(
-                            children: [
-                              Expanded(
-                                child: _buildShowcase(
-                                  key: _galleryHeaderKey,
-                                  title: 'tut_gallery_title',
-                                  description: 'tut_gallery_desc',
-                                  child: _HeaderPill(
-                                    icon: Icons.auto_awesome_motion_rounded,
-                                    label: t.translate('gallery'),
-                                    onTap: () => AppNavigator.push(
-                                      context,
-                                      const GalleryScreen(),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: _HeaderPill(
-                                  icon: Icons.newspaper_rounded,
-                                  label: t.translate('news'),
-                                  onTap: () => AppNavigator.push(
-                                    context,
-                                    const NewsListScreen(),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-                          // Bottom icons row
-                          Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 14,
-                                  vertical: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.18),
-                                  borderRadius: BorderRadius.circular(24),
-                                  border: Border.all(
-                                    color: Colors.white.withValues(alpha: 0.15),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
+                child: Stack(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Welcome & Name
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
                                   children: [
-                                    const Icon(
-                                      Icons.auto_awesome_rounded,
-                                      size: 14,
-                                      color: Colors.white,
-                                    ),
-                                    const SizedBox(width: 6),
                                     Text(
-                                      t.translate('continue_journey'),
-                                      style: theme.textTheme.labelMedium
+                                      '👋 ',
+                                      style: TextStyle(fontSize: 14.sp),
+                                    ),
+                                    Text(
+                                      t.translate('welcome_back'),
+                                      style: theme.textTheme.bodyMedium
                                           ?.copyWith(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w700,
-                                            letterSpacing: 0.2,
+                                            color: Colors.white.withValues(
+                                              alpha: 0.85,
+                                            ),
+                                            letterSpacing: 0.5,
+                                            fontWeight: FontWeight.w500,
                                           ),
                                     ),
                                   ],
                                 ),
-                              ),
-                              const Spacer(),
-                              Consumer<NotificationsProvider>(
-                                builder: (context, notifProvider, child) {
-                                  return Stack(
-                                    clipBehavior: Clip.none,
-                                    children: [
-                                      IconButton(
-                                        onPressed: () => AppNavigator.push(
-                                          context,
-                                          const NotificationsScreen(),
-                                        ),
-                                        icon: const Icon(
-                                          Icons.notifications_outlined,
-                                          color: Colors.white,
-                                          size: 24,
-                                        ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  context.watch<AuthProvider>().user?.name ??
+                                      t.translate('guest_user'),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: theme.textTheme.headlineSmall
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.white,
+                                        letterSpacing: -0.5,
+                                        fontSize: 22.sp,
                                       ),
-                                      if (notifProvider.unreadCount > 0)
-                                        Positioned(
-                                          right: 4,
-                                          top: 4,
-                                          child: Container(
-                                            padding: const EdgeInsets.all(2),
-                                            decoration: BoxDecoration(
-                                              color: cs.error,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            constraints: const BoxConstraints(
-                                              minWidth: 16,
-                                              minHeight: 16,
-                                            ),
-                                            child: Text(
-                                              '${notifProvider.unreadCount}',
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 9,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        ),
-                                    ],
-                                  );
-                                },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        // Gallery & News Pillars
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildShowcase(
+                                key: _galleryHeaderKey,
+                                title: 'tut_gallery_title',
+                                description: 'tut_gallery_desc',
+                                child: _HeaderPill(
+                                  icon: Icons.auto_awesome_motion_rounded,
+                                  label: t.translate('gallery'),
+                                  onTap: () => AppNavigator.push(
+                                    context,
+                                    const GalleryScreen(),
+                                  ),
+                                ),
                               ),
-                              const SizedBox(width: 8),
-                              InkWell(
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: _HeaderPill(
+                                icon: Icons.newspaper_rounded,
+                                label: t.translate('news'),
                                 onTap: () => AppNavigator.push(
                                   context,
-                                  const ProfileScreen(),
+                                  const NewsListScreen(),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        // Bottom icons row
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.18),
+                                borderRadius: BorderRadius.circular(24),
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.15),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.auto_awesome_rounded,
+                                    size: 14,
+                                    color: Colors.white,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    t.translate('continue_journey'),
+                                    style: theme.textTheme.labelMedium
+                                        ?.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w700,
+                                          letterSpacing: 0.2,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Spacer(),
+                            Consumer<NotificationsProvider>(
+                              builder: (context, notifProvider, child) {
+                                return Stack(
+                                  clipBehavior: Clip.none,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () => AppNavigator.push(
+                                        context,
+                                        const NotificationsScreen(),
+                                      ),
+                                      icon: const Icon(
+                                        Icons.notifications_outlined,
+                                        color: Colors.white,
+                                        size: 24,
+                                      ),
+                                    ),
+                                    if (notifProvider.unreadCount > 0)
+                                      Positioned(
+                                        right: 4,
+                                        top: 4,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(2),
+                                          decoration: BoxDecoration(
+                                            color: cs.error,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          constraints: const BoxConstraints(
+                                            minWidth: 16,
+                                            minHeight: 16,
+                                          ),
+                                          child: Text(
+                                            '${notifProvider.unreadCount}',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 9,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              },
+                            ),
+                            const SizedBox(width: 8),
+                            InkWell(
+                              onTap: () => AppNavigator.push(
+                                context,
+                                const ProfileScreen(),
+                              ),
+                              child: Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.3),
+                                    width: 1,
+                                  ),
                                 ),
                                 child: Container(
-                                  padding: const EdgeInsets.all(2),
-                                  decoration: BoxDecoration(
+                                  height: 36,
+                                  width: 36,
+                                  decoration: const BoxDecoration(
                                     shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: Colors.white.withValues(
-                                        alpha: 0.3,
-                                      ),
-                                      width: 1,
-                                    ),
                                   ),
-                                  child: Container(
-                                    height: 36,
-                                    width: 36,
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                    ),
-                                    clipBehavior: Clip.antiAlias,
-                                    child: Consumer<AuthProvider>(
-                                      builder: (context, auth, _) {
-                                        final user = auth.user;
-                                        if (user?.avatarUrl != null &&
-                                            user!.avatarUrl!.isNotEmpty) {
-                                          return CachedNetworkImage(
-                                            imageUrl: user.avatarUrl!,
-                                            fit: BoxFit.cover,
-                                            placeholder: (context, url) =>
-                                                Container(
-                                                  color: Colors.white10,
-                                                ),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    const Icon(
-                                                      Icons.person_rounded,
-                                                      size: 20,
-                                                      color: Colors.white,
-                                                    ),
-                                          );
-                                        }
-                                        return const CircleAvatar(
-                                          radius: 18,
-                                          backgroundColor: Colors.white24,
-                                          child: Icon(
-                                            Icons.person_rounded,
-                                            size: 20,
-                                            color: Colors.white,
-                                          ),
+                                  clipBehavior: Clip.antiAlias,
+                                  child: Consumer<AuthProvider>(
+                                    builder: (context, auth, _) {
+                                      final user = auth.user;
+                                      if (user?.avatarUrl != null &&
+                                          user!.avatarUrl!.isNotEmpty) {
+                                        return CachedNetworkImage(
+                                          imageUrl: user.avatarUrl!,
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) =>
+                                              Container(color: Colors.white10),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(
+                                                Icons.person_rounded,
+                                                size: 20,
+                                                color: Colors.white,
+                                              ),
                                         );
-                                      },
-                                    ),
+                                      }
+                                      return const CircleAvatar(
+                                        radius: 18,
+                                        backgroundColor: Colors.white24,
+                                        child: Icon(
+                                          Icons.person_rounded,
+                                          size: 20,
+                                          color: Colors.white,
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
+            ),
 
-              // DYNAMIC CONTENT
-              Consumer<DashboardProvider>(
-                builder: (context, dashboard, child) {
-                  if (dashboard.isLoading) {
-                    return const DashboardShimmer();
-                  }
+            // DYNAMIC CONTENT
+            Consumer<DashboardProvider>(
+              builder: (context, dashboard, child) {
+                if (dashboard.isLoading) {
+                  return const DashboardShimmer();
+                }
 
-                  if (dashboard.error != null) {
-                    return Center(child: Text('Error: ${dashboard.error}'));
-                  }
+                if (dashboard.error != null) {
+                  return Center(child: Text('Error: ${dashboard.error}'));
+                }
 
-                  final data = dashboard.data;
-                  if (data == null) return const SizedBox();
+                final data = dashboard.data;
+                if (data == null) return const SizedBox();
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // CAROUSEL
-                      if (data.addons.carousel.isNotEmpty) ...[
-                        ModuleVisibility(
-                          module: 'carousel',
-                          child: FadeIn(
-                            duration: const Duration(milliseconds: 800),
-                            child: _buildShowcase(
-                              key: _carouselKey,
-                              title: 'tut_carousel_title',
-                              description: 'tut_carousel_desc',
-                              child: CtaCarousel(banners: data.addons.carousel),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 2.h),
-                      ],
-
-                      // SHORTS
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // CAROUSEL
+                    if (data.addons.carousel.isNotEmpty) ...[
                       ModuleVisibility(
-                        module: 'shortVideos',
-                        child: FadeInRight(
-                          delay: const Duration(milliseconds: 200),
+                        module: 'carousel',
+                        child: FadeIn(
+                          duration: const Duration(milliseconds: 800),
                           child: _buildShowcase(
-                            key: _shortsKey,
-                            title: 'tut_shorts_title',
-                            description: 'tut_shorts_desc',
-                            child: const HomeShortsSection(),
+                            key: _carouselKey,
+                            title: 'tut_carousel_title',
+                            description: 'tut_carousel_desc',
+                            child: CtaCarousel(banners: data.addons.carousel),
                           ),
                         ),
                       ),
                       SizedBox(height: 2.h),
+                    ],
 
-                      // QUICK ACTIONS
-                      _buildShowcase(
-                        key: _actionsKey,
-                        title: 'tut_actions_title',
-                        description: 'tut_actions_desc',
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5.w),
-                          child: Column(
-                            children: [
-                              FadeInUp(
-                                delay: const Duration(milliseconds: 300),
-                                child: Row(
-                                  children: [
-                                    Expanded(
+                    // SHORTS
+                    ModuleVisibility(
+                      module: 'shortVideos',
+                      child: FadeInRight(
+                        delay: const Duration(milliseconds: 200),
+                        child: _buildShowcase(
+                          key: _shortsKey,
+                          title: 'tut_shorts_title',
+                          description: 'tut_shorts_desc',
+                          child: const HomeShortsSection(),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 2.h),
+
+                    // QUICK ACTIONS
+                    _buildShowcase(
+                      key: _actionsKey,
+                      title: 'tut_actions_title',
+                      description: 'tut_actions_desc',
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 5.w),
+                        child: Column(
+                          children: [
+                            FadeInUp(
+                              delay: const Duration(milliseconds: 300),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: QuickCard(
+                                      icon: Icons.video_library_rounded,
+                                      title: t.translate('my_courses'),
+                                      subtitle: t.translate('completed_status'),
+                                      onTap: () {
+                                        context
+                                            .read<AnalyticsService>()
+                                            .logButtonTap(
+                                              buttonName: 'my_courses_card',
+                                              screenName: 'dashboard',
+                                            );
+                                        AppNavigator.push(
+                                          context,
+                                          const CoursesListScreen(),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(width: 3.w),
+                                  Expanded(
+                                    child: ModuleVisibility(
+                                      module: 'quizzes',
                                       child: QuickCard(
-                                        icon: Icons.video_library_rounded,
-                                        title: t.translate('my_courses'),
+                                        icon: Icons.quiz_rounded,
+                                        title: t.translate('quizzes_title'),
                                         subtitle: t.translate(
-                                          'completed_status',
+                                          'quizzes_subtitle',
                                         ),
                                         onTap: () {
                                           context
                                               .read<AnalyticsService>()
                                               .logButtonTap(
-                                                buttonName: 'my_courses_card',
+                                                buttonName: 'quizzes_card',
                                                 screenName: 'dashboard',
                                               );
-                                          AppNavigator.push(
-                                            context,
-                                            const CoursesListScreen(),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    SizedBox(width: 3.w),
-                                    Expanded(
-                                      child: ModuleVisibility(
-                                        module: 'quizzes',
-                                        child: QuickCard(
-                                          icon: Icons.quiz_rounded,
-                                          title: t.translate('quizzes_title'),
-                                          subtitle: t.translate(
-                                            'quizzes_subtitle',
-                                          ),
-                                          onTap: () {
-                                            context
-                                                .read<AnalyticsService>()
-                                                .logButtonTap(
-                                                  buttonName: 'quizzes_card',
-                                                  screenName: 'dashboard',
-                                                );
-                                            if (context
-                                                    .read<AuthProvider>()
-                                                    .user
-                                                    ?.isPremium ??
-                                                false) {
-                                              AppNavigator.push(
-                                                context,
-                                                const QuizTopicsScreen(),
-                                              );
-                                            } else {
-                                              showDialog(
-                                                context: context,
-                                                builder: (_) =>
-                                                    const PremiumUnlockDialog(),
-                                              );
-                                            }
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              FadeInUp(
-                                delay: const Duration(milliseconds: 350),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: QuickCard(
-                                        icon: Icons.smart_toy_rounded,
-                                        title: t.translate('ai_expert'),
-                                        subtitle: t.translate('ai_expert_sub'),
-                                        onTap: () {
                                           if (context
                                                   .read<AuthProvider>()
                                                   .user
@@ -749,7 +707,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                               false) {
                                             AppNavigator.push(
                                               context,
-                                              const AiChatScreen(),
+                                              const QuizTopicsScreen(),
                                             );
                                           } else {
                                             showDialog(
@@ -761,81 +719,72 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                         },
                                       ),
                                     ),
-                                    SizedBox(width: 3.w),
-                                    Expanded(
-                                      child: QuickCard(
-                                        icon: Icons.collections_rounded,
-                                        title: t.translate('gallery'),
-                                        subtitle: t.translate(
-                                          'gallery_subtitle',
-                                        ),
-                                        onTap: () => AppNavigator.push(
-                                          context,
-                                          const GalleryScreen(),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 3.h),
-
-                      // DYNAMIC SECTIONS
-                      ...data.sections.map((section) {
-                        if (section.key == 'continue') {
-                          final courses = section.data.cast<CourseModel>();
-                          if (courses.isEmpty) return const SizedBox();
-                          return ModuleVisibility(
-                            module: 'continueLearning',
-                            child: _buildShowcase(
-                              key: _continueKey,
-                              title: 'tut_continue_title',
-                              description: 'tut_continue_desc',
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SectionHeader(
-                                    title: section.title,
-                                    subtitle: section.subtitle,
                                   ),
-                                  SizedBox(height: 1.5.h),
-                                  SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w,
-                                    ),
-                                    child: Row(
-                                      children: courses
-                                          .map(
-                                            (c) => ContinueCard(
-                                              course: c,
-                                              onTap: () => AppNavigator.push(
-                                                context,
-                                                CourseDetailsScreen(
-                                                  courseId: c.id,
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                          .toList(),
-                                    ),
-                                  ),
-                                  SizedBox(height: 2.h),
                                 ],
                               ),
                             ),
-                          );
-                        } else if (section.key == 'course' ||
-                            section.key.contains('Popular') ||
-                            section.key.contains('Recommended')) {
-                          final courses = section.data.cast<CourseModel>();
-                          if (courses.isEmpty) return const SizedBox();
-                          return ModuleVisibility(
-                            module: 'courses',
+                            const SizedBox(height: 12),
+                            FadeInUp(
+                              delay: const Duration(milliseconds: 350),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: QuickCard(
+                                      icon: Icons.smart_toy_rounded,
+                                      title: t.translate('ai_expert'),
+                                      subtitle: t.translate('ai_expert_sub'),
+                                      onTap: () {
+                                        if (context
+                                                .read<AuthProvider>()
+                                                .user
+                                                ?.isPremium ??
+                                            false) {
+                                          AppNavigator.push(
+                                            context,
+                                            const AiChatScreen(),
+                                          );
+                                        } else {
+                                          showDialog(
+                                            context: context,
+                                            builder: (_) =>
+                                                const PremiumUnlockDialog(),
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(width: 3.w),
+                                  Expanded(
+                                    child: QuickCard(
+                                      icon: Icons.collections_rounded,
+                                      title: t.translate('gallery'),
+                                      subtitle: t.translate('gallery_subtitle'),
+                                      onTap: () => AppNavigator.push(
+                                        context,
+                                        const GalleryScreen(),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 3.h),
+
+                    // DYNAMIC SECTIONS
+                    ...data.sections.map((section) {
+                      if (section.key == 'continue') {
+                        final courses = section.data.cast<CourseModel>();
+                        if (courses.isEmpty) return const SizedBox();
+                        return ModuleVisibility(
+                          module: 'continueLearning',
+                          child: _buildShowcase(
+                            key: _continueKey,
+                            title: 'tut_continue_title',
+                            description: 'tut_continue_desc',
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -844,126 +793,167 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                   subtitle: section.subtitle,
                                 ),
                                 SizedBox(height: 1.5.h),
-                                HorizontalCourses(courses: courses),
-                                SizedBox(height: 2.h),
-                              ],
-                            ),
-                          );
-                        } else if (section.key == 'freeVideos') {
-                          final videos = section.data.cast<FreeVideoModel>();
-                          if (videos.isEmpty) return const SizedBox();
-                          return ModuleVisibility(
-                            module: 'freeVideos',
-                            child: _buildShowcase(
-                              key: _newsKey,
-                              title: 'tut_news_title',
-                              description: 'tut_news_desc',
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SectionHeader(
-                                    title: section.title,
-                                    subtitle: section.subtitle,
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 5.w,
                                   ),
-                                  SizedBox(height: 1.5.h),
-                                  FreeVideosSection(videos: videos),
-                                  SizedBox(height: 2.h),
-                                ],
-                              ),
-                            ),
-                          );
-                        } else if (section.key == 'banner') {
-                          final banners = section.data.cast<BannerModel>();
-                          if (banners.isEmpty) return const SizedBox();
-
-                          return ModuleVisibility(
-                            module: 'banners',
-                            child: Column(
-                              children: [
-                                InlineBanner(banners: banners),
+                                  child: Row(
+                                    children: courses
+                                        .map(
+                                          (c) => ContinueCard(
+                                            course: c,
+                                            onTap: () => AppNavigator.push(
+                                              context,
+                                              CourseDetailsScreen(
+                                                courseId: c.id,
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                        .toList(),
+                                  ),
+                                ),
                                 SizedBox(height: 2.h),
                               ],
                             ),
-                          );
-                        }
-                        return const SizedBox();
-                      }),
-
-                      // TOOLS
-                      ModuleVisibility(
-                        module: 'tools',
-                        child: _buildShowcase(
-                          key: _toolsKey,
-                          title: 'tut_tools_title',
-                          description: 'tut_tools_desc',
+                          ),
+                        );
+                      } else if (section.key == 'course' ||
+                          section.key.contains('Popular') ||
+                          section.key.contains('Recommended')) {
+                        final courses = section.data.cast<CourseModel>();
+                        if (courses.isEmpty) return const SizedBox();
+                        return ModuleVisibility(
+                          module: 'courses',
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SectionHeader(
-                                title: t.translate('tools_section_title'),
-                                subtitle: t.translate('tools_section_subtitle'),
+                                title: section.title,
+                                subtitle: section.subtitle,
                               ),
                               SizedBox(height: 1.5.h),
-                              Consumer<AuthProvider>(
-                                builder: (context, auth, _) => ToolsSection(
-                                  isPremium: auth.user?.isPremium ?? false,
-                                ),
-                              ),
+                              HorizontalCourses(courses: courses),
+                              SizedBox(height: 2.h),
                             ],
                           ),
+                        );
+                      } else if (section.key == 'freeVideos') {
+                        final videos = section.data.cast<FreeVideoModel>();
+                        if (videos.isEmpty) return const SizedBox();
+                        return ModuleVisibility(
+                          module: 'freeVideos',
+                          child: _buildShowcase(
+                            key: _newsKey,
+                            title: 'tut_news_title',
+                            description: 'tut_news_desc',
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SectionHeader(
+                                  title: section.title,
+                                  subtitle: section.subtitle,
+                                ),
+                                SizedBox(height: 1.5.h),
+                                FreeVideosSection(videos: videos),
+                                SizedBox(height: 2.h),
+                              ],
+                            ),
+                          ),
+                        );
+                      } else if (section.key == 'banner') {
+                        final banners = section.data.cast<BannerModel>();
+                        if (banners.isEmpty) return const SizedBox();
+
+                        return ModuleVisibility(
+                          module: 'banners',
+                          child: Column(
+                            children: [
+                              InlineBanner(banners: banners),
+                              SizedBox(height: 2.h),
+                            ],
+                          ),
+                        );
+                      }
+                      return const SizedBox();
+                    }),
+
+                    // TOOLS
+                    ModuleVisibility(
+                      module: 'tools',
+                      child: _buildShowcase(
+                        key: _toolsKey,
+                        title: 'tut_tools_title',
+                        description: 'tut_tools_desc',
+                        child: Column(
+                          children: [
+                            SectionHeader(
+                              title: t.translate('tools_section_title'),
+                              subtitle: t.translate('tools_section_subtitle'),
+                            ),
+                            SizedBox(height: 1.5.h),
+                            Consumer<AuthProvider>(
+                              builder: (context, auth, _) => ToolsSection(
+                                isPremium: auth.user?.isPremium ?? false,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(height: 3.h),
+                    ),
+                    SizedBox(height: 3.h),
 
-                      // 9. FREE PDF PROMO (New)
-                      _buildFreePdfPromo(context, cs),
-                      SizedBox(height: 3.h),
+                    // 9. FREE PDF PROMO (New)
+                    _buildFreePdfPromo(context, cs),
+                    SizedBox(height: 3.h),
 
-                      // 10. TESTIMONIALS (New)
-                      _buildTestimonials(context, cs, theme),
-                      SizedBox(height: 3.h),
+                    // 10. TESTIMONIALS (New)
+                    _buildTestimonials(context, cs, theme),
+                    SizedBox(height: 3.h),
 
-                      // 11. SOCIAL CONNECT (New)
-                      _buildShowcase(
-                        key: _socialKey,
-                        title: 'tut_social_title',
-                        description: 'tut_social_desc',
-                        child: _buildSocialConnect(context, cs, theme),
-                      ),
-                      SizedBox(height: 3.h),
+                    // 11. SOCIAL CONNECT (New)
+                    _buildShowcase(
+                      key: _socialKey,
+                      title: 'tut_social_title',
+                      description: 'tut_social_desc',
+                      child: _buildSocialConnect(context, cs, theme),
+                    ),
+                    SizedBox(height: 3.h),
 
-                      // 12. FREE COUNSELING (New)
-                      _buildFreeCounseling(context, cs),
-                      SizedBox(height: 3.h),
-                    ],
-                  );
-                },
-              ),
-            ],
-          ),
+                    // 12. FREE COUNSELING (New)
+                    _buildFreeCounseling(context, cs),
+                    SizedBox(height: 3.h),
+                  ],
+                );
+              },
+            ),
+          ],
         ),
-        bottomNavigationBar: _buildShowcase(
-          key: _bottomNavKey,
-          title: 'tut_nav_title',
-          description: 'tut_nav_desc',
-          shapeBorder: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: NavigationBar(
-            destinations: navItems.map((item) {
-              return NavigationDestination(
-                icon: item.icon,
-                selectedIcon: item.activeIcon,
-                label: item.label!,
-              );
-            }).toList(),
-            selectedIndex: 0,
-            onDestinationSelected: (index) {
-              if (index < navActions.length && navActions[index] != null) {
-                navActions[index]!();
-              }
-            },
-          ),
+      ),
+      bottomNavigationBar: _buildShowcase(
+        key: _bottomNavKey,
+        title: 'tut_nav_title',
+        description: 'tut_nav_desc',
+        shapeBorder: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
+        child: NavigationBar(
+          destinations: navItems.map((item) {
+            return NavigationDestination(
+              icon: item.icon,
+              selectedIcon: item.activeIcon,
+              label: item.label!,
+            );
+          }).toList(),
+          selectedIndex: 0,
+          onDestinationSelected: (index) {
+            if (index < navActions.length && navActions[index] != null) {
+              navActions[index]!();
+            }
+          },
+        ),
+      ),
     );
   }
 
