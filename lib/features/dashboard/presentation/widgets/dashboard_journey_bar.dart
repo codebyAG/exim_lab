@@ -47,10 +47,10 @@ class DashboardJourneyBar extends StatelessWidget {
                   Text(
                     'Your Learning Journey',
                     style: TextStyle(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w800,
+                      fontSize: 14.5.sp,
+                      fontWeight: FontWeight.w900,
                       color: cs.onSurface,
-                      letterSpacing: -0.2,
+                      letterSpacing: -0.4,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -59,8 +59,8 @@ class DashboardJourneyBar extends StatelessWidget {
                       Text(
                         '$completedCourses / $totalCourses Courses',
                         style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w700,
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w800,
                           color: cs.primary,
                         ),
                       ),
@@ -102,8 +102,8 @@ class DashboardJourneyBar extends StatelessWidget {
                   Text(
                     '$streakDays Day Streak',
                     style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w800,
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w900,
                       color: cs.primary,
                     ),
                   ),

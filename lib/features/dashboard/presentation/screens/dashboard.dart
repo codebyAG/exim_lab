@@ -38,6 +38,7 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/premium_unlock_
 import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_continue_hero.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_journey_bar.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/interest_dialog.dart';
+import 'package:exim_lab/core/functions/pdf_utils.dart';
 
 class DashboardScreen extends StatelessWidget {
   DashboardScreen({super.key});
@@ -537,7 +538,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                         return CachedNetworkImage(
                                           imageUrl: user.avatarUrl!,
                                           fit: BoxFit.cover,
-                                          placeholder: (_, __) => Container(
+                                          placeholder: (_, _) => Container(
                                             color: cs.primaryContainer,
                                           ),
                                           errorWidget: (_, __, ___) => Icon(
@@ -806,10 +807,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                     children: [
                                       Text(
                                         'Short Learning Videos',
-                                        style: theme.textTheme.titleMedium
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.w800,
-                                            ),
+                                        style: theme.textTheme.titleLarge?.copyWith(
+                                          fontWeight: FontWeight.w900,
+                                          fontSize: 18,
+                                        ),
                                       ),
                                       TextButton(
                                         onPressed: () {
@@ -881,8 +882,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                 children: [
                                   Text(
                                     t.translate('tools_section_title'),
-                                    style: theme.textTheme.titleMedium
-                                        ?.copyWith(fontWeight: FontWeight.w800),
+                                    style: theme.textTheme.titleLarge?.copyWith(
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: 18,
+                                    ),
                                   ),
                                   TextButton(
                                     onPressed: () {},
@@ -1169,7 +1172,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => _showPdfSelectionDialog(context),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: cs.primary,
                         foregroundColor: cs.onPrimary,
@@ -1193,6 +1196,43 @@ class _DashboardBodyState extends State<_DashboardBody> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showPdfSelectionDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Choose Your Guide"),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.picture_as_pdf, color: Colors.red),
+              title: const Text("Import Export Guide Vol 1"),
+              onTap: () {
+                Navigator.pop(context);
+                PdfUtils.openAssetPdf('assets/pdf/Import_Export_Guide.pdf');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.picture_as_pdf, color: Colors.red),
+              title: const Text("Import Export Guide Vol 2"),
+              onTap: () {
+                Navigator.pop(context);
+                PdfUtils.openAssetPdf('assets/pdf/Import_Export_Guide2.pdf');
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Close"),
+          ),
+        ],
       ),
     );
   }
