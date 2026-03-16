@@ -1277,19 +1277,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
       borderRadius: BorderRadius.circular(16),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
-            ),
-            child: assetPath != null
-                ? Image.asset(assetPath, width: 28, height: 28, color: color)
-                : Icon(icon, color: color, size: 28),
-          ),
-          const SizedBox(height: 8),
+          assetPath != null
+              ? Image.asset(assetPath, width: 40, height: 40)
+              : Icon(icon, color: color, size: 40),
+          const SizedBox(height: 10),
           Text(
             label,
             style: TextStyle(
