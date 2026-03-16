@@ -236,6 +236,12 @@ class _DashboardBodyState extends State<_DashboardBody> {
     final cs = theme.colorScheme;
     final moduleProvider = Provider.of<ModuleProvider>(context);
 
+    // Track which tutorial keys have been assigned in this build
+    // to prevent "Multiple widgets used the same GlobalKey" error
+    bool assignedContinue = false;
+    bool assignedPopular = false;
+    bool assignedFreeVideos = false;
+
     // Prepare Bottom Navigation Items dynamically
     List<BottomNavigationBarItem> navItems = [
       BottomNavigationBarItem(
@@ -802,9 +808,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
 
                     // DYNAMIC SECTIONS
                     ...data.sections.map((section) {
-                      if (section.key == 'continue') {
+                      if (section.key == 'continue' && !assignedContinue) {
                         final courses = section.data.cast<CourseModel>();
                         if (courses.isEmpty) return const SizedBox();
+                        assignedContinue = true;
                         return ModuleVisibility(
                           module: 'continueLearning',
                           child: _buildShowcase(
@@ -845,11 +852,13 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             ),
                           ),
                         );
-                      } else if (section.key == 'course' ||
-                          section.key.contains('Popular') ||
-                          section.key.contains('Recommended')) {
+                      } else if ((section.key == 'course' ||
+                              section.key.contains('Popular') ||
+                              section.key.contains('Recommended')) &&
+                          !assignedPopular) {
                         final courses = section.data.cast<CourseModel>();
                         if (courses.isEmpty) return const SizedBox();
+                        assignedPopular = true;
                         return ModuleVisibility(
                           module: 'courses',
                           child: _buildShowcase(
@@ -870,9 +879,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             ),
                           ),
                         );
-                      } else if (section.key == 'freeVideos') {
+                      } else if (section.key == 'freeVideos' && !assignedFreeVideos) {
                         final videos = section.data.cast<FreeVideoModel>();
                         if (videos.isEmpty) return const SizedBox();
+                        assignedFreeVideos = true;
                         return ModuleVisibility(
                           module: 'freeVideos',
                           child: _buildShowcase(
