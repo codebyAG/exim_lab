@@ -142,7 +142,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
     final tourSeen = prefs.getBool('dashboard_v3_tour_seen') ?? false;
 
     if (!mounted) return;
-    
+
     // Check interest status
     final user = context.read<AuthProvider>().user;
     final interestDialogShown = prefs.getBool('interest_dialog_shown') ?? false;
@@ -187,7 +187,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
       _markTourSeen();
     } else {
       // Tour already seen, now check interest status or show promo banner
-      final hasNoInterest = user?.interestedIn == null ||
+      final hasNoInterest =
+          user?.interestedIn == null ||
           user!.interestedIn!.isEmpty ||
           user.interestedIn == '';
 
@@ -543,11 +544,12 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                           placeholder: (_, _) => Container(
                                             color: cs.primaryContainer,
                                           ),
-                                           errorWidget: (context, url, error) => Icon(
-                                            Icons.person_rounded,
-                                            size: 22,
-                                            color: cs.primary,
-                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              Icon(
+                                                Icons.person_rounded,
+                                                size: 22,
+                                                color: cs.primary,
+                                              ),
                                         );
                                       }
                                       return CircleAvatar(
@@ -751,7 +753,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             DashboardJourneyBar(
                               completedCourses:
                                   auth.user?.stats?.completedCourses ?? 0,
-                              totalCourses: auth.user?.stats?.totalCourses ?? 10,
+                              totalCourses:
+                                  auth.user?.stats?.totalCourses ?? 10,
                               streakDays: auth.user?.stats?.learningStreak ?? 0,
                             ),
                           ],
@@ -809,10 +812,11 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                     children: [
                                       Text(
                                         'Short Learning Videos',
-                                        style: theme.textTheme.titleLarge?.copyWith(
-                                          fontWeight: FontWeight.w900,
-                                          fontSize: 18,
-                                        ),
+                                        style: theme.textTheme.titleLarge
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.w900,
+                                              fontSize: 18,
+                                            ),
                                       ),
                                       TextButton(
                                         onPressed: () {
