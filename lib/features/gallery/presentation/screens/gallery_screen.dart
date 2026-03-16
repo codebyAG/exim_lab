@@ -56,131 +56,85 @@ class GalleryScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: cs.surface,
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 20.h,
-            floating: false,
-            pinned: true,
-            elevation: 0,
-            backgroundColor: cs.primary,
-            flexibleSpace: FlexibleSpaceBar(
-              centerTitle: true,
-              title: Text(
-                t.translate('gallery_title'),
-                style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 16.sp,
-                  color: Colors.white,
-                  letterSpacing: 0.5,
-                ),
-              ),
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [cs.primary, cs.primary.withValues(alpha: 0.8)],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: -10,
-                    right: -20,
-                    child: CircleAvatar(
-                      radius: 60,
-                      backgroundColor: Colors.white.withValues(alpha: 0.1),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 20,
-                    left: -10,
-                    child: CircleAvatar(
-                      radius: 40,
-                      backgroundColor: Colors.white.withValues(alpha: 0.08),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+      appBar: AppBar(
+        title: Text(
+          t.translate('gallery_title'),
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+            fontSize: 16.sp,
+            color: Colors.white,
           ),
-          SliverPadding(
-            padding: EdgeInsets.all(4.w),
-            sliver: SliverGrid(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 4.w,
-                mainAxisSpacing: 4.w,
-                childAspectRatio: 1.0,
-              ),
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final item = items[index];
-                  return FadeInUp(
-                    delay: Duration(milliseconds: 50 * (index % 10)),
-                    duration: const Duration(milliseconds: 500),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => PhotoViewScreen(
-                              items: items,
-                              initialIndex: index,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Hero(
-                        tag: 'gallery_${item.id}',
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: cs.shadow.withValues(alpha: 0.08),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: CachedNetworkImage(
-                              imageUrl: item.imageUrl,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => Container(
-                                color: cs.surfaceContainerHighest,
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: cs.primary.withValues(alpha: 0.3),
-                                  ),
-                                ),
-                              ),
-                              errorWidget: (context, url, error) => Container(
-                                color: cs.errorContainer,
-                                child: Icon(Icons.error, color: cs.error),
-                              ),
-                            ),
+        ),
+        centerTitle: true,
+        backgroundColor: const Color(0xFFFF8A00), // Unified Orange
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      body: GridView.builder(
+        padding: EdgeInsets.all(4.w),
+        physics: const BouncingScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 4.w,
+          mainAxisSpacing: 4.w,
+          childAspectRatio: 1.0,
+        ),
+        itemCount: items.length,
+        itemBuilder: (context, index) {
+          final item = items[index];
+          return FadeInUp(
+            delay: Duration(milliseconds: 50 * (index % 10)),
+            duration: const Duration(milliseconds: 500),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => PhotoViewScreen(
+                      items: items,
+                      initialIndex: index,
+                    ),
+                  ),
+                );
+              },
+              child: Hero(
+                tag: 'gallery_${item.id}',
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: cs.shadow.withValues(alpha: 0.08),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: CachedNetworkImage(
+                      imageUrl: item.imageUrl,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Container(
+                        color: cs.surfaceContainerHighest,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: cs.primary.withValues(alpha: 0.3),
                           ),
                         ),
                       ),
+                      errorWidget: (context, url, error) => Container(
+                        color: cs.errorContainer,
+                        child: Icon(Icons.error, color: cs.error),
+                      ),
                     ),
-                  );
-                },
-                childCount: items.length,
+                  ),
+                ),
               ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: SizedBox(height: 5.h),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
