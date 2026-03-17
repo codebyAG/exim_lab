@@ -16,6 +16,7 @@ class AuthDataSource {
     required String mobile,
     required String otp,
     String? fcmToken,
+    String? deviceId,
   }) async {
     final Map<String, dynamic> body = {
       "mobile": mobile,
@@ -26,6 +27,10 @@ class AuthDataSource {
 
     if (fcmToken != null) {
       body['fcm_token'] = fcmToken;
+    }
+
+    if (deviceId != null) {
+      body['device_id'] = deviceId;
     }
 
     return await callApi(

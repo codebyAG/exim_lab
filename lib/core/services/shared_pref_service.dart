@@ -83,4 +83,13 @@ class SharedPrefService {
       // ignore
     }
   }
+
+  Future<void> clearTourStatus() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('dashboard_v3_tour_seen');
+    } catch (e) {
+      // ignore
+    }
+  }
 }

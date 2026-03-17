@@ -5,6 +5,8 @@ import 'package:exim_lab/core/services/shared_pref_service.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:exim_lab/core/constants/analytics_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'dart:io';
 
 class AuthProvider extends ChangeNotifier {
   final AuthDataSource _dataSource = AuthDataSource();
@@ -94,13 +96,14 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final fcmToken = await _sharedPrefService
-          .getFcmToken(); // Get Saved FCM Token
+      final fcmToken = await _sharedPrefService.getFcmToken();
+      final deviceId = await _getDeviceId();
 
       final response = await _dataSource.verifyOtp(
         mobile: _currentMobile!,
         otp: otp,
         fcmToken: fcmToken,
+        deviceId: deviceId,
       );
 
       if (response['user'] != null) {
@@ -141,9 +144,26 @@ class AuthProvider extends ChangeNotifier {
   Future<void> logout() async {
     await _sharedPrefService.clearUser();
     await _sharedPrefService.clearToken();
+    await _sharedPrefService.clearTourStatus();
     await _analytics.logLogout();
     _user = null;
     notifyListeners();
+  }
+
+  Future<String?> _getDeviceId() async {
+    try {
+      final deviceInfo = DeviceInfoPlugin();
+      if (Platform.isAndroid) {
+        final androidInfo = await deviceInfo.androidInfo;
+        return androidInfo.id; // unique ID on Android
+      } else if (Platform.isIOS) {
+        final iosInfo = await deviceInfo.iosInfo;
+        return iosInfo.identifierForVendor; // unique ID on iOS
+      }
+    } catch (e) {
+      // ignore
+    }
+    return null;
   }
 
   Future<void> fetchProfile() async {
