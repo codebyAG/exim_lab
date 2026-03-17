@@ -395,8 +395,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
                   ),
                 ],
               ),
-              child: Column(
-                children: [
+              child: SafeArea(
+                bottom: false,
+                child: Column(
+                  children: [
                   // 1. HEADER
                   _buildShowcase(
                     key: _headerKey,
@@ -654,6 +656,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                 ],
               ),
             ),
+          ),
 
             // 3-END. DYNAMIC CONTENT
             Consumer<DashboardProvider>(
