@@ -371,379 +371,249 @@ class _DashboardBodyState extends State<_DashboardBody> {
               child: Icon(Icons.support_agent, color: cs.onPrimary, size: 28),
             )
           : null,
-      body: RefreshIndicator(
-        onRefresh: () => context.read<DashboardProvider>().fetchDashboardData(),
-        child: ListView(
-          controller: _scrollController,
-          cacheExtent: 1000,
-          padding: EdgeInsets.zero,
-          children: [
-            // 1 & 2. ORANGE TOP HEADER SECTION
-            Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(24),
-                  bottomRight: Radius.circular(24),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Color(0x0A000000),
-                    blurRadius: 20,
-                    offset: Offset(0, 4),
+      body: SafeArea(
+        bottom: false,
+        child: RefreshIndicator(
+          onRefresh: () =>
+              context.read<DashboardProvider>().fetchDashboardData(),
+          child: ListView(
+            controller: _scrollController,
+            cacheExtent: 1000,
+            padding: EdgeInsets.zero,
+            children: [
+              // 1 & 2. ORANGE TOP HEADER SECTION
+              Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(24),
+                    bottomRight: Radius.circular(24),
                   ),
-                ],
-              ),
-              child: SafeArea(
-                bottom: false,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0x0A000000),
+                      blurRadius: 20,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                ),
                 child: Column(
                   children: [
-                  // 1. HEADER
-                  _buildShowcase(
-                    key: _headerKey,
-                    title: 'tut_header_title',
-                    description: 'tut_header_desc',
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(5.w, 3.5.h, 5.w, 0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      '👋 ',
-                                      style: TextStyle(fontSize: 16.sp),
-                                    ),
-                                    Text(
-                                      '${t.translate('welcome_back')},',
-                                      style: theme.textTheme.bodyLarge
-                                          ?.copyWith(
-                                            color: const Color(0xFF1D1F33),
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 15.sp,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                                if (context.watch<AuthProvider>().user?.name !=
-                                        null &&
-                                    context
-                                        .watch<AuthProvider>()
-                                        .user!
-                                        .name!
-                                        .isNotEmpty)
-                                  Text(
-                                    context.read<AuthProvider>().user!.name!,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: theme.textTheme.headlineSmall
-                                        ?.copyWith(
-                                          fontWeight: FontWeight.w800,
-                                          color: const Color(0xFF1D1F33),
-                                          fontSize: 22.sp,
-                                          letterSpacing: -0.5,
-                                        ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          _buildShowcase(
-                            key: _notifKey,
-                            title: 'tut_notif_title',
-                            description: 'tut_notif_desc',
-                            child: Consumer<NotificationsProvider>(
-                              builder: (context, notifProvider, child) {
-                                return Stack(
-                                  clipBehavior: Clip.none,
-                                  children: [
-                                    IconButton(
-                                      onPressed: () => AppNavigator.push(
-                                        context,
-                                        const NotificationsScreen(),
-                                      ),
-                                      icon: const Icon(
-                                        Icons.notifications_outlined,
-                                        color: Color(0xFF1D1F33),
-                                        size: 24,
-                                      ),
-                                    ),
-                                    if (notifProvider.unreadCount > 0)
-                                      Positioned(
-                                        right: 4,
-                                        top: 4,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(2),
-                                          decoration: BoxDecoration(
-                                            color: Colors.black.withValues(
-                                              alpha: 0.6,
-                                            ),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          constraints: const BoxConstraints(
-                                            minWidth: 16,
-                                            minHeight: 16,
-                                          ),
-                                          child: Text(
-                                            '${notifProvider.unreadCount}',
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 9,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                );
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          _buildShowcase(
-                            key: _userProfileKey,
-                            title: 'tut_profile_title',
-                            description: 'tut_profile_desc',
-                            child: InkWell(
-                              onTap: () => AppNavigator.push(
-                                context,
-                                const ProfileScreen(),
-                              ),
-                              borderRadius: BorderRadius.circular(40),
-                              child: Container(
-                                padding: const EdgeInsets.all(2),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.grey.withValues(alpha: 0.1),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Container(
-                                  height: 38,
-                                  width: 38,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Consumer<AuthProvider>(
-                                    builder: (context, auth, _) {
-                                      final user = auth.user;
-                                      if (user?.avatarUrl != null &&
-                                          user!.avatarUrl!.isNotEmpty) {
-                                        return CachedNetworkImage(
-                                          imageUrl: user.avatarUrl!,
-                                          fit: BoxFit.cover,
-                                          placeholder: (_, _) => Container(
-                                            color: cs.primaryContainer,
-                                          ),
-                                          errorWidget: (context, url, error) =>
-                                              Icon(
-                                                Icons.person_rounded,
-                                                size: 22,
-                                                color: cs.primary,
-                                              ),
-                                        );
-                                      }
-                                      return CircleAvatar(
-                                        radius: 19,
-                                        backgroundColor: cs.primaryContainer,
-                                        child: Icon(
-                                          Icons.person_rounded,
-                                          size: 22,
-                                          color: cs.primary,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  // 2. GALLERY / NEWS PILL ROW
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(5.w, 0.5.h, 5.w, 0),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'What would you like to learn today?',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: const Color(0xFF6B7280),
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14.sp,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // 3. GALLERY / NEWS CARD ROW
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(5.w, 1.5.h, 5.w, 2.5.h),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: _buildShowcase(
-                            key: _galleryHeaderKey,
-                            title: 'tut_gallery_title',
-                            description: 'tut_gallery_desc',
-                            child: Consumer<AuthProvider>(
-                              builder: (context, auth, _) {
-                                final isPremium = auth.user?.isPremium ?? false;
-                                return _DashboardPillChip(
-                                  icon: Icons.image_rounded,
-                                  label: t.translate('gallery'),
-                                  isLocked: !isPremium,
-                                  onTap: () {
-                                    if (isPremium) {
-                                      AppNavigator.push(
-                                        context,
-                                        const GalleryScreen(),
-                                      );
-                                    } else {
-                                      showDialog(
-                                        context: context,
-                                        builder: (_) =>
-                                            const PremiumUnlockDialog(),
-                                      );
-                                    }
-                                  },
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 3.w),
-                        Expanded(
-                          child: Consumer<AuthProvider>(
-                            builder: (context, auth, _) {
-                              final isPremium = auth.user?.isPremium ?? false;
-                              return _DashboardPillChip(
-                                icon: Icons.newspaper_rounded,
-                                label: 'Latest News',
-                                isLocked: !isPremium,
-                                onTap: () {
-                                  if (isPremium) {
-                                    AppNavigator.push(
-                                      context,
-                                      const NewsListScreen(),
-                                    );
-                                  } else {
-                                    showDialog(
-                                      context: context,
-                                      builder: (_) =>
-                                          const PremiumUnlockDialog(),
-                                    );
-                                  }
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-            // 3-END. DYNAMIC CONTENT
-            Consumer<DashboardProvider>(
-              builder: (context, dashboard, _) {
-                if (dashboard.isLoading) return const DashboardShimmer();
-                if (dashboard.error != null) {
-                  return Center(child: Text('Error: ${dashboard.error}'));
-                }
-                final data = dashboard.data;
-                if (data == null) return const SizedBox();
-
-                bool assignedPopular = false;
-                bool assignedFreeVideos = false;
-
-                final continueSection = data.sections
-                    .where((s) => s.key == 'continue')
-                    .firstOrNull;
-                final continueCourses = continueSection != null
-                    ? continueSection.data.cast<CourseModel>()
-                    : <CourseModel>[];
-
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 2.h),
-
-                    // 3. CONTINUE LEARNING HERO
-                    if (continueCourses.isNotEmpty)
-                      ModuleVisibility(
-                        module: 'continueLearning',
-                        child: _buildShowcase(
-                          key: _continueKey,
-                          title: 'tut_continue_title',
-                          description: 'tut_continue_desc',
-                          child: Consumer<AuthProvider>(
-                            builder: (context, auth, _) {
-                              final isPremium = auth.user?.isPremium ?? false;
-                              return DashboardContinueHero(
-                                course: continueCourses.first,
-                                isLocked: !isPremium,
-                                onTap: () {
-                                  if (isPremium) {
-                                    AppNavigator.push(
-                                      context,
-                                      CourseDetailsScreen(
-                                        courseId: continueCourses.first.id,
-                                      ),
-                                    );
-                                  } else {
-                                    showDialog(
-                                      context: context,
-                                      builder: (_) =>
-                                          const PremiumUnlockDialog(),
-                                    );
-                                  }
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    if (continueCourses.isNotEmpty) SizedBox(height: 2.h),
-
-                    // 4. YOUR LEARNING JOURNEY
-                    Consumer<AuthProvider>(
-                      builder: (context, auth, _) {
-                        final isPremium = auth.user?.isPremium ?? false;
-                        return Column(
+                    // 1. HEADER
+                    _buildShowcase(
+                      key: _headerKey,
+                      title: 'tut_header_title',
+                      description: 'tut_header_desc',
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(5.w, 3.5.h, 5.w, 0),
+                        child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 5.w),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    'Your Learning Journey',
-                                    style: theme.textTheme.titleMedium
-                                        ?.copyWith(fontWeight: FontWeight.w800),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '👋 ',
+                                        style: TextStyle(fontSize: 16.sp),
+                                      ),
+                                      Text(
+                                        '${t.translate('welcome_back')},',
+                                        style: theme.textTheme.bodyLarge
+                                            ?.copyWith(
+                                              color: const Color(0xFF1D1F33),
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 15.sp,
+                                            ),
+                                      ),
+                                    ],
                                   ),
-                                  TextButton(
-                                    onPressed: () {
+                                  if (context
+                                              .watch<AuthProvider>()
+                                              .user
+                                              ?.name !=
+                                          null &&
+                                      context
+                                          .watch<AuthProvider>()
+                                          .user!
+                                          .name!
+                                          .isNotEmpty)
+                                    Text(
+                                      context.read<AuthProvider>().user!.name!,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: theme.textTheme.headlineSmall
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w800,
+                                            color: const Color(0xFF1D1F33),
+                                            fontSize: 22.sp,
+                                            letterSpacing: -0.5,
+                                          ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            _buildShowcase(
+                              key: _notifKey,
+                              title: 'tut_notif_title',
+                              description: 'tut_notif_desc',
+                              child: Consumer<NotificationsProvider>(
+                                builder: (context, notifProvider, child) {
+                                  return Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      IconButton(
+                                        onPressed: () => AppNavigator.push(
+                                          context,
+                                          const NotificationsScreen(),
+                                        ),
+                                        icon: const Icon(
+                                          Icons.notifications_outlined,
+                                          color: Color(0xFF1D1F33),
+                                          size: 24,
+                                        ),
+                                      ),
+                                      if (notifProvider.unreadCount > 0)
+                                        Positioned(
+                                          right: 4,
+                                          top: 4,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(2),
+                                            decoration: BoxDecoration(
+                                              color: Colors.black.withValues(
+                                                alpha: 0.6,
+                                              ),
+                                              shape: BoxShape.circle,
+                                            ),
+                                            constraints: const BoxConstraints(
+                                              minWidth: 16,
+                                              minHeight: 16,
+                                            ),
+                                            child: Text(
+                                              '${notifProvider.unreadCount}',
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 9,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            _buildShowcase(
+                              key: _userProfileKey,
+                              title: 'tut_profile_title',
+                              description: 'tut_profile_desc',
+                              child: InkWell(
+                                onTap: () => AppNavigator.push(
+                                  context,
+                                  const ProfileScreen(),
+                                ),
+                                borderRadius: BorderRadius.circular(40),
+                                child: Container(
+                                  padding: const EdgeInsets.all(2),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.grey.withValues(alpha: 0.1),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Container(
+                                    height: 38,
+                                    width: 38,
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Consumer<AuthProvider>(
+                                      builder: (context, auth, _) {
+                                        final user = auth.user;
+                                        if (user?.avatarUrl != null &&
+                                            user!.avatarUrl!.isNotEmpty) {
+                                          return CachedNetworkImage(
+                                            imageUrl: user.avatarUrl!,
+                                            fit: BoxFit.cover,
+                                            placeholder: (_, _) => Container(
+                                              color: cs.primaryContainer,
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) => Icon(
+                                                  Icons.person_rounded,
+                                                  size: 22,
+                                                  color: cs.primary,
+                                                ),
+                                          );
+                                        }
+                                        return CircleAvatar(
+                                          radius: 19,
+                                          backgroundColor: cs.primaryContainer,
+                                          child: Icon(
+                                            Icons.person_rounded,
+                                            size: 22,
+                                            color: cs.primary,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // 2. GALLERY / NEWS PILL ROW
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(5.w, 0.5.h, 5.w, 0),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'What would you like to learn today?',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: const Color(0xFF6B7280),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // 3. GALLERY / NEWS CARD ROW
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(5.w, 1.5.h, 5.w, 2.5.h),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: _buildShowcase(
+                              key: _galleryHeaderKey,
+                              title: 'tut_gallery_title',
+                              description: 'tut_gallery_desc',
+                              child: Consumer<AuthProvider>(
+                                builder: (context, auth, _) {
+                                  final isPremium =
+                                      auth.user?.isPremium ?? false;
+                                  return _DashboardPillChip(
+                                    icon: Icons.image_rounded,
+                                    label: t.translate('gallery'),
+                                    isLocked: !isPremium,
+                                    onTap: () {
                                       if (isPremium) {
                                         AppNavigator.push(
                                           context,
-                                          const CoursesListScreen(),
+                                          const GalleryScreen(),
                                         );
                                       } else {
                                         showDialog(
@@ -753,117 +623,25 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                         );
                                       }
                                     },
-                                    child: Text(
-                                      'View All',
-                                      style: TextStyle(
-                                        color: cs.primary,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                                  );
+                                },
                               ),
                             ),
-                            DashboardJourneyBar(
-                              completedCourses:
-                                  auth.user?.stats?.completedCourses ?? 0,
-                              totalCourses:
-                                  auth.user?.stats?.totalCourses ?? 10,
-                              streakDays: auth.user?.stats?.learningStreak ?? 0,
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                    SizedBox(height: 2.h),
-
-                    // 5. FREE GUIDE BANNER
-                    _buildShowcase(
-                      key: _pdfPromoKey,
-                      title: 'tut_pdf_promo_title',
-                      description: 'tut_pdf_promo_desc',
-                      child: _buildFreePdfPromo(context, cs),
-                    ),
-                    SizedBox(height: 2.h),
-
-                    // 6. CAROUSEL
-                    if (data.addons.carousel.isNotEmpty) ...[
-                      ModuleVisibility(
-                        module: 'carousel',
-                        child: FadeIn(
-                          duration: const Duration(milliseconds: 800),
-                          child: _buildShowcase(
-                            key: _carouselKey,
-                            title: 'tut_carousel_title',
-                            description: 'tut_carousel_desc',
-                            child: CtaCarousel(banners: data.addons.carousel),
                           ),
-                        ),
-                      ),
-                      SizedBox(height: 2.h),
-                    ],
-
-                    // 7. SHORTS
-                    ModuleVisibility(
-                      module: 'shortVideos',
-                      child: _buildShowcase(
-                        key: _shortsKey,
-                        title: 'tut_shorts_title',
-                        description: 'tut_shorts_desc',
-                        child: Consumer<AuthProvider>(
-                          builder: (context, auth, _) {
-                            final isPremium = auth.user?.isPremium ?? false;
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 5.w,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'Short Learning Videos',
-                                        style: theme.textTheme.titleLarge
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.w900,
-                                              fontSize: 18,
-                                            ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          if (isPremium) {
-                                            AppNavigator.push(
-                                              context,
-                                              const ShortsFeedScreen(),
-                                            );
-                                          } else {
-                                            showDialog(
-                                              context: context,
-                                              builder: (_) =>
-                                                  const PremiumUnlockDialog(),
-                                            );
-                                          }
-                                        },
-                                        child: Text(
-                                          'See All',
-                                          style: TextStyle(
-                                            color: cs.primary,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                InkWell(
+                          SizedBox(width: 3.w),
+                          Expanded(
+                            child: Consumer<AuthProvider>(
+                              builder: (context, auth, _) {
+                                final isPremium = auth.user?.isPremium ?? false;
+                                return _DashboardPillChip(
+                                  icon: Icons.newspaper_rounded,
+                                  label: 'Latest News',
+                                  isLocked: !isPremium,
                                   onTap: () {
                                     if (isPremium) {
                                       AppNavigator.push(
                                         context,
-                                        const ShortsFeedScreen(),
+                                        const NewsListScreen(),
                                       );
                                     } else {
                                       showDialog(
@@ -873,217 +651,448 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                       );
                                     }
                                   },
-                                  child: const IgnorePointer(
-                                    child: HomeShortsSection(),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 2.h),
+                  ],
+                ),
+              ),
 
-                    // 8. TOOLS
-                    ModuleVisibility(
-                      module: 'tools',
-                      child: _buildShowcase(
-                        key: _toolsKey,
-                        title: 'tut_tools_title',
-                        description: 'tut_tools_desc',
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 5.w),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+              // 3-END. DYNAMIC CONTENT
+              Consumer<DashboardProvider>(
+                builder: (context, dashboard, _) {
+                  if (dashboard.isLoading) return const DashboardShimmer();
+                  if (dashboard.error != null) {
+                    return Center(child: Text('Error: ${dashboard.error}'));
+                  }
+                  final data = dashboard.data;
+                  if (data == null) return const SizedBox();
+
+                  bool assignedPopular = false;
+                  bool assignedFreeVideos = false;
+
+                  final continueSection = data.sections
+                      .where((s) => s.key == 'continue')
+                      .firstOrNull;
+                  final continueCourses = continueSection != null
+                      ? continueSection.data.cast<CourseModel>()
+                      : <CourseModel>[];
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 2.h),
+
+                      // 3. CONTINUE LEARNING HERO
+                      if (continueCourses.isNotEmpty)
+                        ModuleVisibility(
+                          module: 'continueLearning',
+                          child: _buildShowcase(
+                            key: _continueKey,
+                            title: 'tut_continue_title',
+                            description: 'tut_continue_desc',
+                            child: Consumer<AuthProvider>(
+                              builder: (context, auth, _) {
+                                final isPremium = auth.user?.isPremium ?? false;
+                                return DashboardContinueHero(
+                                  course: continueCourses.first,
+                                  isLocked: !isPremium,
+                                  onTap: () {
+                                    if (isPremium) {
+                                      AppNavigator.push(
+                                        context,
+                                        CourseDetailsScreen(
+                                          courseId: continueCourses.first.id,
+                                        ),
+                                      );
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (_) =>
+                                            const PremiumUnlockDialog(),
+                                      );
+                                    }
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      if (continueCourses.isNotEmpty) SizedBox(height: 2.h),
+
+                      // 4. YOUR LEARNING JOURNEY
+                      Consumer<AuthProvider>(
+                        builder: (context, auth, _) {
+                          final isPremium = auth.user?.isPremium ?? false;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Your Learning Journey',
+                                      style: theme.textTheme.titleMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        if (isPremium) {
+                                          AppNavigator.push(
+                                            context,
+                                            const CoursesListScreen(),
+                                          );
+                                        } else {
+                                          showDialog(
+                                            context: context,
+                                            builder: (_) =>
+                                                const PremiumUnlockDialog(),
+                                          );
+                                        }
+                                      },
+                                      child: Text(
+                                        'View All',
+                                        style: TextStyle(
+                                          color: cs.primary,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              DashboardJourneyBar(
+                                completedCourses:
+                                    auth.user?.stats?.completedCourses ?? 0,
+                                totalCourses:
+                                    auth.user?.stats?.totalCourses ?? 10,
+                                streakDays:
+                                    auth.user?.stats?.learningStreak ?? 0,
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                      SizedBox(height: 2.h),
+
+                      // 5. FREE GUIDE BANNER
+                      _buildShowcase(
+                        key: _pdfPromoKey,
+                        title: 'tut_pdf_promo_title',
+                        description: 'tut_pdf_promo_desc',
+                        child: _buildFreePdfPromo(context, cs),
+                      ),
+                      SizedBox(height: 2.h),
+
+                      // 6. CAROUSEL
+                      if (data.addons.carousel.isNotEmpty) ...[
+                        ModuleVisibility(
+                          module: 'carousel',
+                          child: FadeIn(
+                            duration: const Duration(milliseconds: 800),
+                            child: _buildShowcase(
+                              key: _carouselKey,
+                              title: 'tut_carousel_title',
+                              description: 'tut_carousel_desc',
+                              child: CtaCarousel(banners: data.addons.carousel),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 2.h),
+                      ],
+
+                      // 7. SHORTS
+                      ModuleVisibility(
+                        module: 'shortVideos',
+                        child: _buildShowcase(
+                          key: _shortsKey,
+                          title: 'tut_shorts_title',
+                          description: 'tut_shorts_desc',
+                          child: Consumer<AuthProvider>(
+                            builder: (context, auth, _) {
+                              final isPremium = auth.user?.isPremium ?? false;
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    t.translate('tools_section_title'),
-                                    style: theme.textTheme.titleLarge?.copyWith(
-                                      fontWeight: FontWeight.w900,
-                                      fontSize: 18,
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 5.w,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Short Learning Videos',
+                                          style: theme.textTheme.titleLarge
+                                              ?.copyWith(
+                                                fontWeight: FontWeight.w900,
+                                                fontSize: 18,
+                                              ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            if (isPremium) {
+                                              AppNavigator.push(
+                                                context,
+                                                const ShortsFeedScreen(),
+                                              );
+                                            } else {
+                                              showDialog(
+                                                context: context,
+                                                builder: (_) =>
+                                                    const PremiumUnlockDialog(),
+                                              );
+                                            }
+                                          },
+                                          child: Text(
+                                            'See All',
+                                            style: TextStyle(
+                                              color: cs.primary,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  TextButton(
-                                    onPressed: () {},
-                                    child: Text(
-                                      'See All',
-                                      style: TextStyle(
-                                        color: cs.primary,
-                                        fontWeight: FontWeight.w700,
-                                      ),
+                                  InkWell(
+                                    onTap: () {
+                                      if (isPremium) {
+                                        AppNavigator.push(
+                                          context,
+                                          const ShortsFeedScreen(),
+                                        );
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          builder: (_) =>
+                                              const PremiumUnlockDialog(),
+                                        );
+                                      }
+                                    },
+                                    child: const IgnorePointer(
+                                      child: HomeShortsSection(),
                                     ),
                                   ),
                                 ],
-                              ),
-                            ),
-                            SizedBox(height: 1.h),
-                            Consumer<AuthProvider>(
-                              builder: (context, auth, _) => ToolsSection(
-                                isPremium: auth.user?.isPremium ?? false,
-                              ),
-                            ),
-                          ],
+                              );
+                            },
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 2.h),
+                      SizedBox(height: 2.h),
 
-                    // 9. DYNAMIC SECTIONS
-                    ...data.sections.map((section) {
-                      if ((section.key == 'course' ||
-                              section.key.contains('Popular') ||
-                              section.key.contains('Recommended')) &&
-                          !assignedPopular) {
-                        final courses = section.data.cast<CourseModel>();
-                        if (courses.isEmpty) return const SizedBox();
-                        assignedPopular = true;
-                        return ModuleVisibility(
-                          module: 'courses',
-                          child: _buildShowcase(
-                            key: _popularCoursesKey,
-                            title: 'tut_popular_courses_title',
-                            description: 'tut_popular_courses_desc',
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 5.w,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        section.title,
-                                        style: theme.textTheme.titleMedium
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.w800,
-                                            ),
-                                      ),
-                                      Consumer<AuthProvider>(
-                                        builder: (context, auth, _) {
-                                          final isPremium =
-                                              auth.user?.isPremium ?? false;
-                                          return TextButton(
-                                            onPressed: () {
-                                              if (isPremium) {
-                                                AppNavigator.push(
-                                                  context,
-                                                  const CoursesListScreen(),
-                                                );
-                                              } else {
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (_) =>
-                                                      const PremiumUnlockDialog(),
-                                                );
-                                              }
-                                            },
-                                            child: Text(
-                                              'See All',
-                                              style: TextStyle(
-                                                color: cs.primary,
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(height: 1.h),
-                                HorizontalCourses(
-                                  courses: courses,
-                                  isPremium:
-                                      context
-                                          .read<AuthProvider>()
-                                          .user
-                                          ?.isPremium ??
-                                      false,
-                                ),
-                                SizedBox(height: 2.h),
-                              ],
-                            ),
-                          ),
-                        );
-                      } else if (section.key == 'freeVideos' &&
-                          !assignedFreeVideos) {
-                        final videos = section.data.cast<FreeVideoModel>();
-                        if (videos.isEmpty) return const SizedBox();
-                        assignedFreeVideos = true;
-                        return ModuleVisibility(
-                          module: 'freeVideos',
-                          child: _buildShowcase(
-                            key: _freeVideosKey,
-                            title: 'tut_free_videos_title',
-                            description: 'tut_free_videos_desc',
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SectionHeader(
-                                  title: section.title,
-                                  subtitle: section.subtitle,
-                                ),
-                                SizedBox(height: 1.5.h),
-                                FreeVideosSection(videos: videos),
-                                SizedBox(height: 2.h),
-                              ],
-                            ),
-                          ),
-                        );
-                      } else if (section.key == 'banner') {
-                        final banners = section.data.cast<BannerModel>();
-                        if (banners.isEmpty) return const SizedBox();
-                        return ModuleVisibility(
-                          module: 'banners',
+                      // 8. TOOLS
+                      ModuleVisibility(
+                        module: 'tools',
+                        child: _buildShowcase(
+                          key: _toolsKey,
+                          title: 'tut_tools_title',
+                          description: 'tut_tools_desc',
                           child: Column(
                             children: [
-                              InlineBanner(banners: banners),
-                              SizedBox(height: 2.h),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      t.translate('tools_section_title'),
+                                      style: theme.textTheme.titleLarge
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w900,
+                                            fontSize: 18,
+                                          ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {},
+                                      child: Text(
+                                        'See All',
+                                        style: TextStyle(
+                                          color: cs.primary,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 1.h),
+                              Consumer<AuthProvider>(
+                                builder: (context, auth, _) => ToolsSection(
+                                  isPremium: auth.user?.isPremium ?? false,
+                                ),
+                              ),
                             ],
                           ),
-                        );
-                      }
-                      return const SizedBox();
-                    }),
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
 
-                    // 10. TESTIMONIALS
-                    _buildShowcase(
-                      key: _testimonialsKey,
-                      title: 'tut_testimonials_title',
-                      description: 'tut_testimonials_desc',
-                      child: _buildTestimonials(context, cs, theme),
-                    ),
-                    SizedBox(height: 3.h),
+                      // 9. DYNAMIC SECTIONS
+                      ...data.sections.map((section) {
+                        if ((section.key == 'course' ||
+                                section.key.contains('Popular') ||
+                                section.key.contains('Recommended')) &&
+                            !assignedPopular) {
+                          final courses = section.data.cast<CourseModel>();
+                          if (courses.isEmpty) return const SizedBox();
+                          assignedPopular = true;
+                          return ModuleVisibility(
+                            module: 'courses',
+                            child: _buildShowcase(
+                              key: _popularCoursesKey,
+                              title: 'tut_popular_courses_title',
+                              description: 'tut_popular_courses_desc',
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 5.w,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          section.title,
+                                          style: theme.textTheme.titleMedium
+                                              ?.copyWith(
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                        ),
+                                        Consumer<AuthProvider>(
+                                          builder: (context, auth, _) {
+                                            final isPremium =
+                                                auth.user?.isPremium ?? false;
+                                            return TextButton(
+                                              onPressed: () {
+                                                if (isPremium) {
+                                                  AppNavigator.push(
+                                                    context,
+                                                    const CoursesListScreen(),
+                                                  );
+                                                } else {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (_) =>
+                                                        const PremiumUnlockDialog(),
+                                                  );
+                                                }
+                                              },
+                                              child: Text(
+                                                'See All',
+                                                style: TextStyle(
+                                                  color: cs.primary,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 1.h),
+                                  HorizontalCourses(
+                                    courses: courses,
+                                    isPremium:
+                                        context
+                                            .read<AuthProvider>()
+                                            .user
+                                            ?.isPremium ??
+                                        false,
+                                  ),
+                                  SizedBox(height: 2.h),
+                                ],
+                              ),
+                            ),
+                          );
+                        } else if (section.key == 'freeVideos' &&
+                            !assignedFreeVideos) {
+                          final videos = section.data.cast<FreeVideoModel>();
+                          if (videos.isEmpty) return const SizedBox();
+                          assignedFreeVideos = true;
+                          return ModuleVisibility(
+                            module: 'freeVideos',
+                            child: _buildShowcase(
+                              key: _freeVideosKey,
+                              title: 'tut_free_videos_title',
+                              description: 'tut_free_videos_desc',
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SectionHeader(
+                                    title: section.title,
+                                    subtitle: section.subtitle,
+                                  ),
+                                  SizedBox(height: 1.5.h),
+                                  FreeVideosSection(videos: videos),
+                                  SizedBox(height: 2.h),
+                                ],
+                              ),
+                            ),
+                          );
+                        } else if (section.key == 'banner') {
+                          final banners = section.data.cast<BannerModel>();
+                          if (banners.isEmpty) return const SizedBox();
+                          return ModuleVisibility(
+                            module: 'banners',
+                            child: Column(
+                              children: [
+                                InlineBanner(banners: banners),
+                                SizedBox(height: 2.h),
+                              ],
+                            ),
+                          );
+                        }
+                        return const SizedBox();
+                      }),
 
-                    // 11. SOCIAL
-                    _buildShowcase(
-                      key: _socialKey,
-                      title: 'tut_social_title',
-                      description: 'tut_social_desc',
-                      child: _buildSocialConnect(context, cs, theme),
-                    ),
-                    SizedBox(height: 3.h),
+                      // 10. TESTIMONIALS
+                      _buildShowcase(
+                        key: _testimonialsKey,
+                        title: 'tut_testimonials_title',
+                        description: 'tut_testimonials_desc',
+                        child: _buildTestimonials(context, cs, theme),
+                      ),
+                      SizedBox(height: 3.h),
 
-                    // 12. FREE COUNSELING
-                    _buildShowcase(
-                      key: _counselingKey,
-                      title: 'tut_counseling_title',
-                      description: 'tut_counseling_desc',
-                      child: _buildFreeCounseling(context, cs),
-                    ),
-                    SizedBox(height: 3.h),
-                  ],
-                );
-              },
-            ),
-          ],
+                      // 11. SOCIAL
+                      _buildShowcase(
+                        key: _socialKey,
+                        title: 'tut_social_title',
+                        description: 'tut_social_desc',
+                        child: _buildSocialConnect(context, cs, theme),
+                      ),
+                      SizedBox(height: 3.h),
+
+                      // 12. FREE COUNSELING
+                      _buildShowcase(
+                        key: _counselingKey,
+                        title: 'tut_counseling_title',
+                        description: 'tut_counseling_desc',
+                        child: _buildFreeCounseling(context, cs),
+                      ),
+                      SizedBox(height: 3.h),
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: NavigationBar(
