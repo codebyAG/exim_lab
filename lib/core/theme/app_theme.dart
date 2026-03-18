@@ -110,6 +110,38 @@ ThemeData buildAppTheme(ColorScheme scheme) {
       elevation: 8,
     ),
 
+    // 🔹 NAVIGATION BAR (MATERIAL 3)
+    navigationBarTheme: NavigationBarThemeData(
+      backgroundColor: scheme.surface,
+      elevation: 0, // Clean flat look
+      indicatorColor: scheme.primary.withValues(alpha: 0.12),
+      iconTheme: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return IconThemeData(color: scheme.primary, size: 24);
+        }
+        return IconThemeData(
+          color: scheme.onSurface.withValues(alpha: 0.6),
+          size: 24,
+        );
+      }),
+      labelTextStyle: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: scheme.primary,
+            fontFamily: 'Poppins',
+          );
+        }
+        return TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+          color: scheme.onSurface.withValues(alpha: 0.6),
+          fontFamily: 'Poppins',
+        );
+      }),
+    ),
+
     // 🔹 FLOATING ACTION BUTTON
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       backgroundColor: scheme.primary,
