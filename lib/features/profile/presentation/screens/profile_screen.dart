@@ -459,7 +459,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Navigator.pop(ctx);
               await context.read<AuthProvider>().logout();
               if (context.mounted) {
-                AppNavigator.replace(context, const WelcomeScreen());
+                AppNavigator.clearAndGo(context, const WelcomeScreen());
               }
             },
             child: Text(t.translate('menu_logout'),
