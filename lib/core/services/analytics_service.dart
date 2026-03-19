@@ -11,6 +11,7 @@ class AnalyticsService {
   FirebaseAnalytics get _analytics => FirebaseAnalytics.instance;
 
   static String? _userMobile;
+  static bool _isSyncing = false; // Prevent overlapping syncs
 
   void setUserMobile(String? mobile) {
     _userMobile = mobile;
@@ -85,12 +86,15 @@ class AnalyticsService {
   }
 
   Future<void> _checkAndSyncEvents(SharedPreferences prefs) async {
+    if (_isSyncing) return;
+
     final lastSyncStr = prefs.getString(_lastSyncKey);
     final now = DateTime.now();
 
     if (lastSyncStr == null) {
-      // First time, initialize and sync immediately if there's data
-      await _syncEventsToServer(prefs);
+      // First run: Initialize the 12-hour countdown
+      await prefs.setString(_lastSyncKey, now.toIso8601String());
+      debugPrint('🕒 Analytics clock started. First sync in 12 hours.');
       return;
     }
 
@@ -104,13 +108,16 @@ class AnalyticsService {
   }
 
   Future<void> _syncEventsToServer(SharedPreferences prefs) async {
-    final List<String> queue = prefs.getStringList(_queueKey) ?? [];
-    if (queue.isEmpty) {
-      await prefs.setString(_lastSyncKey, DateTime.now().toIso8601String());
-      return;
-    }
+    if (_isSyncing) return;
+    _isSyncing = true;
 
     try {
+      final List<String> queue = prefs.getStringList(_queueKey) ?? [];
+      if (queue.isEmpty) {
+        await prefs.setString(_lastSyncKey, DateTime.now().toIso8601String());
+        return;
+      }
+
       // 1. Convert List<String> (JSON) to List<Map>
       final List<Map<String, dynamic>> batchedData = queue
           .map((e) => jsonDecode(e) as Map<String, dynamic>)
@@ -132,7 +139,12 @@ class AnalyticsService {
         '🚀 Successfully Batched ${batchedData.length} Events to Server',
       );
     } catch (e) {
-      debugPrint('⚠️ Batch Sync Failed: $e (Data kept for next attempt)');
+      debugPrint('⚠️ Batch Sync Failed: $e');
+      // Update last sync time anyway to prevent retrying on every event
+      // This enforces the 12-hour rule even for retries
+      await prefs.setString(_lastSyncKey, DateTime.now().toIso8601String());
+    } finally {
+      _isSyncing = false;
     }
   }
 
