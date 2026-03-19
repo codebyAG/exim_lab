@@ -28,6 +28,8 @@ import 'package:exim_lab/localization/app_localization.dart';
 import 'package:exim_lab/features/profile/presentation/screens/profile_screen.dart';
 import 'package:exim_lab/features/module_manager/presentation/widgets/module_visibility.dart';
 import 'package:exim_lab/features/module_manager/presentation/providers/module_provider.dart';
+import 'package:exim_lab/features/journey/presentation/screens/import_journey_screen.dart';
+import 'package:exim_lab/features/journey/presentation/screens/export_journey_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -675,7 +677,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                   icon: Icons.flight_land_rounded,
                                   onTap: () {
                                     if (isPremium) {
-                                      // Logic for import journey
+                                      AppNavigator.push(
+                                        context,
+                                        const ImportJourneyScreen(),
+                                      );
                                     } else {
                                       showDialog(
                                         context: context,
@@ -702,7 +707,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                   icon: Icons.flight_takeoff_rounded,
                                   onTap: () {
                                     if (isPremium) {
-                                      // Logic for export journey
+                                      AppNavigator.push(
+                                        context,
+                                        const ExportJourneyScreen(),
+                                      );
                                     } else {
                                       showDialog(
                                         context: context,
