@@ -438,8 +438,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                           ?.copyWith(
                                             fontWeight: FontWeight.w900,
                                             color: const Color(0xFF1D1F33),
-                                            fontSize: 24.sp,
-                                            letterSpacing: -0.8,
+                                            fontSize: 18.sp,
+                                            letterSpacing: -0.5,
                                           ),
                                     ),
                                 ],
@@ -628,9 +628,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
                               key: _galleryCardKey,
                               title: 'tut_gallery_title',
                               description: 'tut_gallery_desc',
-                              child: _DashboardPillChip(
+                              child: _QuickActionCard(
                                 icon: Icons.image_rounded,
                                 label: t.translate('gallery'),
+                                color: cs.primary, // Theme Vivid Orange
                                 onTap: () {
                                   AppNavigator.push(
                                     context,
@@ -642,89 +643,16 @@ class _DashboardBodyState extends State<_DashboardBody> {
                           ),
                           SizedBox(width: 4.w),
                           Expanded(
-                            child: _DashboardPillChip(
+                            child: _QuickActionCard(
                               icon: Icons.newspaper_rounded,
                               label: t.translate('market_updates'),
+                              color: cs.secondary, // Theme Soft Peach
                               onTap: () {
                                 AppNavigator.push(
                                   context,
                                   const NewsListScreen(),
                                 );
                               },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // 4. QUICK ACTIONS ROW 2: QUIZZES & AI EXPERT
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(5.w, 1.5.h, 5.w, 0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: _buildShowcase(
-                              key: _quizzesCardKey,
-                              title: 'tut_quizzes_title',
-                              description: 'tut_quizzes_desc',
-                              child: Consumer<AuthProvider>(
-                                builder: (context, auth, _) {
-                                  final isPremium =
-                                      auth.user?.isPremium ?? false;
-                                  return _DashboardPillChip(
-                                    icon: Icons.quiz_rounded,
-                                    label: t.translate('quizzes_title'),
-                                    isLocked: !isPremium,
-                                    onTap: () {
-                                      if (isPremium) {
-                                        AppNavigator.push(
-                                          context,
-                                          const QuizTopicsScreen(),
-                                        );
-                                      } else {
-                                        showDialog(
-                                          context: context,
-                                          builder: (_) =>
-                                              const PremiumUnlockDialog(),
-                                        );
-                                      }
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 4.w),
-                          Expanded(
-                            child: _buildShowcase(
-                              key: _aiExpertCardKey,
-                              title: 'tut_ai_expert_title',
-                              description: 'tut_ai_expert_desc',
-                              child: Consumer<AuthProvider>(
-                                builder: (context, auth, _) {
-                                  final isPremium =
-                                      auth.user?.isPremium ?? false;
-                                  return _DashboardPillChip(
-                                    icon: Icons.smart_toy_rounded,
-                                    label: t.translate('ai_expert'),
-                                    isLocked: !isPremium,
-                                    onTap: () {
-                                      if (isPremium) {
-                                        AppNavigator.push(
-                                          context,
-                                          const AiChatScreen(),
-                                        );
-                                      } else {
-                                        showDialog(
-                                          context: context,
-                                          builder: (_) =>
-                                              const PremiumUnlockDialog(),
-                                        );
-                                      }
-                                    },
-                                  );
-                                },
-                              ),
                             ),
                           ),
                         ],
@@ -862,96 +790,6 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         ),
                       if (continueCourses.isNotEmpty) SizedBox(height: 2.h),
 
-                      // 1.6 MASTERCLASS HIGHLIGHT (REPOSITIONED)
-                      Consumer<DashboardProvider>(
-                        builder: (context, dashboard, _) {
-                          final data = dashboard.data;
-                          if (data == null) return const SizedBox();
-                          return _buildShowcase(
-                            key: _masterclassKey,
-                            title: 'Masterclass',
-                            description:
-                                'Watch our complete Import Export Roadmap',
-                            child: _buildMasterclassHighlight(
-                              context,
-                              cs,
-                              theme,
-                              data,
-                            ),
-                          );
-                        },
-                      ),
-                      SizedBox(height: 3.h),
-
-                      // 4. YOUR LEARNING JOURNEY
-                      Consumer<AuthProvider>(
-                        builder: (context, auth, _) {
-                          final isPremium = auth.user?.isPremium ?? false;
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Your Learning Journey',
-                                      style: theme.textTheme.titleMedium
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.w800,
-                                          ),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        if (isPremium) {
-                                          AppNavigator.push(
-                                            context,
-                                            const CoursesListScreen(),
-                                          );
-                                        } else {
-                                          showDialog(
-                                            context: context,
-                                            builder: (_) =>
-                                                const PremiumUnlockDialog(),
-                                          );
-                                        }
-                                      },
-                                      child: Text(
-                                        'View All',
-                                        style: TextStyle(
-                                          color: cs.primary,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              DashboardJourneyBar(
-                                completedCourses:
-                                    auth.user?.stats?.completedCourses ?? 0,
-                                totalCourses:
-                                    auth.user?.stats?.totalCourses ?? 10,
-                                streakDays:
-                                    auth.user?.stats?.learningStreak ?? 0,
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                      SizedBox(height: 2.h),
-
-                      // 6. FREE GUIDE BANNER
-                      _buildShowcase(
-                        key: _pdfPromoKey,
-                        title: 'tut_pdf_promo_title',
-                        description: 'tut_pdf_promo_desc',
-                        child: _buildFreePdfPromo(context, cs),
-                      ),
-                      SizedBox(height: 2.h),
-
                       // 6. TOOLS (MOVED UP)
                       ModuleVisibility(
                         module: 'tools',
@@ -999,6 +837,129 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         ),
                       ),
                       SizedBox(height: 2.h),
+
+                      // 1.6 MASTERCLASS HIGHLIGHT
+                      Consumer<DashboardProvider>(
+                        builder: (context, dashboard, _) {
+                          final data = dashboard.data;
+                          if (data == null) return const SizedBox();
+                          return _buildShowcase(
+                            key: _masterclassKey,
+                            title: 'Masterclass',
+                            description:
+                                'Watch our complete Import Export Roadmap',
+                            child: _buildMasterclassHighlight(
+                              context,
+                              cs,
+                              theme,
+                              data,
+                            ),
+                          );
+                        },
+                      ),
+                      SizedBox(height: 3.h),
+
+                      // 4. YOUR LEARNING JOURNEY BAR
+                      Consumer<AuthProvider>(
+                        builder: (context, auth, _) {
+                          return DashboardJourneyBar(
+                            completedCourses:
+                                auth.user?.stats?.completedCourses ?? 0,
+                            totalCourses: auth.user?.stats?.totalCourses ?? 10,
+                            streakDays: auth.user?.stats?.learningStreak ?? 0,
+                          );
+                        },
+                      ),
+                      SizedBox(height: 2.h),
+
+                      // 6. FREE GUIDE BANNER
+                      _buildShowcase(
+                        key: _pdfPromoKey,
+                        title: 'tut_pdf_promo_title',
+                        description: 'tut_pdf_promo_desc',
+                        child: _buildFreePdfPromo(context, cs),
+                      ),
+                      SizedBox(height: 2.h),
+
+                      // 4. QUICK ACTIONS ROW 2: QUIZZES & AI EXPERT (MOVED ABOVE CAROUSEL)
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(5.w, 1.h, 5.w, 1.5.h),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: _buildShowcase(
+                                key: _quizzesCardKey,
+                                title: 'tut_quizzes_title',
+                                description: 'tut_quizzes_desc',
+                                child: Consumer<AuthProvider>(
+                                  builder: (context, auth, _) {
+                                    final isPremium =
+                                        auth.user?.isPremium ?? false;
+                                    return _QuickActionCard(
+                                      icon: Icons.quiz_rounded,
+                                      label: t.translate('quizzes_title'),
+                                      color: const Color(
+                                        0xFFF6862A,
+                                      ), // Logo Orange
+                                      isLocked: !isPremium,
+                                      onTap: () {
+                                        if (isPremium) {
+                                          AppNavigator.push(
+                                            context,
+                                            const QuizTopicsScreen(),
+                                          );
+                                        } else {
+                                          showDialog(
+                                            context: context,
+                                            builder: (_) =>
+                                                const PremiumUnlockDialog(),
+                                          );
+                                        }
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 4.w),
+                            Expanded(
+                              child: _buildShowcase(
+                                key: _aiExpertCardKey,
+                                title: 'tut_ai_expert_title',
+                                description: 'tut_ai_expert_desc',
+                                child: Consumer<AuthProvider>(
+                                  builder: (context, auth, _) {
+                                    final isPremium =
+                                        auth.user?.isPremium ?? false;
+                                    return _QuickActionCard(
+                                      icon: Icons.smart_toy_rounded,
+                                      label: t.translate('ai_expert'),
+                                      color: const Color(
+                                        0xFFFF5722,
+                                      ), // Deep Orange
+                                      isLocked: !isPremium,
+                                      onTap: () {
+                                        if (isPremium) {
+                                          AppNavigator.push(
+                                            context,
+                                            const AiChatScreen(),
+                                          );
+                                        } else {
+                                          showDialog(
+                                            context: context,
+                                            builder: (_) =>
+                                                const PremiumUnlockDialog(),
+                                          );
+                                        }
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
 
                       // 6. CAROUSEL
                       if (data.addons.carousel.isNotEmpty) ...[
@@ -1313,7 +1274,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
     AppLocalizations t,
   ) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.5.h),
+      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
       child: FadeInLeft(
         duration: const Duration(milliseconds: 800),
         child: Container(
@@ -1423,10 +1384,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
                           child: CircleAvatar(
                             radius: 35,
                             backgroundColor: Colors.white,
-                            child: Icon(
-                              Icons.person_pin_rounded,
-                              color: cs.primary,
-                              size: 45,
+                            backgroundImage: const AssetImage(
+                              'assets/ashok_sir_image.png',
                             ),
                           ),
                         ),
@@ -1579,10 +1538,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
                           backgroundColor: cs.primaryContainer.withValues(
                             alpha: 0.3,
                           ),
-                          child: Icon(
-                            Icons.person_pin_rounded,
-                            color: cs.primary,
-                            size: 45,
+                          backgroundImage: const AssetImage(
+                            'assets/ashok_sir_image.png',
                           ),
                         ),
                         SizedBox(width: 4.w),
@@ -2476,16 +2433,18 @@ class _DashboardBodyState extends State<_DashboardBody> {
   }
 }
 
-class _DashboardPillChip extends StatelessWidget {
+class _QuickActionCard extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
+  final Color color;
   final bool isLocked;
 
-  const _DashboardPillChip({
+  const _QuickActionCard({
     required this.icon,
     required this.label,
     required this.onTap,
+    required this.color,
     this.isLocked = false,
   });
 
@@ -2495,53 +2454,49 @@ class _DashboardPillChip extends StatelessWidget {
 
     return Material(
       color: Colors.white,
-      borderRadius: BorderRadius.circular(16),
-      elevation: 5,
-      shadowColor: Colors.black.withValues(alpha: 0.2),
+      borderRadius: BorderRadius.circular(24),
+      elevation: 8,
+      shadowColor: color.withValues(alpha: 0.2),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(24),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 4.w),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: Colors.grey.withValues(alpha: 0.1),
-              width: 1,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: color.withValues(alpha: 0.1), width: 1.5),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [color.withValues(alpha: 0.05), Colors.white],
             ),
           ),
-          child: Row(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFF8A00).withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
+                  color: color.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
                 ),
                 child: Icon(
                   isLocked ? Icons.lock_outline_rounded : icon,
-                  color: const Color(0xFFFF8A00),
-                  size: 22,
+                  color: color,
+                  size: 28,
                 ),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: const Color(0xFF1D1F33),
-                    fontWeight: FontWeight.w700,
-                    fontSize: 15.sp,
-                    letterSpacing: 0,
-                  ),
+              const SizedBox(height: 12),
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: const Color(0xFF1D1F33),
+                  fontWeight: FontWeight.w900,
+                  fontSize: 14.sp,
                 ),
-              ),
-              Icon(
-                Icons.chevron_right_rounded,
-                color: Colors.grey.withValues(alpha: 0.8),
-                size: 20,
               ),
             ],
           ),
