@@ -898,7 +898,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                     return _QuickActionCard(
                                       icon: Icons.quiz_rounded,
                                       label: t.translate('quizzes_title'),
-                                      color: cs.primary, // Strict theme matching
+                                      color:
+                                          cs.primary, // Strict theme matching
                                       isLocked: !isPremium,
                                       onTap: () {
                                         if (isPremium) {
@@ -932,7 +933,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                     return _QuickActionCard(
                                       icon: Icons.smart_toy_rounded,
                                       label: t.translate('ai_expert'),
-                                      color: cs.primary, // Strict theme matching
+                                      color:
+                                          cs.primary, // Strict theme matching
                                       isLocked: !isPremium,
                                       onTap: () {
                                         if (isPremium) {
@@ -1632,7 +1634,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
         height: 12.h,
         padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
         decoration: BoxDecoration(
-          color: cs.primary.withValues(alpha: 0.08), // Theme-aligned light orange
+          color: cs.primary.withValues(
+            alpha: 0.08,
+          ), // Theme-aligned light orange
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: cs.primary.withValues(alpha: 0.15), // Theme-aligned border
