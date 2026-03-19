@@ -17,84 +17,118 @@ class JourneyHeader extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            const Color(0xFFFEF3C7),
-            const Color(0xFFFDE68A).withValues(alpha: 0.5),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(24),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 24,
+            offset: const Offset(0, 12),
+          ),
+        ],
+        border: Border.all(color: Colors.orange.withValues(alpha: 0.1), width: 1.5),
       ),
       clipBehavior: Clip.antiAlias,
       child: Stack(
         children: [
-          // Background Blobs
+          // Background accents
           Positioned(
-            top: -20,
+            top: -40,
             right: -20,
             child: Container(
-              width: 120,
-              height: 120,
+              width: 140,
+              height: 140,
               decoration: BoxDecoration(
-                color: Colors.orange.withValues(alpha: 0.1),
+                gradient: RadialGradient(
+                  colors: [
+                    Colors.orange.withValues(alpha: 0.15),
+                    Colors.orange.withValues(alpha: 0),
+                  ],
+                ),
                 shape: BoxShape.circle,
               ),
             ),
           ),
           Positioned(
-            bottom: -30,
-            left: 20,
-            child: Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                color: Colors.orange.withValues(alpha: 0.05),
-                shape: BoxShape.circle,
-              ),
+            bottom: -20,
+            left: -10,
+            child: Icon(
+              Icons.auto_awesome_motion_rounded,
+              size: 80,
+              color: Colors.orange.withValues(alpha: 0.05),
             ),
           ),
-          // Content
+          // Main content
           Padding(
-            padding: EdgeInsets.all(5.w),
+            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.5.h),
             child: Row(
               children: [
+                // Icon Section
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFF97316), Color(0xFFFB923C)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
-                        blurRadius: 10,
+                        color: Colors.orange.withValues(alpha: 0.3),
+                        blurRadius: 15,
+                        offset: const Offset(0, 5),
                       ),
                     ],
                   ),
-                  child: Icon(Icons.public_rounded, size: 10.w, color: Colors.orange),
+                  child: Icon(
+                    title.toLowerCase().contains('export')
+                        ? Icons.flight_takeoff_rounded
+                        : Icons.flight_land_rounded,
+                    size: 8.w,
+                    color: Colors.white,
+                  ),
                 ),
-                SizedBox(width: 4.w),
+                SizedBox(width: 5.w),
+                // Text Section
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        title,
+                        title.toUpperCase(),
                         style: TextStyle(
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.w900,
-                          color: const Color(0xFF1D1F33),
-                          height: 1.1,
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.orange,
+                          letterSpacing: 1.2,
                         ),
                       ),
                       SizedBox(height: 0.5.h),
                       Text(
                         subtitle,
                         style: TextStyle(
-                          fontSize: 13.sp,
-                          color: const Color(0xFF6B7280),
-                          fontWeight: FontWeight.w500,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w900,
+                          color: const Color(0xFF1D1F33),
+                          height: 1.2,
+                        ),
+                      ),
+                      SizedBox(height: 1.h),
+                      // Visual indicator of completeness (Status pill)
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.5.h),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          'Step-by-Step Training',
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.orange.shade800,
+                          ),
                         ),
                       ),
                     ],
