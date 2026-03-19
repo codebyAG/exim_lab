@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:animate_do/animate_do.dart';
 import '../../data/models/journey_model.dart';
 
 class JourneyHeader extends StatelessWidget {
@@ -11,133 +12,135 @@ class JourneyHeader extends StatelessWidget {
     required this.title,
     required this.subtitle,
   });
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(28),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 24,
-            offset: const Offset(0, 12),
-          ),
-        ],
-        border: Border.all(color: Colors.orange.withValues(alpha: 0.1), width: 1.5),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Stack(
-        children: [
-          // Background accents
-          Positioned(
-            top: -40,
-            right: -20,
-            child: Container(
-              width: 140,
-              height: 140,
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  colors: [
-                    Colors.orange.withValues(alpha: 0.15),
-                    Colors.orange.withValues(alpha: 0),
-                  ],
+    return FadeInDown(
+      duration: const Duration(milliseconds: 600),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(28),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 24,
+              offset: const Offset(0, 12),
+            ),
+          ],
+          border: Border.all(color: Colors.orange.withValues(alpha: 0.1), width: 1.5),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Stack(
+          children: [
+            // Background accents
+            Positioned(
+              top: -40,
+              right: -20,
+              child: Container(
+                width: 140,
+                height: 140,
+                decoration: BoxDecoration(
+                  gradient: RadialGradient(
+                    colors: [
+                      Colors.orange.withValues(alpha: 0.15),
+                      Colors.orange.withValues(alpha: 0),
+                    ],
+                  ),
+                  shape: BoxShape.circle,
                 ),
-                shape: BoxShape.circle,
               ),
             ),
-          ),
-          Positioned(
-            bottom: -20,
-            left: -10,
-            child: Icon(
-              Icons.auto_awesome_motion_rounded,
-              size: 80,
-              color: Colors.orange.withValues(alpha: 0.05),
+            Positioned(
+              bottom: -20,
+              left: -10,
+              child: Icon(
+                Icons.auto_awesome_motion_rounded,
+                size: 80,
+                color: Colors.orange.withValues(alpha: 0.05),
+              ),
             ),
-          ),
-          // Main content
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.5.h),
-            child: Row(
-              children: [
-                // Icon Section
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFFF97316), Color(0xFFFB923C)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+            // Main content
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.5.h),
+              child: Row(
+                children: [
+                  // Icon Section
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFFF97316), Color(0xFFFB923C)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.orange.withValues(alpha: 0.3),
+                          blurRadius: 15,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
                     ),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.orange.withValues(alpha: 0.3),
-                        blurRadius: 15,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
+                    child: Icon(
+                      title.toLowerCase().contains('export')
+                          ? Icons.flight_takeoff_rounded
+                          : Icons.flight_land_rounded,
+                      size: 8.w,
+                      color: Colors.white,
+                    ),
                   ),
-                  child: Icon(
-                    title.toLowerCase().contains('export')
-                        ? Icons.flight_takeoff_rounded
-                        : Icons.flight_land_rounded,
-                    size: 8.w,
-                    color: Colors.white,
-                  ),
-                ),
-                SizedBox(width: 5.w),
-                // Text Section
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title.toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.orange,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                      SizedBox(height: 0.5.h),
-                      Text(
-                        subtitle,
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w900,
-                          color: const Color(0xFF1D1F33),
-                          height: 1.2,
-                        ),
-                      ),
-                      SizedBox(height: 1.h),
-                      // Visual indicator of completeness (Status pill)
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.5.h),
-                        decoration: BoxDecoration(
-                          color: Colors.orange.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Text(
-                          'Step-by-Step Training',
+                  SizedBox(width: 5.w),
+                  // Text Section
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title.toUpperCase(),
                           style: TextStyle(
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.orange.shade800,
+                            fontSize: 11.sp,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.orange,
+                            letterSpacing: 1.2,
                           ),
                         ),
-                      ),
-                    ],
+                        SizedBox(height: 0.5.h),
+                        Text(
+                          subtitle,
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w900,
+                            color: const Color(0xFF1D1F33),
+                            height: 1.2,
+                          ),
+                        ),
+                        SizedBox(height: 1.h),
+                        // Visual indicator of completeness (Status pill)
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.5.h),
+                          decoration: BoxDecoration(
+                            color: Colors.orange.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            'Step-by-Step Training',
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.orange.shade800,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -179,38 +182,40 @@ class JourneyStepCard extends StatelessWidget {
   }
 
   Widget _buildTimeline(ColorScheme cs, bool isActive, bool isCompleted, bool isLocked) {
+    Widget dot = Container(
+      width: 36,
+      height: 36,
+      decoration: BoxDecoration(
+        color: isCompleted ? Colors.green : (isActive ? Colors.orange : Colors.grey.shade300),
+        shape: BoxShape.circle,
+        boxShadow: [
+          if (isActive)
+            BoxShadow(
+              color: Colors.orange.withValues(alpha: 0.3),
+              blurRadius: 12,
+              spreadRadius: 2,
+            ),
+        ],
+      ),
+      child: Center(
+        child: isCompleted
+            ? const Icon(Icons.check_rounded, color: Colors.white, size: 22)
+            : isLocked
+                ? const Icon(Icons.lock_rounded, color: Colors.white, size: 16)
+                : Text(
+                    '${step.id}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 16,
+                    ),
+                  ),
+      ),
+    );
+
     return Column(
       children: [
-        Container(
-          width: 36,
-          height: 36,
-          decoration: BoxDecoration(
-            color: isCompleted ? Colors.green : (isActive ? Colors.orange : Colors.grey.shade300),
-            shape: BoxShape.circle,
-            boxShadow: [
-              if (isActive)
-                BoxShadow(
-                  color: Colors.orange.withValues(alpha: 0.3),
-                  blurRadius: 12,
-                  spreadRadius: 2,
-                ),
-            ],
-          ),
-          child: Center(
-            child: isCompleted
-                ? const Icon(Icons.check_rounded, color: Colors.white, size: 22)
-                : isLocked
-                    ? const Icon(Icons.lock_rounded, color: Colors.white, size: 16)
-                    : Text(
-                        '${step.id}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 16,
-                        ),
-                      ),
-          ),
-        ),
+        isActive ? Flash(infinite: true, duration: const Duration(seconds: 3), child: dot) : dot,
         if (!isLast)
           Expanded(
             child: CustomPaint(
@@ -345,9 +350,8 @@ class JourneyStepCard extends StatelessWidget {
   }
 
   Widget _buildIllustration(bool isActive, bool isCompleted) {
-    return Container(
-      width: 18.w,
-      height: 18.w,
+    Widget illustration = Container(
+      padding: EdgeInsets.all(3.w),
       decoration: BoxDecoration(
         color: (isCompleted ? Colors.green : (isActive ? Colors.orange : Colors.grey)).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
@@ -358,6 +362,10 @@ class JourneyStepCard extends StatelessWidget {
         size: 10.w,
       ),
     );
+
+    return isActive 
+      ? Pulse(infinite: true, duration: const Duration(seconds: 2), child: illustration) 
+      : illustration;
   }
 }
 

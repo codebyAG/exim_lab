@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:animate_do/animate_do.dart';
 import '../../data/models/journey_model.dart';
 import '../../data/dummy_journey_data.dart';
 import '../widgets/journey_widgets.dart';
@@ -57,10 +58,14 @@ class _ImportJourneyScreenState extends State<ImportJourneyScreen> {
           ..._steps.asMap().entries.map((entry) {
             final index = entry.key;
             final step = entry.value;
-            return JourneyStepCard(
-              step: step,
-              isLast: index == _steps.length - 1,
-              onTap: () => _onStepTap(step, index),
+            return FadeInUp(
+              duration: const Duration(milliseconds: 500),
+              delay: Duration(milliseconds: 100 * index),
+              child: JourneyStepCard(
+                step: step,
+                isLast: index == _steps.length - 1,
+                onTap: () => _onStepTap(step, index),
+              ),
             );
           }),
           SizedBox(height: 4.h),
