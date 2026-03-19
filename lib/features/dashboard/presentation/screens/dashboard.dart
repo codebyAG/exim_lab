@@ -8,6 +8,7 @@ import 'package:exim_lab/features/courses/data/models/course_model.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_details_screen.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_list_screen.dart';
 import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart';
+import 'package:exim_lab/features/quiz/presentation/screens/quiz_topics_screen.dart';
 import 'package:exim_lab/features/dashboard/presentation/providers/dashboard_provider.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
@@ -575,13 +576,17 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       ),
                     ),
 
-                    // 2. GALLERY / NEWS PILL ROW
+                    // 1.5 ABOUT US SECTION
+                    _buildAboutUs(context, cs, theme, t),
+
                     Padding(
-                      padding: EdgeInsets.fromLTRB(5.w, 0.5.h, 5.w, 0),
+                      padding: EdgeInsets.fromLTRB(5.w, 1.5.h, 5.w, 0),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'What would you like to learn today?',
+                          t.translate(
+                            'what_learn_today',
+                          ), // Re-using what_learn_today or fixed string
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: const Color(0xFF6B7280),
                             fontWeight: FontWeight.w500,
@@ -591,14 +596,14 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       ),
                     ),
 
-                    // 3. GALLERY / NEWS CARD ROW
+                    // 3. QUICK ACTIONS ROW 1: GALLERY & MARKET UPDATES
                     Padding(
-                      padding: EdgeInsets.fromLTRB(5.w, 1.5.h, 5.w, 2.5.h),
+                      padding: EdgeInsets.fromLTRB(5.w, 1.5.h, 5.w, 0),
                       child: Row(
                         children: [
                           Expanded(
                             child: _buildShowcase(
-                              key: _galleryHeaderKey,
+                              key: _galleryCardKey,
                               title: 'tut_gallery_title',
                               description: 'tut_gallery_desc',
                               child: Consumer<AuthProvider>(
@@ -628,14 +633,14 @@ class _DashboardBodyState extends State<_DashboardBody> {
                               ),
                             ),
                           ),
-                          SizedBox(width: 3.w),
+                          SizedBox(width: 4.w),
                           Expanded(
                             child: Consumer<AuthProvider>(
                               builder: (context, auth, _) {
                                 final isPremium = auth.user?.isPremium ?? false;
                                 return _DashboardPillChip(
                                   icon: Icons.newspaper_rounded,
-                                  label: 'Latest News',
+                                  label: t.translate('market_updates'),
                                   isLocked: !isPremium,
                                   onTap: () {
                                     if (isPremium) {
@@ -652,6 +657,80 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                     }
                                   },
                                 );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // 4. QUICK ACTIONS ROW 2: QUIZZES & AI EXPERT
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(5.w, 1.5.h, 5.w, 0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: _buildShowcase(
+                              key: _quizzesCardKey,
+                              title: 'tut_quizzes_title',
+                              description: 'tut_quizzes_desc',
+                              child: _DashboardPillChip(
+                                icon: Icons.quiz_rounded,
+                                label: t.translate('quizzes_title'),
+                                onTap: () => AppNavigator.push(
+                                  context,
+                                  const QuizTopicsScreen(),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 4.w),
+                          Expanded(
+                            child: _buildShowcase(
+                              key: _aiExpertCardKey,
+                              title: 'tut_ai_expert_title',
+                              description: 'tut_ai_expert_desc',
+                              child: _DashboardPillChip(
+                                icon: Icons.smart_toy_rounded,
+                                label: t.translate('ai_expert'),
+                                onTap: () => AppNavigator.push(
+                                  context,
+                                  const AiChatScreen(),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // 5. JOURNEY ROW: IMPORT & EXPORT JOURNEY
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(5.w, 1.5.h, 5.w, 2.5.h),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: _buildJourneyCard(
+                              context: context,
+                              cs: cs,
+                              theme: theme,
+                              label: t.translate('start_import_journey'),
+                              icon: Icons.flight_land_rounded,
+                              onTap: () {
+                                // Logic for import journey
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 4.w),
+                          Expanded(
+                            child: _buildJourneyCard(
+                              context: context,
+                              cs: cs,
+                              theme: theme,
+                              label: t.translate('start_export_journey'),
+                              icon: Icons.flight_takeoff_rounded,
+                              onTap: () {
+                                // Logic for export journey
                               },
                             ),
                           ),
@@ -793,6 +872,54 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       ),
                       SizedBox(height: 2.h),
 
+                      // 6. TOOLS (MOVED UP)
+                      ModuleVisibility(
+                        module: 'tools',
+                        child: _buildShowcase(
+                          key: _toolsKey,
+                          title: 'tut_tools_title',
+                          description: 'tut_tools_desc',
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      t.translate('tools_section_title'),
+                                      style: theme.textTheme.titleLarge
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w900,
+                                            fontSize: 18,
+                                          ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {},
+                                      child: Text(
+                                        'See All',
+                                        style: TextStyle(
+                                          color: cs.primary,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 1.h),
+                              Consumer<AuthProvider>(
+                                builder: (context, auth, _) => ToolsSection(
+                                  isPremium: auth.user?.isPremium ?? false,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+
                       // 6. CAROUSEL
                       if (data.addons.carousel.isNotEmpty) ...[
                         ModuleVisibility(
@@ -892,55 +1019,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       ),
                       SizedBox(height: 2.h),
 
-                      // 8. TOOLS
-                      ModuleVisibility(
-                        module: 'tools',
-                        child: _buildShowcase(
-                          key: _toolsKey,
-                          title: 'tut_tools_title',
-                          description: 'tut_tools_desc',
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      t.translate('tools_section_title'),
-                                      style: theme.textTheme.titleLarge
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.w900,
-                                            fontSize: 18,
-                                          ),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {},
-                                      child: Text(
-                                        'See All',
-                                        style: TextStyle(
-                                          color: cs.primary,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 1.h),
-                              Consumer<AuthProvider>(
-                                builder: (context, auth, _) => ToolsSection(
-                                  isPremium: auth.user?.isPremium ?? false,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 2.h),
-
-                      // 9. DYNAMIC SECTIONS
+                      // 10. DYNAMIC SECTIONS
                       ...data.sections.map((section) {
                         if ((section.key == 'course' ||
                                 section.key.contains('Popular') ||
@@ -1151,6 +1230,188 @@ class _DashboardBodyState extends State<_DashboardBody> {
             navActions[index]!();
           }
         },
+      ),
+    );
+  }
+
+  Widget _buildAboutUs(
+    BuildContext context,
+    ColorScheme cs,
+    ThemeData theme,
+    AppLocalizations t,
+  ) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+      child: Container(
+        padding: EdgeInsets.all(4.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.5)),
+          boxShadow: [
+            BoxShadow(
+              color: cs.shadow.withValues(alpha: 0.05),
+              blurRadius: 15,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 28,
+                  backgroundColor: cs.primaryContainer.withValues(alpha: 0.2),
+                  child: Icon(
+                    Icons.person_pin_rounded,
+                    color: cs.primary,
+                    size: 36,
+                  ),
+                ),
+                SizedBox(width: 4.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        t.translate('about_sir_title'),
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 14.sp,
+                          color: cs.onSurface,
+                        ),
+                      ),
+                      Text(
+                        t.translate('about_sir_desc'),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: cs.primary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 1.5.h),
+            Text(
+              t.translate('about_us_text'),
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: cs.onSurfaceVariant,
+                height: 1.4,
+              ),
+            ),
+            SizedBox(height: 1.h),
+            TextButton(
+              onPressed: () => _showAboutUsDialog(context, t),
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                minimumSize: const Size(0, 0),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Text(
+                "${t.translate('read_more')} →",
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  color: cs.primary,
+                  fontSize: 12.sp,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showAboutUsDialog(BuildContext context, AppLocalizations t) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(t.translate('about_us_title')),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                t.translate('about_us_text'),
+                style: const TextStyle(height: 1.5),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                t.translate('about_us_text_full'),
+                style: const TextStyle(height: 1.5),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Close"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildJourneyCard({
+    required BuildContext context,
+    required ColorScheme cs,
+    required ThemeData theme,
+    required String label,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFE0B2).withValues(alpha: 0.5), // Soft peach
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: const Color(0xFFFFB74D).withValues(alpha: 0.3),
+        ),
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 3.w),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.8),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.orange.withValues(alpha: 0.1),
+                      blurRadius: 10,
+                    ),
+                  ],
+                ),
+                child: Icon(icon, color: const Color(0xFFE65100), size: 28),
+              ),
+              SizedBox(height: 1.5.h),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 12.sp,
+                  color: const Color(0xFF4E342E),
+                  height: 1.2,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
