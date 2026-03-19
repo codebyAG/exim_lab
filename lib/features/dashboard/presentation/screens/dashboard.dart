@@ -1307,7 +1307,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
             ),
             SizedBox(height: 1.h),
             TextButton(
-              onPressed: () => _showAboutUsDialog(context, t),
+              onPressed: () => _showAboutUsBottomSheet(context, t, cs, theme),
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,
                 minimumSize: const Size(0, 0),
@@ -1328,36 +1328,151 @@ class _DashboardBodyState extends State<_DashboardBody> {
     );
   }
 
-  void _showAboutUsDialog(BuildContext context, AppLocalizations t) {
-    showDialog(
+  void _showAboutUsBottomSheet(
+    BuildContext context,
+    AppLocalizations t,
+    ColorScheme cs,
+    ThemeData theme,
+  ) {
+    showModalBottomSheet(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(t.translate('about_us_title')),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                t.translate('about_us_text'),
-                style: const TextStyle(height: 1.5),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        height: 70.h,
+        decoration: BoxDecoration(
+          color: cs.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+        ),
+        child: Column(
+          children: [
+            SizedBox(height: 1.5.h),
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: cs.outlineVariant,
+                borderRadius: BorderRadius.circular(2),
               ),
-              const SizedBox(height: 10),
-              Text(
-                t.translate('about_us_text_full'),
-                style: const TextStyle(height: 1.5),
+            ),
+            SizedBox(height: 2.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 6.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    t.translate('about_us_title'),
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      color: cs.onSurface,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: Icon(Icons.close_rounded, color: cs.onSurfaceVariant),
+                    style: IconButton.styleFrom(
+                      backgroundColor: cs.surfaceContainerHighest,
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
+            const Divider(),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(6.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 35,
+                          backgroundColor: cs.primaryContainer.withValues(
+                            alpha: 0.3,
+                          ),
+                          child: Icon(
+                            Icons.person_pin_rounded,
+                            color: cs.primary,
+                            size: 45,
+                          ),
+                        ),
+                        SizedBox(width: 4.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                t.translate('about_sir_title'),
+                                style: theme.textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.w900,
+                                  color: cs.onSurface,
+                                ),
+                              ),
+                              Text(
+                                t.translate('about_sir_desc'),
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: cs.primary,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 4.h),
+                    _buildSectionHeader(cs, theme, "Our Vision"),
+                    SizedBox(height: 1.h),
+                    Text(
+                      t.translate('about_us_text'),
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        color: cs.onSurfaceVariant,
+                        height: 1.6,
+                      ),
+                    ),
+                    SizedBox(height: 3.h),
+                    _buildSectionHeader(cs, theme, "Our Commitment"),
+                    SizedBox(height: 1.h),
+                    Text(
+                      t.translate('about_us_text_full'),
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        color: cs.onSurfaceVariant,
+                        height: 1.6,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(ColorScheme cs, ThemeData theme, String title) {
+    return Row(
+      children: [
+        Container(
+          width: 4,
+          height: 18,
+          decoration: BoxDecoration(
+            color: cs.primary,
+            borderRadius: BorderRadius.circular(2),
           ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Close"),
+        SizedBox(width: 2.w),
+        Text(
+          title,
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w800,
+            color: cs.onSurface,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
