@@ -599,8 +599,6 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     // 1.5 ABOUT US SECTION
                     _buildAboutUs(context, cs, theme, t),
 
-                    SizedBox(height: 2.h),
-
                     Padding(
                       padding: EdgeInsets.fromLTRB(5.w, 1.5.h, 5.w, 0),
                       child: Align(
@@ -1338,7 +1336,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 9.sp,
-                              fontWeight: FontWeight.w900,
+                              fontWeight: FontWeight.w700,
                               letterSpacing: 0.6,
                             ),
                           ),
@@ -1356,7 +1354,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                               style: TextStyle(
                                 color: cs.primary,
                                 fontSize: 11.sp,
-                                fontWeight: FontWeight.w800,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ],
@@ -1397,7 +1395,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                               Text(
                                 t.translate('about_sir_title'),
                                 style: theme.textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.w900,
+                                  fontWeight: FontWeight.bold,
                                   color: const Color(0xFF1D1F33),
                                   fontSize: 16.sp,
                                 ),
@@ -1407,7 +1405,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                 t.translate('about_sir_desc'),
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: cs.primary,
-                                  fontWeight: FontWeight.w800,
+                                  fontWeight: FontWeight.w600,
                                   fontSize: 11.sp,
                                 ),
                               ),
@@ -1447,7 +1445,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             Text(
                               t.translate('read_more'),
                               style: TextStyle(
-                                fontWeight: FontWeight.w900,
+                                fontWeight: FontWeight.bold,
                                 color: cs.primary,
                                 fontSize: 13.sp,
                               ),
@@ -1610,7 +1608,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
         Text(
           title,
           style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w800,
+            fontWeight: FontWeight.w600,
             color: cs.onSurface,
           ),
         ),
@@ -2457,8 +2455,8 @@ class _QuickActionCard extends StatelessWidget {
     return Material(
       color: Colors.white,
       borderRadius: BorderRadius.circular(24),
-      elevation: 8,
-      shadowColor: color.withValues(alpha: 0.2),
+      elevation: 2,
+      shadowColor: color.withValues(alpha: 0.1),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(24),
@@ -2467,11 +2465,8 @@ class _QuickActionCard extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
             border: Border.all(color: color.withValues(alpha: 0.1), width: 1.5),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [color.withValues(alpha: 0.05), Colors.white],
-            ),
+            gradient: null, // Removed low-alpha gradient for clarity
+            color: Colors.white,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -2496,7 +2491,7 @@ class _QuickActionCard extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: theme.textTheme.titleMedium?.copyWith(
                   color: const Color(0xFF1D1F33),
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w600,
                   fontSize: 14.sp,
                 ),
               ),

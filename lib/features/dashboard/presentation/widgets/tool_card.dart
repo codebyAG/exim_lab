@@ -40,13 +40,13 @@ class ToolCard extends StatelessWidget {
                   color: theme.brightness == Brightness.dark
                       ? Colors.black.withValues(alpha: 0.3)
                       : Colors.black.withValues(alpha: 0.08),
-                  blurRadius: 16,
-                  offset: const Offset(0, 6),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
                 ),
                 BoxShadow(
                   color: cs.primary.withValues(alpha: 0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
                 ),
               ],
               border: Border.all(
@@ -56,7 +56,7 @@ class ToolCard extends StatelessWidget {
               image: const DecorationImage(
                 image: AssetImage('assets/tool_card_bg.png'),
                 fit: BoxFit.cover,
-                opacity: 0.35,
+                opacity: 0.05, // Greatly reduced opacity for clarity
               ),
             ),
             child: Stack(
@@ -98,7 +98,7 @@ class ToolCard extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: theme.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                           SizedBox(height: 0.6.h),
