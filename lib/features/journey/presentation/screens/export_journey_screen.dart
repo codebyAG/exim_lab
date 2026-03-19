@@ -137,7 +137,26 @@ class _ExportJourneyScreenState extends State<ExportJourneyScreen> {
   void _onStepTap(JourneyStep step) {
     if (step.status == JourneyStepStatus.locked) return;
 
-    // TODO: Implement actual logic or navigation
-    debugPrint('Tapped Step: ${step.title}');
+    if (step.id == 1) {
+      showDialog(
+        context: context,
+        builder: (context) => CategorySelectionDialog(
+          title: 'Which product category are you interested in exporting?',
+          onContinue: (category) {
+            Navigator.pop(context);
+            debugPrint('Selected for Export: $category');
+            // Advance to next step (Simulation)
+            _advanceStep();
+          },
+        ),
+      );
+    }
+  }
+
+  void _advanceStep() {
+    setState(() {
+      _steps[0] = _steps[0].copyWith(status: JourneyStepStatus.completed);
+      _steps[1] = _steps[1].copyWith(status: JourneyStepStatus.active);
+    });
   }
 }
