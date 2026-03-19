@@ -532,23 +532,32 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                             imageUrl: user.avatarUrl!,
                                             fit: BoxFit.cover,
                                             placeholder: (_, _) => Container(
-                                              color: cs.primaryContainer,
+                                              color: cs.surfaceContainerHighest,
                                             ),
                                             errorWidget:
-                                                (context, url, error) => Icon(
-                                                  Icons.person_rounded,
-                                                  size: 22,
-                                                  color: cs.primary,
+                                                (
+                                                  context,
+                                                  url,
+                                                  error,
+                                                ) => Container(
+                                                  color: cs
+                                                      .surfaceContainerHighest,
+                                                  child: Icon(
+                                                    Icons.person_rounded,
+                                                    size: 24,
+                                                    color: cs.onSurfaceVariant,
+                                                  ),
                                                 ),
                                           );
                                         }
                                         return CircleAvatar(
                                           radius: 19,
-                                          backgroundColor: cs.primaryContainer,
+                                          backgroundColor:
+                                              cs.surfaceContainerHighest,
                                           child: Icon(
                                             Icons.person_rounded,
-                                            size: 22,
-                                            color: cs.primary,
+                                            size: 24,
+                                            color: cs.onSurfaceVariant,
                                           ),
                                         );
                                       },
