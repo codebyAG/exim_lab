@@ -111,12 +111,14 @@ class AnalyticsService {
     if (_isSyncing) return;
     _isSyncing = true;
 
+    // 🕒 Update last sync time IMMEDIATELY to prevent rapid retries if API fails
+    // This enforces the 12-hour rule even if the sync itself fails or takes time
+    final nowStr = DateTime.now().toIso8601String();
+    await prefs.setString(_lastSyncKey, nowStr);
+
     try {
       final List<String> queue = prefs.getStringList(_queueKey) ?? [];
-      if (queue.isEmpty) {
-        await prefs.setString(_lastSyncKey, DateTime.now().toIso8601String());
-        return;
-      }
+      if (queue.isEmpty) return;
 
       // 1. Convert List<String> (JSON) to List<Map>
       final List<Map<String, dynamic>> batchedData = queue
@@ -134,15 +136,12 @@ class AnalyticsService {
 
       // 3. Clear Queue on Success
       await prefs.remove(_queueKey);
-      await prefs.setString(_lastSyncKey, DateTime.now().toIso8601String());
       debugPrint(
         '🚀 Successfully Batched ${batchedData.length} Events to Server',
       );
     } catch (e) {
       debugPrint('⚠️ Batch Sync Failed: $e');
-      // Update last sync time anyway to prevent retrying on every event
-      // This enforces the 12-hour rule even for retries
-      await prefs.setString(_lastSyncKey, DateTime.now().toIso8601String());
+      // No need to update _lastSyncKey here, it was already updated at the start
     } finally {
       _isSyncing = false;
     }
