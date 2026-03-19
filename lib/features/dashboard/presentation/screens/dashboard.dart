@@ -411,9 +411,11 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                         '${t.translate('welcome_back')},',
                                         style: theme.textTheme.bodyLarge
                                             ?.copyWith(
-                                              color: const Color(0xFF1D1F33),
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 15.sp,
+                                              color: const Color(
+                                                0xFF6B7280,
+                                              ), // Soft Gray
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 16.sp,
                                             ),
                                       ),
                                     ],
@@ -434,10 +436,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                       overflow: TextOverflow.ellipsis,
                                       style: theme.textTheme.headlineSmall
                                           ?.copyWith(
-                                            fontWeight: FontWeight.w800,
+                                            fontWeight: FontWeight.w900,
                                             color: const Color(0xFF1D1F33),
-                                            fontSize: 22.sp,
-                                            letterSpacing: -0.5,
+                                            fontSize: 24.sp,
+                                            letterSpacing: -0.8,
                                           ),
                                     ),
                                 ],
@@ -450,48 +452,71 @@ class _DashboardBodyState extends State<_DashboardBody> {
                               description: 'tut_notif_desc',
                               child: Consumer<NotificationsProvider>(
                                 builder: (context, notifProvider, child) {
-                                  return Stack(
-                                    clipBehavior: Clip.none,
-                                    children: [
-                                      IconButton(
-                                        onPressed: () => AppNavigator.push(
-                                          context,
-                                          const NotificationsScreen(),
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: Colors.grey.withValues(
+                                          alpha: 0.1,
                                         ),
-                                        icon: const Icon(
-                                          Icons.notifications_outlined,
-                                          color: Color(0xFF1D1F33),
-                                          size: 24,
-                                        ),
+                                        width: 1,
                                       ),
-                                      if (notifProvider.unreadCount > 0)
-                                        Positioned(
-                                          right: 4,
-                                          top: 4,
-                                          child: Container(
-                                            padding: const EdgeInsets.all(2),
-                                            decoration: BoxDecoration(
-                                              color: Colors.black.withValues(
-                                                alpha: 0.6,
-                                              ),
-                                              shape: BoxShape.circle,
-                                            ),
-                                            constraints: const BoxConstraints(
-                                              minWidth: 16,
-                                              minHeight: 16,
-                                            ),
-                                            child: Text(
-                                              '${notifProvider.unreadCount}',
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 9,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              textAlign: TextAlign.center,
-                                            ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withValues(
+                                            alpha: 0.05,
+                                          ),
+                                          blurRadius: 10,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Stack(
+                                      clipBehavior: Clip.none,
+                                      children: [
+                                        IconButton(
+                                          onPressed: () => AppNavigator.push(
+                                            context,
+                                            const NotificationsScreen(),
+                                          ),
+                                          icon: const Icon(
+                                            Icons.notifications_none_rounded,
+                                            color: Color(0xFF1D1F33),
+                                            size: 24,
                                           ),
                                         ),
-                                    ],
+                                        if (notifProvider.unreadCount > 0)
+                                          Positioned(
+                                            right: 8,
+                                            top: 8,
+                                            child: Container(
+                                              padding: const EdgeInsets.all(2),
+                                              decoration: BoxDecoration(
+                                                color: cs.primary,
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                  color: Colors.white,
+                                                  width: 2,
+                                                ),
+                                              ),
+                                              constraints: const BoxConstraints(
+                                                minWidth: 14,
+                                                minHeight: 14,
+                                              ),
+                                              child: Text(
+                                                '${notifProvider.unreadCount}',
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 8,
+                                                  fontWeight: FontWeight.w900,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
                                   );
                                 },
                               ),
@@ -508,12 +533,12 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                 ),
                                 borderRadius: BorderRadius.circular(40),
                                 child: Container(
-                                  padding: const EdgeInsets.all(2),
+                                  padding: const EdgeInsets.all(3),
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     border: Border.all(
-                                      color: Colors.grey.withValues(alpha: 0.1),
-                                      width: 1,
+                                      color: cs.primary.withValues(alpha: 0.4),
+                                      width: 2,
                                     ),
                                   ),
                                   child: Container(
@@ -1351,7 +1376,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             "FOUNDER PROFILE",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 9.sp,
+                              fontSize: 10.sp,
                               fontWeight: FontWeight.w900,
                               letterSpacing: 0.8,
                             ),
@@ -1369,7 +1394,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                               "48+ Years Experience",
                               style: TextStyle(
                                 color: cs.primary,
-                                fontSize: 10.sp,
+                                fontSize: 12.sp,
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
@@ -1415,7 +1440,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                 style: theme.textTheme.headlineSmall?.copyWith(
                                   fontWeight: FontWeight.w900,
                                   color: const Color(0xFF1D1F33),
-                                  fontSize: 16.sp,
+                                  fontSize: 18.sp,
                                 ),
                               ),
                               SizedBox(height: 0.5.h),
@@ -1424,7 +1449,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: cs.primary,
                                   fontWeight: FontWeight.w800,
-                                  fontSize: 11.sp,
+                                  fontSize: 13.sp,
                                 ),
                               ),
                             ],
@@ -1442,7 +1467,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: const Color(0xFF4B5563),
                         height: 1.5,
-                        fontSize: 12.sp,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -1465,7 +1490,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                               style: TextStyle(
                                 fontWeight: FontWeight.w900,
                                 color: cs.primary,
-                                fontSize: 13.sp,
+                                fontSize: 15.sp,
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -2080,7 +2105,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
           Text(
             label,
             style: TextStyle(
-              fontSize: 12.sp,
+              fontSize: 14.sp,
               fontWeight: FontWeight.w600,
               color: Colors.black87,
             ),
@@ -2237,7 +2262,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                   "FEATURED MASTERCLASS",
                   style: TextStyle(
                     color: const Color(0xFFFF8A00),
-                    fontSize: 10.sp,
+                    fontSize: 11.sp,
                     fontWeight: FontWeight.w900,
                     letterSpacing: 1.2,
                   ),
@@ -2506,7 +2531,7 @@ class _DashboardPillChip extends StatelessWidget {
                   style: theme.textTheme.titleMedium?.copyWith(
                     color: const Color(0xFF1D1F33),
                     fontWeight: FontWeight.w700,
-                    fontSize: 13.sp,
+                    fontSize: 15.sp,
                     letterSpacing: 0,
                   ),
                 ),
