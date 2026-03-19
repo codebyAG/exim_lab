@@ -74,7 +74,9 @@ class AnalyticsService {
       currentQueue.add(jsonEncode(eventData));
       await prefs.setStringList(_queueKey, currentQueue);
 
-      debugPrint('📥 Event Queued Locally: $eventName (Total: ${currentQueue.length})');
+      debugPrint(
+        '📥 Event Queued Locally: $eventName (Total: ${currentQueue.length})',
+      );
 
       // 3. Check if it's time to sync
       await _checkAndSyncEvents(prefs);
@@ -111,8 +113,9 @@ class AnalyticsService {
 
     try {
       // 1. Convert List<String> (JSON) to List<Map>
-      final List<Map<String, dynamic>> batchedData =
-          queue.map((e) => jsonDecode(e) as Map<String, dynamic>).toList();
+      final List<Map<String, dynamic>> batchedData = queue
+          .map((e) => jsonDecode(e) as Map<String, dynamic>)
+          .toList();
 
       // 2. Send as Array to Backend
       await callApi(
@@ -127,7 +130,9 @@ class AnalyticsService {
       // 3. Clear Queue on Success
       await prefs.remove(_queueKey);
       await prefs.setString(_lastSyncKey, DateTime.now().toIso8601String());
-      debugPrint('🚀 Successfully Batched ${batchedData.length} Events to Server');
+      debugPrint(
+        '🚀 Successfully Batched ${batchedData.length} Events to Server',
+      );
     } catch (e) {
       debugPrint('⚠️ Batch Sync Failed: $e (Data kept for next attempt)');
     }
