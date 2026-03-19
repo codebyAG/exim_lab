@@ -373,33 +373,57 @@ class _JourneyQuestionDialogState extends State<JourneyQuestionDialog> {
 
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-      child: Padding(
+      insetPadding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 10.h),
+      child: Container(
         padding: EdgeInsets.all(6.w),
+        constraints: BoxConstraints(maxHeight: 80.h),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              widget.title,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w900),
+            // Progress Header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  widget.title,
+                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: Colors.orange),
+                ),
+                Text(
+                  '${_currentQuestionIndex + 1}/${widget.questions.length}',
+                  style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: Colors.grey),
+                ),
+              ],
             ),
-            SizedBox(height: 3.h),
+            SizedBox(height: 1.5.h),
+            LinearProgressIndicator(
+              value: (_currentQuestionIndex + 1) / widget.questions.length,
+              backgroundColor: Colors.orange.withValues(alpha: 0.1),
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.orange),
+              borderRadius: BorderRadius.circular(10),
+              minHeight: 6,
+            ),
+            SizedBox(height: 4.h),
+            
+            // Question Text
             Text(
               question.text,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w700),
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w900,
+                color: const Color(0xFF1D1F33),
+                height: 1.2,
+              ),
             ),
-            SizedBox(height: 2.5.h),
+            SizedBox(height: 4.h),
+            
+            // Options List
             Flexible(
-              child: GridView.builder(
+              child: ListView.separated(
                 shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 2.0,
-                  mainAxisSpacing: 1.5.h,
-                  crossAxisSpacing: 3.w,
-                ),
+                padding: EdgeInsets.zero,
                 itemCount: question.options.length,
+                separatorBuilder: (context, index) => SizedBox(height: 1.5.h),
                 itemBuilder: (context, index) {
                   final option = question.options[index];
                   final isSelected = _answers[question.id] == option;
@@ -407,30 +431,56 @@ class _JourneyQuestionDialogState extends State<JourneyQuestionDialog> {
                     onTap: () => setState(() => _answers[question.id] = option),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
+                      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
                       decoration: BoxDecoration(
-                        color: isSelected ? Colors.orange : Colors.orange.withValues(alpha: 0.05),
-                        borderRadius: BorderRadius.circular(16),
+                        color: isSelected ? Colors.orange : Colors.white,
+                        borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: isSelected ? Colors.orange : Colors.orange.withValues(alpha: 0.1),
+                          color: isSelected ? Colors.orange : Colors.grey.withValues(alpha: 0.2),
                           width: 2,
                         ),
+                        boxShadow: [
+                          if (isSelected)
+                            BoxShadow(
+                              color: Colors.orange.withValues(alpha: 0.2),
+                              blurRadius: 15,
+                              offset: const Offset(0, 8),
+                            ),
+                        ],
                       ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        option,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          fontWeight: FontWeight.bold,
-                          color: isSelected ? Colors.white : Colors.black87,
-                        ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              option,
+                              style: TextStyle(
+                                fontSize: 13.5.sp,
+                                fontWeight: FontWeight.w700,
+                                color: isSelected ? Colors.white : const Color(0xFF374151),
+                              ),
+                            ),
+                          ),
+                          if (isSelected)
+                            const Icon(Icons.check_circle_rounded, color: Colors.white)
+                          else
+                            Container(
+                              width: 24,
+                              height: 24,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.grey.withValues(alpha: 0.3), width: 2),
+                              ),
+                            ),
+                        ],
                       ),
                     ),
                   );
                 },
               ),
             ),
-            SizedBox(height: 3.h),
+            SizedBox(height: 4.h),
+            
+            // Action Button
             ElevatedButton(
               onPressed: _answers[question.id] == null
                   ? null
@@ -444,12 +494,14 @@ class _JourneyQuestionDialogState extends State<JourneyQuestionDialog> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
                 foregroundColor: Colors.white,
-                minimumSize: Size(double.infinity, 6.h),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                minimumSize: Size(double.infinity, 7.h),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                elevation: 8,
+                shadowColor: Colors.orange.withValues(alpha: 0.4),
               ),
               child: Text(
-                _currentQuestionIndex < widget.questions.length - 1 ? 'Next' : 'Continue',
-                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
+                _currentQuestionIndex < widget.questions.length - 1 ? 'Next Step' : 'Confirm Choice',
+                style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w900),
               ),
             ),
           ],
