@@ -65,7 +65,7 @@ class AnalyticsService {
       final eventData = {
         'event_name': eventName,
         'parameters': params,
-        'event_timestamp': DateTime.now().toIso8601String(),
+        'event_timestamp': DateTime.now().toUtc().toIso8601String(),
       };
 
       // 2. Add to Local List (JSON String List)
