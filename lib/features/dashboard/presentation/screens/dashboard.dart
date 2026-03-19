@@ -676,7 +676,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                   isLocked: !isPremium,
                                   icon: Icons.flight_land_rounded,
                                   onTap: () {
-                                    if (isPremium) {
+                                    if (!isPremium) {
                                       AppNavigator.push(
                                         context,
                                         const ImportJourneyScreen(),
@@ -706,7 +706,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                   isLocked: !isPremium,
                                   icon: Icons.flight_takeoff_rounded,
                                   onTap: () {
-                                    if (isPremium) {
+                                    if (!isPremium) {
                                       AppNavigator.push(
                                         context,
                                         const ExportJourneyScreen(),
