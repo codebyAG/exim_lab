@@ -122,6 +122,7 @@ class AnalyticsService {
         methodType: MethodType.post,
         requestData: {'events': batchedData},
         parser: (json) => json,
+        logErrorEvent: false, // Prevent infinite recursion if sync fails
       );
 
       // 3. Clear Queue on Success
@@ -149,6 +150,7 @@ class AnalyticsService {
           // No phone number because this matches anonymous install
         },
         parser: (json) => json,
+        logErrorEvent: false, // Prevent recursion for public tracking
       );
       debugPrint('🚀 Install Source Logged to Public API');
     } catch (e) {

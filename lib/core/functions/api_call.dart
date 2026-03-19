@@ -15,6 +15,7 @@ Future<T> callApi<T>(
   String contentType = 'application/json',
   MethodType methodType = MethodType.get,
   ProgressCallback? progressCallback,
+  bool logErrorEvent = true, // Added to prevent analytics recursion
 }) async {
   log("➡️ API URL: $url");
   if (requestData != null) {
@@ -70,8 +71,10 @@ Future<T> callApi<T>(
     }
   } on DioException catch (e) {
     log("❌ DIO ERROR: ${e.message}");
-    // 📊 LOG ERROR
-    AnalyticsService().logError(message: 'Dio Error: ${e.message} at $url');
+    // 📊 LOG ERROR (if not suppressed)
+    if (logErrorEvent) {
+      AnalyticsService().logError(message: 'Dio Error: ${e.message} at $url');
+    }
 
     throw ApiException(
       message: dioExceptionMessage(e.type),
@@ -79,8 +82,10 @@ Future<T> callApi<T>(
     );
   } catch (e) {
     log("❌ UNKNOWN ERROR: $e");
-    // 📊 LOG ERROR
-    AnalyticsService().logError(message: 'Unknown Error: $e at $url');
+    // 📊 LOG ERROR (if not suppressed)
+    if (logErrorEvent) {
+      AnalyticsService().logError(message: 'Unknown Error: $e at $url');
+    }
 
     throw ApiException(message: 'Something went wrong');
   }
