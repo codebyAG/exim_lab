@@ -26,7 +26,7 @@ class ApiConstants {
   static const String notifications = '$baseUrl/api/notifications';
   static const String appModules = '$baseUrl/api/app-modules';
   static const String shortVideos = '$baseUrl/api/short-videos';
-  static const String logAnalytics = '$baseUrl/api/analytics/log-event';
+  static const String logAnalytics = '$baseUrl/api/analytics/track';
   static const String logInstall = '$baseUrl/api/analytics/log-install';
   static const String checkMembership = '$baseUrl/api/subscriptions/me/status';
 

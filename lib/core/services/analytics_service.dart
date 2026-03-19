@@ -65,8 +65,7 @@ class AnalyticsService {
       final eventData = {
         'event_name': eventName,
         'parameters': params,
-        'phone_number': _userMobile ?? '',
-        'timestamp': DateTime.now().toIso8601String(),
+        'event_timestamp': DateTime.now().toIso8601String(),
       };
 
       // 2. Add to Local List (JSON String List)
@@ -121,9 +120,7 @@ class AnalyticsService {
       await callApi(
         ApiConstants.logAnalytics,
         methodType: MethodType.post,
-        requestData: {
-          'data': batchedData, // Only "data" key with array as requested
-        },
+        requestData: {'events': batchedData},
         parser: (json) => json,
       );
 
