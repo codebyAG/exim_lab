@@ -646,7 +646,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             child: _QuickActionCard(
                               icon: Icons.newspaper_rounded,
                               label: t.translate('market_updates'),
-                              color: cs.secondary, // Theme Soft Peach
+                              color: cs.primary, // Strict theme matching
                               onTap: () {
                                 AppNavigator.push(
                                   context,
@@ -898,9 +898,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                     return _QuickActionCard(
                                       icon: Icons.quiz_rounded,
                                       label: t.translate('quizzes_title'),
-                                      color: const Color(
-                                        0xFFF6862A,
-                                      ), // Logo Orange
+                                      color: cs.primary, // Strict theme matching
                                       isLocked: !isPremium,
                                       onTap: () {
                                         if (isPremium) {
@@ -934,9 +932,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                     return _QuickActionCard(
                                       icon: Icons.smart_toy_rounded,
                                       label: t.translate('ai_expert'),
-                                      color: const Color(
-                                        0xFFFF5722,
-                                      ), // Deep Orange
+                                      color: cs.primary, // Strict theme matching
                                       isLocked: !isPremium,
                                       onTap: () {
                                         if (isPremium) {
@@ -1318,7 +1314,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
               ),
 
               Padding(
-                padding: EdgeInsets.all(5.w),
+                padding: EdgeInsets.all(4.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -1328,8 +1324,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       children: [
                         Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
+                            horizontal: 10,
+                            vertical: 5,
                           ),
                           decoration: BoxDecoration(
                             color: cs.primary,
@@ -1339,9 +1335,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             "FOUNDER PROFILE",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 10.sp,
+                              fontSize: 9.sp,
                               fontWeight: FontWeight.w900,
-                              letterSpacing: 0.8,
+                              letterSpacing: 0.6,
                             ),
                           ),
                         ),
@@ -1350,14 +1346,14 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             Icon(
                               Icons.verified_rounded,
                               color: cs.primary,
-                              size: 16,
+                              size: 14,
                             ),
                             const SizedBox(width: 4),
                             Text(
                               "48+ Years Experience",
                               style: TextStyle(
                                 color: cs.primary,
-                                fontSize: 12.sp,
+                                fontSize: 11.sp,
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
@@ -1365,7 +1361,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 2.5.h),
+                    SizedBox(height: 1.5.h),
 
                     // MAIN CONTENT
                     Row(
@@ -1373,16 +1369,16 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       children: [
                         // PROFILE VISUAL
                         Container(
-                          padding: const EdgeInsets.all(3),
+                          padding: const EdgeInsets.all(2),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
                               color: cs.primary.withValues(alpha: 0.4),
-                              width: 2,
+                              width: 1.5,
                             ),
                           ),
                           child: CircleAvatar(
-                            radius: 35,
+                            radius: 28,
                             backgroundColor: Colors.white,
                             backgroundImage: const AssetImage(
                               'assets/ashok_sir_image.png',
@@ -1401,16 +1397,16 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                 style: theme.textTheme.headlineSmall?.copyWith(
                                   fontWeight: FontWeight.w900,
                                   color: const Color(0xFF1D1F33),
-                                  fontSize: 18.sp,
+                                  fontSize: 16.sp,
                                 ),
                               ),
-                              SizedBox(height: 0.5.h),
+                              SizedBox(height: 0.2.h),
                               Text(
                                 t.translate('about_sir_desc'),
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: cs.primary,
                                   fontWeight: FontWeight.w800,
-                                  fontSize: 13.sp,
+                                  fontSize: 11.sp,
                                 ),
                               ),
                             ],
@@ -1418,7 +1414,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 2.h),
+                    SizedBox(height: 1.2.h),
 
                     // DESCRIPTION TEXT
                     Text(
@@ -1427,12 +1423,12 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: const Color(0xFF4B5563),
-                        height: 1.5,
-                        fontSize: 14.sp,
+                        height: 1.4,
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    SizedBox(height: 1.5.h),
+                    SizedBox(height: 0.8.h),
 
                     // ACTION BUTTON
                     InkWell(
@@ -1440,7 +1436,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                           _showAboutUsBottomSheet(context, t, cs, theme),
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                          vertical: 12,
+                          vertical: 8,
                           horizontal: 4,
                         ),
                         child: Row(
@@ -1451,7 +1447,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                               style: TextStyle(
                                 fontWeight: FontWeight.w900,
                                 color: cs.primary,
-                                fontSize: 15.sp,
+                                fontSize: 13.sp,
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -1636,15 +1632,15 @@ class _DashboardBodyState extends State<_DashboardBody> {
         height: 12.h,
         padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
         decoration: BoxDecoration(
-          color: const Color(0xFFFFEBD8), // Soft premium peach
+          color: cs.primary.withValues(alpha: 0.08), // Theme-aligned light orange
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: const Color(0xFFFFDAB9), // Slightly darker peach border
+            color: cs.primary.withValues(alpha: 0.15), // Theme-aligned border
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFFF7B00).withValues(alpha: 0.1),
+              color: cs.primary.withValues(alpha: 0.1),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -1662,12 +1658,12 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     color: Colors.white.withValues(alpha: 0.8),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(icon, color: const Color(0xFFF16622), size: 24),
+                  child: Icon(icon, color: cs.primary, size: 24),
                 ),
                 Text(
                   label,
                   style: theme.textTheme.titleSmall?.copyWith(
-                    color: const Color(0xFF8B4513), // Saddle Brown for text
+                    color: cs.onSurface, // Matching theme text colors
                     fontWeight: FontWeight.w900,
                     fontSize: 11.5.sp,
                     height: 1.1,
@@ -1906,7 +1902,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             children: [
                               Text(
                                 t["name"]!,
-                                style: const TextStyle(
+                                style: TextStyle(
+                                  color: cs.primary,
+                                  fontSize: 11.sp,
                                   fontWeight: FontWeight.w800,
                                 ),
                               ),
@@ -2413,9 +2411,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             child: const Text(
                               "Watch Now",
                               style: TextStyle(
+                                fontSize: 13,
                                 color: Colors.white,
                                 fontWeight: FontWeight.w900,
-                                fontSize: 13,
                               ),
                             ),
                           ),
