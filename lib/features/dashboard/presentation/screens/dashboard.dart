@@ -565,6 +565,27 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     // 1.5 ABOUT US SECTION
                     _buildAboutUs(context, cs, theme, t),
 
+                    // 1.6 MASTERCLASS HIGHLIGHT (MOVED FROM BOTTOM)
+                    Consumer<DashboardProvider>(
+                      builder: (context, dashboard, _) {
+                        final data = dashboard.data;
+                        if (data == null) return const SizedBox();
+                        return _buildShowcase(
+                          key: _masterclassKey,
+                          title: 'Masterclass',
+                          description:
+                              'Watch our complete Import Export Roadmap',
+                          child: _buildMasterclassHighlight(
+                            context,
+                            cs,
+                            theme,
+                            data,
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 2.h),
+
                     Padding(
                       padding: EdgeInsets.fromLTRB(5.w, 1.5.h, 5.w, 0),
                       child: Align(
@@ -883,20 +904,6 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             ],
                           );
                         },
-                      ),
-                      SizedBox(height: 2.h),
-
-                      // 5. 45-MINUTE MASTERCLASS HIGHLIGHT
-                      _buildShowcase(
-                        key: _masterclassKey,
-                        title: 'Masterclass',
-                        description: 'Watch our complete Import Export Roadmap',
-                        child: _buildMasterclassHighlight(
-                          context,
-                          cs,
-                          theme,
-                          data,
-                        ),
                       ),
                       SizedBox(height: 2.h),
 
