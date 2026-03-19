@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:provider/provider.dart';
 import '../../data/models/journey_model.dart';
 import '../../data/dummy_journey_data.dart';
 import '../widgets/journey_widgets.dart';
+import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/premium_unlock_dialog.dart';
 
 class ExportJourneyScreen extends StatefulWidget {
   const ExportJourneyScreen({super.key});
@@ -23,6 +26,8 @@ class _ExportJourneyScreenState extends State<ExportJourneyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isPremium = context.watch<AuthProvider>().user?.isPremium ?? false;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF9FAFB),
       appBar: AppBar(
@@ -64,6 +69,7 @@ class _ExportJourneyScreenState extends State<ExportJourneyScreen> {
               child: JourneyStepCard(
                 step: step,
                 isLast: index == _steps.length - 1,
+                isPremiumLocked: step.isPremium && !isPremium,
                 onTap: () => _onStepTap(step, index),
               ),
             );
@@ -75,6 +81,17 @@ class _ExportJourneyScreenState extends State<ExportJourneyScreen> {
   }
 
   void _onStepTap(JourneyStep step, int index) {
+    final bool isPremium = context.read<AuthProvider>().user?.isPremium ?? false;
+
+    // Gate premium steps (Step 5 onwards / Index 4+)
+    if (step.isPremium && !isPremium) {
+      showDialog(
+        context: context,
+        builder: (context) => const PremiumUnlockDialog(),
+      );
+      return;
+    }
+
     if (step.status == JourneyStepStatus.locked) return;
 
     if (step.questions != null && step.questions!.isNotEmpty) {
@@ -95,13 +112,21 @@ class _ExportJourneyScreenState extends State<ExportJourneyScreen> {
   }
 
   void _advanceStep(int currentIndex) {
+    final bool isPremium = context.read<AuthProvider>().user?.isPremium ?? false;
+
     setState(() {
       // Complete current step
       _steps[currentIndex] = _steps[currentIndex].copyWith(status: JourneyStepStatus.completed);
       
-      // Unlock next step if exists
+      // Unlock next step if it's NOT premium locked for this user
       if (currentIndex + 1 < _steps.length) {
-        _steps[currentIndex + 1] = _steps[currentIndex + 1].copyWith(status: JourneyStepStatus.active);
+        final nextStep = _steps[currentIndex + 1];
+        if (!nextStep.isPremium || isPremium) {
+          _steps[currentIndex + 1] = nextStep.copyWith(status: JourneyStepStatus.active);
+        } else {
+          // It remains locked, but user will get the premium prompt on click
+          _steps[currentIndex + 1] = nextStep.copyWith(status: JourneyStepStatus.locked);
+        }
       }
     });
 

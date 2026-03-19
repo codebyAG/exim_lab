@@ -71,6 +71,7 @@ class DummyJourneyData {
         title: 'Check Regulations',
         description: 'HS Code, Import duty, GST, restrictions.',
         icon: Icons.gavel_rounded,
+        isPremium: true,
         questions: [
           JourneyQuestion(
             id: 'import_reg',
@@ -84,6 +85,7 @@ class DummyJourneyData {
         title: 'Place Order',
         description: 'Issue Purchase Order (PO). Make payment.',
         icon: Icons.shopping_cart_checkout_rounded,
+        isPremium: true,
         questions: [
           JourneyQuestion(
             id: 'import_order',
@@ -97,6 +99,7 @@ class DummyJourneyData {
         title: 'Negotiate Deal',
         description: 'Finalize: Price (FOB/CIF), MOQ (minimum order), Payment terms (Advance / LC).',
         icon: Icons.handshake_rounded,
+        isPremium: true,
         questions: [
           JourneyQuestion(
             id: 'import_neg',
@@ -110,6 +113,7 @@ class DummyJourneyData {
         title: 'Shipping & Logistics',
         description: 'Choose shipping: Air (fast, costly), Sea (cheap, slow). Hire freight forwarder.',
         icon: Icons.local_shipping_rounded,
+        isPremium: true,
         questions: [
           JourneyQuestion(
             id: 'import_ship',
@@ -123,6 +127,7 @@ class DummyJourneyData {
         title: 'Customs Clearance',
         description: 'Invoice, Packing list, Bill of lading.',
         icon: Icons.description_rounded,
+        isPremium: true,
         questions: [
           JourneyQuestion(
             id: 'import_customs',
@@ -136,6 +141,7 @@ class DummyJourneyData {
         title: 'Receive Goods',
         description: 'Delivery to warehouse. Check quality & quantity.',
         icon: Icons.receipt_long_rounded,
+        isPremium: true,
         questions: [
           JourneyQuestion(
             id: 'import_receive',
@@ -149,6 +155,7 @@ class DummyJourneyData {
         title: 'Sell in Market',
         description: 'Online / offline / wholesale. Price for profit.',
         icon: Icons.storefront_rounded,
+        isPremium: true,
         questions: [
           JourneyQuestion(
             id: 'import_sell',
@@ -220,6 +227,7 @@ class DummyJourneyData {
         title: 'Find Buyers',
         description: 'Engage in B2B portals, trade fairs, and embassies to find global buyers.',
         icon: Icons.language_rounded,
+        isPremium: true,
         questions: [
           JourneyQuestion(
             id: 'export_buyers',
@@ -233,6 +241,7 @@ class DummyJourneyData {
         title: 'Pricing & Quotation',
         description: 'Prepare Performa Invoice with FOB/CIF pricing.',
         icon: Icons.request_quote_rounded,
+        isPremium: true,
         questions: [
           JourneyQuestion(
             id: 'export_price',
@@ -246,6 +255,7 @@ class DummyJourneyData {
         title: 'Export Documentation',
         description: 'Prepare Commercial Invoice, Packing List, and Shipping Bill.',
         icon: Icons.description_rounded,
+        isPremium: true,
         questions: [
           JourneyQuestion(
             id: 'export_docs',
@@ -259,6 +269,7 @@ class DummyJourneyData {
         title: 'Quality Inspection',
         description: 'Ensure products meet international standards. Get pre-shipment inspection.',
         icon: Icons.rule_folder_rounded,
+        isPremium: true,
         questions: [
           JourneyQuestion(
             id: 'export_quality',
@@ -272,6 +283,7 @@ class DummyJourneyData {
         title: 'Shipping & Freight',
         description: 'Book containers. Choose Air or Sea freight.',
         icon: Icons.directions_boat_rounded,
+        isPremium: true,
         questions: [
           JourneyQuestion(
             id: 'export_ship',
@@ -285,6 +297,7 @@ class DummyJourneyData {
         title: 'Duty Drawbacks',
         description: 'Claim export incentives like RoDTEP/DBK from the government.',
         icon: Icons.monetization_on_rounded,
+        isPremium: true,
         questions: [
           JourneyQuestion(
             id: 'export_incentives',
@@ -298,6 +311,7 @@ class DummyJourneyData {
         title: 'Payment Receipt',
         description: 'Secure payments via LC (Letter of Credit) or Advance TT.',
         icon: Icons.payments_rounded,
+        isPremium: true,
         questions: [
           JourneyQuestion(
             id: 'export_payment',

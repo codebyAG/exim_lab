@@ -149,12 +149,14 @@ class JourneyHeader extends StatelessWidget {
 class JourneyStepCard extends StatelessWidget {
   final JourneyStep step;
   final bool isLast;
+  final bool isPremiumLocked;
   final VoidCallback onTap;
 
   const JourneyStepCard({
     super.key,
     required this.step,
     required this.isLast,
+    this.isPremiumLocked = false,
     required this.onTap,
   });
 
@@ -274,7 +276,7 @@ class JourneyStepCard extends StatelessWidget {
                     ),
                   ),
                   if (isActive) _buildStartButton(),
-                  if (isLocked) _buildLockedBadge(),
+                  if (isLocked || isPremiumLocked) _buildLockedBadge(),
                 ],
               ),
             ),
@@ -327,20 +329,26 @@ class JourneyStepCard extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.6.h),
         decoration: BoxDecoration(
-          color: Colors.grey.shade100,
+          color: isPremiumLocked ? Colors.orange.withValues(alpha: 0.1) : Colors.grey.shade100,
           borderRadius: BorderRadius.circular(12),
+          border: isPremiumLocked ? Border.all(color: Colors.orange.withValues(alpha: 0.2)) : null,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.lock_rounded, size: 14, color: Colors.grey.shade500),
+            Icon(
+              isPremiumLocked ? Icons.stars_rounded : Icons.lock_rounded,
+              size: 14,
+              color: isPremiumLocked ? Colors.orange : Colors.grey.shade500,
+            ),
             SizedBox(width: 1.5.w),
             Text(
-              'Locked',
+              isPremiumLocked ? 'PREMIUM' : 'Locked',
               style: TextStyle(
-                fontSize: 11.sp,
-                color: Colors.grey.shade500,
-                fontWeight: FontWeight.bold,
+                fontSize: 10.sp,
+                color: isPremiumLocked ? Colors.orange.shade800 : Colors.grey.shade500,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 0.5,
               ),
             ),
           ],
