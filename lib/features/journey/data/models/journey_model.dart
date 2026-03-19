@@ -6,6 +6,20 @@ enum JourneyStepStatus {
   locked,
 }
 
+class JourneyQuestion {
+  final String id;
+  final String text;
+  final List<String> options;
+  final String? initialValue;
+
+  const JourneyQuestion({
+    required this.id,
+    required this.text,
+    required this.options,
+    this.initialValue,
+  });
+}
+
 class JourneyStep {
   final int id;
   final String title;
@@ -13,7 +27,7 @@ class JourneyStep {
   final IconData icon;
   final JourneyStepStatus status;
   final bool isPremium;
-  final List<String>? options; // For initial selection dialogs
+  final List<JourneyQuestion>? questions;
 
   const JourneyStep({
     required this.id,
@@ -22,11 +36,12 @@ class JourneyStep {
     required this.icon,
     this.status = JourneyStepStatus.locked,
     this.isPremium = false,
-    this.options,
+    this.questions,
   });
 
   JourneyStep copyWith({
     JourneyStepStatus? status,
+    List<JourneyQuestion>? questions,
   }) {
     return JourneyStep(
       id: id,
@@ -35,7 +50,7 @@ class JourneyStep {
       icon: icon,
       status: status ?? this.status,
       isPremium: isPremium,
-      options: options,
+      questions: questions ?? this.questions,
     );
   }
 }

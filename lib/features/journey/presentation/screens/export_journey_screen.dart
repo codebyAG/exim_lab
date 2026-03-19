@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import '../../data/models/journey_model.dart';
+import '../../data/dummy_journey_data.dart';
 import '../widgets/journey_widgets.dart';
 
 class ExportJourneyScreen extends StatefulWidget {
@@ -11,85 +12,13 @@ class ExportJourneyScreen extends StatefulWidget {
 }
 
 class _ExportJourneyScreenState extends State<ExportJourneyScreen> {
-  final List<JourneyStep> _steps = [
-    const JourneyStep(
-      id: 1,
-      title: 'Market Analysis',
-      description: 'Identify high-demand countries for your product. Analyze export statistics.',
-      icon: Icons.public_rounded,
-      status: JourneyStepStatus.active,
-    ),
-    const JourneyStep(
-      id: 2,
-      title: 'Product Selection',
-      description: 'Select products with high export potential and incentives.',
-      icon: Icons.checklist_rtl_rounded,
-      status: JourneyStepStatus.locked,
-    ),
-    const JourneyStep(
-      id: 3,
-      title: 'Business Registration',
-      description: 'Register your firm (Proprietorship/LLP/Pvt Ltd). Open a current account.',
-      icon: Icons.business_center_rounded,
-      status: JourneyStepStatus.locked,
-    ),
-    const JourneyStep(
-      id: 4,
-      title: 'IEC Registration',
-      description: 'Obtain Import Export Code from DGFT.',
-      icon: Icons.assignment_turned_in_rounded,
-      status: JourneyStepStatus.locked,
-    ),
-    const JourneyStep(
-      id: 5,
-      title: 'Find Buyers',
-      description: 'Engage in B2B portals, trade fairs, and embassies to find global buyers.',
-      icon: Icons.language_rounded,
-      status: JourneyStepStatus.locked,
-    ),
-    const JourneyStep(
-      id: 6,
-      title: 'Pricing & Quotation',
-      description: 'Prepare Performa Invoice with FOB/CIF pricing.',
-      icon: Icons.request_quote_rounded,
-      status: JourneyStepStatus.locked,
-    ),
-    const JourneyStep(
-      id: 7,
-      title: 'Export Documentation',
-      description: 'Prepare Commercial Invoice, Packing List, and Shipping Bill.',
-      icon: Icons.description_rounded,
-      status: JourneyStepStatus.locked,
-    ),
-    const JourneyStep(
-      id: 8,
-      title: 'Quality Inspection',
-      description: 'Ensure products meet international standards. Get pre-shipment inspection.',
-      icon: Icons.rule_folder_rounded,
-      status: JourneyStepStatus.locked,
-    ),
-    const JourneyStep(
-      id: 9,
-      title: 'Shipping & Freight',
-      description: 'Book containers. Choose Air or Sea freight.',
-      icon: Icons.directions_boat_rounded,
-      status: JourneyStepStatus.locked,
-    ),
-    const JourneyStep(
-      id: 10,
-      title: 'Duty Drawbacks',
-      description: 'Claim export incentives like RoDTEP/DBK from the government.',
-      icon: Icons.monetization_on_rounded,
-      status: JourneyStepStatus.locked,
-    ),
-    const JourneyStep(
-      id: 11,
-      title: 'Payment Receipt',
-      description: 'Secure payments via LC (Letter of Credit) or Advance TT.',
-      icon: Icons.payments_rounded,
-      status: JourneyStepStatus.locked,
-    ),
-  ];
+  late List<JourneyStep> _steps;
+
+  @override
+  void initState() {
+    super.initState();
+    _steps = DummyJourneyData.getExportSteps();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +29,10 @@ class _ExportJourneyScreenState extends State<ExportJourneyScreen> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+          onPressed: () => Navigator.pop(context),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_none_rounded),
@@ -114,10 +47,11 @@ class _ExportJourneyScreenState extends State<ExportJourneyScreen> {
       ),
       body: ListView(
         padding: EdgeInsets.all(5.w),
+        physics: const BouncingScrollPhysics(),
         children: [
           const JourneyHeader(
-            title: 'How to Become an Exporter',
-            subtitle: 'Step-by-Step Guide for Exporters',
+            title: 'Export Journey',
+            subtitle: '11 Steps to master exporting',
           ),
           SizedBox(height: 3.h),
           ..._steps.asMap().entries.map((entry) {
@@ -126,37 +60,53 @@ class _ExportJourneyScreenState extends State<ExportJourneyScreen> {
             return JourneyStepCard(
               step: step,
               isLast: index == _steps.length - 1,
-              onTap: () => _onStepTap(step),
+              onTap: () => _onStepTap(step, index),
             );
           }),
+          SizedBox(height: 4.h),
         ],
       ),
     );
   }
 
-  void _onStepTap(JourneyStep step) {
+  void _onStepTap(JourneyStep step, int index) {
     if (step.status == JourneyStepStatus.locked) return;
 
-    if (step.id == 1) {
+    if (step.questions != null && step.questions!.isNotEmpty) {
       showDialog(
         context: context,
-        builder: (context) => CategorySelectionDialog(
-          title: 'Which product category are you interested in exporting?',
-          onContinue: (category) {
+        builder: (context) => JourneyQuestionDialog(
+          title: step.title,
+          questions: step.questions!,
+          onComplete: (answers) {
             Navigator.pop(context);
-            debugPrint('Selected for Export: $category');
-            // Advance to next step (Simulation)
-            _advanceStep();
+            _advanceStep(index);
           },
         ),
       );
+    } else {
+      _advanceStep(index);
     }
   }
 
-  void _advanceStep() {
+  void _advanceStep(int currentIndex) {
     setState(() {
-      _steps[0] = _steps[0].copyWith(status: JourneyStepStatus.completed);
-      _steps[1] = _steps[1].copyWith(status: JourneyStepStatus.active);
+      // Complete current step
+      _steps[currentIndex] = _steps[currentIndex].copyWith(status: JourneyStepStatus.completed);
+      
+      // Unlock next step if exists
+      if (currentIndex + 1 < _steps.length) {
+        _steps[currentIndex + 1] = _steps[currentIndex + 1].copyWith(status: JourneyStepStatus.active);
+      }
     });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Step ${currentIndex + 1} completed!'),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
   }
 }
