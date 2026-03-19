@@ -1286,88 +1286,203 @@ class _DashboardBodyState extends State<_DashboardBody> {
     AppLocalizations t,
   ) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-      child: Container(
-        padding: EdgeInsets.all(4.w),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.5)),
-          boxShadow: [
-            BoxShadow(
-              color: cs.shadow.withValues(alpha: 0.05),
-              blurRadius: 15,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 28,
-                  backgroundColor: cs.primaryContainer.withValues(alpha: 0.2),
-                  child: Icon(
-                    Icons.person_pin_rounded,
-                    color: cs.primary,
-                    size: 36,
-                  ),
-                ),
-                SizedBox(width: 4.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        t.translate('about_sir_title'),
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 14.sp,
-                          color: cs.onSurface,
-                        ),
-                      ),
-                      Text(
-                        t.translate('about_sir_desc'),
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: cs.primary,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.5.h),
+      child: FadeInLeft(
+        duration: const Duration(milliseconds: 800),
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                const Color(0xFFFFF5E6), // Very light orange/cream
+                Colors.white,
               ],
             ),
-            SizedBox(height: 1.5.h),
-            Text(
-              t.translate('about_us_text'),
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: cs.onSurfaceVariant,
-                height: 1.4,
-              ),
+            borderRadius: BorderRadius.circular(32),
+            border: Border.all(
+              color: cs.primary.withValues(alpha: 0.15),
+              width: 1.5,
             ),
-            SizedBox(height: 1.h),
-            TextButton(
-              onPressed: () => _showAboutUsBottomSheet(context, t, cs, theme),
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                minimumSize: const Size(0, 0),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            boxShadow: [
+              BoxShadow(
+                color: cs.primary.withValues(alpha: 0.08),
+                blurRadius: 25,
+                offset: const Offset(0, 10),
               ),
-              child: Text(
-                "${t.translate('read_more')} →",
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  color: cs.primary,
-                  fontSize: 12.sp,
+            ],
+          ),
+          child: Stack(
+            children: [
+              // ✨ ABSTRACT BACKGROUND DECORATION
+              Positioned(
+                right: -20,
+                top: -20,
+                child: Container(
+                  height: 100,
+                  width: 100,
+                  decoration: BoxDecoration(
+                    color: cs.primary.withValues(alpha: 0.05),
+                    shape: BoxShape.circle,
+                  ),
                 ),
               ),
-            ),
-          ],
+
+              Padding(
+                padding: EdgeInsets.all(5.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // TOP ROW: BADGE & EXPERIENCE
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: cs.primary,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Text(
+                            "FOUNDER PROFILE",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 9.sp,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 0.8,
+                            ),
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.verified_rounded,
+                              color: cs.primary,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              "48+ Years Experience",
+                              style: TextStyle(
+                                color: cs.primary,
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 2.5.h),
+
+                    // MAIN CONTENT
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // PROFILE VISUAL
+                        Container(
+                          padding: const EdgeInsets.all(3),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: cs.primary.withValues(alpha: 0.4),
+                              width: 2,
+                            ),
+                          ),
+                          child: CircleAvatar(
+                            radius: 35,
+                            backgroundColor: Colors.white,
+                            child: Icon(
+                              Icons.person_pin_rounded,
+                              color: cs.primary,
+                              size: 45,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 4.w),
+
+                        // TEXT DETAILS
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                t.translate('about_sir_title'),
+                                style: theme.textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.w900,
+                                  color: const Color(0xFF1D1F33),
+                                  fontSize: 16.sp,
+                                ),
+                              ),
+                              SizedBox(height: 0.5.h),
+                              Text(
+                                t.translate('about_sir_desc'),
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: cs.primary,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 11.sp,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 2.h),
+
+                    // DESCRIPTION TEXT
+                    Text(
+                      t.translate('about_us_text'),
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: const Color(0xFF4B5563),
+                        height: 1.5,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(height: 1.5.h),
+
+                    // ACTION BUTTON
+                    InkWell(
+                      onTap: () =>
+                          _showAboutUsBottomSheet(context, t, cs, theme),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 4,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              t.translate('read_more'),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w900,
+                                color: cs.primary,
+                                fontSize: 13.sp,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Icon(
+                              Icons.arrow_forward_rounded,
+                              color: cs.primary,
+                              size: 20,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
