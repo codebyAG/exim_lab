@@ -14,21 +14,26 @@ class JourneyHeader extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
     return FadeInDown(
       duration: const Duration(milliseconds: 600),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: cs.surface,
           borderRadius: BorderRadius.circular(28),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
+              color: cs.shadow.withValues(alpha: 0.04),
               blurRadius: 24,
               offset: const Offset(0, 12),
             ),
           ],
-          border: Border.all(color: Colors.orange.withValues(alpha: 0.1), width: 1.5),
+          border: Border.all(
+            color: cs.primary.withValues(alpha: 0.1),
+            width: 1.5,
+          ),
         ),
         clipBehavior: Clip.antiAlias,
         child: Stack(
@@ -43,8 +48,8 @@ class JourneyHeader extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: RadialGradient(
                     colors: [
-                      Colors.orange.withValues(alpha: 0.15),
-                      Colors.orange.withValues(alpha: 0),
+                      cs.primary.withValues(alpha: 0.15),
+                      cs.primary.withValues(alpha: 0),
                     ],
                   ),
                   shape: BoxShape.circle,
@@ -57,7 +62,7 @@ class JourneyHeader extends StatelessWidget {
               child: Icon(
                 Icons.auto_awesome_motion_rounded,
                 size: 80,
-                color: Colors.orange.withValues(alpha: 0.05),
+                color: cs.primary.withValues(alpha: 0.05),
               ),
             ),
             // Main content
@@ -69,15 +74,15 @@ class JourneyHeader extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFFF97316), Color(0xFFFB923C)],
+                      gradient: LinearGradient(
+                        colors: [cs.primary, cs.secondary],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.orange.withValues(alpha: 0.3),
+                          color: cs.primary.withValues(alpha: 0.3),
                           blurRadius: 15,
                           offset: const Offset(0, 5),
                         ),
@@ -102,7 +107,7 @@ class JourneyHeader extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 11.sp,
                             fontWeight: FontWeight.w800,
-                            color: Colors.orange,
+                            color: cs.primary,
                             letterSpacing: 1.2,
                           ),
                         ),
@@ -112,7 +117,7 @@ class JourneyHeader extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w900,
-                            color: const Color(0xFF1D1F33),
+                            color: cs.onSurface,
                             height: 1.2,
                           ),
                         ),
@@ -121,7 +126,7 @@ class JourneyHeader extends StatelessWidget {
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.5.h),
                           decoration: BoxDecoration(
-                            color: Colors.orange.withValues(alpha: 0.1),
+                            color: cs.primary.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
@@ -129,7 +134,7 @@ class JourneyHeader extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 10.sp,
                               fontWeight: FontWeight.w700,
-                              color: Colors.orange.shade800,
+                              color: cs.primary,
                             ),
                           ),
                         ),
@@ -188,12 +193,14 @@ class JourneyStepCard extends StatelessWidget {
       width: 36,
       height: 36,
       decoration: BoxDecoration(
-        color: isCompleted ? Colors.green : (isActive ? Colors.orange : Colors.grey.shade300),
+        color: isCompleted
+            ? Colors.green
+            : (isActive ? cs.primary : cs.outlineVariant),
         shape: BoxShape.circle,
         boxShadow: [
           if (isActive)
             BoxShadow(
-              color: Colors.orange.withValues(alpha: 0.3),
+              color: cs.primary.withValues(alpha: 0.3),
               blurRadius: 12,
               spreadRadius: 2,
             ),
@@ -223,7 +230,7 @@ class JourneyStepCard extends StatelessWidget {
             child: CustomPaint(
               size: const Size(2, double.infinity),
               painter: DashedLinePainter(
-                color: isCompleted ? Colors.green : Colors.grey.shade300,
+                color: isCompleted ? Colors.green : cs.outlineVariant,
               ),
             ),
           ),
@@ -235,17 +242,17 @@ class JourneyStepCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cs.surface,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: cs.shadow.withValues(alpha: 0.05),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
         ],
         border: Border.all(
-          color: isActive ? Colors.orange.withValues(alpha: 0.5) : Colors.transparent,
+          color: isActive ? cs.primary.withValues(alpha: 0.5) : Colors.transparent,
           width: 2,
         ),
       ),
@@ -262,7 +269,7 @@ class JourneyStepCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w800,
-                      color: const Color(0xFF1D1F33),
+                      color: cs.onSurface,
                       letterSpacing: -0.5,
                     ),
                   ),
@@ -271,35 +278,33 @@ class JourneyStepCard extends StatelessWidget {
                     step.description,
                     style: TextStyle(
                       fontSize: 13.sp,
-                      color: const Color(0xFF6B7280),
+                      color: cs.onSurface.withValues(alpha: 0.6),
                       height: 1.3,
                     ),
                   ),
-                  if (isActive) _buildStartButton(),
-                  if (isLocked || isPremiumLocked) _buildLockedBadge(),
+                  if (isActive) _buildStartButton(cs),
+                  if (isLocked || isPremiumLocked) _buildLockedBadge(cs),
                 ],
               ),
             ),
             SizedBox(width: 4.w),
-            _buildIllustration(isActive, isCompleted),
+            _buildIllustration(cs, isActive, isCompleted),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildStartButton() {
+  Widget _buildStartButton(ColorScheme cs) {
     return Padding(
       padding: EdgeInsets.only(top: 2.h),
       child: Container(
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFFF97316), Color(0xFFFB923C)],
-          ),
+          gradient: LinearGradient(colors: [cs.primary, cs.secondary]),
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFF97316).withValues(alpha: 0.3),
+              color: cs.primary.withValues(alpha: 0.3),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -323,15 +328,19 @@ class JourneyStepCard extends StatelessWidget {
     );
   }
 
-  Widget _buildLockedBadge() {
+  Widget _buildLockedBadge(ColorScheme cs) {
     return Padding(
       padding: EdgeInsets.only(top: 1.5.h),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.6.h),
         decoration: BoxDecoration(
-          color: isPremiumLocked ? Colors.orange.withValues(alpha: 0.1) : Colors.grey.shade100,
+          color: isPremiumLocked
+              ? cs.primary.withValues(alpha: 0.1)
+              : cs.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12),
-          border: isPremiumLocked ? Border.all(color: Colors.orange.withValues(alpha: 0.2)) : null,
+          border: isPremiumLocked
+              ? Border.all(color: cs.primary.withValues(alpha: 0.2))
+              : null,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -339,14 +348,14 @@ class JourneyStepCard extends StatelessWidget {
             Icon(
               isPremiumLocked ? Icons.stars_rounded : Icons.lock_rounded,
               size: 14,
-              color: isPremiumLocked ? Colors.orange : Colors.grey.shade500,
+              color: isPremiumLocked ? cs.primary : cs.onSurfaceVariant,
             ),
             SizedBox(width: 1.5.w),
             Text(
               isPremiumLocked ? 'PREMIUM' : 'Locked',
               style: TextStyle(
                 fontSize: 10.sp,
-                color: isPremiumLocked ? Colors.orange.shade800 : Colors.grey.shade500,
+                color: isPremiumLocked ? cs.primary : cs.onSurfaceVariant,
                 fontWeight: FontWeight.w900,
                 letterSpacing: 0.5,
               ),
@@ -357,16 +366,21 @@ class JourneyStepCard extends StatelessWidget {
     );
   }
 
-  Widget _buildIllustration(bool isActive, bool isCompleted) {
+  Widget _buildIllustration(ColorScheme cs, bool isActive, bool isCompleted) {
     Widget illustration = Container(
       padding: EdgeInsets.all(3.w),
       decoration: BoxDecoration(
-        color: (isCompleted ? Colors.green : (isActive ? Colors.orange : Colors.grey)).withValues(alpha: 0.1),
+        color: (isCompleted
+                ? Colors.green
+                : (isActive ? cs.primary : cs.outline))
+            .withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Icon(
         step.icon,
-        color: isCompleted ? Colors.green : (isActive ? Colors.orange : Colors.grey),
+        color: isCompleted
+            ? Colors.green
+            : (isActive ? cs.primary : cs.outline),
         size: 10.w,
       ),
     );
@@ -419,6 +433,7 @@ class _JourneyQuestionDialogState extends State<JourneyQuestionDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     final question = widget.questions[_currentQuestionIndex];
 
     return Dialog(
@@ -436,7 +451,11 @@ class _JourneyQuestionDialogState extends State<JourneyQuestionDialog> {
               children: [
                 Text(
                   widget.title,
-                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: Colors.orange),
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w800,
+                    color: cs.primary,
+                  ),
                 ),
                 Text(
                   '${_currentQuestionIndex + 1}/${widget.questions.length}',
@@ -447,8 +466,8 @@ class _JourneyQuestionDialogState extends State<JourneyQuestionDialog> {
             SizedBox(height: 1.5.h),
             LinearProgressIndicator(
               value: (_currentQuestionIndex + 1) / widget.questions.length,
-              backgroundColor: Colors.orange.withValues(alpha: 0.1),
-              valueColor: const AlwaysStoppedAnimation<Color>(Colors.orange),
+              backgroundColor: cs.primary.withValues(alpha: 0.1),
+              valueColor: AlwaysStoppedAnimation<Color>(cs.primary),
               borderRadius: BorderRadius.circular(10),
               minHeight: 6,
             ),
@@ -461,7 +480,7 @@ class _JourneyQuestionDialogState extends State<JourneyQuestionDialog> {
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w900,
-                color: const Color(0xFF1D1F33),
+                color: cs.onSurface,
                 height: 1.2,
               ),
             ),
@@ -483,16 +502,16 @@ class _JourneyQuestionDialogState extends State<JourneyQuestionDialog> {
                       duration: const Duration(milliseconds: 200),
                       padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
                       decoration: BoxDecoration(
-                        color: isSelected ? Colors.orange : Colors.white,
+                        color: isSelected ? cs.primary : cs.surface,
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: isSelected ? Colors.orange : Colors.grey.withValues(alpha: 0.2),
+                          color: isSelected ? cs.primary : cs.outline,
                           width: 2,
                         ),
                         boxShadow: [
                           if (isSelected)
                             BoxShadow(
-                              color: Colors.orange.withValues(alpha: 0.2),
+                              color: cs.primary.withValues(alpha: 0.2),
                               blurRadius: 15,
                               offset: const Offset(0, 8),
                             ),
@@ -506,7 +525,9 @@ class _JourneyQuestionDialogState extends State<JourneyQuestionDialog> {
                               style: TextStyle(
                                 fontSize: 13.5.sp,
                                 fontWeight: FontWeight.w700,
-                                color: isSelected ? Colors.white : const Color(0xFF374151),
+                                color: isSelected
+                                    ? cs.onPrimary
+                                    : cs.onSurface,
                               ),
                             ),
                           ),
@@ -518,7 +539,10 @@ class _JourneyQuestionDialogState extends State<JourneyQuestionDialog> {
                               height: 24,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                border: Border.all(color: Colors.grey.withValues(alpha: 0.3), width: 2),
+                                border: Border.all(
+                                  color: cs.outline,
+                                  width: 2,
+                                ),
                               ),
                             ),
                         ],
@@ -542,12 +566,14 @@ class _JourneyQuestionDialogState extends State<JourneyQuestionDialog> {
                       }
                     },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-                foregroundColor: Colors.white,
+                backgroundColor: cs.primary,
+                foregroundColor: cs.onPrimary,
                 minimumSize: Size(double.infinity, 7.h),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
                 elevation: 8,
-                shadowColor: Colors.orange.withValues(alpha: 0.4),
+                shadowColor: cs.primary.withValues(alpha: 0.4),
               ),
               child: Text(
                 _currentQuestionIndex < widget.questions.length - 1 ? 'Next Step' : 'Confirm Choice',

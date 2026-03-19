@@ -373,15 +373,15 @@ class _DashboardBodyState extends State<_DashboardBody> {
               // 1 & 2. ORANGE TOP HEADER SECTION
               Container(
                 width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
+                decoration: BoxDecoration(
+                  color: cs.surface,
+                  borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(24),
                     bottomRight: Radius.circular(24),
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Color(0x0A000000),
+                      color: cs.shadow.withValues(alpha: 0.04),
                       blurRadius: 20,
                       offset: Offset(0, 4),
                     ),
@@ -413,8 +413,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                         '${t.translate('welcome_back')},',
                                         style: theme.textTheme.bodyLarge
                                             ?.copyWith(
-                                              color: const Color(
-                                                0xFF6B7280,
+                                              color: cs.onSurface.withValues(
+                                                alpha: 0.6,
                                               ), // Soft Gray
                                               fontWeight: FontWeight.w600,
                                               fontSize: 16.sp,
@@ -439,7 +439,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                       style: theme.textTheme.headlineSmall
                                           ?.copyWith(
                                             fontWeight: FontWeight.w900,
-                                            color: const Color(0xFF1D1F33),
+                                            color: cs.onSurface,
                                             fontSize: 18.sp,
                                             letterSpacing: -0.5,
                                           ),
@@ -459,14 +459,14 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                       color: Colors.white,
                                       shape: BoxShape.circle,
                                       border: Border.all(
-                                        color: Colors.grey.withValues(
+                                        color: cs.outline.withValues(
                                           alpha: 0.1,
                                         ),
                                         width: 1,
                                       ),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black.withValues(
+                                          color: cs.shadow.withValues(
                                             alpha: 0.05,
                                           ),
                                           blurRadius: 10,
@@ -2459,9 +2459,10 @@ class _QuickActionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final cs = theme.colorScheme;
 
     return Material(
-      color: Colors.white,
+      color: cs.surface,
       borderRadius: BorderRadius.circular(24),
       elevation: 2,
       shadowColor: color.withValues(alpha: 0.1),
@@ -2474,7 +2475,7 @@ class _QuickActionCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(24),
             border: Border.all(color: color.withValues(alpha: 0.1), width: 1.5),
             gradient: null, // Removed low-alpha gradient for clarity
-            color: Colors.white,
+            color: cs.surface,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -2498,7 +2499,7 @@ class _QuickActionCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.titleMedium?.copyWith(
-                  color: const Color(0xFF1D1F33),
+                  color: cs.onSurface,
                   fontWeight: FontWeight.w600,
                   fontSize: 14.sp,
                 ),
