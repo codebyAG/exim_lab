@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:exim_lab/core/constants/api_constants.dart';
 import 'package:exim_lab/core/functions/api_call.dart';
 import 'package:exim_lab/core/constants/analytics_constants.dart';
@@ -37,45 +38,102 @@ class AnalyticsService {
       await _analytics.logEvent(name: name, parameters: finalParams);
       debugPrint('📊 Firebase Event: $name, Params: $finalParams');
 
-      // 2. Log to Custom Server
-      await _logToServer(name, finalParams);
+      // 2. Queue for Custom Server (Batching)
+      await _queueEventForServer(name, finalParams);
     } catch (e) {
       debugPrint('⚠️ Analytics Error: $e');
     }
   }
 
-  Future<void> _logToServer(
+  // 🔹 BATCHING LOGIC
+  static const String _queueKey = 'analytics_events_queue';
+  static const String _lastSyncKey = 'analytics_last_sync_time';
+  static const int _syncIntervalHours = 12;
+
+  Future<void> _queueEventForServer(
     String eventName,
     Map<String, Object> params,
   ) async {
     try {
-      // 🔸 Check for Token (Only log to strict Backend API if logged in)
       final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString(
-        'auth_token',
-      ); // Ensure this matches login key
+      final token = prefs.getString('auth_token');
 
-      if (token == null || token.isEmpty) {
-        // debugPrint('ℹ️ Skipping Server Log (No Auth Token): $eventName');
-        return;
-      }
+      // Only queue if user is authenticated (as per current backend rules)
+      if (token == null || token.isEmpty) return;
 
+      // 1. Prepare event object
+      final eventData = {
+        'event_name': eventName,
+        'parameters': params,
+        'phone_number': _userMobile ?? '',
+        'timestamp': DateTime.now().toIso8601String(),
+      };
+
+      // 2. Add to Local List (JSON String List)
+      final List<String> currentQueue = prefs.getStringList(_queueKey) ?? [];
+      currentQueue.add(jsonEncode(eventData));
+      await prefs.setStringList(_queueKey, currentQueue);
+
+      debugPrint('📥 Event Queued Locally: $eventName (Total: ${currentQueue.length})');
+
+      // 3. Check if it's time to sync
+      await _checkAndSyncEvents(prefs);
+    } catch (e) {
+      debugPrint('⚠️ Error queueing event: $e');
+    }
+  }
+
+  Future<void> _checkAndSyncEvents(SharedPreferences prefs) async {
+    final lastSyncStr = prefs.getString(_lastSyncKey);
+    final now = DateTime.now();
+
+    if (lastSyncStr == null) {
+      // First time, initialize and sync immediately if there's data
+      await _syncEventsToServer(prefs);
+      return;
+    }
+
+    final lastSync = DateTime.parse(lastSyncStr);
+    final difference = now.difference(lastSync).inHours;
+
+    if (difference >= _syncIntervalHours) {
+      debugPrint('🕒 12 Hours passed. Triggering Analytics Sync...');
+      await _syncEventsToServer(prefs);
+    }
+  }
+
+  Future<void> _syncEventsToServer(SharedPreferences prefs) async {
+    final List<String> queue = prefs.getStringList(_queueKey) ?? [];
+    if (queue.isEmpty) {
+      await prefs.setString(_lastSyncKey, DateTime.now().toIso8601String());
+      return;
+    }
+
+    try {
+      // 1. Convert List<String> (JSON) to List<Map>
+      final List<Map<String, dynamic>> batchedData =
+          queue.map((e) => jsonDecode(e) as Map<String, dynamic>).toList();
+
+      // 2. Send as Array to Backend
       await callApi(
         ApiConstants.logAnalytics,
         methodType: MethodType.post,
         requestData: {
-          'event_name': eventName,
-          'parameters': params,
-          'phone_number': _userMobile ?? '',
-          'timestamp': DateTime.now().toIso8601String(),
+          'data': batchedData, // Only "data" key with array as requested
         },
         parser: (json) => json,
       );
-      debugPrint('🚀 Server Analytics Logged: $eventName');
+
+      // 3. Clear Queue on Success
+      await prefs.remove(_queueKey);
+      await prefs.setString(_lastSyncKey, DateTime.now().toIso8601String());
+      debugPrint('🚀 Successfully Batched ${batchedData.length} Events to Server');
     } catch (e) {
-      // debugPrint('⚠️ Server Analytics Error: $e'); // Silent fail to avoid spam
+      debugPrint('⚠️ Batch Sync Failed: $e (Data kept for next attempt)');
     }
   }
+
+  // 🗑️ REMOVED THE OLD REAL-TIME METHOD
 
   // 🔹 PUBLIC INSTALL TRACKING (No Token)
   Future<void> logInstallSource(Map<String, dynamic> params) async {
