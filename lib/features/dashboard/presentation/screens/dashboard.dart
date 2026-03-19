@@ -599,25 +599,6 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     // 1.5 ABOUT US SECTION
                     _buildAboutUs(context, cs, theme, t),
 
-                    // 1.6 MASTERCLASS HIGHLIGHT (MOVED FROM BOTTOM)
-                    Consumer<DashboardProvider>(
-                      builder: (context, dashboard, _) {
-                        final data = dashboard.data;
-                        if (data == null) return const SizedBox();
-                        return _buildShowcase(
-                          key: _masterclassKey,
-                          title: 'Masterclass',
-                          description:
-                              'Watch our complete Import Export Roadmap',
-                          child: _buildMasterclassHighlight(
-                            context,
-                            cs,
-                            theme,
-                            data,
-                          ),
-                        );
-                      },
-                    ),
                     SizedBox(height: 2.h),
 
                     Padding(
@@ -880,6 +861,27 @@ class _DashboardBodyState extends State<_DashboardBody> {
                           ),
                         ),
                       if (continueCourses.isNotEmpty) SizedBox(height: 2.h),
+
+                      // 1.6 MASTERCLASS HIGHLIGHT (REPOSITIONED)
+                      Consumer<DashboardProvider>(
+                        builder: (context, dashboard, _) {
+                          final data = dashboard.data;
+                          if (data == null) return const SizedBox();
+                          return _buildShowcase(
+                            key: _masterclassKey,
+                            title: 'Masterclass',
+                            description:
+                                'Watch our complete Import Export Roadmap',
+                            child: _buildMasterclassHighlight(
+                              context,
+                              cs,
+                              theme,
+                              data,
+                            ),
+                          );
+                        },
+                      ),
+                      SizedBox(height: 3.h),
 
                       // 4. YOUR LEARNING JOURNEY
                       Consumer<AuthProvider>(
