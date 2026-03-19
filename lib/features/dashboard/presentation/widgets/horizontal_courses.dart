@@ -29,6 +29,8 @@ class HorizontalCourses extends StatelessWidget {
         separatorBuilder: (context, index) => SizedBox(width: 2.w),
         itemBuilder: (context, index) {
           final course = courses[index];
+          final isFree = course.basePrice == 0;
+          final isAccessible = isPremium || isFree;
           // Determine learners count (mock logic if missing or assume 0)
           // CourseCard expects title, rating, learners, image.
           // Note: CourseModel has basePrice but not rating/learners.
@@ -40,9 +42,9 @@ class HorizontalCourses extends StatelessWidget {
             rating: (course.rating ?? 4.5).toString(),
             learners: '${course.learnersCount ?? 0} Learners',
             image: course.imageUrl ?? 'assets/course1.png',
-            isLocked: !isPremium,
+            isLocked: !isAccessible,
             onTap: () {
-              if (isPremium) {
+              if (isAccessible) {
                 AppNavigator.push(
                   context,
                   CourseDetailsScreen(courseId: course.id),

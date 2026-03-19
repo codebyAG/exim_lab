@@ -9,6 +9,8 @@ import 'package:provider/provider.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:exim_lab/features/courses/presentation/widgets/courses_shimmer.dart';
+import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/premium_unlock_dialog.dart';
 
 class CoursesListScreen extends StatefulWidget {
   const CoursesListScreen({super.key});
@@ -146,14 +148,23 @@ class _CoursesListScreenState extends State<CoursesListScreen>
       itemCount: state.courses.length,
       itemBuilder: (context, index) {
         final course = state.courses[index];
-        return FadeInUp(
-          duration: const Duration(milliseconds: 400),
-          delay: Duration(milliseconds: (index < 6 ? index : 5) * 70),
-          child: _CourseTile(
-            title: course.title,
-            subtitle: course.description,
-            courseId: course.id,
-          ),
+        return Consumer<AuthProvider>(
+          builder: (context, auth, _) {
+            final isPremium = auth.user?.isPremium ?? false;
+            final isFree = course.basePrice == 0;
+            final isLocked = !isPremium && !isFree;
+
+            return FadeInUp(
+              duration: const Duration(milliseconds: 400),
+              delay: Duration(milliseconds: (index < 6 ? index : 5) * 70),
+              child: _CourseTile(
+                title: course.title,
+                subtitle: course.description,
+                courseId: course.id,
+                isLocked: isLocked,
+              ),
+            );
+          },
         );
       },
     );
@@ -201,11 +212,13 @@ class _CourseTile extends StatelessWidget {
   final String title;
   final String subtitle;
   final String courseId;
+  final bool isLocked;
 
   const _CourseTile({
     required this.title,
     required this.subtitle,
     required this.courseId,
+    this.isLocked = false,
   });
 
   @override
@@ -233,7 +246,14 @@ class _CourseTile extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () {
-          AppNavigator.push(context, CourseDetailsScreen(courseId: courseId));
+          if (isLocked) {
+            showDialog(
+              context: context,
+              builder: (_) => const PremiumUnlockDialog(),
+            );
+          } else {
+            AppNavigator.push(context, CourseDetailsScreen(courseId: courseId));
+          }
         },
         borderRadius: BorderRadius.circular(24),
         child: Row(
@@ -249,7 +269,7 @@ class _CourseTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Icon(
-                Icons.play_circle_rounded,
+                isLocked ? Icons.lock_rounded : Icons.play_circle_rounded,
                 size: 32,
                 color: theme.colorScheme.primary,
               ),
@@ -390,33 +410,49 @@ class _MyCourseCard extends StatelessWidget {
           // ▶ RESUME BUTTON (Simpler, cleaner)
           Align(
             alignment: Alignment.bottomRight,
-            child: GestureDetector(
-              onTap: () {
-                AppNavigator.push(
-                  context,
-                  CourseDetailsScreen(courseId: course.id),
+            child: Consumer<AuthProvider>(
+              builder: (context, auth, _) {
+                final isPremium = auth.user?.isPremium ?? false;
+                final isFree = course.basePrice == 0;
+                final isLocked = !isPremium && !isFree;
+
+                return GestureDetector(
+                  onTap: () {
+                    if (isLocked) {
+                      showDialog(
+                        context: context,
+                        builder: (_) => const PremiumUnlockDialog(),
+                      );
+                    } else {
+                      AppNavigator.push(
+                        context,
+                        CourseDetailsScreen(courseId: course.id),
+                      );
+                    }
+                  },
+                  child: Container(
+                    height: 42,
+                    width: 42,
+                    decoration: BoxDecoration(
+                      color: isLocked ? Colors.grey : cs.primary,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: (isLocked ? Colors.grey : cs.primary)
+                              .withValues(alpha: 0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      isLocked ? Icons.lock_rounded : Icons.play_arrow_rounded,
+                      color: cs.onPrimary,
+                      size: isLocked ? 20 : 26,
+                    ),
+                  ),
                 );
               },
-              child: Container(
-                height: 42,
-                width: 42,
-                decoration: BoxDecoration(
-                  color: cs.primary,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: cs.primary.withValues(alpha: 0.3),
-                      blurRadius: 8,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Icon(
-                  Icons.play_arrow_rounded,
-                  color: cs.onPrimary,
-                  size: 26,
-                ),
-              ),
             ),
           ),
         ],

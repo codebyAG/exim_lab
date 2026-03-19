@@ -289,15 +289,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
         ),
       );
       navActions.add(() {
-        final isPremium = context.read<AuthProvider>().user?.isPremium ?? false;
-        if (isPremium) {
-          AppNavigator.push(context, const ShortsFeedScreen());
-        } else {
-          showDialog(
-            context: context,
-            builder: (_) => const PremiumUnlockDialog(),
-          );
-        }
+        AppNavigator.push(context, const ShortsFeedScreen());
       });
     }
 
@@ -310,15 +302,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
         ),
       );
       navActions.add(() {
-        final isPremium = context.read<AuthProvider>().user?.isPremium ?? false;
-        if (isPremium) {
-          AppNavigator.push(context, const CoursesListScreen());
-        } else {
-          showDialog(
-            context: context,
-            builder: (_) => const PremiumUnlockDialog(),
-          );
-        }
+        AppNavigator.push(context, const CoursesListScreen());
       });
     }
 
@@ -606,28 +590,13 @@ class _DashboardBodyState extends State<_DashboardBody> {
                               key: _galleryCardKey,
                               title: 'tut_gallery_title',
                               description: 'tut_gallery_desc',
-                              child: Consumer<AuthProvider>(
-                                builder: (context, auth, _) {
-                                  final isPremium =
-                                      auth.user?.isPremium ?? false;
-                                  return _DashboardPillChip(
-                                    icon: Icons.image_rounded,
-                                    label: t.translate('gallery'),
-                                    isLocked: !isPremium,
-                                    onTap: () {
-                                      if (isPremium) {
-                                        AppNavigator.push(
-                                          context,
-                                          const GalleryScreen(),
-                                        );
-                                      } else {
-                                        showDialog(
-                                          context: context,
-                                          builder: (_) =>
-                                              const PremiumUnlockDialog(),
-                                        );
-                                      }
-                                    },
+                              child: _DashboardPillChip(
+                                icon: Icons.image_rounded,
+                                label: t.translate('gallery'),
+                                onTap: () {
+                                  AppNavigator.push(
+                                    context,
+                                    const GalleryScreen(),
                                   );
                                 },
                               ),
@@ -635,27 +604,13 @@ class _DashboardBodyState extends State<_DashboardBody> {
                           ),
                           SizedBox(width: 4.w),
                           Expanded(
-                            child: Consumer<AuthProvider>(
-                              builder: (context, auth, _) {
-                                final isPremium = auth.user?.isPremium ?? false;
-                                return _DashboardPillChip(
-                                  icon: Icons.newspaper_rounded,
-                                  label: t.translate('market_updates'),
-                                  isLocked: !isPremium,
-                                  onTap: () {
-                                    if (isPremium) {
-                                      AppNavigator.push(
-                                        context,
-                                        const NewsListScreen(),
-                                      );
-                                    } else {
-                                      showDialog(
-                                        context: context,
-                                        builder: (_) =>
-                                            const PremiumUnlockDialog(),
-                                      );
-                                    }
-                                  },
+                            child: _DashboardPillChip(
+                              icon: Icons.newspaper_rounded,
+                              label: t.translate('market_updates'),
+                              onTap: () {
+                                AppNavigator.push(
+                                  context,
+                                  const NewsListScreen(),
                                 );
                               },
                             ),
@@ -674,13 +629,30 @@ class _DashboardBodyState extends State<_DashboardBody> {
                               key: _quizzesCardKey,
                               title: 'tut_quizzes_title',
                               description: 'tut_quizzes_desc',
-                              child: _DashboardPillChip(
-                                icon: Icons.quiz_rounded,
-                                label: t.translate('quizzes_title'),
-                                onTap: () => AppNavigator.push(
-                                  context,
-                                  const QuizTopicsScreen(),
-                                ),
+                              child: Consumer<AuthProvider>(
+                                builder: (context, auth, _) {
+                                  final isPremium =
+                                      auth.user?.isPremium ?? false;
+                                  return _DashboardPillChip(
+                                    icon: Icons.quiz_rounded,
+                                    label: t.translate('quizzes_title'),
+                                    isLocked: !isPremium,
+                                    onTap: () {
+                                      if (isPremium) {
+                                        AppNavigator.push(
+                                          context,
+                                          const QuizTopicsScreen(),
+                                        );
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          builder: (_) =>
+                                              const PremiumUnlockDialog(),
+                                        );
+                                      }
+                                    },
+                                  );
+                                },
                               ),
                             ),
                           ),
@@ -690,13 +662,30 @@ class _DashboardBodyState extends State<_DashboardBody> {
                               key: _aiExpertCardKey,
                               title: 'tut_ai_expert_title',
                               description: 'tut_ai_expert_desc',
-                              child: _DashboardPillChip(
-                                icon: Icons.smart_toy_rounded,
-                                label: t.translate('ai_expert'),
-                                onTap: () => AppNavigator.push(
-                                  context,
-                                  const AiChatScreen(),
-                                ),
+                              child: Consumer<AuthProvider>(
+                                builder: (context, auth, _) {
+                                  final isPremium =
+                                      auth.user?.isPremium ?? false;
+                                  return _DashboardPillChip(
+                                    icon: Icons.smart_toy_rounded,
+                                    label: t.translate('ai_expert'),
+                                    isLocked: !isPremium,
+                                    onTap: () {
+                                      if (isPremium) {
+                                        AppNavigator.push(
+                                          context,
+                                          const AiChatScreen(),
+                                        );
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          builder: (_) =>
+                                              const PremiumUnlockDialog(),
+                                        );
+                                      }
+                                    },
+                                  );
+                                },
                               ),
                             ),
                           ),
@@ -710,27 +699,55 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       child: Row(
                         children: [
                           Expanded(
-                            child: _buildJourneyCard(
-                              context: context,
-                              cs: cs,
-                              theme: theme,
-                              label: t.translate('start_import_journey'),
-                              icon: Icons.flight_land_rounded,
-                              onTap: () {
-                                // Logic for import journey
+                            child: Consumer<AuthProvider>(
+                              builder: (context, auth, _) {
+                                final isPremium = auth.user?.isPremium ?? false;
+                                return _buildJourneyCard(
+                                  context: context,
+                                  cs: cs,
+                                  theme: theme,
+                                  label: t.translate('start_import_journey'),
+                                  isLocked: !isPremium,
+                                  icon: Icons.flight_land_rounded,
+                                  onTap: () {
+                                    if (isPremium) {
+                                      // Logic for import journey
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (_) =>
+                                            const PremiumUnlockDialog(),
+                                      );
+                                    }
+                                  },
+                                );
                               },
                             ),
                           ),
                           SizedBox(width: 4.w),
                           Expanded(
-                            child: _buildJourneyCard(
-                              context: context,
-                              cs: cs,
-                              theme: theme,
-                              label: t.translate('start_export_journey'),
-                              icon: Icons.flight_takeoff_rounded,
-                              onTap: () {
-                                // Logic for export journey
+                            child: Consumer<AuthProvider>(
+                              builder: (context, auth, _) {
+                                final isPremium = auth.user?.isPremium ?? false;
+                                return _buildJourneyCard(
+                                  context: context,
+                                  cs: cs,
+                                  theme: theme,
+                                  label: t.translate('start_export_journey'),
+                                  isLocked: !isPremium,
+                                  icon: Icons.flight_takeoff_rounded,
+                                  onTap: () {
+                                    if (isPremium) {
+                                      // Logic for export journey
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (_) =>
+                                            const PremiumUnlockDialog(),
+                                      );
+                                    }
+                                  },
+                                );
                               },
                             ),
                           ),
@@ -777,15 +794,19 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             child: Consumer<AuthProvider>(
                               builder: (context, auth, _) {
                                 final isPremium = auth.user?.isPremium ?? false;
+                                final course = continueCourses.first;
+                                final isFree = course.basePrice == 0;
+                                final isAccessible = isPremium || isFree;
+
                                 return DashboardContinueHero(
-                                  course: continueCourses.first,
-                                  isLocked: !isPremium,
+                                  course: course,
+                                  isLocked: !isAccessible,
                                   onTap: () {
-                                    if (isPremium) {
+                                    if (isAccessible) {
                                       AppNavigator.push(
                                         context,
                                         CourseDetailsScreen(
-                                          courseId: continueCourses.first.id,
+                                          courseId: course.id,
                                         ),
                                       );
                                     } else {
@@ -994,18 +1015,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      if (isPremium) {
-                                        AppNavigator.push(
-                                          context,
-                                          const ShortsFeedScreen(),
-                                        );
-                                      } else {
-                                        showDialog(
-                                          context: context,
-                                          builder: (_) =>
-                                              const PremiumUnlockDialog(),
-                                        );
-                                      }
+                                      AppNavigator.push(
+                                        context,
+                                        const ShortsFeedScreen(),
+                                      );
                                     },
                                     child: const IgnorePointer(
                                       child: HomeShortsSection(),
@@ -1483,49 +1496,72 @@ class _DashboardBodyState extends State<_DashboardBody> {
     required String label,
     required IconData icon,
     required VoidCallback onTap,
+    bool isLocked = true,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFE0B2).withValues(alpha: 0.5), // Soft peach
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: const Color(0xFFFFB74D).withValues(alpha: 0.3),
-        ),
-      ),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 3.w),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.8),
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.orange.withValues(alpha: 0.1),
-                      blurRadius: 10,
-                    ),
-                  ],
-                ),
-                child: Icon(icon, color: const Color(0xFFE65100), size: 28),
-              ),
-              SizedBox(height: 1.5.h),
-              Text(
-                label,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 12.sp,
-                  color: const Color(0xFF4E342E),
-                  height: 1.2,
-                ),
-              ),
-            ],
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        height: 12.h,
+        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFEBD8), // Soft premium peach
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: const Color(0xFFFFDAB9), // Slightly darker peach border
+            width: 1,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFFFF7B00).withValues(alpha: 0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.8),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(icon, color: const Color(0xFFF16622), size: 24),
+                ),
+                Text(
+                  label,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    color: const Color(0xFF8B4513), // Saddle Brown for text
+                    fontWeight: FontWeight.w900,
+                    fontSize: 11.5.sp,
+                    height: 1.1,
+                  ),
+                ),
+              ],
+            ),
+            if (isLocked)
+              Positioned(
+                top: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.5),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.lock_rounded,
+                    color: Colors.white,
+                    size: 14,
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );
