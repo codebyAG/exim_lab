@@ -29,7 +29,14 @@ class DashboardContinueHero extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         child: Container(
           decoration: BoxDecoration(
-            color: cs.surface,
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                cs.surface,
+                cs.primary.withValues(alpha: 0.03),
+              ],
+            ),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: cs.outlineVariant.withValues(alpha: 0.5),

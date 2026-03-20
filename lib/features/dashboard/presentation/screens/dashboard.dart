@@ -374,7 +374,14 @@ class _DashboardBodyState extends State<_DashboardBody> {
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.white,
+                      cs.surfaceContainerHighest.withValues(alpha: 0.1),
+                    ],
+                  ),
                   borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(32),
                     bottomRight: Radius.circular(32),
@@ -1412,7 +1419,14 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             horizontal: 20,
                           ),
                           decoration: BoxDecoration(
-                            color: cs.secondary, // Red
+                            gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: [
+                                cs.secondary,
+                                cs.secondary.withValues(alpha: 0.8),
+                              ],
+                            ),
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
@@ -1623,11 +1637,15 @@ class _DashboardBodyState extends State<_DashboardBody> {
         height: 15.h,
         padding: EdgeInsets.all(4.w),
         decoration: BoxDecoration(
-          color: bgColor,
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [bgColor, bgColor.withValues(alpha: 0.15)],
+          ),
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: bgColor.withValues(alpha: 0.2),
+              color: bgColor.withValues(alpha: 0.25),
               blurRadius: 15,
               offset: const Offset(0, 8),
             ),
@@ -1712,7 +1730,14 @@ class _DashboardBodyState extends State<_DashboardBody> {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 3.w),
         decoration: BoxDecoration(
-          color: Colors.white,
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.white,
+              cs.surfaceContainerHighest.withValues(alpha: 0.3),
+            ],
+          ),
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
@@ -2539,9 +2564,15 @@ class _QuickActionCard extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 4.w),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: color.withValues(alpha: 0.1), width: 1.5),
-            gradient: null, // Removed low-alpha gradient for clarity
-            color: cs.surface,
+            border: Border.all(
+              color: color.withValues(alpha: 0.15),
+              width: 1.5,
+            ),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [cs.surface, color.withValues(alpha: 0.08)],
+            ),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
