@@ -1267,203 +1267,194 @@ class _DashboardBodyState extends State<_DashboardBody> {
       padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
       child: FadeInLeft(
         duration: const Duration(milliseconds: 800),
-        child: Container(
+        child: SizedBox(
           width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                cs.primary,
-                cs.primary.withValues(alpha: 0.9), // Deep Navy
-              ],
-            ),
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-                color: cs.primary.withValues(alpha: 0.3),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
+          height: 26
+              .h, // Increased from 28.h for larger text and to prevent cutting
           child: Stack(
             children: [
-              // ✨ ABSTRACT BACKGROUND DECORATION
-              Positioned(
-                right: -20,
-                top: -20,
-                child: Container(
-                  height: 100,
-                  width: 100,
-                  decoration: BoxDecoration(
-                    color: cs.primary.withValues(alpha: 0.05),
-                    shape: BoxShape.circle,
-                  ),
-                ),
+              // 🎨 CUSTOM DRAWN BACKGROUND (Matches image exactly)
+              CustomPaint(
+                size: Size(double.infinity, 31.h),
+                painter: _SirCardPainter(cs: cs),
               ),
 
+              // 📦 CONTENT LAYER
               Padding(
                 padding: EdgeInsets.all(4.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
                   children: [
-                    // TOP ROW: BADGE & EXPERIENCE
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 5,
+                    // 👱‍♂️ PROFILE WITH ADAPTIVE GLOW RING
+                    SizedBox(
+                      width: 28.w, // Reduced from 35.w to give text more space
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          CustomPaint(
+                            size: Size(25.w, 25.w), // Scaled down ring
+                            painter: _ProfileGlowPainter(cs: cs),
                           ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Text(
-                            "VERIFIED • 48+ YEARS EXPERIENCE",
-                            style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.9),
-                              fontSize: 10.sp,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.6,
+                          Container(
+                            width: 19.w, // Scaled down portrait
+                            height: 19.w,
+                            padding: const EdgeInsets.all(2),
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 1.5.h),
-
-                    // MAIN CONTENT
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // PROFILE VISUAL
-                        Container(
-                          padding: const EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: cs.primary.withValues(alpha: 0.4),
-                              width: 1.5,
-                            ),
-                          ),
-                          child: CircleAvatar(
-                            radius: 28,
-                            backgroundColor: Colors.white,
-                            backgroundImage: const AssetImage(
-                              'assets/ashok_sir_image.png',
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 4.w),
-
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                t.translate('about_sir_title'),
-                                style: theme.textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontSize: 18.sp,
-                                  letterSpacing: -0.5,
-                                ),
-                                overflow: TextOverflow.ellipsis,
+                            child: CircleAvatar(
+                              radius: 9.w,
+                              backgroundImage: const AssetImage(
+                                'assets/ashok_sir_image.png',
                               ),
-                              SizedBox(height: 0.2.h),
-                              Text(
-                                t.translate('about_sir_desc'),
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: cs.secondary.withValues(
-                                    alpha: 0.9,
-                                  ), // Accent Red
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12.sp,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
+                              backgroundColor: Colors.transparent,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 1.2.h),
-
-                    // DESCRIPTION TEXT
-                    Text(
-                      t.translate('about_us_text'),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: Colors.white70,
-                        height: 1.4,
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.italic,
+                        ],
                       ),
                     ),
-                    SizedBox(height: 1.5.h),
-
-                    // ACTION BUTTON (RED)
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: InkWell(
-                        onTap: () =>
-                            _showAboutUsBottomSheet(context, t, cs, theme),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 10,
-                            horizontal: 20,
-                          ),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                              colors: [
-                                cs.secondary,
-                                cs.secondary.withValues(alpha: 0.8),
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: cs.secondary.withValues(alpha: 0.4),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
+                    SizedBox(width: 4.w), // More spacing from profile
+                    // 📝 TEXT CONTENT
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // 🏅 BADGES
+                          Row(
                             children: [
-                              Text(
-                                "Know More",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.white,
-                                  fontSize: 12.sp,
-                                  letterSpacing: 0.5,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              const Icon(
-                                Icons.arrow_forward_rounded,
-                                color: Colors.white,
-                                size: 18,
+                              _buildPillBadge("VERIFIED", cs.primary),
+                              SizedBox(width: 2.w),
+                              _buildPillBadge(
+                                "48+ YEARS EXP.",
+                                null,
+                                isWhite: true,
                               ),
                             ],
                           ),
-                        ),
+                          SizedBox(height: 1.h),
+                          Text(
+                            "Mr. Ashok Gupta Kinkkar",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 19.sp,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: -0.5,
+                            ),
+                            maxLines: 1, // Prevent wrap if possible
+                            overflow: TextOverflow.visible,
+                          ),
+                          Text(
+                            "Founder & Global Mentor",
+                            style: TextStyle(
+                              color: const Color(0xFFFFD700), // Gold
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          SizedBox(height: 1.h),
+                          Text(
+                            "\"Empowering India in Global Trade\"",
+                            style: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.9),
+                              fontSize: 12.sp,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
+
+              // 🔘 RED "KNOW MORE" BUTTON
+              Positioned(
+                bottom: 1.h,
+                right: 2.w, // Moved from 5.w to be more to the right
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () => _showAboutUsBottomSheet(context, t, cs, theme),
+                    borderRadius: BorderRadius.circular(30),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w, // Increased for larger presence
+                        vertical: 1.2.h,
+                      ),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFFD32F2F), Color(0xFFB71C1C)],
+                        ),
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(
+                              0xFFD32F2F,
+                            ).withValues(alpha: 0.4),
+                            blurRadius: 10,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "Know More ",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 14.sp, // Increased
+                            ),
+                          ),
+                          Icon(
+                            Icons.arrow_forward_rounded,
+                            color: Colors.white,
+                            size: 14.sp, // Increased
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPillBadge(String text, Color? color, {bool isWhite = false}) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 3.w,
+        vertical: 0.5.h,
+      ), // Increased padding
+      decoration: BoxDecoration(
+        color: isWhite
+            ? Colors.white
+            : (color?.withValues(alpha: 0.2) ?? Colors.white10),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isWhite
+              ? Colors.white
+              : (color?.withValues(alpha: 0.3) ?? Colors.white24),
+          width: 0.8,
+        ),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: isWhite ? const Color(0xFF001A3D) : Colors.white,
+          fontSize: 10.5.sp, // Increased from 9.sp
+          fontWeight: FontWeight.w900,
+          letterSpacing: 0.5,
         ),
       ),
     );
@@ -2728,4 +2719,141 @@ class _TutorialStepContentState extends State<_TutorialStepContent> {
       ),
     );
   }
+}
+
+// 🎨 CUSTOM PAINTER FOR THE 3D NAVY CARD
+class _SirCardPainter extends CustomPainter {
+  final ColorScheme cs;
+  _SirCardPainter({required this.cs});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [cs.primary, const Color(0xFF001A3D)],
+      ).createShader(Offset.zero & size);
+
+    final path = Path();
+    const r = 24.0; // Corner radius
+
+    // 📐 TRACING THE PREMIUM SHAPE
+    path.moveTo(0, r);
+    path.quadraticBezierTo(0, 0, r, 0);
+    path.lineTo(size.width - r, 0);
+    path.quadraticBezierTo(size.width, 0, size.width, r);
+    path.lineTo(
+      size.width,
+      size.height * 0.65,
+    ); // Start Step Down slightly earlier
+    path.quadraticBezierTo(
+      size.width,
+      size.height * 0.75,
+      size.width - r,
+      size.height * 0.75,
+    );
+    path.lineTo(
+      size.width * 0.55 + r,
+      size.height * 0.75,
+    ); // Moved left to 0.55
+    path.quadraticBezierTo(
+      size.width * 0.55,
+      size.height * 0.75,
+      size.width * 0.55,
+      size.height * 0.85,
+    );
+    path.lineTo(size.width * 0.55, size.height - r);
+    path.quadraticBezierTo(
+      size.width * 0.55,
+      size.height,
+      size.width * 0.55 - r,
+      size.height,
+    );
+    path.lineTo(r, size.height);
+    path.quadraticBezierTo(0, size.height, 0, size.height - r);
+    path.close();
+
+    // Draw Drop Shadow
+    canvas.drawShadow(
+      path.shift(const Offset(0, 10)),
+      Colors.black54,
+      15,
+      true,
+    );
+
+    // Draw Background
+    canvas.drawPath(path, paint);
+
+    // Draw Globe/Grid lines (Subtle)
+    final gridPaint = Paint()
+      ..color = Colors.white.withValues(alpha: 0.08)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1;
+
+    final center = Offset(size.width * 0.25, size.height * 0.5);
+    for (int i = 1; i <= 4; i++) {
+      canvas.drawCircle(center, i * 35.0, gridPaint);
+    }
+    canvas.drawLine(
+      Offset(0, size.height * 0.5),
+      Offset(size.width * 0.6, size.height * 0.5),
+      gridPaint,
+    );
+
+    // Draw Bevel Border
+    final borderPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5
+      ..shader = LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Colors.white.withValues(alpha: 0.4),
+          Colors.transparent,
+          Colors.white.withValues(alpha: 0.15),
+        ],
+      ).createShader(Offset.zero & size);
+    canvas.drawPath(path, borderPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+// 🎨 CUSTOM PAINTER FOR THE GLOWING PROFILE RING
+class _ProfileGlowPainter extends CustomPainter {
+  final ColorScheme cs;
+  _ProfileGlowPainter({required this.cs});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = size.width / 2;
+
+    // Outer Glow
+    final glowPaint = Paint()
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12)
+      ..shader = SweepGradient(
+        colors: [
+          const Color(0xFFD32F2F),
+          Colors.white,
+          const Color(0xFF2196F3),
+          const Color(0xFFD32F2F),
+        ],
+        stops: const [0.0, 0.4, 0.7, 1.0],
+      ).createShader(Rect.fromCircle(center: center, radius: radius));
+
+    canvas.drawCircle(center, radius - 4, glowPaint);
+
+    // Solid Ring
+    final ringPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.5
+      ..color = Colors.white.withValues(alpha: 0.9);
+    canvas.drawCircle(center, radius - 7, ringPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
