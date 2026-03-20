@@ -62,13 +62,13 @@ class GalleryScreen extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.w800,
             fontSize: 16.sp,
-            color: Colors.white,
+            color: cs.onSurface,
           ),
         ),
         centerTitle: true,
-        backgroundColor: const Color(0xFFFF8A00), // Unified Orange
+        backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: cs.onSurface),
       ),
       body: GridView.builder(
         padding: EdgeInsets.all(4.w),

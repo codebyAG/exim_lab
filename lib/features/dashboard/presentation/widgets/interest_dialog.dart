@@ -66,6 +66,7 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
@@ -86,7 +87,7 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                     height: 90,
                     width: 90,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFFECCC),
+                      color: cs.primary.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: const Center(
@@ -94,12 +95,12 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const Text(
+                  Text(
                     "Hello there! 👋",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w800,
-                      color: Color(0xFF2D2D2D),
+                      color: cs.onSurface,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -120,8 +121,8 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                     controller: _nameController,
                     decoration: InputDecoration(
                       hintText: "Your Name",
-                      prefixIcon: const Icon(Icons.person,
-                          color: Color(0xFFF6862A), size: 22),
+                      prefixIcon: Icon(Icons.person,
+                          color: cs.primary, size: 22),
                       filled: true,
                       fillColor: const Color(0xFFF7F7F7),
                       border: OutlineInputBorder(
@@ -157,7 +158,7 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                           ),
                         ),
                         Icon(Icons.keyboard_arrow_down_rounded,
-                            color: const Color(0xFFF6862A), size: 28),
+                            color: cs.primary, size: 28),
                       ],
                     ),
                   ),
@@ -170,13 +171,13 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                     ),
                     child: Column(
                       children: [
-                        _buildInterestItem("Import"),
+                        _buildInterestItem(context, "Import"),
                         Divider(
                             height: 1,
                             color: Colors.grey.shade200,
                             indent: 16,
                             endIndent: 16),
-                        _buildInterestItem("Export"),
+                        _buildInterestItem(context, "Export"),
                       ],
                     ),
                   ),
@@ -189,7 +190,7 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                     child: ElevatedButton(
                       onPressed: _isSubmitting ? null : _submitInterest,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFF6862A),
+                        backgroundColor: cs.primary,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
@@ -254,7 +255,8 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
     );
   }
 
-  Widget _buildInterestItem(String value) {
+  Widget _buildInterestItem(BuildContext context, String value) {
+    final cs = Theme.of(context).colorScheme;
     final isSelected = _selectedInterest == value;
     return InkWell(
       onTap: () => setState(() => _selectedInterest = value),
@@ -263,7 +265,7 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
         child: Row(
           children: [
             if (isSelected) 
-              const Icon(Icons.check, color: Color(0xFFF6862A), size: 22)
+              Icon(Icons.check, color: cs.primary, size: 22)
             else
               const SizedBox(width: 22),
             const SizedBox(width: 12),

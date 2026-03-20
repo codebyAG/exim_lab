@@ -374,7 +374,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: cs.primary, // Navy Blue
+                  color: Colors.white,
                   borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(32),
                     bottomRight: Radius.circular(32),
@@ -413,7 +413,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                         '${t.translate('welcome_back')},',
                                         style: theme.textTheme.bodyLarge
                                             ?.copyWith(
-                                              color: Colors.white70,
+                                              color: cs.onSurface.withValues(
+                                                alpha: 0.7,
+                                              ),
                                               fontWeight: FontWeight.w600,
                                               fontSize: 16.sp,
                                             ),
@@ -437,7 +439,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                       style: theme.textTheme.headlineSmall
                                           ?.copyWith(
                                             fontWeight: FontWeight.w900,
-                                            color: Colors.white,
+                                            color: cs.onSurface,
                                             fontSize: 18.sp,
                                             letterSpacing: -0.5,
                                           ),
@@ -480,9 +482,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                             context,
                                             const NotificationsScreen(),
                                           ),
-                                          icon: const Icon(
+                                          icon: Icon(
                                             Icons.notifications_none_rounded,
-                                            color: Color(0xFF1D1F33),
+                                            color: cs.onSurface,
                                             size: 24,
                                           ),
                                         ),
@@ -1294,7 +1296,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
               end: Alignment.bottomRight,
               colors: [
                 cs.primary,
-                const Color(0xFF112240), // Deep Navy
+                cs.primary.withValues(alpha: 0.9), // Deep Navy
               ],
             ),
             borderRadius: BorderRadius.circular(30),

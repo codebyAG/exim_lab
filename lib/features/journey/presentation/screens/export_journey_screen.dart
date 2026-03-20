@@ -29,7 +29,7 @@ class _ExportJourneyScreenState extends State<ExportJourneyScreen> {
     final bool isPremium = context.watch<AuthProvider>().user?.isPremium ?? false;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9FAFB),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Start Your Export Journey'),
         backgroundColor: Colors.white,

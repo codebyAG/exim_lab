@@ -15,129 +15,84 @@ class JourneyHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-
     return FadeInDown(
       duration: const Duration(milliseconds: 600),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: cs.surface,
+          gradient: LinearGradient(
+            colors: [cs.primary, cs.primary.withValues(alpha: 0.8)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
           borderRadius: BorderRadius.circular(28),
           boxShadow: [
             BoxShadow(
-              color: cs.shadow.withValues(alpha: 0.04),
-              blurRadius: 24,
-              offset: const Offset(0, 12),
+              color: cs.primary.withValues(alpha: 0.25),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
             ),
           ],
-          border: Border.all(
-            color: cs.primary.withValues(alpha: 0.1),
-            width: 1.5,
-          ),
         ),
         clipBehavior: Clip.antiAlias,
         child: Stack(
           children: [
-            // Background accents
             Positioned(
-              top: -40,
-              right: -20,
-              child: Container(
-                width: 140,
-                height: 140,
-                decoration: BoxDecoration(
-                  gradient: RadialGradient(
-                    colors: [
-                      cs.primary.withValues(alpha: 0.15),
-                      cs.primary.withValues(alpha: 0),
-                    ],
-                  ),
-                  shape: BoxShape.circle,
-                ),
+              right: -30,
+              top: -30,
+              child: Opacity(
+                opacity: 0.1,
+                child: Icon(Icons.public_rounded, size: 180, color: Colors.white),
               ),
             ),
-            Positioned(
-              bottom: -20,
-              left: -10,
-              child: Icon(
-                Icons.auto_awesome_motion_rounded,
-                size: 80,
-                color: cs.primary.withValues(alpha: 0.05),
-              ),
-            ),
-            // Main content
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.5.h),
+              padding: EdgeInsets.all(5.w),
               child: Row(
                 children: [
-                  // Icon Section
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [cs.primary, cs.secondary],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: cs.primary.withValues(alpha: 0.3),
-                          blurRadius: 15,
-                          offset: const Offset(0, 5),
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      title.toLowerCase().contains('export')
-                          ? Icons.flight_takeoff_rounded
-                          : Icons.flight_land_rounded,
-                      size: 8.w,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(width: 5.w),
-                  // Text Section
+                  _buildPortrait(),
+                  SizedBox(width: 4.w),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          title.toUpperCase(),
-                          style: TextStyle(
-                            fontSize: 11.sp,
-                            fontWeight: FontWeight.w800,
-                            color: cs.primary,
-                            letterSpacing: 1.2,
-                          ),
-                        ),
-                        SizedBox(height: 0.5.h),
-                        Text(
-                          subtitle,
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w900,
-                            color: cs.onSurface,
-                            height: 1.2,
-                          ),
-                        ),
-                        SizedBox(height: 1.h),
-                        // Visual indicator of completeness (Status pill)
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.5.h),
+                          padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.4.h),
                           decoration: BoxDecoration(
-                            color: cs.primary.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.white24),
                           ),
                           child: Text(
-                            'Step-by-Step Training',
+                            'FOUNDER & GLOBAL MENTOR',
                             style: TextStyle(
-                              fontSize: 10.sp,
-                              fontWeight: FontWeight.w700,
-                              color: cs.primary,
+                              fontSize: 7.5.sp,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                              letterSpacing: 0.5,
                             ),
                           ),
                         ),
+                        SizedBox(height: 1.h),
+                        Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
+                            height: 1.1,
+                          ),
+                        ),
+                        SizedBox(height: 0.6.h),
+                        Text(
+                          subtitle,
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: Colors.white.withValues(alpha: 0.8),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(height: 2.h),
+                        _buildKnowMoreButton(cs),
                       ],
                     ),
                   ),
@@ -146,6 +101,53 @@ class JourneyHeader extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildPortrait() {
+    return Container(
+      width: 26.w,
+      height: 26.w,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white.withValues(alpha: 0.3), width: 3),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+        image: const DecorationImage(
+          image: AssetImage('assets/ashok_sir_image.png'),
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildKnowMoreButton(ColorScheme cs) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.8.h),
+      decoration: BoxDecoration(
+        color: cs.secondary,
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Know More',
+            style: TextStyle(
+              fontSize: 9.sp,
+              fontWeight: FontWeight.w900,
+              color: cs.onSecondary,
+            ),
+          ),
+          SizedBox(width: 1.5.w),
+          Icon(Icons.arrow_forward_ios_rounded, color: cs.onSecondary, size: 10),
+        ],
       ),
     );
   }
@@ -242,18 +244,18 @@ class JourneyStepCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: cs.surface,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: cs.shadow.withValues(alpha: 0.05),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
           ),
         ],
         border: Border.all(
-          color: isActive ? cs.primary.withValues(alpha: 0.5) : Colors.transparent,
-          width: 2,
+          color: isActive ? cs.primary.withValues(alpha: 0.2) : Colors.grey.withValues(alpha: 0.1),
+          width: 1.5,
         ),
       ),
       child: Opacity(

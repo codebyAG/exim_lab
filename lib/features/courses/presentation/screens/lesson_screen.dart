@@ -278,7 +278,7 @@ class _LessonTile extends StatelessWidget {
       case 'pdf':
         return Colors.blue;
       default:
-        return const Color(0xFFE53935); // Primary Redish
+        return const Color(0xFFD32F2F); // Use theme red directly if needed, or better, pass Theme to this helper
     }
   }
 }

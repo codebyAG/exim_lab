@@ -14,6 +14,7 @@ class PremiumUnlockDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
       backgroundColor: Colors.transparent,
@@ -27,7 +28,7 @@ class PremiumUnlockDialog extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFF6862A).withValues(alpha: 0.3),
+              color: cs.secondary.withValues(alpha: 0.3),
               blurRadius: 40,
               spreadRadius: 4,
             ),
@@ -51,8 +52,8 @@ class PremiumUnlockDialog extends StatelessWidget {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          const Color(0xFFF6862A),
-                          const Color(0xFFFF5722).withValues(alpha: 0.85),
+                          cs.secondary,
+                          cs.secondary.withValues(alpha: 0.85),
                         ],
                       ),
                     ),
@@ -144,7 +145,7 @@ class PremiumUnlockDialog extends StatelessWidget {
                           child: ElevatedButton(
                             onPressed: () => _launchWhatsApp(context),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFF6862A),
+                              backgroundColor: cs.secondary,
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               elevation: 0,
@@ -231,6 +232,7 @@ class _PremiumFeatureTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Column(
       children: [
         Padding(
@@ -243,7 +245,7 @@ class _PremiumFeatureTile extends StatelessWidget {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF6862A).withValues(alpha: 0.12),
+                  color: cs.secondary.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
@@ -279,7 +281,7 @@ class _PremiumFeatureTile extends StatelessWidget {
               // Checkmark
               const Icon(
                 Icons.check_circle_rounded,
-                color: Color(0xFFF6862A),
+                color: Color(0xFFD32F2F), // Use theme red directly if needed, or cs.secondary
                 size: 20,
               ),
             ],

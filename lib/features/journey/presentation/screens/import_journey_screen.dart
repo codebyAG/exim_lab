@@ -29,7 +29,7 @@ class _ImportJourneyScreenState extends State<ImportJourneyScreen> {
     final bool isPremium = context.watch<AuthProvider>().user?.isPremium ?? false;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9FAFB),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Start Your Import Journey'),
         backgroundColor: Colors.white,
