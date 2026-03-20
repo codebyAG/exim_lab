@@ -665,62 +665,36 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       child: Row(
                         children: [
                           Expanded(
-                            child: Consumer<AuthProvider>(
-                              builder: (context, auth, _) {
-                                final isPremium = auth.user?.isPremium ?? false;
-                                return _buildJourneyCard(
-                                  context: context,
-                                  cs: cs,
-                                  theme: theme,
-                                  label: t.translate('start_import_journey'),
-                                  isLocked: !isPremium,
-                                  icon: Icons.directions_boat_rounded,
-                                  backgroundColor: cs.primary, // Navy
-                                  onTap: () {
-                                    if (isPremium) {
-                                      AppNavigator.push(
-                                        context,
-                                        const ImportJourneyScreen(),
-                                      );
-                                    } else {
-                                      showDialog(
-                                        context: context,
-                                        builder: (_) =>
-                                            const PremiumUnlockDialog(),
-                                      );
-                                    }
-                                  },
+                            child: _buildJourneyCard(
+                              context: context,
+                              cs: cs,
+                              theme: theme,
+                              label: t.translate('start_import_journey'),
+                              isLocked: false,
+                              icon: Icons.directions_boat_rounded,
+                              backgroundColor: cs.primary, // Navy
+                              onTap: () {
+                                AppNavigator.push(
+                                  context,
+                                  const ImportJourneyScreen(),
                                 );
                               },
                             ),
                           ),
                           SizedBox(width: 4.w),
                           Expanded(
-                            child: Consumer<AuthProvider>(
-                              builder: (context, auth, _) {
-                                final isPremium = auth.user?.isPremium ?? false;
-                                return _buildJourneyCard(
-                                  context: context,
-                                  cs: cs,
-                                  theme: theme,
-                                  label: t.translate('start_export_journey'),
-                                  isLocked: !isPremium,
-                                  icon: Icons.airplanemode_active_rounded,
-                                  backgroundColor: cs.secondary, // Red
-                                  onTap: () {
-                                    if (isPremium) {
-                                      AppNavigator.push(
-                                        context,
-                                        const ExportJourneyScreen(),
-                                      );
-                                    } else {
-                                      showDialog(
-                                        context: context,
-                                        builder: (_) =>
-                                            const PremiumUnlockDialog(),
-                                      );
-                                    }
-                                  },
+                            child: _buildJourneyCard(
+                              context: context,
+                              cs: cs,
+                              theme: theme,
+                              label: t.translate('start_export_journey'),
+                              isLocked: false,
+                              icon: Icons.airplanemode_active_rounded,
+                              backgroundColor: cs.secondary, // Red
+                              onTap: () {
+                                AppNavigator.push(
+                                  context,
+                                  const ExportJourneyScreen(),
                                 );
                               },
                             ),
