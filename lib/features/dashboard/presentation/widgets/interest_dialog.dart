@@ -124,7 +124,7 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                       prefixIcon: Icon(Icons.person,
                           color: cs.primary, size: 22),
                       filled: true,
-                      fillColor: const Color(0xFFF7F7F7),
+                      fillColor: cs.surfaceContainerHighest.withValues(alpha: 0.5),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide.none,
@@ -143,7 +143,7 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 14),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF7F7F7),
+                      color: cs.surfaceContainerHighest.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Row(
@@ -166,7 +166,7 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
 
                   Container(
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF7F7F7),
+                      color: cs.surfaceContainerHighest.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Column(

@@ -206,12 +206,12 @@ class _LessonTile extends StatelessWidget {
               height: 42,
               width: 42,
               decoration: BoxDecoration(
-                color: _getLessonColor(lesson.type).withValues(alpha: 0.1),
+                color: _getLessonColor(cs, lesson.type).withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 _getLessonIcon(lesson.type),
-                color: _getLessonColor(lesson.type),
+                color: _getLessonColor(cs, lesson.type),
                 size: 20,
               ),
             ),
@@ -270,7 +270,7 @@ class _LessonTile extends StatelessWidget {
     }
   }
 
-  Color _getLessonColor(String type) {
+  Color _getLessonColor(ColorScheme cs, String type) {
     switch (type.toLowerCase()) {
       case 'quiz':
         return Colors.orange;
@@ -278,7 +278,7 @@ class _LessonTile extends StatelessWidget {
       case 'pdf':
         return Colors.blue;
       default:
-        return const Color(0xFFD32F2F); // Use theme red directly if needed, or better, pass Theme to this helper
+        return cs.secondary;
     }
   }
 }

@@ -343,10 +343,10 @@ class _MyCourseCard extends StatelessWidget {
 
     // 🎨 Adaptive background colors
     final List<Color> bgColors = [
-      isDark ? cs.primaryContainer : const Color(0xFFFFE4EC),
-      isDark ? cs.secondaryContainer : const Color(0xFFE6F0FF),
-      isDark ? cs.tertiaryContainer : const Color(0xFFE6F7F2),
-      isDark ? cs.surfaceContainerHighest : const Color(0xFFFFF3E0),
+      isDark ? cs.primaryContainer : cs.primary.withValues(alpha: 0.08),
+      isDark ? cs.secondaryContainer : cs.secondary.withValues(alpha: 0.08),
+      isDark ? cs.tertiaryContainer : cs.primaryContainer.withValues(alpha: 0.15),
+      isDark ? cs.surfaceContainerHighest : cs.surfaceContainerHighest,
     ];
 
     final bgColor = bgColors[colorIndex % bgColors.length];

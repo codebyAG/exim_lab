@@ -610,7 +610,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             'what_learn_today',
                           ), // Re-using what_learn_today or fixed string
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: const Color(0xFF6B7280),
+                            color: cs.onSurfaceVariant,
                             fontWeight: FontWeight.w500,
                             fontSize: 14.sp,
                           ),
@@ -675,9 +675,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                   label: t.translate('start_import_journey'),
                                   isLocked: !isPremium,
                                   icon: Icons.directions_boat_rounded,
-                                  backgroundColor: const Color(
-                                    0xFF003366,
-                                  ), // Navy/Blue
+                                  backgroundColor: cs.primary, // Navy
                                   onTap: () {
                                     if (isPremium) {
                                       AppNavigator.push(
@@ -1769,7 +1767,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
               Icons.public_rounded,
               "100+",
               "Countries",
-              const Color(0xFF2A5298),
+              cs.primary,
             ), // Blue accent
           ],
         ),
@@ -2313,25 +2311,19 @@ class _DashboardBodyState extends State<_DashboardBody> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
             decoration: BoxDecoration(
-              color: const Color(0xFFFF8A00).withValues(alpha: 0.1),
+              color: cs.secondary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(30),
-              border: Border.all(
-                color: const Color(0xFFFF8A00).withValues(alpha: 0.2),
-              ),
+              border: Border.all(color: cs.secondary.withValues(alpha: 0.2)),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
-                  Icons.auto_awesome_rounded,
-                  color: Color(0xFFFF8A00),
-                  size: 16,
-                ),
+                Icon(Icons.auto_awesome_rounded, color: cs.secondary, size: 16),
                 const SizedBox(width: 8),
                 Text(
                   "FEATURED MASTERCLASS",
                   style: TextStyle(
-                    color: const Color(0xFFFF8A00),
+                    color: cs.secondary,
                     fontSize: 11.sp,
                     fontWeight: FontWeight.w900,
                     letterSpacing: 1.2,
@@ -2358,17 +2350,14 @@ class _DashboardBodyState extends State<_DashboardBody> {
                 clipBehavior: Clip.antiAlias,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(32),
-                  gradient: const LinearGradient(
+                  gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFF1D1F33), // Deep Navy
-                      Color(0xFF2E325A), // Soft Purple/Navy
-                    ],
+                    colors: [cs.primary, cs.primary.withValues(alpha: 0.8)],
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF1D1F33).withValues(alpha: 0.3),
+                      color: cs.primary.withValues(alpha: 0.3),
                       blurRadius: 30,
                       offset: const Offset(0, 15),
                     ),
@@ -2397,8 +2386,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
                           begin: Alignment.centerLeft,
                           end: Alignment.centerRight,
                           colors: [
-                            const Color(0xFF1D1F33).withValues(alpha: 0.95),
-                            const Color(0xFF1D1F33).withValues(alpha: 0.4),
+                            cs.primary.withValues(alpha: 0.95),
+                            cs.primary.withValues(alpha: 0.4),
                             Colors.transparent,
                           ],
                         ),

@@ -21,10 +21,10 @@ class PremiumUnlockDialog extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(28),
-          gradient: const LinearGradient(
+          gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFF1A0A2E), Color(0xFF16213E)],
+            colors: [cs.primary, cs.primary.withValues(alpha: 0.85)],
           ),
           boxShadow: [
             BoxShadow(
