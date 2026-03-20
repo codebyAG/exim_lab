@@ -1,63 +1,63 @@
 import 'package:flutter/material.dart';
 
 class AppColorSchemes {
-  // 🌞 LIGHT THEME — Bright Orange & Soft White
+  // 🌞 LIGHT THEME — Global Academy Navy & Red
   static const ColorScheme light = ColorScheme.light(
-    // 🟧 PRIMARY — Bright Clean Orange
-    primary: Color(0xFFFF8A00), // vivid orange
+    // 🟦 PRIMARY — Deep Navy Blue
+    primary: Color(0xFF0A1D37), 
     onPrimary: Color(0xFFFFFFFF),
 
-    // 🟨 SECONDARY — Soft Peach Accent
-    secondary: Color(0xFFFFB703),
-    onSecondary: Color(0xFF3B1D00),
+    // 🟥 SECONDARY — Vibrant Red (CTAs)
+    secondary: Color(0xFFD32F2F),
+    onSecondary: Color(0xFFFFFFFF),
 
-    // 🧱 SURFACE — Clean White
-    surface: Color(0xFFFFFFFF),
-    onSurface: Color(0xFF1F2937),
+    // 🧱 SURFACE — Light Off-White / Blue Tint
+    surface: Color(0xFFF8FAFC),
+    onSurface: Color(0xFF0A1D37), // Navy for text
 
     // ❌ ERROR
-    error: Color(0xFFEF4444),
+    error: Color(0xFFB00020),
     onError: Color(0xFFFFFFFF),
 
     // 🧩 OUTLINES
-    outline: Color(0xFFE5E7EB),
-    outlineVariant: Color(0xFFF3F4F6),
+    outline: Color(0xFFBDC3C7),
+    outlineVariant: Color(0xFFECF0F1),
 
     // 🌫 SHADOWS
     shadow: Color(0xFF000000),
     scrim: Color(0xFF000000),
 
     // ✨ MATERIAL OVERLAY
-    surfaceTint: Color(0xFFFF8A00),
+    surfaceTint: Color(0xFF0A1D37),
   );
 
-  // 🌙 DARK THEME — Bright Orange on Soft Charcoal
+  // 🌙 DARK THEME — Deep Navy on Darker Surface
   static const ColorScheme dark = ColorScheme.dark(
-    // 🟧 PRIMARY — Bright Orange (same identity)
-    primary: Color(0xFFFF9F1C),
-    onPrimary: Color(0xFF1F2937),
+    // 🟦 PRIMARY — Deep Navy
+    primary: Color(0xFF1B2A4E),
+    onPrimary: Color(0xFFFFFFFF),
 
-    // 🟨 SECONDARY — Warm Gold
-    secondary: Color(0xFFFFC857),
-    onSecondary: Color(0xFF1F2937),
+    // 🟥 SECONDARY — Vibrant Red
+    secondary: Color(0xFFE57373),
+    onSecondary: Color(0xFFFFFFFF),
 
-    // 🧱 SURFACE — Soft Dark Grey (NOT black)
-    surface: Color(0xFF1E1E1E),
-    onSurface: Color(0xFFE5E7EB),
+    // 🧱 SURFACE — Deep Charcoal / Navy
+    surface: Color(0xFF0F172A),
+    onSurface: Color(0xFFE2E8F0),
 
     // ❌ ERROR
     error: Color(0xFFF87171),
-    onError: Color(0xFF1F2937),
+    onError: Color(0xFFFFFFFF),
 
     // 🧩 OUTLINES
-    outline: Color(0xFF374151),
-    outlineVariant: Color(0xFF2D2D2D),
+    outline: Color(0xFF334155),
+    outlineVariant: Color(0xFF1E293B),
 
     // 🌫 SHADOWS
     shadow: Color(0xFF000000),
     scrim: Color(0xFF000000),
 
     // ✨ MATERIAL OVERLAY
-    surfaceTint: Color(0xFFFF9F1C),
+    surfaceTint: Color(0xFF1B2A4E),
   );
 }

@@ -370,14 +370,14 @@ class _DashboardBodyState extends State<_DashboardBody> {
             cacheExtent: 1000,
             padding: EdgeInsets.zero,
             children: [
-              // 1 & 2. ORANGE TOP HEADER SECTION
+              // 1 & 2. NAVY TOP HEADER SECTION
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: cs.surface,
+                  color: cs.primary, // Navy Blue
                   borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(24),
-                    bottomRight: Radius.circular(24),
+                    bottomLeft: Radius.circular(32),
+                    bottomRight: Radius.circular(32),
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -413,9 +413,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                         '${t.translate('welcome_back')},',
                                         style: theme.textTheme.bodyLarge
                                             ?.copyWith(
-                                              color: cs.onSurface.withValues(
-                                                alpha: 0.6,
-                                              ), // Soft Gray
+                                              color: Colors.white70,
                                               fontWeight: FontWeight.w600,
                                               fontSize: 16.sp,
                                             ),
@@ -439,7 +437,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                       style: theme.textTheme.headlineSmall
                                           ?.copyWith(
                                             fontWeight: FontWeight.w900,
-                                            color: cs.onSurface,
+                                            color: Colors.white,
                                             fontSize: 18.sp,
                                             letterSpacing: -0.5,
                                           ),
@@ -674,19 +672,13 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                   theme: theme,
                                   label: t.translate('start_import_journey'),
                                   isLocked: !isPremium,
-                                  icon: Icons.flight_land_rounded,
+                                  icon: Icons.directions_boat_rounded,
+                                  backgroundColor: const Color(0xFF003366), // Navy/Blue
                                   onTap: () {
-                                    if (!isPremium) {
-                                      AppNavigator.push(
-                                        context,
-                                        const ImportJourneyScreen(),
-                                      );
+                                    if (isPremium) {
+                                      AppNavigator.push(context, const ImportJourneyScreen());
                                     } else {
-                                      showDialog(
-                                        context: context,
-                                        builder: (_) =>
-                                            const PremiumUnlockDialog(),
-                                      );
+                                      showDialog(context: context, builder: (_) => const PremiumUnlockDialog());
                                     }
                                   },
                                 );
@@ -704,19 +696,13 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                   theme: theme,
                                   label: t.translate('start_export_journey'),
                                   isLocked: !isPremium,
-                                  icon: Icons.flight_takeoff_rounded,
+                                  icon: Icons.airplanemode_active_rounded,
+                                  backgroundColor: cs.secondary, // Red
                                   onTap: () {
-                                    if (!isPremium) {
-                                      AppNavigator.push(
-                                        context,
-                                        const ExportJourneyScreen(),
-                                      );
+                                    if (isPremium) {
+                                      AppNavigator.push(context, const ExportJourneyScreen());
                                     } else {
-                                      showDialog(
-                                        context: context,
-                                        builder: (_) =>
-                                            const PremiumUnlockDialog(),
-                                      );
+                                      showDialog(context: context, builder: (_) => const PremiumUnlockDialog());
                                     }
                                   },
                                 );
@@ -726,6 +712,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         ],
                       ),
                     ),
+
+                    // 6. TRUST STRIP
+                    _buildTrustStrip(cs),
                   ],
                 ),
               ),
@@ -1288,19 +1277,15 @@ class _DashboardBodyState extends State<_DashboardBody> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                const Color(0xFFFFF5E6), // Very light orange/cream
-                Colors.white,
+                cs.primary,
+                const Color(0xFF112240), // Deep Navy
               ],
             ),
-            borderRadius: BorderRadius.circular(32),
-            border: Border.all(
-              color: cs.primary.withValues(alpha: 0.15),
-              width: 1.5,
-            ),
+            borderRadius: BorderRadius.circular(30),
             boxShadow: [
               BoxShadow(
-                color: cs.primary.withValues(alpha: 0.08),
-                blurRadius: 25,
+                color: cs.primary.withValues(alpha: 0.3),
+                blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
             ],
@@ -1336,36 +1321,18 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             vertical: 5,
                           ),
                           decoration: BoxDecoration(
-                            color: cs.primary,
+                            color: Colors.white.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(30),
                           ),
                           child: Text(
-                            "FOUNDER PROFILE",
+                            "VERIFIED • 48+ YEARS EXPERIENCE",
                             style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 9.sp,
+                              color: Colors.white.withValues(alpha: 0.9),
+                              fontSize: 8.sp,
                               fontWeight: FontWeight.w700,
                               letterSpacing: 0.6,
                             ),
                           ),
-                        ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.verified_rounded,
-                              color: cs.primary,
-                              size: 14,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              "48+ Years Experience",
-                              style: TextStyle(
-                                color: cs.primary,
-                                fontSize: 11.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
                         ),
                       ],
                     ),
@@ -1395,31 +1362,33 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         ),
                         SizedBox(width: 4.w),
 
-                        // TEXT DETAILS
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                t.translate('about_sir_title'),
-                                style: theme.textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF1D1F33),
-                                  fontSize: 16.sp,
-                                ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              t.translate('about_sir_title'),
+                              style: theme.textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 18.sp,
+                                letterSpacing: -0.5,
                               ),
-                              SizedBox(height: 0.2.h),
-                              Text(
-                                t.translate('about_sir_desc'),
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: cs.primary,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 11.sp,
-                                ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 0.2.h),
+                            Text(
+                              t.translate('about_sir_desc'),
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: cs.secondary.withValues(alpha: 0.9), // Accent Red
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12.sp,
                               ),
-                            ],
-                          ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
+                      ),
                       ],
                     ),
                     SizedBox(height: 1.2.h),
@@ -1427,44 +1396,60 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     // DESCRIPTION TEXT
                     Text(
                       t.translate('about_us_text'),
-                      maxLines: 4,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: const Color(0xFF4B5563),
+                        color: Colors.white70,
                         height: 1.4,
-                        fontSize: 12.sp,
+                        fontSize: 11.sp,
                         fontWeight: FontWeight.w500,
+                        fontStyle: FontStyle.italic,
                       ),
                     ),
-                    SizedBox(height: 0.8.h),
+                    SizedBox(height: 1.5.h),
 
-                    // ACTION BUTTON
-                    InkWell(
-                      onTap: () =>
-                          _showAboutUsBottomSheet(context, t, cs, theme),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 8,
-                          horizontal: 4,
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              t.translate('read_more'),
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: cs.primary,
-                                fontSize: 13.sp,
+                    // ACTION BUTTON (RED)
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: InkWell(
+                        onTap: () =>
+                            _showAboutUsBottomSheet(context, t, cs, theme),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 20,
+                          ),
+                          decoration: BoxDecoration(
+                            color: cs.secondary, // Red
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: cs.secondary.withValues(alpha: 0.4),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                            Icon(
-                              Icons.arrow_forward_rounded,
-                              color: cs.primary,
-                              size: 20,
-                            ),
-                          ],
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "Know More",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white,
+                                  fontSize: 12.sp,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              const Icon(
+                                Icons.arrow_forward_rounded,
+                                color: Colors.white,
+                                size: 18,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -1632,75 +1617,153 @@ class _DashboardBodyState extends State<_DashboardBody> {
     required IconData icon,
     required VoidCallback onTap,
     bool isLocked = true,
+    Color? backgroundColor,
+    Color? textColor,
   }) {
+    final bgColor = backgroundColor ?? cs.primary.withValues(alpha: 0.08);
+    final isDark = bgColor.computeLuminance() < 0.5;
+    final txtColor = textColor ?? (isDark ? Colors.white : cs.onSurface);
+
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(20),
       child: Container(
-        height: 12.h,
-        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
+        height: 15.h,
+        padding: EdgeInsets.all(4.w),
         decoration: BoxDecoration(
-          color: cs.primary.withValues(
-            alpha: 0.08,
-          ), // Theme-aligned light orange
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: cs.primary.withValues(alpha: 0.15), // Theme-aligned border
-            width: 1,
-          ),
+          color: bgColor,
+          borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: cs.primary.withValues(alpha: 0.1),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              color: bgColor.withValues(alpha: 0.2),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
             ),
           ],
+          image: DecorationImage(
+            image: const AssetImage('assets/exim_wave_bg.png'), // Subtle pattern if exists
+            opacity: 0.1,
+            repeat: ImageRepeat.repeat,
+            fit: BoxFit.none,
+            scale: 2,
+          ),
         ),
-        child: Stack(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.8),
+                    color: Colors.white.withValues(alpha: 0.2),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(icon, color: cs.primary, size: 24),
+                  child: Icon(icon, color: Colors.white, size: 20),
                 ),
+                if (isLocked)
+                  const Icon(Icons.lock_rounded, color: Colors.white70, size: 16),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 Text(
                   label,
                   style: theme.textTheme.titleSmall?.copyWith(
-                    color: cs.onSurface, // Matching theme text colors
-                    fontWeight: FontWeight.w900,
-                    fontSize: 11.5.sp,
+                    color: txtColor,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 12.sp,
                     height: 1.1,
+                  ),
+                ),
+                SizedBox(height: 1.h),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Start Now",
+                        style: TextStyle(
+                          color: isDark ? bgColor : cs.primary,
+                          fontSize: 9.sp,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Icon(
+                        Icons.chevron_right_rounded,
+                        color: isDark ? bgColor : cs.primary,
+                        size: 14,
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-            if (isLocked)
-              Positioned(
-                top: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.5),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.lock_rounded,
-                    color: Colors.white,
-                    size: 14,
-                  ),
-                ),
-              ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildTrustStrip(ColorScheme cs) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 3.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: cs.primary.withValues(alpha: 0.05),
+              blurRadius: 15,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildTrustItem(Icons.workspace_premium_rounded, "45+", "Years Experience", cs.secondary), // Red
+            _buildTrustItem(Icons.school_rounded, "25K+", "Students Trained", cs.primary),   // Navy
+            _buildTrustItem(Icons.public_rounded, "100+", "Countries", const Color(0xFF2A5298)), // Blue accent
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTrustItem(IconData icon, String value, String label, Color color) {
+    return Column(
+      children: [
+        Icon(icon, color: color, size: 22),
+        SizedBox(height: 0.5.h),
+        Text(
+          value,
+          style: TextStyle(
+            color: color,
+            fontWeight: FontWeight.w900,
+            fontSize: 13.sp,
+          ),
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            color: color.withValues(alpha: 0.7),
+            fontWeight: FontWeight.w600,
+            fontSize: 7.sp,
+          ),
+        ),
+      ],
     );
   }
 
