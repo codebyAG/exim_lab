@@ -673,12 +673,21 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                   label: t.translate('start_import_journey'),
                                   isLocked: !isPremium,
                                   icon: Icons.directions_boat_rounded,
-                                  backgroundColor: const Color(0xFF003366), // Navy/Blue
+                                  backgroundColor: const Color(
+                                    0xFF003366,
+                                  ), // Navy/Blue
                                   onTap: () {
                                     if (isPremium) {
-                                      AppNavigator.push(context, const ImportJourneyScreen());
+                                      AppNavigator.push(
+                                        context,
+                                        const ImportJourneyScreen(),
+                                      );
                                     } else {
-                                      showDialog(context: context, builder: (_) => const PremiumUnlockDialog());
+                                      showDialog(
+                                        context: context,
+                                        builder: (_) =>
+                                            const PremiumUnlockDialog(),
+                                      );
                                     }
                                   },
                                 );
@@ -700,9 +709,16 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                   backgroundColor: cs.secondary, // Red
                                   onTap: () {
                                     if (isPremium) {
-                                      AppNavigator.push(context, const ExportJourneyScreen());
+                                      AppNavigator.push(
+                                        context,
+                                        const ExportJourneyScreen(),
+                                      );
                                     } else {
-                                      showDialog(context: context, builder: (_) => const PremiumUnlockDialog());
+                                      showDialog(
+                                        context: context,
+                                        builder: (_) =>
+                                            const PremiumUnlockDialog(),
+                                      );
                                     }
                                   },
                                 );
@@ -1362,33 +1378,35 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         ),
                         SizedBox(width: 4.w),
 
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              t.translate('about_sir_title'),
-                              style: theme.textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                fontSize: 18.sp,
-                                letterSpacing: -0.5,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                t.translate('about_sir_title'),
+                                style: theme.textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 18.sp,
+                                  letterSpacing: -0.5,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            SizedBox(height: 0.2.h),
-                            Text(
-                              t.translate('about_sir_desc'),
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: cs.secondary.withValues(alpha: 0.9), // Accent Red
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12.sp,
+                              SizedBox(height: 0.2.h),
+                              Text(
+                                t.translate('about_sir_desc'),
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: cs.secondary.withValues(
+                                    alpha: 0.9,
+                                  ), // Accent Red
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12.sp,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
                       ],
                     ),
                     SizedBox(height: 1.2.h),
@@ -1640,13 +1658,6 @@ class _DashboardBodyState extends State<_DashboardBody> {
               offset: const Offset(0, 8),
             ),
           ],
-          image: DecorationImage(
-            image: const AssetImage('assets/exim_wave_bg.png'), // Subtle pattern if exists
-            opacity: 0.1,
-            repeat: ImageRepeat.repeat,
-            fit: BoxFit.none,
-            scale: 2,
-          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1664,7 +1675,11 @@ class _DashboardBodyState extends State<_DashboardBody> {
                   child: Icon(icon, color: Colors.white, size: 20),
                 ),
                 if (isLocked)
-                  const Icon(Icons.lock_rounded, color: Colors.white70, size: 16),
+                  const Icon(
+                    Icons.lock_rounded,
+                    color: Colors.white70,
+                    size: 16,
+                  ),
               ],
             ),
             Column(
@@ -1681,7 +1696,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
                 ),
                 SizedBox(height: 1.h),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
@@ -1733,16 +1751,36 @@ class _DashboardBodyState extends State<_DashboardBody> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildTrustItem(Icons.workspace_premium_rounded, "45+", "Years Experience", cs.secondary), // Red
-            _buildTrustItem(Icons.school_rounded, "25K+", "Students Trained", cs.primary),   // Navy
-            _buildTrustItem(Icons.public_rounded, "100+", "Countries", const Color(0xFF2A5298)), // Blue accent
+            _buildTrustItem(
+              Icons.workspace_premium_rounded,
+              "45+",
+              "Years Experience",
+              cs.secondary,
+            ), // Red
+            _buildTrustItem(
+              Icons.school_rounded,
+              "25K+",
+              "Students Trained",
+              cs.primary,
+            ), // Navy
+            _buildTrustItem(
+              Icons.public_rounded,
+              "100+",
+              "Countries",
+              const Color(0xFF2A5298),
+            ), // Blue accent
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTrustItem(IconData icon, String value, String label, Color color) {
+  Widget _buildTrustItem(
+    IconData icon,
+    String value,
+    String label,
+    Color color,
+  ) {
     return Column(
       children: [
         Icon(icon, color: color, size: 22),
