@@ -1346,7 +1346,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             "VERIFIED • 48+ YEARS EXPERIENCE",
                             style: TextStyle(
                               color: Colors.white.withValues(alpha: 0.9),
-                              fontSize: 8.sp,
+                              fontSize: 10.sp,
                               fontWeight: FontWeight.w700,
                               letterSpacing: 0.6,
                             ),
@@ -1421,7 +1421,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: Colors.white70,
                         height: 1.4,
-                        fontSize: 11.sp,
+                        fontSize: 13.sp,
                         fontWeight: FontWeight.w500,
                         fontStyle: FontStyle.italic,
                       ),
@@ -1713,7 +1713,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         "Start Now",
                         style: TextStyle(
                           color: isDark ? bgColor : cs.primary,
-                          fontSize: 9.sp,
+                          fontSize: 11.sp,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -1792,7 +1792,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
           style: TextStyle(
             color: color,
             fontWeight: FontWeight.w900,
-            fontSize: 13.sp,
+            fontSize: 15.sp,
           ),
         ),
         Text(
@@ -1800,7 +1800,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
           style: TextStyle(
             color: color.withValues(alpha: 0.7),
             fontWeight: FontWeight.w600,
-            fontSize: 7.sp,
+            fontSize: 10.sp,
           ),
         ),
       ],

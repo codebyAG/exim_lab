@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class AppColorSchemes {
   // 🌞 LIGHT THEME — Global Academy Navy & Red
   static const ColorScheme light = ColorScheme.light(
-    // 🟦 PRIMARY — Deep Navy Blue
-    primary: Color(0xFF0A1D37), 
+    // 🟦 PRIMARY — Pure Navy Blue
+    primary: Color(0xFF000080), 
     onPrimary: Color(0xFFFFFFFF),
 
     // 🟥 SECONDARY — Vibrant Red (CTAs)
