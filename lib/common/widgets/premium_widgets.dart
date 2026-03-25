@@ -26,9 +26,9 @@ class PremiumCardWavePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = color.withValues(alpha: 1.0)
+      ..color = color.withValues(alpha: 0.2)
       ..style = PaintingStyle.fill;
-// Wave color is a full solid shade of the container theme (Blue/Red)
+// Wave color is a subtle shade of the container theme (Blue/Red) for icon clarity
 
     final path = Path();
     path.moveTo(0, size.height * 0.4);

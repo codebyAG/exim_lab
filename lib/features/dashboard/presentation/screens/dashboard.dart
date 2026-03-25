@@ -2381,55 +2381,69 @@ class _QuickActionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final cs = theme.colorScheme;
-
-    return Material(
-      color: cs.surface,
-      borderRadius: BorderRadius.circular(24),
-      elevation: 2,
-      shadowColor: color.withValues(alpha: 0.1),
-      child: InkWell(
-        onTap: onTap,
+    return Container(
+      width: 100,
+      height: 100,
+      margin: EdgeInsets.only(right: 4.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
         borderRadius: BorderRadius.circular(24),
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 4.w),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(
-              color: color.withValues(alpha: 0.15),
-              width: 1.5,
-            ),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [cs.surface, color.withValues(alpha: 0.08)],
-            ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: InkWell(
+          onTap: onTap,
+          child: Stack(
             children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  isLocked ? Icons.lock_outline_rounded : icon,
-                  color: color,
-                  size: 28,
-                ),
+              // 🌊 BOTTOM ACCENT WAVE (Universal Premium Design)
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: 40, // Balanced for 100x100 card
+                child: CustomPaint(painter: _CardWavePainter(color: color)),
               ),
-              const SizedBox(height: 12),
-              Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  color: cs.onSurface,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14.sp,
+
+              // 📦 QUICK CONTENT
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: color.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          isLocked ? Icons.lock_outline_rounded : icon,
+                          color: color,
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        label,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: const Color(0xFF001A3D),
+                          fontWeight: FontWeight.w800,
+                          fontSize: 11.sp,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -2599,9 +2613,9 @@ class _CardWavePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = color.withValues(alpha: 1.0)
+      ..color = color.withValues(alpha: 0.2)
       ..style = PaintingStyle.fill;
-    // Wave color is a full solid shade of the container theme (Blue/Red)
+    // Wave color is a subtle shade of the container theme (Blue/Red) for icon clarity
 
     final path = Path();
     path.moveTo(0, size.height * 0.4);
