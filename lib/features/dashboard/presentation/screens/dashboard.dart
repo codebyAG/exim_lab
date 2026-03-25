@@ -1639,71 +1639,84 @@ class _DashboardBodyState extends State<_DashboardBody> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.w),
       child: Container(
-        padding: EdgeInsets.all(5.w),
+        width: double.infinity,
         decoration: BoxDecoration(
-          color: cs.primaryContainer.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: cs.primary.withValues(alpha: 0.1)),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: cs.primary.withValues(alpha: 0.05),
-              blurRadius: 15,
-              offset: const Offset(0, 5),
+              color: cs.primary.withValues(alpha: 0.1),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
             ),
           ],
         ),
-        child: Row(
-          children: [
-            const Text("🎁", style: TextStyle(fontSize: 40)),
-            SizedBox(width: 4.w),
-            Expanded(
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () => _showPdfSelectionDialog(context),
+            borderRadius: BorderRadius.circular(24),
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 2.5.h, horizontal: 5.w),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
+                  // 📝 TITLE & SUBTITLE (TOP)
                   Text(
                     "Free Import Export Guide",
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.w800,
-                      fontSize: 15.sp,
-                      color: cs.onSurface,
+                      fontSize: 16.sp,
+                      color: const Color(0xFF001A3D),
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     "Complete beginner guide to start business",
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       color: cs.onSurfaceVariant,
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(height: 0.8.h),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () => _showPdfSelectionDialog(context),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: cs.primary,
-                        foregroundColor: cs.onPrimary,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                  SizedBox(height: 2.h),
+
+                  // 🎨 ICON / DOWNLOAD AREA (MIDDLE)
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 1.5.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: cs.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Column(
+                      children: [
+                        const Icon(
+                          Icons.picture_as_pdf_outlined,
+                          color: Color(0xFF0D47A1), // Navy
+                          size: 32,
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                      child: Text(
-                        "Download Free PDF →",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13.sp,
+                        SizedBox(height: 1.h),
+                        Text(
+                          "TAP TO DOWNLOAD FREE PDF",
+                          style: TextStyle(
+                            color: const Color(0xFF0D47A1),
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1.1,
+                            fontSize: 10.sp,
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -2416,10 +2429,24 @@ class _QuickActionCard extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment
+                        .spaceBetween, // Distribute top and middle
                     children: [
+                      // 📝 TITLE (TOP)
+                      Text(
+                        label,
+                        maxLines: 2, // Allow 2 lines for clarity
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: const Color(0xFF001A3D),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14.sp, // Match ToolCard
+                        ),
+                      ),
+                      // 🎨 ICON (MIDDLE)
                       Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
                           color: color.withValues(alpha: 0.1),
                           shape: BoxShape.circle,
@@ -2427,21 +2454,12 @@ class _QuickActionCard extends StatelessWidget {
                         child: Icon(
                           isLocked ? Icons.lock_outline_rounded : icon,
                           color: color,
-                          size: 24,
+                          size: 22,
                         ),
                       ),
-                      const SizedBox(height: 6),
-                      Text(
-                        label,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.labelMedium?.copyWith(
-                          color: const Color(0xFF001A3D),
-                          fontWeight: FontWeight.w800,
-                          fontSize: 11.sp,
-                        ),
-                      ),
+                      const SizedBox(
+                        height: 20,
+                      ), // Placeholder for bottom wave area
                     ],
                   ),
                 ),
@@ -2613,9 +2631,9 @@ class _CardWavePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = color.withValues(alpha: 0.2)
+      ..color = color.withValues(alpha: 0.4)
       ..style = PaintingStyle.fill;
-    // Wave color is a subtle shade of the container theme (Blue/Red) for icon clarity
+    // Wave color is a balanced shade (0.4) for visibility and clarity
 
     final path = Path();
     path.moveTo(0, size.height * 0.4);
