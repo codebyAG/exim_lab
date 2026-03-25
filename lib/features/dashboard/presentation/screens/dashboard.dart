@@ -439,102 +439,101 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     // 1.5 ABOUT US SECTION
                     _buildAboutUs(context, cs, theme, t),
 
+                    // 2. FEATURE TITLE
                     Padding(
-                      padding: EdgeInsets.fromLTRB(5.w, 1.5.h, 5.w, 0),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          t.translate(
-                            'what_learn_today',
-                          ), // Re-using what_learn_today or fixed string
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: cs.onSurfaceVariant,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14.sp,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    // 3. QUICK ACTIONS ROW 1: GALLERY & MARKET UPDATES
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(5.w, 1.5.h, 5.w, 0),
-                      child: Row(
+                      padding: EdgeInsets.fromLTRB(5.w, 3.h, 5.w, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: _buildShowcase(
-                              key: _galleryCardKey,
-                              title: 'tut_gallery_title',
-                              description: 'tut_gallery_desc',
-                              child: _QuickActionCard(
-                                icon: Icons.image_rounded,
-                                label: t.translate('gallery'),
-                                color: cs.primary, // Theme Vivid Orange
-                                onTap: () {
-                                  AppNavigator.push(
-                                    context,
-                                    const GalleryScreen(),
-                                  );
-                                },
+                          Row(
+                            children: [
+                              Text(
+                                "What would you like to ",
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: cs.onSurfaceVariant,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14.sp,
+                                ),
                               ),
-                            ),
+                              Text(
+                                "Learn Today?",
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: const Color(0xFF001A3D),
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 14.sp,
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(width: 4.w),
-                          Expanded(
-                            child: _QuickActionCard(
-                              icon: Icons.newspaper_rounded,
-                              label: t.translate('market_updates'),
-                              color: cs.primary, // Strict theme matching
-                              onTap: () {
-                                AppNavigator.push(
-                                  context,
-                                  const NewsListScreen(),
-                                );
-                              },
+                          SizedBox(height: 0.5.h),
+                          Container(
+                            width: 15.w,
+                            height: 1.5,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFD32F2F),
+                              borderRadius: BorderRadius.circular(1),
                             ),
                           ),
                         ],
                       ),
                     ),
-
-                    // 5. JOURNEY ROW: IMPORT & EXPORT JOURNEY
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(5.w, 1.5.h, 5.w, 2.5.h),
+                    // 3. PREMIUM FEATURE CARDS SCROLL (Square Type)
+                    SizedBox(height: 2.h),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 5.w,
+                        vertical: 1.h,
+                      ),
                       child: Row(
                         children: [
-                          Expanded(
-                            child: _buildJourneyCard(
-                              context: context,
-                              cs: cs,
-                              theme: theme,
-                              label: t.translate('start_import_journey'),
-                              isLocked: false,
-                              icon: Icons.directions_boat_rounded,
-                              backgroundColor: cs.primary, // Navy
-                              onTap: () {
-                                AppNavigator.push(
-                                  context,
-                                  const ImportJourneyScreen(),
-                                );
-                              },
+                          // 📸 GALLERY
+                          _buildShowcase(
+                            key: _galleryCardKey,
+                            title: 'tut_gallery_title',
+                            description: 'tut_gallery_desc',
+                            child: _PremiumFeatureCard(
+                              title: t.translate('gallery'),
+                              icon: Icons.photo_library_rounded,
+                              buttonLabel: "Success Stories",
+                              themeColor: const Color(0xFF0D47A1),
+                              onTap: () => AppNavigator.push(
+                                context,
+                                const GalleryScreen(),
+                              ),
                             ),
                           ),
-                          SizedBox(width: 4.w),
-                          Expanded(
-                            child: _buildJourneyCard(
-                              context: context,
-                              cs: cs,
-                              theme: theme,
-                              label: t.translate('start_export_journey'),
-                              isLocked: false,
-                              icon: Icons.airplanemode_active_rounded,
-                              backgroundColor: cs.secondary, // Red
-                              onTap: () {
-                                AppNavigator.push(
-                                  context,
-                                  const ExportJourneyScreen(),
-                                );
-                              },
+                          // 📊 MARKET UPDATES
+                          _PremiumFeatureCard(
+                            title: t.translate('market_updates'),
+                            icon: Icons.trending_up_rounded,
+                            buttonLabel: "Live Trends >",
+                            themeColor: const Color(0xFFD32F2F),
+                            onTap: () => AppNavigator.push(
+                              context,
+                              const NewsListScreen(),
+                            ),
+                          ),
+                          // 🚢 IMPORT JOURNEY
+                          _PremiumFeatureCard(
+                            title: t.translate('start_import_journey'),
+                            icon: Icons.directions_boat_rounded,
+                            buttonLabel: "Continue >",
+                            themeColor: const Color(0xFF0D47A1),
+                            onTap: () => AppNavigator.push(
+                              context,
+                              const ImportJourneyScreen(),
+                            ),
+                          ),
+                          // ✈️ EXPORT JOURNEY
+                          _PremiumFeatureCard(
+                            title: t.translate('start_export_journey'),
+                            icon: Icons.airplanemode_active_rounded,
+                            buttonLabel: "Start Learning",
+                            themeColor: const Color(0xFFD32F2F),
+                            onTap: () => AppNavigator.push(
+                              context,
+                              const ExportJourneyScreen(),
                             ),
                           ),
                         ],
@@ -1434,115 +1433,6 @@ class _DashboardBodyState extends State<_DashboardBody> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildJourneyCard({
-    required BuildContext context,
-    required ColorScheme cs,
-    required ThemeData theme,
-    required String label,
-    required IconData icon,
-    required VoidCallback onTap,
-    bool isLocked = true,
-    Color? backgroundColor,
-    Color? textColor,
-  }) {
-    final bgColor = backgroundColor ?? cs.primary.withValues(alpha: 0.08);
-    final isDark = bgColor.computeLuminance() < 0.5;
-    final txtColor = textColor ?? (isDark ? Colors.white : cs.onSurface);
-
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        height: 15.h,
-        padding: EdgeInsets.all(4.w),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [bgColor, bgColor.withValues(alpha: 0.15)],
-          ),
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: bgColor.withValues(alpha: 0.25),
-              blurRadius: 15,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(icon, color: Colors.white, size: 20),
-                ),
-                if (isLocked)
-                  const Icon(
-                    Icons.lock_rounded,
-                    color: Colors.white70,
-                    size: 16,
-                  ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    color: txtColor,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 12.sp,
-                    height: 1.1,
-                  ),
-                ),
-                SizedBox(height: 1.h),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "Start Now",
-                        style: TextStyle(
-                          color: isDark ? bgColor : cs.primary,
-                          fontSize: 11.sp,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      Icon(
-                        Icons.chevron_right_rounded,
-                        color: isDark ? bgColor : cs.primary,
-                        size: 14,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -2548,6 +2438,201 @@ class _QuickActionCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class _PremiumFeatureCard extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final String buttonLabel;
+  final Color themeColor;
+  final VoidCallback onTap;
+
+  const _PremiumFeatureCard({
+    required this.title,
+    required this.icon,
+    required this.buttonLabel,
+    required this.themeColor,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 42.w,
+      height: 22.h, // Squarish type
+      margin: EdgeInsets.only(right: 4.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Stack(
+          children: [
+            // 🌊 BOTTOM ACCENT WAVE
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: 8.h,
+              child: CustomPaint(painter: _CardWavePainter(color: themeColor)),
+            ),
+
+            // 🎨 ICON
+            Positioned(
+              top: 5.h,
+              left: 0,
+              right: 0,
+              bottom: 7.h,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    width: 35.sp,
+                    height: 35.sp,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: themeColor.withValues(alpha: 0.15),
+                          blurRadius: 15,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    icon,
+                    size: 36.sp, // Large and clear
+                    color: themeColor.withValues(alpha: 0.9),
+                  ),
+                ],
+              ),
+            ),
+
+            // 📝 TITLE
+            Positioned(
+              top: 2.h,
+              left: 3.w,
+              right: 3.w,
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: const Color(0xFF001A3D),
+                  fontWeight: FontWeight.w900,
+                  fontSize: 13.sp, // Larger text
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+
+            // 🔘 ACTION PILL
+            Positioned(
+              bottom: 1.5.h,
+              left: 3.w,
+              right: 3.w,
+              child: Center(
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: onTap,
+                    borderRadius: BorderRadius.circular(20),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 3.w,
+                        vertical: 0.6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 4,
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              buttonLabel,
+                              style: TextStyle(
+                                color: themeColor,
+                                fontWeight: FontWeight.w900,
+                                fontSize: 9.5.sp, // Larger text
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          if (buttonLabel.contains(">")) ...[
+                            SizedBox(width: 1.w),
+                            Icon(
+                              Icons.chevron_right_rounded,
+                              size: 14,
+                              color: themeColor,
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CardWavePainter extends CustomPainter {
+  final Color color;
+  _CardWavePainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [color.withValues(alpha: 0.05), color.withValues(alpha: 0.8)],
+      ).createShader(Offset.zero & size);
+
+    final path = Path();
+    path.moveTo(0, size.height * 0.4);
+    path.quadraticBezierTo(
+      size.width * 0.25,
+      size.height * 0.1,
+      size.width * 0.5,
+      size.height * 0.5,
+    );
+    path.quadraticBezierTo(
+      size.width * 0.75,
+      size.height * 0.9,
+      size.width,
+      size.height * 0.4,
+    );
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
+    path.close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class _TutorialStepContent extends StatefulWidget {
