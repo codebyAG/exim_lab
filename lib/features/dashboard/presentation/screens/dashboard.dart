@@ -541,7 +541,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     ),
 
                     // 6. TRUST STRIP
-                    _buildTrustStrip(cs),
+                    // _buildTrustStrip(cs),
                   ],
                 ),
               ),
@@ -1436,85 +1436,85 @@ class _DashboardBodyState extends State<_DashboardBody> {
     );
   }
 
-  Widget _buildTrustStrip(ColorScheme cs) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 3.w),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.white,
-              cs.surfaceContainerHighest.withValues(alpha: 0.3),
-            ],
-          ),
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: cs.primary.withValues(alpha: 0.05),
-              blurRadius: 15,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildTrustItem(
-              Icons.workspace_premium_rounded,
-              "45+",
-              "Years Experience",
-              cs.secondary,
-            ), // Red
-            _buildTrustItem(
-              Icons.school_rounded,
-              "25K+",
-              "Students Trained",
-              cs.primary,
-            ), // Navy
-            _buildTrustItem(
-              Icons.public_rounded,
-              "100+",
-              "Countries",
-              cs.primary,
-            ), // Blue accent
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _buildTrustStrip(ColorScheme cs) {
+  //   return Padding(
+  //     padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+  //     child: Container(
+  //       padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 3.w),
+  //       decoration: BoxDecoration(
+  //         gradient: LinearGradient(
+  //           begin: Alignment.topCenter,
+  //           end: Alignment.bottomCenter,
+  //           colors: [
+  //             Colors.white,
+  //             cs.surfaceContainerHighest.withValues(alpha: 0.3),
+  //           ],
+  //         ),
+  //         borderRadius: BorderRadius.circular(20),
+  //         boxShadow: [
+  //           BoxShadow(
+  //             color: cs.primary.withValues(alpha: 0.05),
+  //             blurRadius: 15,
+  //             offset: const Offset(0, 5),
+  //           ),
+  //         ],
+  //       ),
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //         children: [
+  //           _buildTrustItem(
+  //             Icons.workspace_premium_rounded,
+  //             "45+",
+  //             "Years Experience",
+  //             cs.secondary,
+  //           ), // Red
+  //           _buildTrustItem(
+  //             Icons.school_rounded,
+  //             "25K+",
+  //             "Students Trained",
+  //             cs.primary,
+  //           ), // Navy
+  //           _buildTrustItem(
+  //             Icons.public_rounded,
+  //             "100+",
+  //             "Countries",
+  //             cs.primary,
+  //           ), // Blue accent
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  Widget _buildTrustItem(
-    IconData icon,
-    String value,
-    String label,
-    Color color,
-  ) {
-    return Column(
-      children: [
-        Icon(icon, color: color, size: 22),
-        SizedBox(height: 0.5.h),
-        Text(
-          value,
-          style: TextStyle(
-            color: color,
-            fontWeight: FontWeight.w900,
-            fontSize: 15.sp,
-          ),
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            color: color.withValues(alpha: 0.7),
-            fontWeight: FontWeight.w600,
-            fontSize: 10.sp,
-          ),
-        ),
-      ],
-    );
-  }
+  // Widget _buildTrustItem(
+  //   IconData icon,
+  //   String value,
+  //   String label,
+  //   Color color,
+  // ) {
+  //   return Column(
+  //     children: [
+  //       Icon(icon, color: color, size: 22),
+  //       SizedBox(height: 0.5.h),
+  //       Text(
+  //         value,
+  //         style: TextStyle(
+  //           color: color,
+  //           fontWeight: FontWeight.w900,
+  //           fontSize: 15.sp,
+  //         ),
+  //       ),
+  //       Text(
+  //         label,
+  //         style: TextStyle(
+  //           color: color.withValues(alpha: 0.7),
+  //           fontWeight: FontWeight.w600,
+  //           fontSize: 10.sp,
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget _buildHeaderCircleIcon({
     required IconData icon,
@@ -2599,11 +2599,9 @@ class _CardWavePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..shader = LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [color.withValues(alpha: 0.05), color.withValues(alpha: 0.8)],
-      ).createShader(Offset.zero & size);
+      ..color = color.withValues(alpha: 1.0)
+      ..style = PaintingStyle.fill;
+    // Wave color is a full solid shade of the container theme (Blue/Red)
 
     final path = Path();
     path.moveTo(0, size.height * 0.4);
