@@ -452,7 +452,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: cs.onSurfaceVariant,
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 14.sp,
+                                  fontSize: 16.sp,
                                 ),
                               ),
                               Text(
@@ -460,7 +460,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: const Color(0xFF001A3D),
                                   fontWeight: FontWeight.w800,
-                                  fontSize: 14.sp,
+                                  fontSize: 16.sp,
                                 ),
                               ),
                             ],
@@ -2458,12 +2458,12 @@ class _PremiumFeatureCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 42.w,
-      height: 22.h, // Squarish type
+      width: 44.w,
+      height: 24.h, // Increased height for larger text
       margin: EdgeInsets.only(right: 4.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -2473,7 +2473,7 @@ class _PremiumFeatureCard extends StatelessWidget {
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
         child: Stack(
           children: [
             // 🌊 BOTTOM ACCENT WAVE
@@ -2481,7 +2481,7 @@ class _PremiumFeatureCard extends StatelessWidget {
               bottom: 0,
               left: 0,
               right: 0,
-              height: 8.h,
+              height: 10.h,
               child: CustomPaint(painter: _CardWavePainter(color: themeColor)),
             ),
 
@@ -2490,7 +2490,7 @@ class _PremiumFeatureCard extends StatelessWidget {
               top: 5.h,
               left: 0,
               right: 0,
-              bottom: 7.h,
+              bottom: 8.h,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -2509,7 +2509,7 @@ class _PremiumFeatureCard extends StatelessWidget {
                   ),
                   Icon(
                     icon,
-                    size: 36.sp, // Large and clear
+                    size: 38.sp,
                     color: themeColor.withValues(alpha: 0.9),
                   ),
                 ],
@@ -2526,8 +2526,8 @@ class _PremiumFeatureCard extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: const Color(0xFF001A3D),
-                  fontWeight: FontWeight.w900,
-                  fontSize: 13.sp, // Larger text
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.sp, // Boldly increased
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -2547,8 +2547,8 @@ class _PremiumFeatureCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     child: Container(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 3.w,
-                        vertical: 0.6.h,
+                        horizontal: 4.w,
+                        vertical: 0.8.h,
                       ),
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -2569,7 +2569,7 @@ class _PremiumFeatureCard extends StatelessWidget {
                               style: TextStyle(
                                 color: themeColor,
                                 fontWeight: FontWeight.w900,
-                                fontSize: 9.5.sp, // Larger text
+                                fontSize: 12.sp, // Boldly increased
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
