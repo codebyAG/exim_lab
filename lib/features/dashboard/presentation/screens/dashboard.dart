@@ -2459,7 +2459,7 @@ class _PremiumFeatureCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 44.w,
-      height: 24.h, // Increased height for larger text
+      height: 26.h, // Adjusted height for better spacing
       margin: EdgeInsets.only(right: 4.w),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -2485,109 +2485,104 @@ class _PremiumFeatureCard extends StatelessWidget {
               child: CustomPaint(painter: _CardWavePainter(color: themeColor)),
             ),
 
-            // 🎨 ICON
-            Positioned(
-              top: 5.h,
-              left: 0,
-              right: 0,
-              bottom: 8.h,
-              child: Stack(
-                alignment: Alignment.center,
+            // 📦 DYNAMIC CONTENT COLUMN (Prevents overlap)
+            Padding(
+              padding: EdgeInsets.fromLTRB(3.w, 1.5.h, 3.w, 1.h),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    width: 35.sp,
-                    height: 35.sp,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: themeColor.withValues(alpha: 0.15),
-                          blurRadius: 15,
-                        ),
-                      ],
+                  // 📝 TITLE
+                  Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: const Color(0xFF001A3D),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15.sp, // Slightly balanced
                     ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  Icon(
-                    icon,
-                    size: 38.sp,
-                    color: themeColor.withValues(alpha: 0.9),
-                  ),
-                ],
-              ),
-            ),
 
-            // 📝 TITLE
-            Positioned(
-              top: 2.h,
-              left: 3.w,
-              right: 3.w,
-              child: Text(
-                title,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: const Color(0xFF001A3D),
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16.sp, // Boldly increased
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-
-            // 🔘 ACTION PILL
-            Positioned(
-              bottom: 1.5.h,
-              left: 3.w,
-              right: 3.w,
-              child: Center(
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: onTap,
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 4.w,
-                        vertical: 0.8.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.1),
-                            blurRadius: 4,
+                  // 🎨 ICON AREA
+                  Expanded(
+                    child: Center(
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            width: 35.sp,
+                            height: 35.sp,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: themeColor.withValues(alpha: 0.15),
+                                  blurRadius: 15,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(
+                            icon,
+                            size: 38.sp,
+                            color: themeColor.withValues(alpha: 0.9),
                           ),
                         ],
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Flexible(
-                            child: Text(
-                              buttonLabel,
-                              style: TextStyle(
-                                color: themeColor,
-                                fontWeight: FontWeight.w900,
-                                fontSize: 12.sp, // Boldly increased
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          if (buttonLabel.contains(">")) ...[
-                            SizedBox(width: 1.w),
-                            Icon(
-                              Icons.chevron_right_rounded,
-                              size: 14,
-                              color: themeColor,
+                    ),
+                  ),
+
+                  // 🔘 ACTION PILL
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: onTap,
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 4.w,
+                          vertical: 0.7.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.1),
+                              blurRadius: 4,
                             ),
                           ],
-                        ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                buttonLabel,
+                                style: TextStyle(
+                                  color: themeColor,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 12.sp,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            if (buttonLabel.contains(">")) ...[
+                              SizedBox(width: 1.w),
+                              Icon(
+                                Icons.chevron_right_rounded,
+                                size: 14,
+                                color: themeColor,
+                              ),
+                            ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
           ],
