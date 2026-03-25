@@ -2390,27 +2390,23 @@ class _PremiumActionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
     return Container(
       width: 100,
       height: 100,
       margin: EdgeInsets.only(right: 4.w),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF001A3D), // Deep Navy
-            Color(0xFF0D47A1), // Blue
-          ],
-        ),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.15),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
         ],
+        border: Border.all(color: color.withValues(alpha: 0.1), width: 1),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
@@ -2431,48 +2427,50 @@ class _PremiumActionCard extends StatelessWidget {
                 ),
               ),
 
-              // 📦 QUICK CONTENT
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // 📝 TITLE (TOP) - Solid White
-                      Text(
-                        label,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.labelMedium?.copyWith(
-                          color: Colors.white, // Solid white for navy bg
-                          fontWeight: FontWeight.w800,
-                          fontSize: 14.sp,
-                        ),
+              // 📦 CONTENT BLOCK
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 12.0,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // 📝 TITLE (TOP) - Navy Like About Section
+                    Text(
+                      label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: const Color(0xFF001A3D), // Deep Navy
+                        fontWeight: FontWeight.w900,
+                        fontSize: 14.sp,
                       ),
+                    ),
 
-                      // 🎨 ICON (MIDDLE)
-                      Icon(
-                        icon,
-                        color: Colors.white,
-                        size: 30, // Large & Clear
-                        shadows: [
-                          Shadow(
-                            color: Colors.white.withValues(alpha: 0.3),
-                            blurRadius: 10,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 18), // Bottom spacer for wave
-                    ],
-                  ),
+                    // 🎨 ICON (CENTER) - Themed Color
+                    Icon(
+                      icon,
+                      color: color,
+                      size: 28,
+                      shadows: [
+                        Shadow(
+                          color: color.withValues(alpha: 0.2),
+                          blurRadius: 8,
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 16), // Bottom spacer
+                  ],
                 ),
               ),
 
               // 🔒 LOCK OVERLAY
               if (isLocked)
                 Container(
-                  color: Colors.black.withValues(alpha: 0.4),
+                  color: Colors.black.withValues(alpha: 0.2),
                   child: const Center(
                     child: Icon(
                       Icons.lock_rounded,
