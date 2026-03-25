@@ -1639,83 +1639,81 @@ class _DashboardBodyState extends State<_DashboardBody> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.w),
       child: Container(
-        width: double.infinity,
+        padding: EdgeInsets.all(5.w),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
+          color: cs.primary,
+          borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: cs.primary.withValues(alpha: 0.1),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
+              color: cs.primary.withValues(alpha: 0.2),
+              blurRadius: 15,
+              offset: const Offset(0, 5),
             ),
           ],
         ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: () => _showPdfSelectionDialog(context),
-            borderRadius: BorderRadius.circular(24),
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 2.5.h, horizontal: 5.w),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // 📝 TITLE & SUBTITLE (TOP)
-                  Text(
-                    "Free Import Export Guide",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 16.sp,
-                      color: const Color(0xFF001A3D),
+        child: InkWell(
+          onTap: () => _showPdfSelectionDialog(context),
+          borderRadius: BorderRadius.circular(20),
+          child: Row(
+            children: [
+              const Text("🎁", style: TextStyle(fontSize: 40)),
+              SizedBox(width: 4.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Free Import Export Guide",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    "Complete beginner guide to start business",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: cs.onSurfaceVariant,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w500,
+                    const SizedBox(height: 4),
+                    Text(
+                      "Complete beginner guide to start business",
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.9),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 2.h),
-
-                  // 🎨 ICON / DOWNLOAD AREA (MIDDLE)
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 8.w,
-                      vertical: 1.5.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: cs.primary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Column(
+                    SizedBox(height: 0.8.h),
+                    Row(
                       children: [
-                        const Icon(
-                          Icons.picture_as_pdf_outlined,
-                          color: Color(0xFF0D47A1), // Navy
-                          size: 32,
-                        ),
-                        SizedBox(height: 1.h),
-                        Text(
-                          "TAP TO DOWNLOAD FREE PDF",
-                          style: TextStyle(
-                            color: const Color(0xFF0D47A1),
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: 1.1,
-                            fontSize: 10.sp,
+                        ElevatedButton.icon(
+                          onPressed: () => _showPdfSelectionDialog(context),
+                          icon: Icon(
+                            Icons.picture_as_pdf,
+                            color: cs.primary,
+                            size: 18,
+                          ),
+                          label: Text(
+                            "Download PDF",
+                            style: TextStyle(
+                              color: cs.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 0,
                           ),
                         ),
                       ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),
