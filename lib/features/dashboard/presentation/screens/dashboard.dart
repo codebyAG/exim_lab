@@ -402,204 +402,35 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       title: 'tut_header_title',
                       description: 'tut_header_desc',
                       child: Container(
-                        padding: EdgeInsets.fromLTRB(5.w, 3.5.h, 5.w, 0),
+                        padding: EdgeInsets.fromLTRB(5.w, 3.h, 5.w, 0),
                         child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        '👋 ',
-                                        style: TextStyle(fontSize: 16.sp),
-                                      ),
-                                      Text(
-                                        '${t.translate('welcome_back')},',
-                                        style: theme.textTheme.bodyLarge
-                                            ?.copyWith(
-                                              color: cs.onSurface.withValues(
-                                                alpha: 0.7,
-                                              ),
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 16.sp,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                  if (context
-                                              .watch<AuthProvider>()
-                                              .user
-                                              ?.name !=
-                                          null &&
-                                      context
-                                          .watch<AuthProvider>()
-                                          .user!
-                                          .name!
-                                          .isNotEmpty)
-                                    Text(
-                                      context.read<AuthProvider>().user!.name!,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: theme.textTheme.headlineSmall
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.w900,
-                                            color: cs.onSurface,
-                                            fontSize: 18.sp,
-                                            letterSpacing: -0.5,
-                                          ),
-                                    ),
-                                ],
+                            // 🏛️ LOGO
+                            SizedBox(
+                              height: 6.h,
+                              child: Image.asset(
+                                'assets/startup_india_import_export_academy_logo.png',
+                                fit: BoxFit.contain,
                               ),
                             ),
-                            const SizedBox(width: 12),
-                            _buildShowcase(
-                              key: _notifKey,
-                              title: 'tut_notif_title',
-                              description: 'tut_notif_desc',
-                              child: Consumer<NotificationsProvider>(
-                                builder: (context, notifProvider, child) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: cs.outline.withValues(
-                                          alpha: 0.1,
-                                        ),
-                                        width: 1,
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: cs.shadow.withValues(
-                                            alpha: 0.05,
-                                          ),
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Stack(
-                                      clipBehavior: Clip.none,
-                                      children: [
-                                        IconButton(
-                                          onPressed: () => AppNavigator.push(
-                                            context,
-                                            const NotificationsScreen(),
-                                          ),
-                                          icon: Icon(
-                                            Icons.notifications_none_rounded,
-                                            color: cs.onSurface,
-                                            size: 24,
-                                          ),
-                                        ),
-                                        if (notifProvider.unreadCount > 0)
-                                          Positioned(
-                                            right: 8,
-                                            top: 8,
-                                            child: Container(
-                                              padding: const EdgeInsets.all(2),
-                                              decoration: BoxDecoration(
-                                                color: cs.primary,
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                  color: Colors.white,
-                                                  width: 2,
-                                                ),
-                                              ),
-                                              constraints: const BoxConstraints(
-                                                minWidth: 14,
-                                                minHeight: 14,
-                                              ),
-                                              child: Text(
-                                                '${notifProvider.unreadCount}',
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 8,
-                                                  fontWeight: FontWeight.w900,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ),
-                                          ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
+                            const Spacer(),
+
+                            // 🔍 SEARCH
+                            _buildHeaderCircleIcon(
+                              icon: Icons.search_rounded,
+                              onTap: () {
+                                // TODO: Implement search
+                              },
+                              cs: cs,
                             ),
-                            const SizedBox(width: 4),
-                            _buildShowcase(
-                              key: _userProfileKey,
-                              title: 'tut_profile_title',
-                              description: 'tut_profile_desc',
-                              child: InkWell(
-                                onTap: () => AppNavigator.push(
-                                  context,
-                                  const ProfileScreen(),
-                                ),
-                                borderRadius: BorderRadius.circular(40),
-                                child: Container(
-                                  padding: const EdgeInsets.all(3),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: cs.primary.withValues(alpha: 0.4),
-                                      width: 2,
-                                    ),
-                                  ),
-                                  child: Container(
-                                    height: 38,
-                                    width: 38,
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Consumer<AuthProvider>(
-                                      builder: (context, auth, _) {
-                                        final user = auth.user;
-                                        if (user?.avatarUrl != null &&
-                                            user!.avatarUrl!.isNotEmpty) {
-                                          return CachedNetworkImage(
-                                            imageUrl: user.avatarUrl!,
-                                            fit: BoxFit.cover,
-                                            placeholder: (_, _) => Container(
-                                              color: cs.surfaceContainerHighest,
-                                            ),
-                                            errorWidget:
-                                                (
-                                                  context,
-                                                  url,
-                                                  error,
-                                                ) => Container(
-                                                  color: cs
-                                                      .surfaceContainerHighest,
-                                                  child: Icon(
-                                                    Icons.person_rounded,
-                                                    size: 24,
-                                                    color: cs.onSurfaceVariant,
-                                                  ),
-                                                ),
-                                          );
-                                        }
-                                        return CircleAvatar(
-                                          radius: 19,
-                                          backgroundColor:
-                                              cs.surfaceContainerHighest,
-                                          child: Icon(
-                                            Icons.person_rounded,
-                                            size: 24,
-                                            color: cs.onSurfaceVariant,
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                            const SizedBox(width: 8),
+
+                            // 🔔 NOTIFICATIONS
+                            _buildNotificationIcon(cs),
+                            const SizedBox(width: 8),
+
+                            // 👤 PROFILE
+                            _buildProfileIcon(cs),
                           ],
                         ),
                       ),
@@ -1792,6 +1623,125 @@ class _DashboardBodyState extends State<_DashboardBody> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildHeaderCircleIcon({
+    required IconData icon,
+    required VoidCallback onTap,
+    required ColorScheme cs,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: cs.shadow.withValues(alpha: 0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: IconButton(
+        onPressed: onTap,
+        iconSize: 22,
+        icon: Icon(icon, color: cs.onSurface, size: 22),
+      ),
+    );
+  }
+
+  Widget _buildNotificationIcon(ColorScheme cs) {
+    return Consumer<NotificationsProvider>(
+      builder: (context, notifProvider, child) {
+        return Stack(
+          clipBehavior: Clip.none,
+          children: [
+            _buildHeaderCircleIcon(
+              icon: Icons.notifications_none_rounded,
+              onTap: () =>
+                  AppNavigator.push(context, const NotificationsScreen()),
+              cs: cs,
+            ),
+            if (notifProvider.unreadCount > 0)
+              Positioned(
+                right: -2,
+                top: -2,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD32F2F),
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 2),
+                  ),
+                  constraints: const BoxConstraints(
+                    minWidth: 18,
+                    minHeight: 18,
+                  ),
+                  child: Text(
+                    '${notifProvider.unreadCount}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 9,
+                      fontWeight: FontWeight.w900,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildProfileIcon(ColorScheme cs) {
+    return InkWell(
+      onTap: () => AppNavigator.push(context, const ProfileScreen()),
+      borderRadius: BorderRadius.circular(40),
+      child: Container(
+        padding: const EdgeInsets.all(2),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: const Color(0xFF0D47A1), width: 1.5),
+        ),
+        child: Container(
+          height: 36,
+          width: 36,
+          clipBehavior: Clip.antiAlias,
+          decoration: const BoxDecoration(shape: BoxShape.circle),
+          child: Consumer<AuthProvider>(
+            builder: (context, auth, _) {
+              final user = auth.user;
+              if (user?.avatarUrl != null && user!.avatarUrl!.isNotEmpty) {
+                return CachedNetworkImage(
+                  imageUrl: user.avatarUrl!,
+                  fit: BoxFit.cover,
+                  placeholder: (_, _) =>
+                      Container(color: cs.surfaceContainerHighest),
+                  errorWidget: (context, url, error) => Container(
+                    color: cs.surfaceContainerHighest,
+                    child: Icon(
+                      Icons.person_rounded,
+                      size: 22,
+                      color: cs.onSurfaceVariant,
+                    ),
+                  ),
+                );
+              }
+              return CircleAvatar(
+                radius: 18,
+                backgroundColor: cs.surfaceContainerHighest,
+                child: Icon(
+                  Icons.person_rounded,
+                  size: 22,
+                  color: cs.onSurfaceVariant,
+                ),
+              );
+            },
+          ),
+        ),
+      ),
     );
   }
 
