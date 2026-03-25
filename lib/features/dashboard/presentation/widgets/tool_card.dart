@@ -1,157 +1,160 @@
+import 'package:exim_lab/common/widgets/premium_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 class ToolCard extends StatelessWidget {
-  final IconData icon;
+  final dynamic icon;
   final String title;
   final String subtitle;
+  final String buttonLabel;
   final VoidCallback onTap;
   final bool isLocked;
+  final Color themeColor;
 
   const ToolCard({
     super.key,
     required this.icon,
     required this.title,
     required this.subtitle,
+    this.buttonLabel = "Open Tool >", // Default label
     required this.onTap,
     this.isLocked = false,
+    this.themeColor = const Color(0xFF0D47A1), // Default Navy
   });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
-
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 2.w),
-      child: SizedBox(
-        width: 55.w,
-        height: 20.h,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(20),
-          onTap: onTap,
-          child: Container(
-            padding: EdgeInsets.all(2.h),
-            decoration: BoxDecoration(
-              color: cs.surface,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: theme.brightness == Brightness.dark
-                      ? Colors.black.withValues(alpha: 0.3)
-                      : Colors.black.withValues(alpha: 0.08),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-                BoxShadow(
-                  color: cs.primary.withValues(alpha: 0.05),
-                  blurRadius: 6,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-              border: Border.all(
-                color: cs.outlineVariant.withValues(alpha: 0.12),
-                width: 1,
-              ),
-              image: const DecorationImage(
-                image: AssetImage('assets/tool_card_bg.png'),
-                fit: BoxFit.cover,
-                opacity: 0.05, // Greatly reduced opacity for clarity
+    return Container(
+      width: 44.w,
+      height: 26.h,
+      margin: EdgeInsets.only(right: 4.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: Stack(
+          children: [
+            // 🌊 BOTTOM ACCENT WAVE
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: 10.h,
+              child: CustomPaint(
+                painter: PremiumCardWavePainter(color: themeColor),
               ),
             ),
-            child: Stack(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Gradient ICON
-                    Container(
-                      height: 5.h,
-                      width: 5.h,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [cs.primary, cs.secondary],
-                        ),
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: cs.primary.withValues(alpha: 0.25),
-                            blurRadius: 10,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Icon(icon, color: Colors.white, size: 2.4.h),
+
+            // 📦 DYNAMIC CONTENT COLUMN
+            Padding(
+              padding: EdgeInsets.fromLTRB(3.w, 1.5.h, 3.w, 1.h),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // 📝 TITLE
+                  Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: const Color(0xFF001A3D),
+                      fontWeight: FontWeight.w800,
+                      fontSize: 14.sp,
                     ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
 
-                    SizedBox(height: 1.2.h),
-
-                    // TEXT AREA
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  // 🎨 ICON AREA
+                  Expanded(
+                    child: Center(
+                      child: Stack(
+                        alignment: Alignment.center,
                         children: [
-                          Text(
-                            title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
+                          Container(
+                            width: 35.sp,
+                            height: 35.sp,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: themeColor.withValues(alpha: 0.15),
+                                  blurRadius: 15,
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(height: 0.6.h),
-                          Text(
-                            subtitle,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: cs.onSurface.withValues(alpha: 0.7),
-                              fontWeight: FontWeight.w500,
-                            ),
+                          SafePremiumIcon(
+                            icon: isLocked ? Icons.lock_outline_rounded : icon,
+                            size: 36.sp,
+                            color: themeColor.withValues(alpha: 0.9),
                           ),
                         ],
-                      ),
-                    ),
-                  ],
-                ),
-                // Arrow hint or Lock
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: isLocked
-                      ? Icon(
-                          Icons.lock_outline_rounded,
-                          size: 16,
-                          color: cs.error.withValues(alpha: 0.7),
-                        )
-                      : Icon(
-                          Icons.arrow_forward_rounded,
-                          size: 16,
-                          color: cs.primary.withValues(alpha: 0.5),
-                        ),
-                ),
-                if (isLocked)
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: cs.error.withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.lock_rounded,
-                        size: 14,
-                        color: cs.error.withValues(alpha: 0.8),
                       ),
                     ),
                   ),
-              ],
+
+                  // 🔘 ACTION PILL
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: onTap,
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 4.w,
+                          vertical: 0.6.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.1),
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                buttonLabel,
+                                style: TextStyle(
+                                  color: themeColor,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 11.sp,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            if (buttonLabel.contains(">")) ...[
+                              SizedBox(width: 1.w),
+                              Icon(
+                                Icons.chevron_right_rounded,
+                                size: 14,
+                                color: themeColor,
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

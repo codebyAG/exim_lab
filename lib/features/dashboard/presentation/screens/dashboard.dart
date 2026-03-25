@@ -2458,8 +2458,8 @@ class _PremiumFeatureCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 44.w,
-      height: 26.h, // Adjusted height for better spacing
+      width: 15.h,
+      height: 15.h, // Adjusted height for better spacing
       margin: EdgeInsets.only(right: 4.w),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -2511,8 +2511,8 @@ class _PremiumFeatureCard extends StatelessWidget {
                         alignment: Alignment.center,
                         children: [
                           Container(
-                            width: 35.sp,
-                            height: 35.sp,
+                            width: 15.sp,
+                            height: 15.sp,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               boxShadow: [
@@ -2525,7 +2525,7 @@ class _PremiumFeatureCard extends StatelessWidget {
                           ),
                           Icon(
                             icon,
-                            size: 38.sp,
+                            size: 28.sp,
                             color: themeColor.withValues(alpha: 0.9),
                           ),
                         ],

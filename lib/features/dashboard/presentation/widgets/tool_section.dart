@@ -34,85 +34,95 @@ class ToolsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
     return SizedBox(
-      height: 22.h,
-      child: ListView(
+      height: 28.h, // Adjusted to fit the new card height
+      child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-        children: [
-          ToolCard(
-            icon: Icons.calculate,
-            title: t.translate('tool_export_calc'),
-            subtitle: t.translate('tool_export_calc_sub'),
-            isLocked: !isPremium,
-            onTap:
-                () => _onToolTap(context, const ExportPriceCalculatorScreen()),
-          ),
-          SizedBox(width: 3.w),
-          ToolCard(
-            icon: Icons.receipt_long_rounded,
-            title: t.translate('tool_import_calc'),
-            subtitle: t.translate('tool_import_calc_sub'),
-            isLocked: !isPremium,
-            onTap: () => _onToolTap(context, const ImportCalculatorScreen()),
-          ),
-          SizedBox(width: 3.w),
-          ToolCard(
-            icon: Icons.search_rounded,
-            title: t.translate('tool_hsn_finder'),
-            subtitle: t.translate('tool_hsn_finder_sub'),
-            isLocked: !isPremium,
-            onTap: () => _onToolTap(context, const HsnFinderScreen()),
-          ),
-          SizedBox(width: 3.w),
-          ToolCard(
-            icon: Icons.aspect_ratio_rounded,
-            title: t.translate('tool_cbm_calc'),
-            subtitle: t.translate('tool_cbm_calc_sub'),
-            isLocked: false,
-            onTap:
-                () => AppNavigator.push(context, const CbmCalculatorScreen()),
-          ),
-          SizedBox(width: 3.w),
-          ToolCard(
-            icon: Icons.percent_rounded,
-            title: t.translate('tool_gst_calc'),
-            subtitle: t.translate('tool_gst_calc_sub'),
-            isLocked: !isPremium,
-            onTap: () => _onToolTap(context, const GstCalculatorScreen()),
-          ),
-          SizedBox(width: 3.w),
-          ToolCard(
-            icon: Icons.verified_user_rounded,
-            title: t.translate('tool_prod_cert'),
-            subtitle: t.translate('tool_prod_cert_sub'),
-            isLocked: !isPremium,
-            onTap: () => _onToolTap(context, const ProductCertScreen()),
-          ),
-          SizedBox(width: 3.w),
-          ToolCard(
-            icon: Icons.currency_exchange_rounded,
-            title: t.translate('tool_forex'),
-            subtitle: t.translate('tool_forex_sub'),
-            isLocked: !isPremium,
-            onTap: () => _onToolTap(context, const ForexConverterScreen()),
-          ),
-          SizedBox(width: 3.w),
-          ToolCard(
-            icon: Icons.account_balance_rounded,
-            title: t.translate('tool_gov_benefits'),
-            subtitle: t.translate('tool_gov_benefits_sub'),
-            isLocked: !isPremium,
-            onTap: () => _onToolTap(context, const GovBenefitsScreen()),
-          ),
-          SizedBox(width: 3.w),
-          ToolCard(
-            icon: Icons.menu_book_rounded,
-            title: t.translate('tool_incoterms_2026'),
-            subtitle: t.translate('tool_incoterms_sub'),
-            isLocked: !isPremium,
-            onTap: () => _onToolTap(context, const IncotermsScreen()),
-          ),
-        ],
+        child: Row(
+          children: [
+            ToolCard(
+              icon: Icons.calculate,
+              title: t.translate('tool_export_calc'),
+              subtitle: t.translate('tool_export_calc_sub'),
+              buttonLabel: "Calculate >",
+              themeColor: const Color(0xFF0D47A1), // Navy
+              isLocked: !isPremium,
+              onTap: () => _onToolTap(context, const ExportPriceCalculatorScreen()),
+            ),
+            ToolCard(
+              icon: Icons.receipt_long_rounded,
+              title: t.translate('tool_import_calc'),
+              subtitle: t.translate('tool_import_calc_sub'),
+              buttonLabel: "Estimate >",
+              themeColor: const Color(0xFFD32F2F), // Red
+              isLocked: !isPremium,
+              onTap: () => _onToolTap(context, const ImportCalculatorScreen()),
+            ),
+            ToolCard(
+              icon: Icons.search_rounded,
+              title: t.translate('tool_hsn_finder'),
+              subtitle: t.translate('tool_hsn_finder_sub'),
+              buttonLabel: "Find Now >",
+              themeColor: const Color(0xFF00C853), // Green
+              isLocked: !isPremium,
+              onTap: () => _onToolTap(context, const HsnFinderScreen()),
+            ),
+            ToolCard(
+              icon: Icons.aspect_ratio_rounded,
+              title: t.translate('tool_cbm_calc'),
+              subtitle: t.translate('tool_cbm_calc_sub'),
+              buttonLabel: "Measure >",
+              themeColor: const Color(0xFF00B0FF), // Light Blue
+              isLocked: false, // Free
+              onTap: () => AppNavigator.push(context, const CbmCalculatorScreen()),
+            ),
+            ToolCard(
+              icon: Icons.percent_rounded,
+              title: t.translate('tool_gst_calc'),
+              subtitle: t.translate('tool_gst_calc_sub'),
+              buttonLabel: "Compute >",
+              themeColor: const Color(0xFFFF6D00), // Orange
+              isLocked: !isPremium,
+              onTap: () => _onToolTap(context, const GstCalculatorScreen()),
+            ),
+            ToolCard(
+              icon: Icons.verified_user_rounded,
+              title: t.translate('tool_prod_cert'),
+              subtitle: t.translate('tool_prod_cert_sub'),
+              buttonLabel: "Verify >",
+              themeColor: const Color(0xFF283593), // Indigo
+              isLocked: !isPremium,
+              onTap: () => _onToolTap(context, const ProductCertScreen()),
+            ),
+            ToolCard(
+              icon: Icons.currency_exchange_rounded,
+              title: t.translate('tool_forex'),
+              subtitle: t.translate('tool_forex_sub'),
+              buttonLabel: "Convert >",
+              themeColor: const Color(0xFF2E7D32), // Dark Green
+              isLocked: !isPremium,
+              onTap: () => _onToolTap(context, const ForexConverterScreen()),
+            ),
+            ToolCard(
+              icon: Icons.account_balance_rounded,
+              title: t.translate('tool_gov_benefits'),
+              subtitle: t.translate('tool_gov_benefits_sub'),
+              buttonLabel: "Explore >",
+              themeColor: const Color(0xFF7B1FA2), // Purple
+              isLocked: !isPremium,
+              onTap: () => _onToolTap(context, const GovBenefitsScreen()),
+            ),
+            ToolCard(
+              icon: Icons.menu_book_rounded,
+              title: t.translate('tool_incoterms_2026'),
+              subtitle: t.translate('tool_incoterms_sub'),
+              buttonLabel: "Read More >",
+              themeColor: const Color(0xFF455A64), // Blue Grey
+              isLocked: !isPremium,
+              onTap: () => _onToolTap(context, const IncotermsScreen()),
+            ),
+          ],
+        ),
       ),
     );
   }
