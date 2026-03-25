@@ -717,11 +717,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                   builder: (context, auth, _) {
                                     final isPremium =
                                         auth.user?.isPremium ?? false;
-                                    return _QuickActionCard(
+                                    return _PremiumActionCard(
                                       icon: Icons.quiz_rounded,
                                       label: t.translate('quizzes_title'),
-                                      color:
-                                          cs.primary, // Strict theme matching
+                                      color: Colors.blue, // Vibrant blue wave
                                       isLocked: !isPremium,
                                       onTap: () {
                                         if (isPremium) {
@@ -752,11 +751,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                   builder: (context, auth, _) {
                                     final isPremium =
                                         auth.user?.isPremium ?? false;
-                                    return _QuickActionCard(
+                                    return _PremiumActionCard(
                                       icon: Icons.smart_toy_rounded,
                                       label: t.translate('ai_expert'),
-                                      color:
-                                          cs.primary, // Strict theme matching
+                                      color: Colors.blue, // Vibrant blue wave
                                       isLocked: !isPremium,
                                       onTap: () {
                                         if (isPremium) {
@@ -2374,14 +2372,14 @@ class _DashboardBodyState extends State<_DashboardBody> {
   }
 }
 
-class _QuickActionCard extends StatelessWidget {
+class _PremiumActionCard extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
   final Color color;
   final bool isLocked;
 
-  const _QuickActionCard({
+  const _PremiumActionCard({
     required this.icon,
     required this.label,
     required this.onTap,
@@ -2397,11 +2395,18 @@ class _QuickActionCard extends StatelessWidget {
       height: 100,
       margin: EdgeInsets.only(right: 4.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF001A3D), // Deep Navy
+            Color(0xFF0D47A1), // Blue
+          ],
+        ),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withValues(alpha: 0.15),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -2413,13 +2418,17 @@ class _QuickActionCard extends StatelessWidget {
           onTap: onTap,
           child: Stack(
             children: [
-              // 🌊 BOTTOM ACCENT WAVE (Universal Premium Design)
+              // 🌊 BOTTOM ACCENT WAVE (0.4 Opacity for Visibility)
               Positioned(
                 bottom: 0,
                 left: 0,
                 right: 0,
-                height: 40, // Balanced for 100x100 card
-                child: CustomPaint(painter: _CardWavePainter(color: color)),
+                height: 40,
+                child: CustomPaint(
+                  painter: _CardWavePainter(
+                    color: color.withValues(alpha: 0.4),
+                  ),
+                ),
               ),
 
               // 📦 QUICK CONTENT
@@ -2427,41 +2436,51 @@ class _QuickActionCard extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment
-                        .spaceBetween, // Distribute top and middle
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // 📝 TITLE (TOP)
+                      // 📝 TITLE (TOP) - Solid White
                       Text(
                         label,
-                        maxLines: 2, // Allow 2 lines for clarity
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
                         style: theme.textTheme.labelMedium?.copyWith(
-                          color: const Color(0xFF001A3D),
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14.sp, // Match ToolCard
+                          color: Colors.white, // Solid white for navy bg
+                          fontWeight: FontWeight.w800,
+                          fontSize: 14.sp,
                         ),
                       ),
+
                       // 🎨 ICON (MIDDLE)
-                      Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: color.withValues(alpha: 0.1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          isLocked ? Icons.lock_outline_rounded : icon,
-                          color: color,
-                          size: 22,
-                        ),
+                      Icon(
+                        icon,
+                        color: Colors.white,
+                        size: 30, // Large & Clear
+                        shadows: [
+                          Shadow(
+                            color: Colors.white.withValues(alpha: 0.3),
+                            blurRadius: 10,
+                          ),
+                        ],
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ), // Placeholder for bottom wave area
+                      const SizedBox(height: 18), // Bottom spacer for wave
                     ],
                   ),
                 ),
               ),
+
+              // 🔒 LOCK OVERLAY
+              if (isLocked)
+                Container(
+                  color: Colors.black.withValues(alpha: 0.4),
+                  child: const Center(
+                    child: Icon(
+                      Icons.lock_rounded,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
