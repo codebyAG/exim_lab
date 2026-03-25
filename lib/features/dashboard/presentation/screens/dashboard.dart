@@ -478,7 +478,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       ),
                     ),
                     // 3. PREMIUM FEATURE CARDS SCROLL (Square Type)
-                    SizedBox(height: 2.h),
+                    SizedBox(height: 0.8.h),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       padding: EdgeInsets.symmetric(
@@ -569,7 +569,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 2.h),
+                      SizedBox(height: 0.8.h),
 
                       // 3. CONTINUE LEARNING HERO
                       if (continueCourses.isNotEmpty)
@@ -610,7 +610,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             ),
                           ),
                         ),
-                      if (continueCourses.isNotEmpty) SizedBox(height: 2.h),
+                      if (continueCourses.isNotEmpty) SizedBox(height: 0.8.h),
 
                       // 6. TOOLS (MOVED UP)
                       ModuleVisibility(
@@ -658,7 +658,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 2.h),
+                      SizedBox(height: 0.8.h),
 
                       // 1.6 MASTERCLASS HIGHLIGHT
                       Consumer<DashboardProvider>(
@@ -679,7 +679,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                           );
                         },
                       ),
-                      SizedBox(height: 3.h),
+                      SizedBox(height: 1.2.h),
 
                       // 4. YOUR LEARNING JOURNEY BAR
                       Consumer<AuthProvider>(
@@ -692,7 +692,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                           );
                         },
                       ),
-                      SizedBox(height: 2.h),
+                      SizedBox(height: 0.8.h),
 
                       // 6. FREE GUIDE BANNER
                       _buildShowcase(
@@ -701,7 +701,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         description: 'tut_pdf_promo_desc',
                         child: _buildFreePdfPromo(context, cs),
                       ),
-                      SizedBox(height: 2.h),
+                      SizedBox(height: 0.8.h),
 
                       // 4. QUICK ACTIONS ROW 2: QUIZZES & AI EXPERT (MOVED ABOVE CAROUSEL)
                       Padding(
@@ -795,7 +795,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 2.h),
+                        SizedBox(height: 0.8.h),
                       ],
 
                       // 7. SHORTS
@@ -870,7 +870,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 2.h),
+                      SizedBox(height: 0.8.h),
 
                       // 10. DYNAMIC SECTIONS
                       ...data.sections.map((section) {
@@ -947,7 +947,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                             ?.isPremium ??
                                         false,
                                   ),
-                                  SizedBox(height: 2.h),
+                                  SizedBox(height: 0.8.h),
                                 ],
                               ),
                             ),
@@ -972,7 +972,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                   ),
                                   SizedBox(height: 1.5.h),
                                   FreeVideosSection(videos: videos),
-                                  SizedBox(height: 2.h),
+                                  SizedBox(height: 0.8.h),
                                 ],
                               ),
                             ),
@@ -985,7 +985,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             child: Column(
                               children: [
                                 InlineBanner(banners: banners),
-                                SizedBox(height: 2.h),
+                                SizedBox(height: 0.8.h),
                               ],
                             ),
                           );
@@ -1000,7 +1000,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         description: 'tut_testimonials_desc',
                         child: _buildTestimonials(context, cs, theme),
                       ),
-                      SizedBox(height: 3.h),
+                      SizedBox(height: 1.2.h),
 
                       // 11. SOCIAL
                       _buildShowcase(
@@ -1009,7 +1009,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         description: 'tut_social_desc',
                         child: _buildSocialConnect(context, cs, theme),
                       ),
-                      SizedBox(height: 3.h),
+                      SizedBox(height: 1.2.h),
 
                       // 12. FREE COUNSELING
                       _buildShowcase(
@@ -1018,7 +1018,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         description: 'tut_counseling_desc',
                         child: _buildFreeCounseling(context, cs),
                       ),
-                      SizedBox(height: 3.h),
+                      SizedBox(height: 1.2.h),
                     ],
                   );
                 },
@@ -1317,7 +1317,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            SizedBox(height: 2.h),
+            SizedBox(height: 0.8.h),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 6.w),
               child: Row(
@@ -1392,7 +1392,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         height: 1.6,
                       ),
                     ),
-                    SizedBox(height: 3.h),
+                    SizedBox(height: 1.2.h),
                     _buildSectionHeader(cs, theme, "Our Commitment"),
                     SizedBox(height: 1.h),
                     Text(
@@ -1677,7 +1677,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(height: 2.h),
+                  SizedBox(height: 0.8.h),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -1797,7 +1797,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
           title: "Student Success Stories",
           subtitle: "Real results from our premium members",
         ),
-        SizedBox(height: 2.h),
+        SizedBox(height: 0.8.h),
         SizedBox(
           height: 24.h,
           child: ListView.separated(
@@ -2048,7 +2048,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                 size: 36,
               ),
             ),
-            SizedBox(height: 2.h),
+            SizedBox(height: 0.8.h),
             const Text(
               "Still Confused?",
               style: TextStyle(
@@ -2075,7 +2075,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 3.h),
+            SizedBox(height: 1.2.h),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -2330,7 +2330,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                               height: 1.3,
                             ),
                           ),
-                          SizedBox(height: 2.h),
+                          SizedBox(height: 0.8.h),
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 16,
