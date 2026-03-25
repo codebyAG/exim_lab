@@ -23,10 +23,7 @@ class ToolsSection extends StatelessWidget {
     if (isPremium) {
       AppNavigator.push(context, screen);
     } else {
-      showDialog(
-        context: context,
-        builder: (_) => const PremiumUnlockDialog(),
-      );
+      showDialog(context: context, builder: (_) => const PremiumUnlockDialog());
     }
   }
 
@@ -34,7 +31,7 @@ class ToolsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
     return SizedBox(
-      height: 28.h, // Adjusted to fit the new card height
+      height: 20.h, // Adjusted to fit the new card height
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
@@ -47,7 +44,8 @@ class ToolsSection extends StatelessWidget {
               buttonLabel: "Calculate >",
               themeColor: const Color(0xFF0D47A1), // Navy
               isLocked: !isPremium,
-              onTap: () => _onToolTap(context, const ExportPriceCalculatorScreen()),
+              onTap: () =>
+                  _onToolTap(context, const ExportPriceCalculatorScreen()),
             ),
             ToolCard(
               icon: Icons.receipt_long_rounded,
@@ -74,7 +72,8 @@ class ToolsSection extends StatelessWidget {
               buttonLabel: "Measure >",
               themeColor: const Color(0xFF00B0FF), // Light Blue
               isLocked: false, // Free
-              onTap: () => AppNavigator.push(context, const CbmCalculatorScreen()),
+              onTap: () =>
+                  AppNavigator.push(context, const CbmCalculatorScreen()),
             ),
             ToolCard(
               icon: Icons.percent_rounded,
