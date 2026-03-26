@@ -720,7 +720,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                     return _PremiumActionCard(
                                       icon: Icons.quiz_rounded,
                                       label: t.translate('quizzes_title'),
-                                      color: Colors.blue, // Vibrant blue wave
+                                      color: cs.primary,
                                       isLocked: !isPremium,
                                       onTap: () {
                                         if (isPremium) {
@@ -754,7 +754,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                     return _PremiumActionCard(
                                       icon: Icons.smart_toy_rounded,
                                       label: t.translate('ai_expert'),
-                                      color: Colors.blue, // Vibrant blue wave
+                                      color: cs.primary,
                                       isLocked: !isPremium,
                                       onTap: () {
                                         if (isPremium) {
@@ -2378,6 +2378,7 @@ class _PremiumActionCard extends StatelessWidget {
   final VoidCallback onTap;
   final Color color;
   final bool isLocked;
+  final String? buttonLabel;
 
   const _PremiumActionCard({
     required this.icon,
@@ -2385,16 +2386,14 @@ class _PremiumActionCard extends StatelessWidget {
     required this.onTap,
     required this.color,
     this.isLocked = false,
+    this.buttonLabel,
   });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
-
     return Container(
-      width: 100,
-      height: 100,
+      width: 15.h,
+      height: 15.h,
       margin: EdgeInsets.only(right: 4.w),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -2406,81 +2405,126 @@ class _PremiumActionCard extends StatelessWidget {
             offset: const Offset(0, 8),
           ),
         ],
-        border: Border.all(color: color.withValues(alpha: 0.1), width: 1),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
-        child: InkWell(
-          onTap: onTap,
-          child: Stack(
-            children: [
-              // 🌊 BOTTOM ACCENT WAVE (0.4 Opacity for Visibility)
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                height: 40,
-                child: CustomPaint(
-                  painter: _CardWavePainter(
-                    color: color.withValues(alpha: 0.4),
-                  ),
-                ),
-              ),
+        child: Stack(
+          children: [
+            // 🌊 BOTTOM ACCENT WAVE
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: 10.h,
+              child: CustomPaint(painter: _CardWavePainter(color: color)),
+            ),
 
-              // 📦 CONTENT BLOCK
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8.0,
-                  vertical: 12.0,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // 📝 TITLE (TOP) - Navy Like About Section
-                    Text(
-                      label,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.labelMedium?.copyWith(
-                        color: const Color(0xFF001A3D), // Deep Navy
-                        fontWeight: FontWeight.w900,
-                        fontSize: 14.sp,
+            // 📦 DYNAMIC CONTENT COLUMN
+            Padding(
+              padding: EdgeInsets.fromLTRB(3.w, 1.5.h, 3.w, 1.h),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // 📝 TITLE
+                  Text(
+                    label,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: color,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 15.sp,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+
+                  // 🎨 ICON AREA
+                  Expanded(
+                    child: Center(
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            width: 15.sp,
+                            height: 15.sp,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: color.withValues(alpha: 0.15),
+                                  blurRadius: 15,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(
+                            icon,
+                            size: 28.sp,
+                            color: color.withValues(alpha: 0.9),
+                          ),
+                        ],
                       ),
                     ),
+                  ),
 
-                    // 🎨 ICON (CENTER) - Themed Color
-                    Icon(
-                      icon,
-                      color: color,
-                      size: 28,
-                      shadows: [
-                        Shadow(
-                          color: color.withValues(alpha: 0.2),
-                          blurRadius: 8,
+                  // 🔘 ACTION PILL
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: onTap,
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 4.w,
+                          vertical: 0.7.h,
                         ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 16), // Bottom spacer
-                  ],
-                ),
-              ),
-
-              // 🔒 LOCK OVERLAY
-              if (isLocked)
-                Container(
-                  color: Colors.black.withValues(alpha: 0.2),
-                  child: const Center(
-                    child: Icon(
-                      Icons.lock_rounded,
-                      color: Colors.white,
-                      size: 24,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.1),
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                buttonLabel ?? "Start >",
+                                style: TextStyle(
+                                  color: color,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 12.sp,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
+                ],
+              ),
+            ),
+
+            // 🔒 LOCK OVERLAY
+            if (isLocked)
+              Container(
+                color: Colors.black.withValues(alpha: 0.2),
+                child: const Center(
+                  child: Icon(
+                    Icons.lock_rounded,
+                    color: Colors.white,
+                    size: 24,
+                  ),
                 ),
-            ],
-          ),
+              ),
+          ],
         ),
       ),
     );
