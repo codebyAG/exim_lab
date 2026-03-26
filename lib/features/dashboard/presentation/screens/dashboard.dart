@@ -419,7 +419,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             _buildHeaderCircleIcon(
                               icon: Icons.search_rounded,
                               onTap: () {
-                                // TODO: Implement search
+                                // Search functionality to be handled by user
                               },
                               cs: cs,
                             ),
@@ -2378,7 +2378,6 @@ class _PremiumActionCard extends StatelessWidget {
   final VoidCallback onTap;
   final Color color;
   final bool isLocked;
-  final String? buttonLabel;
 
   const _PremiumActionCard({
     required this.icon,
@@ -2386,7 +2385,6 @@ class _PremiumActionCard extends StatelessWidget {
     required this.onTap,
     required this.color,
     this.isLocked = false,
-    this.buttonLabel,
   });
 
   @override
@@ -2493,7 +2491,7 @@ class _PremiumActionCard extends StatelessWidget {
                           children: [
                             Flexible(
                               child: Text(
-                                buttonLabel ?? "Start >",
+                                "Start >",
                                 style: TextStyle(
                                   color: color,
                                   fontWeight: FontWeight.w900,
