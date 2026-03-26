@@ -71,13 +71,29 @@ Future<T> callApi<T>(
     }
   } on DioException catch (e) {
     log("❌ DIO ERROR: ${e.message}");
+    if (e.response?.data != null) {
+      log("❌ DIO ERROR DATA: ${e.response?.data}");
+    }
+
+    String errorMessage = dioExceptionMessage(e.type);
+
+    // 🔍 Extract server-provided error message if available (e.g. 400 Bad Request)
+    if (e.response?.data != null && e.response?.data is Map) {
+      final resData = e.response?.data as Map;
+      final serverMsg =
+          resData['message'] ?? resData['msg'] ?? resData['status'];
+      if (serverMsg != null && serverMsg is String) {
+        errorMessage = serverMsg;
+      }
+    }
+
     // 📊 LOG ERROR (if not suppressed)
     if (logErrorEvent) {
-      AnalyticsService().logError(message: 'Dio Error: ${e.message} at $url');
+      AnalyticsService().logError(message: 'Dio Error: $errorMessage at $url');
     }
 
     throw ApiException(
-      message: dioExceptionMessage(e.type),
+      message: errorMessage,
       statusCode: e.response?.statusCode,
     );
   } catch (e) {
