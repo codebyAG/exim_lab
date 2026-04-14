@@ -43,6 +43,16 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_conti
 import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_journey_bar.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/interest_dialog.dart';
 import 'package:exim_lab/core/functions/pdf_utils.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/founder_card.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/premium_feature_card.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/premium_action_card.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/masterclass_highlight_card.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/free_pdf_promo_card.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/testimonials_section.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/social_connect_section.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/free_counseling_section.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_header_widgets.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/tutorial_step_content.dart';
 
 class DashboardScreen extends StatelessWidget {
   DashboardScreen({super.key});
@@ -235,7 +245,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
         builder: (tooltipContext) {
           // Providing local context to the tooltip content via callbacks
           // to avoid 'ShowCaseView context not found' error in detached overlays
-          return _TutorialStepContent(
+          return TutorialStepContent(
             targetKey: key,
             title: title,
             description: description,
@@ -416,28 +426,27 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             const Spacer(),
 
                             // 🔍 SEARCH
-                            _buildHeaderCircleIcon(
+                            HeaderCircleIcon(
                               icon: Icons.search_rounded,
                               onTap: () {
                                 // Search functionality to be handled by user
                               },
-                              cs: cs,
                             ),
                             const SizedBox(width: 8),
 
                             // 🔔 NOTIFICATIONS
-                            _buildNotificationIcon(cs),
+                            const NotificationIcon(),
                             const SizedBox(width: 8),
 
                             // 👤 PROFILE
-                            _buildProfileIcon(cs),
+                            const ProfileIcon(),
                           ],
                         ),
                       ),
                     ),
 
                     // 1.5 ABOUT US SECTION
-                    _buildAboutUs(context, cs, theme, t),
+                    const FounderCard(),
 
                     // 2. FEATURE TITLE
                     Padding(
@@ -492,7 +501,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             key: _galleryCardKey,
                             title: 'tut_gallery_title',
                             description: 'tut_gallery_desc',
-                            child: _PremiumFeatureCard(
+                            child: PremiumFeatureCard(
                               title: t.translate('gallery'),
                               icon: Icons.photo_library_rounded,
                               buttonLabel: "Success Stories",
@@ -504,7 +513,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             ),
                           ),
                           // 📊 MARKET UPDATES
-                          _PremiumFeatureCard(
+                          PremiumFeatureCard(
                             title: t.translate('market_updates'),
                             icon: Icons.trending_up_rounded,
                             buttonLabel: "Live Trends >",
@@ -515,7 +524,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             ),
                           ),
                           // 🚢 IMPORT JOURNEY
-                          _PremiumFeatureCard(
+                          PremiumFeatureCard(
                             title: t.translate('start_import_journey'),
                             icon: Icons.directions_boat_rounded,
                             buttonLabel: "Continue >",
@@ -526,7 +535,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             ),
                           ),
                           // ✈️ EXPORT JOURNEY
-                          _PremiumFeatureCard(
+                          PremiumFeatureCard(
                             title: t.translate('start_export_journey'),
                             icon: Icons.airplanemode_active_rounded,
                             buttonLabel: "Start Learning",
@@ -670,12 +679,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             title: 'Masterclass',
                             description:
                                 'Watch our complete Import Export Roadmap',
-                            child: _buildMasterclassHighlight(
-                              context,
-                              cs,
-                              theme,
-                              data,
-                            ),
+                            child: MasterclassHighlightCard(data: data),
                           );
                         },
                       ),
@@ -699,7 +703,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         key: _pdfPromoKey,
                         title: 'tut_pdf_promo_title',
                         description: 'tut_pdf_promo_desc',
-                        child: _buildFreePdfPromo(context, cs),
+                        child: const FreePdfPromoCard(),
                       ),
                       SizedBox(height: 0.8.h),
 
@@ -717,7 +721,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                   builder: (context, auth, _) {
                                     final isPremium =
                                         auth.user?.isPremium ?? false;
-                                    return _PremiumActionCard(
+                                    return PremiumActionCard(
                                       icon: Icons.quiz_rounded,
                                       label: t.translate('quizzes_title'),
                                       color: cs.primary,
@@ -751,7 +755,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                   builder: (context, auth, _) {
                                     final isPremium =
                                         auth.user?.isPremium ?? false;
-                                    return _PremiumActionCard(
+                                    return PremiumActionCard(
                                       icon: Icons.smart_toy_rounded,
                                       label: t.translate('ai_expert'),
                                       color: cs.primary,
