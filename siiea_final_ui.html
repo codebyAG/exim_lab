@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SIIEA – Ultra Aggressive</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red:#C8151B; --red2:#FF2D35; --red3:#FF6B6B;
+  --bd:#05133A; --bn:#0A2066; --bm:#1040C1; --bb:#1E5FFF;
+  --gold:#F5A800; --gold2:#FFD000; --gold3:#FFF0A0;
+  --w:#FFFFFF; --m:#7A90C4; --dm:#4A6099;
+  --font-head:'Plus Jakarta Sans',sans-serif;
+  --font-body:'Nunito',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font-body);background:#000d2b;display:flex;justify-content:center;min-height:100vh;}
+.phone{width:100%;max-width:390px;background:var(--bd);min-height:100vh;position:relative;overflow-x:hidden;padding-bottom:88px;}
+
+/* STATUS */
+.sb{background:#020C28;color:#fff;display:flex;justify-content:space-between;align-items:center;padding:13px 20px 9px;font-size:12px;font-weight:700;letter-spacing:.02em;font-family:var(--font-body);}
+
+/* HEADER */
+.hdr{position:relative;overflow:hidden;}
+.hdr-grad{position:absolute;inset:0;background:linear-gradient(160deg,#020C28 0%,#0A2066 55%,#020C28 100%);}
+.hdr-inner{position:relative;z-index:3;padding:14px 18px 0;}
+
+/* LOGO ROW */
+.logo-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.logo-l{display:flex;align-items:center;gap:10px;}
+.globe-box{width:54px;height:54px;border-radius:14px;background:linear-gradient(135deg,#fff,#C8D8FF);display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.3);box-shadow:0 0 24px rgba(30,95,255,.5),inset 0 1px 0 rgba(255,255,255,.5);overflow:hidden;flex-shrink:0;}
+.logo-txt .l1{font-size:9px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.1em;text-transform:uppercase;font-family:var(--font-body);}
+.logo-txt .l2{font-family:var(--font-head);font-size:17px;font-weight:900;color:#fff;letter-spacing:-.3px;line-height:1.1;}
+.logo-txt .l2 span{color:var(--gold2);}
+.logo-txt .l3{font-family:var(--font-head);font-size:13px;font-weight:800;color:#fff;letter-spacing:.02em;}
+.logo-tag{display:inline-block;background:var(--red);padding:2px 9px;border-radius:4px;margin-top:3px;font-size:8px;font-weight:800;color:#fff;letter-spacing:.06em;font-family:var(--font-body);box-shadow:0 2px 8px rgba(200,21,27,.5);}
+.abtns{display:flex;gap:8px;}
+.abtn{width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;position:relative;}
+.abadge{position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:var(--red2);border-radius:50%;border:2px solid var(--bd);font-size:8px;font-weight:900;color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-body);}
+
+/* WELCOME */
+.welcome-row{display:flex;justify-content:space-between;align-items:flex-end;padding:0 0 8px;}
+.w-hi{font-size:14px;font-weight:600;color:rgba(255,255,255,.65);margin-bottom:2px;font-family:var(--font-body);}
+.w-name{font-family:var(--font-head);font-size:38px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1;text-shadow:0 2px 20px rgba(30,95,255,.6);}
+
+/* RED SLASH */
+.slash{height:4px;background:linear-gradient(90deg,var(--red),#1E5FFF33);}
+
+/* CARDS / GENERIC */
+.card{margin:14px 14px 0;border-radius:20px;overflow:hidden;position:relative;border:1.5px solid rgba(30,95,255,.35);}
+
+/* ── FOUNDER CARD */
+.fc-grad{background:linear-gradient(135deg,#0A2066,#1040C1);}
+.fc-topbar{background:rgba(0,0,0,.35);padding:8px 16px;display:flex;gap:8px;border-bottom:1px solid rgba(255,255,255,.08);}
+.pill{border-radius:6px;padding:4px 10px;font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;font-family:var(--font-body);}
+.pill-w{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;}
+.pill-g{background:rgba(245,168,0,.2);border:1px solid rgba(245,168,0,.4);color:var(--gold2);}
+.fc-body{display:flex;gap:14px;align-items:center;padding:16px;position:relative;z-index:2;}
+.avatar-ring{width:82px;height:82px;border-radius:50%;border:3px solid var(--gold);padding:3px;box-shadow:0 0 24px rgba(245,168,0,.45);flex-shrink:0;overflow:hidden;background:linear-gradient(135deg,#3A6BC8,#1040C1);}
+.fc-info{}
+.fc-name{font-family:var(--font-head);font-size:18px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:3px;}
+.fc-role{font-size:12px;font-weight:600;color:var(--gold);margin-bottom:7px;font-family:var(--font-body);}
+.fc-quote{font-size:12px;font-style:italic;color:rgba(255,255,255,.7);line-height:1.6;border-left:3px solid var(--red);padding-left:10px;font-family:var(--font-body);}
+.fc-cta{background:linear-gradient(90deg,var(--red),var(--red2));padding:12px 16px;display:flex;justify-content:space-between;align-items:center;}
+.fc-cta-txt{font-size:13px;font-weight:700;color:#fff;font-family:var(--font-head);}
+.fc-cta-arr{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;font-weight:900;}
+
+/* ── PROGRESS */
+.prog-card{margin:14px 14px 0;border-radius:18px;padding:16px;background:linear-gradient(135deg,#061540,#0A2066);border:1.5px solid rgba(30,95,255,.25);}
+.prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.prog-lbl{font-family:var(--font-head);font-size:15px;font-weight:800;color:#fff;letter-spacing:-.2px;}
+.prog-pct{font-family:var(--font-head);font-size:22px;font-weight:900;color:var(--gold2);text-shadow:0 0 16px rgba(255,208,0,.5);}
+.prog-track{height:10px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden;margin-bottom:8px;}
+.prog-fill{height:100%;width:65%;border-radius:10px;background:linear-gradient(90deg,var(--bm),var(--bb),#55AAFF);box-shadow:0 0 12px rgba(30,95,255,.6);}
+.prog-sub{font-size:12px;font-weight:600;color:var(--m);font-family:var(--font-body);}
+
+/* DIVIDER */
+.div{height:2px;margin:14px 14px 0;background:linear-gradient(90deg,var(--red),rgba(30,95,255,.3),transparent);}
+
+/* SEC HEADER */
+.sec{display:flex;justify-content:space-between;align-items:center;padding:0 16px;margin:16px 0 10px;}
+.sec-t{font-family:var(--font-head);font-size:19px;font-weight:900;color:#fff;letter-spacing:-.3px;}
+.sec-t span{color:var(--gold2);}
+.sec-link{font-size:11px;font-weight:700;color:var(--bb);background:rgba(30,95,255,.15);border:1px solid rgba(30,95,255,.3);border-radius:20px;padding:4px 12px;font-family:var(--font-body);}
+
+/* ── LEARN SCROLL */
+.ls{display:flex;gap:10px;padding:4px 14px;overflow-x:auto;scrollbar-width:none;margin-bottom:4px;}
+.ls::-webkit-scrollbar{display:none;}
+.lc{flex-shrink:0;width:126px;border-radius:16px;overflow:hidden;border:1.5px solid rgba(255,255,255,.1);box-shadow:0 4px 20px rgba(0,0,0,.4);cursor:pointer;}
+.lc-thumb{height:100px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.lc-ov{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(0,0,0,.7) 100%);}
+.lc-lbl{position:absolute;bottom:7px;left:8px;right:8px;font-family:var(--font-head);font-size:13px;font-weight:800;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.9);line-height:1.25;}
+.lc-cta{padding:8px 10px;font-size:10px;font-weight:800;letter-spacing:.02em;display:flex;align-items:center;justify-content:space-between;font-family:var(--font-body);}
+
+/* ── SKILLS */
+.skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 14px;}
+.sk{border-radius:16px;padding:14px;position:relative;overflow:hidden;border:1.5px solid rgba(255,255,255,.08);cursor:pointer;}
+.sk::before{content:'';position:absolute;top:-20px;right:-20px;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.04);}
+.sk-icon-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.sk-icon{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;}
+.sk-badge{font-size:8px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:rgba(255,255,255,.12);border-radius:4px;padding:2px 7px;color:rgba(255,255,255,.7);font-family:var(--font-body);}
+.sk-name{font-family:var(--font-head);font-size:14px;font-weight:800;color:#fff;line-height:1.3;margin-bottom:3px;}
+.sk-sub{font-size:10px;font-weight:600;color:rgba(255,255,255,.55);font-family:var(--font-body);}
+
+/* ── CERTS */
+.cert-row{display:flex;gap:8px;padding:12px 14px;overflow-x:auto;scrollbar-width:none;}
+.cert-row::-webkit-scrollbar{display:none;}
+.cert{flex-shrink:0;border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:8px;border:1.5px solid rgba(255,255,255,.1);cursor:pointer;}
+.cert-ico{font-size:20px;}
+.cert-n{font-family:var(--font-head);font-size:13px;font-weight:800;color:#fff;}
+.cert-l{font-size:10px;font-weight:600;font-family:var(--font-body);}
+
+/* ── SPLIT */
+.split{margin:0 14px;border-radius:18px;overflow:hidden;display:flex;border:1.5px solid rgba(255,255,255,.08);}
+.achieve{flex:1;padding:16px;background:linear-gradient(160deg,#0A2066,#061540);border-right:1px solid rgba(255,255,255,.08);}
+.ap-t{font-family:var(--font-head);font-size:15px;font-weight:800;color:#fff;margin-bottom:12px;letter-spacing:-.2px;}
+.ap-t span{color:var(--gold2);}
+.ap-list{display:flex;flex-direction:column;gap:8px;}
+.ap-i{display:flex;align-items:flex-start;gap:7px;}
+.ap-chk{width:16px;height:16px;border-radius:4px;background:var(--bb);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:900;flex-shrink:0;margin-top:1px;}
+.ap-txt{font-size:12px;font-weight:600;color:rgba(255,255,255,.85);line-height:1.45;font-family:var(--font-body);}
+.webinar{width:158px;flex-shrink:0;background:linear-gradient(160deg,#06123A,#030A24);padding:14px 12px;}
+.wb-live{display:flex;align-items:center;gap:5px;margin-bottom:8px;}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--red2);box-shadow:0 0 8px var(--red2);animation:pulse 1.4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+.wb-live-t{font-size:10px;font-weight:700;color:rgba(255,255,255,.6);font-family:var(--font-body);}
+.wb-live-t span{color:var(--red2);font-weight:800;}
+.wb-date{font-family:var(--font-head);font-size:22px;font-weight:900;color:#fff;line-height:1.15;margin-bottom:4px;}
+.wb-time{font-size:13px;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:5px;margin-bottom:12px;font-family:var(--font-body);}
+.wb-reg{background:linear-gradient(90deg,var(--bm),var(--bb));border-radius:8px;padding:10px;text-align:center;font-family:var(--font-head);font-size:13px;font-weight:800;color:#fff;cursor:pointer;box-shadow:0 4px 16px rgba(30,95,255,.5);}
+
+/* ── MASTERCLASS */
+.mc{margin:14px 14px 0;border-radius:20px;overflow:hidden;position:relative;background:linear-gradient(135deg,#020C28,#0A2066,#1040C1);border:2px solid rgba(30,95,255,.35);box-shadow:0 12px 48px rgba(16,64,193,.5);}
+.mc-stripe{position:absolute;top:0;right:0;width:6px;height:100%;background:linear-gradient(180deg,var(--red),var(--red2));}
+.mc-body{padding:20px 18px;position:relative;z-index:2;}
+.mc-tag-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.mc-tag{background:var(--red);padding:5px 14px;border-radius:6px;font-family:var(--font-head);font-size:11px;font-weight:800;color:#fff;letter-spacing:.04em;text-transform:uppercase;box-shadow:0 3px 12px rgba(200,21,27,.5);}
+.mc-cp{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:4px 10px;font-size:10px;font-weight:700;color:rgba(255,255,255,.8);font-family:var(--font-body);}
+.mc-title{font-family:var(--font-head);font-size:30px;font-weight:900;color:#fff;line-height:1.1;letter-spacing:-1px;margin-bottom:4px;text-shadow:0 2px 20px rgba(0,0,0,.5);}
+.mc-sub{font-size:13px;font-weight:600;color:rgba(255,255,255,.65);margin-bottom:16px;font-family:var(--font-body);}
+.mc-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.mc-enroll{background:linear-gradient(90deg,var(--red),var(--red2));border-radius:40px;padding:13px 28px;font-family:var(--font-head);font-size:15px;font-weight:800;color:#fff;letter-spacing:.02em;cursor:pointer;box-shadow:0 6px 20px rgba(200,21,27,.55);}
+.mc-date{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;color:rgba(255,255,255,.85);font-family:var(--font-body);}
+
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);max-width:390px;width:100%;background:#020C28;border-top:2px solid rgba(30,95,255,.3);display:flex;justify-content:space-around;padding:10px 0 22px;z-index:100;}
+.ni{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:6px 20px;border-radius:12px;}
+.ni.active{background:rgba(30,95,255,.18);}
+.ni-ico{font-size:20px;}
+.ni-lbl{font-size:9px;font-weight:800;letter-spacing:.04em;color:var(--m);font-family:var(--font-body);}
+.ni.active .ni-lbl{color:var(--bb);}
+
+/* ANIM */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.au{animation:fadeUp .45s ease both;}
+.au1{animation-delay:.05s}.au2{animation-delay:.1s}.au3{animation-delay:.15s}
+.au4{animation-delay:.2s}.au5{animation-delay:.25s}.au6{animation-delay:.3s}
+
+
+/* ══ COURSE CARDS (Recommended) ══ */
+.course-scroll{display:flex;gap:12px;padding:4px 14px;overflow-x:auto;scrollbar-width:none;margin-bottom:4px;}
+.course-scroll::-webkit-scrollbar{display:none;}
+.course-card{flex-shrink:0;width:190px;border-radius:18px;overflow:hidden;border:1.5px solid rgba(255,255,255,.1);background:#061540;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer;}
+.cc-thumb{height:110px;position:relative;overflow:hidden;}
+.cc-ov{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,.75)100%);}
+.cc-badge{position:absolute;top:8px;left:8px;border-radius:5px;padding:3px 8px;font-size:9px;font-weight:800;font-family:var(--font-body);letter-spacing:.04em;}
+.cc-badge-gold{background:rgba(255,208,0,.25);border:1px solid rgba(255,208,0,.5);color:var(--gold2);}
+.cc-badge-red{background:rgba(255,45,53,.25);border:1px solid rgba(255,45,53,.5);color:#FF8888;}
+.cc-duration{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.65);border-radius:4px;padding:2px 7px;font-size:9px;font-weight:700;color:rgba(255,255,255,.9);font-family:var(--font-body);}
+.cc-body{padding:12px;}
+.cc-tag{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;font-family:var(--font-body);}
+.cc-name{font-family:var(--font-head);font-size:12px;font-weight:800;color:#fff;line-height:1.4;margin-bottom:8px;}
+.cc-meta-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.cc-rating{font-size:10px;font-weight:600;color:var(--m);font-family:var(--font-body);}
+.cc-rating span{color:var(--dm);}
+.cc-price{font-family:var(--font-head);font-size:13px;font-weight:900;color:var(--gold2);}
+.cc-enroll-btn{background:linear-gradient(90deg,var(--bm),var(--bb));border-radius:8px;padding:8px 12px;text-align:center;font-family:var(--font-head);font-size:11px;font-weight:800;color:#fff;cursor:pointer;}
+
+/* ══ POPULAR LIST ══ */
+.popular-list{display:flex;flex-direction:column;gap:10px;margin:0 14px;}
+.pop-card{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#061540,#0A2066);border:1.5px solid rgba(30,95,255,.2);border-radius:16px;padding:12px;cursor:pointer;}
+.pop-rank{font-family:var(--font-head);font-size:22px;font-weight:900;color:rgba(255,255,255,.1);min-width:28px;line-height:1;}
+.pop-thumb{width:56px;height:56px;border-radius:12px;overflow:hidden;flex-shrink:0;}
+.pop-info{flex:1;min-width:0;}
+.pop-tag{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;font-family:var(--font-body);}
+.pop-name{font-family:var(--font-head);font-size:12px;font-weight:800;color:#fff;line-height:1.35;margin-bottom:4px;}
+.pop-meta{font-size:10px;font-weight:600;color:var(--m);font-family:var(--font-body);}
+.pop-price{font-family:var(--font-head);font-size:13px;font-weight:900;color:var(--gold2);flex-shrink:0;}
+
+/* ══ FREE VIDEOS ══ */
+.free-card{flex-shrink:0;width:175px;border-radius:16px;overflow:hidden;border:1.5px solid rgba(255,255,255,.1);background:#061540;cursor:pointer;}
+.fv-thumb{height:98px;position:relative;overflow:hidden;}
+.fv-free-tag{position:absolute;top:8px;left:8px;background:linear-gradient(90deg,#25D366,#1BA851);border-radius:5px;padding:3px 8px;font-size:9px;font-weight:800;color:#fff;font-family:var(--font-body);letter-spacing:.04em;}
+.fv-body{padding:10px;}
+.fv-name{font-family:var(--font-head);font-size:11px;font-weight:800;color:#fff;line-height:1.4;margin-bottom:6px;}
+.fv-meta{font-size:10px;font-weight:600;color:var(--m);font-family:var(--font-body);}
+
+/* ══ SHORT VIDEOS ══ */
+.shorts-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0 14px;}
+.short-card{cursor:pointer;}
+.short-thumb{height:145px;border-radius:14px;position:relative;overflow:hidden;margin-bottom:7px;}
+.short-dur{position:absolute;bottom:7px;right:7px;background:rgba(0,0,0,.7);border-radius:4px;padding:2px 6px;font-size:9px;font-weight:700;color:#fff;font-family:var(--font-body);}
+.short-views{position:absolute;top:7px;left:7px;background:rgba(0,0,0,.55);border-radius:4px;padding:2px 5px;font-size:8px;font-weight:700;color:#fff;font-family:var(--font-body);}
+.short-title{font-family:var(--font-body);font-size:10px;font-weight:700;color:rgba(255,255,255,.85);line-height:1.4;}
+
+/* ══ SOCIAL FOOTER ══ */
+.social-footer{margin:14px 14px 0;border-radius:24px;overflow:hidden;background:linear-gradient(160deg,#020C28,#061540);border:1.5px solid rgba(30,95,255,.25);padding:22px 18px 24px;}
+.sf-brand{margin-bottom:16px;}
+.sf-logo-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.sf-globe{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#1040C1,#1E5FFF);display:flex;align-items:center;justify-content:center;border:1.5px solid rgba(30,95,255,.4);flex-shrink:0;}
+.sf-name{font-family:var(--font-head);font-size:20px;font-weight:900;color:#fff;letter-spacing:-.5px;line-height:1.1;}
+.sf-tagline{font-size:10px;font-weight:700;color:var(--gold2);font-family:var(--font-body);letter-spacing:.02em;}
+.sf-desc{font-size:12px;font-weight:500;color:var(--m);line-height:1.6;font-family:var(--font-body);}
+.sf-div{height:1px;background:linear-gradient(90deg,transparent,rgba(30,95,255,.4),transparent);margin:16px 0;}
+.sf-follow-label{font-family:var(--font-head);font-size:14px;font-weight:800;color:#fff;margin-bottom:14px;letter-spacing:-.2px;}
+.sf-icons-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.si-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:14px;cursor:pointer;text-decoration:none;transition:transform .18s ease;border:1.5px solid rgba(255,255,255,.08);}
+.si-btn:active{transform:scale(.94);}
+.si-btn span{font-size:9px;font-weight:700;color:rgba(255,255,255,.7);font-family:var(--font-body);letter-spacing:.02em;text-align:center;}
+.si-instagram{background:linear-gradient(135deg,#833AB4,#E1306C,#F77737);}
+.si-facebook{background:#1877F2;}
+.si-youtube{background:#FF0000;}
+.si-whatsapp{background:#25D366;}
+.si-twitter{background:#000000;border-color:rgba(255,255,255,.15);}
+.si-linkedin{background:#0A66C2;}
+.si-telegram{background:#229ED9;}
+.si-gplay{background:linear-gradient(135deg,#34A853,#4285F4);}
+.sf-links-row{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.sf-link{font-size:11px;font-weight:600;color:var(--bb);font-family:var(--font-body);text-decoration:none;}
+.sf-dot{font-size:11px;color:var(--dm);}
+.sf-copyright{display:flex;align-items:center;justify-content:center;gap:6px;font-size:11px;font-weight:500;color:var(--dm);font-family:var(--font-body);}
+.sf-copy-flag{font-size:14px;}
+
+</style>
+</head>
+<body>
+<div class="phone">
+
+<!-- STATUS BAR -->
+<div class="sb">
+  <span>9:41</span>
+  <span style="letter-spacing:.12em">▐▐▐ ◈ ▮</span>
+</div>
+
+<!-- HEADER -->
+<div class="hdr au">
+  <div class="hdr-grad"></div>
+
+  <!-- World map SVG in background -->
+  <svg style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:.07;z-index:1;" viewBox="0 0 390 220" preserveAspectRatio="xMidYMid slice">
+    <!-- simplified world map dots -->
+    <g fill="#5599FF">
+      <!-- North America -->
+      <ellipse cx="80" cy="70" rx="38" ry="28"/>
+      <ellipse cx="95" cy="100" rx="20" ry="16"/>
+      <!-- South America -->
+      <ellipse cx="105" cy="140" rx="18" ry="30"/>
+      <!-- Europe -->
+      <ellipse cx="185" cy="60" rx="22" ry="16"/>
+      <!-- Africa -->
+      <ellipse cx="190" cy="110" rx="22" ry="32"/>
+      <!-- Asia -->
+      <ellipse cx="270" cy="65" rx="50" ry="28"/>
+      <!-- Australia -->
+      <ellipse cx="310" cy="140" rx="22" ry="14"/>
+    </g>
+    <!-- Trade route lines -->
+    <g stroke="#1E5FFF" stroke-width="1" fill="none" stroke-dasharray="4,6" opacity=".6">
+      <path d="M80 80 Q190 40 270 70"/>
+      <path d="M105 140 Q190 110 270 120"/>
+      <path d="M190 110 Q240 110 310 140"/>
+    </g>
+    <!-- Route dots -->
+    <g fill="#FFD000" opacity=".8">
+      <circle cx="80" cy="80" r="3"/>
+      <circle cx="190" cy="55" r="3"/>
+      <circle cx="270" cy="70" r="3"/>
+      <circle cx="105" cy="140" r="2.5"/>
+      <circle cx="310" cy="140" r="2.5"/>
+    </g>
+  </svg>
+
+  <!-- Airplane SVG top right -->
+  <svg style="position:absolute;right:14px;top:70px;z-index:2;opacity:.7;" width="80" height="40" viewBox="0 0 80 40">
+    <g transform="rotate(-20,40,20)">
+      <!-- fuselage -->
+      <ellipse cx="40" cy="20" rx="32" ry="7" fill="#C8D8FF"/>
+      <!-- nose -->
+      <path d="M72 20 Q82 20 78 22 Q74 23 68 22 Z" fill="#E8F0FF"/>
+      <!-- wings -->
+      <path d="M30 20 L44 4 L50 4 L42 20 Z" fill="#A8C4FF"/>
+      <path d="M30 20 L44 36 L50 36 L42 20 Z" fill="#A8C4FF"/>
+      <!-- tail -->
+      <path d="M8 20 L4 12 L10 14 Z" fill="#A8C4FF"/>
+      <path d="M8 20 L4 28 L10 26 Z" fill="#A8C4FF"/>
+      <!-- windows -->
+      <circle cx="52" cy="18" r="2" fill="#1E5FFF" opacity=".8"/>
+      <circle cx="44" cy="18" r="2" fill="#1E5FFF" opacity=".8"/>
+      <circle cx="36" cy="18" r="2" fill="#1E5FFF" opacity=".8"/>
+    </g>
+    <!-- trail -->
+    <path d="M0 28 Q20 26 40 24" stroke="#ffffff" stroke-width="1.5" fill="none" stroke-dasharray="3,4" opacity=".4"/>
+  </svg>
+
+  <div class="hdr-inner">
+    <div class="logo-row">
+      <div class="logo-l">
+        <div class="globe-box">
+          <!-- Globe SVG -->
+          <svg width="46" height="46" viewBox="0 0 46 46">
+            <circle cx="23" cy="23" r="20" fill="#1040C1" stroke="#5599FF" stroke-width="1.5"/>
+            <ellipse cx="23" cy="23" rx="10" ry="20" fill="none" stroke="#88AAFF" stroke-width="1" opacity=".7"/>
+            <ellipse cx="23" cy="23" rx="20" ry="8" fill="none" stroke="#88AAFF" stroke-width="1" opacity=".7"/>
+            <line x1="3" y1="23" x2="43" y2="23" stroke="#88AAFF" stroke-width="1" opacity=".5"/>
+            <line x1="23" y1="3" x2="23" y2="43" stroke="#88AAFF" stroke-width="1" opacity=".5"/>
+            <circle cx="23" cy="23" r="20" fill="none" stroke="white" stroke-width="1.5"/>
+            <!-- continents hint -->
+            <ellipse cx="16" cy="18" rx="6" ry="4" fill="#3A8C3A" opacity=".7"/>
+            <ellipse cx="28" cy="16" rx="8" ry="5" fill="#3A8C3A" opacity=".7"/>
+            <ellipse cx="28" cy="26" rx="5" ry="6" fill="#3A8C3A" opacity=".6"/>
+          </svg>
+        </div>
+        <div class="logo-txt">
+          <div class="l1">Start Up India</div>
+          <div class="l2">IMPORT <span>EXPORT</span></div>
+          <div class="l3">ACADEMY</div>
+          <div class="logo-tag">45 YEARS OF EXPERIENCE</div>
+        </div>
+      </div>
+      <div class="abtns">
+        <div class="abtn">🔍</div>
+        <div class="abtn">🔔<div class="abadge">3</div></div>
+        <div class="abtn">👤</div>
+      </div>
+    </div>
+
+    <div class="welcome-row">
+      <div>
+        <div class="w-hi">Welcome back,</div>
+        <div class="w-name">LAKSHYA</div>
+      </div>
+      <!-- Ship SVG -->
+      <svg width="110" height="72" viewBox="0 0 110 72" style="margin-right:-8px;margin-bottom:-4px;filter:drop-shadow(0 -6px 18px rgba(30,95,255,.6))">
+        <!-- water waves -->
+        <path d="M0 56 Q14 50 28 56 Q42 62 56 56 Q70 50 84 56 Q98 62 110 56 L110 72 L0 72 Z" fill="#1040C1" opacity=".5"/>
+        <path d="M0 60 Q14 54 28 60 Q42 66 56 60 Q70 54 84 60 Q98 66 110 60 L110 72 L0 72 Z" fill="#1E5FFF" opacity=".4"/>
+        <!-- hull -->
+        <path d="M15 52 L95 52 L100 62 L10 62 Z" fill="#C8D8FF"/>
+        <rect x="10" y="62" width="90" height="6" rx="3" fill="#8AAAE0"/>
+        <!-- deck structures -->
+        <rect x="30" y="36" width="50" height="16" rx="3" fill="#E8F0FF"/>
+        <rect x="38" y="26" width="34" height="12" rx="2" fill="#C8D8FF"/>
+        <rect x="46" y="18" width="18" height="10" rx="2" fill="#A8C0FF"/>
+        <!-- chimney -->
+        <rect x="54" y="10" width="6" height="16" rx="2" fill="#666"/>
+        <ellipse cx="57" cy="10" rx="4" ry="2" fill="#888"/>
+        <!-- smoke -->
+        <circle cx="57" cy="6" r="3" fill="rgba(200,200,200,.3)"/>
+        <circle cx="59" cy="2" r="2" fill="rgba(200,200,200,.2)"/>
+        <!-- containers on deck -->
+        <rect x="32" y="38" width="12" height="10" rx="1" fill="#FF4444"/>
+        <rect x="46" y="38" width="12" height="10" rx="1" fill="#FFD000"/>
+        <rect x="60" y="38" width="12" height="10" rx="1" fill="#44AAFF"/>
+        <!-- windows -->
+        <rect x="40" y="28" width="5" height="4" rx="1" fill="#1E5FFF" opacity=".8"/>
+        <rect x="48" y="28" width="5" height="4" rx="1" fill="#1E5FFF" opacity=".8"/>
+        <rect x="56" y="28" width="5" height="4" rx="1" fill="#1E5FFF" opacity=".8"/>
+        <!-- flag -->
+        <line x1="57" y1="10" x2="57" y2="2" stroke="#AAA" stroke-width="1"/>
+        <polygon points="57,2 65,5 57,8" fill="#FF6B6B"/>
+      </svg>
+    </div>
+  </div>
+  <div class="slash"></div>
+</div>
+
+<!-- FOUNDER CARD -->
+<div class="card fc-grad au1" style="border-color:rgba(30,95,255,.4);box-shadow:0 8px 40px rgba(16,64,193,.45)">
+  <!-- diagonal stripes -->
+  <div style="position:absolute;inset:0;background:repeating-linear-gradient(-55deg,transparent,transparent 20px,rgba(255,255,255,.015) 20px,rgba(255,255,255,.015) 21px);pointer-events:none;z-index:1;"></div>
+
+  <!-- Cargo/Globe watermark -->
+  <svg style="position:absolute;right:-10px;top:10px;opacity:.06;z-index:0;" width="120" height="120" viewBox="0 0 120 120">
+    <circle cx="60" cy="60" r="55" fill="none" stroke="white" stroke-width="3"/>
+    <ellipse cx="60" cy="60" rx="25" ry="55" fill="none" stroke="white" stroke-width="2"/>
+    <line x1="5" y1="60" x2="115" y2="60" stroke="white" stroke-width="2"/>
+    <ellipse cx="60" cy="60" rx="55" ry="20" fill="none" stroke="white" stroke-width="2"/>
+  </svg>
+
+  <div class="fc-topbar" style="position:relative;z-index:2;">
+    <div class="pill pill-w">✓ &nbsp;VERIFIED</div>
+    <div class="pill pill-g">⭐ &nbsp;48+ YRS EXPERIENCE</div>
+  </div>
+  <div class="fc-body" style="position:relative;z-index:2;">
+    <div class="avatar-ring">
+      <svg width="76" height="76" viewBox="0 0 76 76">
+        <!-- avatar body -->
+        <circle cx="38" cy="38" r="38" fill="linear-gradient(135deg,#3A6BC8,#1040C1)"/>
+        <circle cx="38" cy="28" r="14" fill="#C8D8FF"/>
+        <path d="M10 70 Q10 50 38 50 Q66 50 66 70" fill="#A8C0FF"/>
+        <!-- suit -->
+        <path d="M14 70 Q14 52 38 52 Q62 52 62 70" fill="#1040C1"/>
+        <path d="M30 52 L38 62 L46 52" fill="none" stroke="white" stroke-width="1.5"/>
+        <!-- tie -->
+        <polygon points="38,54 41,62 38,70 35,62" fill="#C8151B"/>
+        <!-- face details -->
+        <circle cx="33" cy="26" r="2" fill="#666"/>
+        <circle cx="43" cy="26" r="2" fill="#666"/>
+        <path d="M33 33 Q38 37 43 33" fill="none" stroke="#666" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <div class="fc-info">
+      <div class="fc-name">Mr. Ashok Gupta<br>Kinkkar</div>
+      <div class="fc-role">Founder &amp; Global Mentor</div>
+      <div class="fc-quote">"Empowering India<br>in Global Trade"</div>
+    </div>
+  </div>
+  <div class="fc-cta">
+    <div class="fc-cta-txt">Know More About the Mentor</div>
+    <div class="fc-cta-arr">→</div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="prog-card au2">
+  <div class="prog-row">
+    <div class="prog-lbl">📘 Your Progress</div>
+    <div class="prog-pct">65%</div>
+  </div>
+  <div class="prog-track"><div class="prog-fill"></div></div>
+  <div class="prog-sub">Import Fundamentals · 13 of 20 lessons complete</div>
+</div>
+
+<div class="div"></div>
+
+<!-- LEARN TODAY -->
+<div class="sec au3">
+  <div class="sec-t">Learn <span>Today</span></div>
+</div>
+<div class="ls au3">
+
+  <!-- GALLERY card -->
+  <div class="lc">
+    <div class="lc-thumb" style="background:linear-gradient(135deg,#0A2066,#1E5FFF);">
+      <svg width="100" height="90" viewBox="0 0 100 90" style="position:absolute;inset:0;width:100%;height:100%;">
+        <!-- camera -->
+        <rect x="25" y="28" width="50" height="36" rx="6" fill="#1040C1" stroke="#5599FF" stroke-width="1.5"/>
+        <circle cx="50" cy="46" r="12" fill="#0A2066" stroke="#88AAFF" stroke-width="1.5"/>
+        <circle cx="50" cy="46" r="7" fill="#1E5FFF"/>
+        <circle cx="50" cy="46" r="3" fill="#66AAFF"/>
+        <rect x="34" y="22" width="12" height="7" rx="3" fill="#1040C1" stroke="#5599FF" stroke-width="1"/>
+        <!-- photos floating -->
+        <rect x="8" y="15" width="22" height="16" rx="2" fill="#0D2880" stroke="#3366CC" stroke-width="1" transform="rotate(-12,19,23)"/>
+        <rect x="70" y="18" width="20" height="14" rx="2" fill="#0D2880" stroke="#3366CC" stroke-width="1" transform="rotate(10,80,25)"/>
+      </svg>
+      <div class="lc-ov"></div>
+      <div class="lc-lbl">Gallery</div>
+    </div>
+    <div class="lc-cta" style="background:#0D2880;color:#7AAEFF;">Success Stories <span>›</span></div>
+  </div>
+
+  <!-- MARKET card -->
+  <div class="lc">
+    <div class="lc-thumb" style="background:linear-gradient(135deg,#6B0000,#C8151B);">
+      <svg width="110" height="90" viewBox="0 0 110 90" style="position:absolute;inset:0;width:100%;height:100%;">
+        <!-- bar chart -->
+        <rect x="15" y="55" width="12" height="22" rx="2" fill="#FF4444" opacity=".8"/>
+        <rect x="32" y="40" width="12" height="37" rx="2" fill="#FF6666" opacity=".9"/>
+        <rect x="49" y="28" width="12" height="49" rx="2" fill="#FF8888"/>
+        <rect x="66" y="18" width="12" height="59" rx="2" fill="#FFAAAA"/>
+        <rect x="83" y="30" width="12" height="47" rx="2" fill="#FF6666" opacity=".9"/>
+        <!-- trend arrow up -->
+        <polyline points="12,70 32,55 52,40 72,22 95,15" fill="none" stroke="#FFD000" stroke-width="2.5" stroke-linecap="round"/>
+        <polygon points="95,8 102,20 88,20" fill="#FFD000"/>
+        <!-- grid lines -->
+        <line x1="10" y1="77" x2="100" y2="77" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+        <text x="10" y="86" font-size="8" fill="rgba(255,255,255,.5)" font-family="sans-serif">MARKET</text>
+      </svg>
+      <div class="lc-ov"></div>
+      <div class="lc-lbl">Market Updates</div>
+    </div>
+    <div class="lc-cta" style="background:#7A0008;color:#FF8888;">Live Trends <span>›</span></div>
+  </div>
+
+  <!-- IMPORT card -->
+  <div class="lc">
+    <div class="lc-thumb" style="background:linear-gradient(135deg,#003060,#0070CC);">
+      <svg width="110" height="90" viewBox="0 0 110 90" style="position:absolute;inset:0;width:100%;height:100%;">
+        <!-- airplane -->
+        <g transform="translate(8,15) rotate(-15)">
+          <ellipse cx="45" cy="25" rx="36" ry="8" fill="#C8D8FF"/>
+          <path d="M81 25 Q92 25 88 27 Q84 28 76 27 Z" fill="#E8F0FF"/>
+          <path d="M34 25 L48 8 L54 8 L46 25 Z" fill="#88AAFF"/>
+          <path d="M34 25 L48 42 L54 42 L46 25 Z" fill="#88AAFF"/>
+          <path d="M9 25 L4 17 L11 19 Z" fill="#88AAFF"/>
+          <path d="M9 25 L4 33 L11 31 Z" fill="#88AAFF"/>
+          <circle cx="58" cy="23" r="2.5" fill="#1E5FFF"/>
+          <circle cx="50" cy="23" r="2.5" fill="#1E5FFF"/>
+          <circle cx="42" cy="23" r="2.5" fill="#1E5FFF"/>
+        </g>
+        <!-- cloud -->
+        <ellipse cx="75" cy="18" rx="16" ry="9" fill="rgba(255,255,255,.12)"/>
+        <ellipse cx="86" cy="20" rx="10" ry="7" fill="rgba(255,255,255,.1)"/>
+        <!-- trail lines -->
+        <path d="M2 55 Q30 50 60 46" stroke="rgba(255,255,255,.3)" stroke-width="1.5" fill="none" stroke-dasharray="4,5"/>
+        <path d="M2 60 Q30 55 60 51" stroke="rgba(255,255,255,.2)" stroke-width="1" fill="none" stroke-dasharray="3,5"/>
+      </svg>
+      <div class="lc-ov"></div>
+      <div class="lc-lbl">Import Journey</div>
+    </div>
+    <div class="lc-cta" style="background:#003878;color:#66BBFF;">Continue <span>›</span></div>
+  </div>
+
+  <!-- EXPORT card -->
+  <div class="lc">
+    <div class="lc-thumb" style="background:linear-gradient(135deg,#4A2800,#CC6600);">
+      <svg width="110" height="90" viewBox="0 0 110 90" style="position:absolute;inset:0;width:100%;height:100%;">
+        <!-- cargo ship small -->
+        <path d="M10 58 L100 58 L96 68 L14 68 Z" fill="#DDE8FF"/>
+        <rect x="22" y="42" width="66" height="16" rx="2" fill="#C8D8FF"/>
+        <rect x="35" y="32" width="40" height="12" rx="2" fill="#B0C8FF"/>
+        <!-- containers -->
+        <rect x="24" y="44" width="14" height="10" rx="1" fill="#FF2D35"/>
+        <rect x="40" y="44" width="14" height="10" rx="1" fill="#FFD000"/>
+        <rect x="56" y="44" width="14" height="10" rx="1" fill="#44BBFF"/>
+        <rect x="72" y="44" width="12" height="10" rx="1" fill="#44DD66"/>
+        <!-- chimney smoke -->
+        <rect x="52" y="18" width="6" height="16" rx="2" fill="#888"/>
+        <ellipse cx="58" cy="12" rx="6" ry="4" fill="rgba(150,150,150,.3)"/>
+        <ellipse cx="62" cy="7" rx="4" ry="3" fill="rgba(150,150,150,.2)"/>
+        <!-- water -->
+        <path d="M0 68 Q18 62 36 68 Q54 74 72 68 Q90 62 110 68 L110 80 L0 80Z" fill="#1040C1" opacity=".5"/>
+      </svg>
+      <div class="lc-ov"></div>
+      <div class="lc-lbl">Export Journey</div>
+    </div>
+    <div class="lc-cta" style="background:#5A3000;color:#FFB055;">Start Learning <span>›</span></div>
+  </div>
+
+</div>
+
+<div class="div"></div>
+
+<!-- SKILLS -->
+<div class="sec au4">
+  <div class="sec-t">Skills You'll <span>Learn</span></div>
+  <div class="sec-link">See All →</div>
+</div>
+<div class="skills-grid au4">
+
+  <!-- Export Price Calc -->
+  <div class="sk" style="background:linear-gradient(135deg,#0A2066,#153580);">
+    <div class="sk-icon-row">
+      <div class="sk-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32">
+          <rect x="4" y="4" width="24" height="24" rx="4" fill="#1040C1" stroke="#5599FF" stroke-width="1.5"/>
+          <rect x="8" y="8" width="7" height="5" rx="1" fill="#88BBFF"/>
+          <rect x="17" y="8" width="7" height="5" rx="1" fill="#88BBFF"/>
+          <rect x="8" y="15" width="7" height="4" rx="1" fill="#5599FF"/>
+          <rect x="17" y="15" width="7" height="4" rx="1" fill="#5599FF"/>
+          <rect x="8" y="21" width="7" height="4" rx="1" fill="#FFD000"/>
+          <rect x="17" y="21" width="7" height="4" rx="1" fill="#5599FF"/>
+        </svg>
+      </div>
+      <div class="sk-badge">TOOL</div>
+    </div>
+    <div class="sk-name">Export Price<br>Calculator</div>
+    <div class="sk-sub">Profit · Pricing</div>
+  </div>
+
+  <!-- Import Calc -->
+  <div class="sk" style="background:linear-gradient(135deg,#5A0006,#8B000C);">
+    <div class="sk-icon-row">
+      <div class="sk-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32">
+          <!-- box/package -->
+          <path d="M16 4 L28 10 L28 22 L16 28 L4 22 L4 10 Z" fill="#C8151B" stroke="#FF8888" stroke-width="1.5"/>
+          <path d="M16 4 L16 28" stroke="#FF8888" stroke-width="1" opacity=".5"/>
+          <path d="M4 10 L16 16 L28 10" stroke="#FF8888" stroke-width="1.5"/>
+          <path d="M16 16 L28 10" stroke="#FFBBBB" stroke-width="1"/>
+          <!-- $ sign -->
+          <text x="12" y="20" font-size="9" fill="#FFD000" font-weight="bold" font-family="sans-serif">$</text>
+        </svg>
+      </div>
+      <div class="sk-badge">TOOL</div>
+    </div>
+    <div class="sk-name">Import<br>Calculator</div>
+    <div class="sk-sub">Cost · Duty</div>
+  </div>
+
+  <!-- Logistics -->
+  <div class="sk" style="background:linear-gradient(135deg,#003A70,#005AAA);">
+    <div class="sk-icon-row">
+      <div class="sk-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32">
+          <!-- truck -->
+          <rect x="2" y="12" width="18" height="12" rx="2" fill="#1040C1" stroke="#88AAFF" stroke-width="1.5"/>
+          <path d="M20 16 L28 16 L30 22 L20 22 Z" fill="#0A2066" stroke="#88AAFF" stroke-width="1.5"/>
+          <circle cx="7" cy="26" r="3.5" fill="#333" stroke="#88AAFF" stroke-width="1.5"/>
+          <circle cx="25" cy="26" r="3.5" fill="#333" stroke="#88AAFF" stroke-width="1.5"/>
+          <rect x="4" y="14" width="10" height="6" rx="1" fill="#1E5FFF" opacity=".5"/>
+          <rect x="22" y="17" width="6" height="4" rx="1" fill="#88AAFF" opacity=".4"/>
+        </svg>
+      </div>
+      <div class="sk-badge">MODULE</div>
+    </div>
+    <div class="sk-name">Logistics &amp;<br>Shipping</div>
+    <div class="sk-sub">Routes · Freight</div>
+  </div>
+
+  <!-- Buyer Acquisition -->
+  <div class="sk" style="background:linear-gradient(135deg,#4A2800,#7A4400);">
+    <div class="sk-icon-row">
+      <div class="sk-icon">
+        <svg width="32" height="32" viewBox="0 0 32 32">
+          <!-- globe with people/network -->
+          <circle cx="16" cy="16" r="12" fill="#7A4400" stroke="#FFD000" stroke-width="1.5"/>
+          <ellipse cx="16" cy="16" rx="5" ry="12" fill="none" stroke="#FFD000" stroke-width="1" opacity=".6"/>
+          <line x1="4" y1="16" x2="28" y2="16" stroke="#FFD000" stroke-width="1" opacity=".6"/>
+          <ellipse cx="16" cy="16" rx="12" ry="5" fill="none" stroke="#FFD000" stroke-width="1" opacity=".6"/>
+          <!-- people dots -->
+          <circle cx="8" cy="10" r="2.5" fill="#FFD000"/>
+          <circle cx="24" cy="10" r="2.5" fill="#FFD000"/>
+          <circle cx="16" cy="6" r="2.5" fill="#FFD000"/>
+          <line x1="8" y1="10" x2="16" y2="6" stroke="#FFD000" stroke-width="1" opacity=".7"/>
+          <line x1="24" y1="10" x2="16" y2="6" stroke="#FFD000" stroke-width="1" opacity=".7"/>
+          <line x1="8" y1="10" x2="24" y2="10" stroke="#FFD000" stroke-width="1" opacity=".7"/>
+        </svg>
+      </div>
+      <div class="sk-badge">MODULE</div>
+    </div>
+    <div class="sk-name">Buyer<br>Acquisition</div>
+    <div class="sk-sub">Leads · Markets</div>
+  </div>
+
+</div>
+
+<!-- CERTS -->
+<div class="cert-row au4">
+  <div class="cert" style="background:linear-gradient(135deg,#0A2066,#1040C1);">
+    <div class="cert-ico">
+      <svg width="22" height="22" viewBox="0 0 22 22"><path d="M11 2 L13 8 L20 8 L14 12 L16 18 L11 14 L6 18 L8 12 L2 8 L9 8 Z" fill="#1E5FFF" stroke="#88AAFF" stroke-width="1"/></svg>
+    </div>
+    <div><div class="cert-n">Export</div><div class="cert-l" style="color:#88AAFF">Beginner</div></div>
+  </div>
+  <div class="cert" style="background:linear-gradient(135deg,#5A0006,#C8151B);">
+    <div class="cert-ico">📋</div>
+    <div><div class="cert-n">Documentation</div><div class="cert-l" style="color:#FF9999">Expert</div></div>
+  </div>
+  <div class="cert" style="background:linear-gradient(135deg,#0A2066,#1040C1);">
+    <div class="cert-ico">⚔️</div>
+    <div><div class="cert-n">Trade</div><div class="cert-l" style="color:#88AAFF">Analyst</div></div>
+  </div>
+  <div class="cert" style="background:linear-gradient(135deg,#4A2800,#8B5500);">
+    <div class="cert-ico">🏆</div>
+    <div><div class="cert-n">Trade</div><div class="cert-l" style="color:#FFD000">Advanced</div></div>
+  </div>
+</div>
+
+<div class="div"></div>
+
+<!-- ACHIEVE + WEBINAR -->
+<div class="split au5">
+  <div class="achieve">
+    <div class="ap-t">What You'll <span>Achieve</span></div>
+    <div class="ap-list">
+      <div class="ap-i"><div class="ap-chk">✓</div><div class="ap-txt">Start your export business</div></div>
+      <div class="ap-i"><div class="ap-chk">✓</div><div class="ap-txt">Find international buyers</div></div>
+      <div class="ap-i"><div class="ap-chk">✓</div><div class="ap-txt">Calculate profit margins</div></div>
+      <div class="ap-i"><div class="ap-chk">✓</div><div class="ap-txt">Handle global shipping</div></div>
+    </div>
+  </div>
+  <div class="webinar">
+    <div class="wb-live">
+      <div class="live-dot"></div>
+      <div class="wb-live-t">Upcoming <span>LIVE</span></div>
+    </div>
+    <div class="wb-date">25<br>April</div>
+    <div class="wb-time">📅 7:00 PM</div>
+    <div class="wb-reg">Register Now →</div>
+  </div>
+</div>
+
+<!-- MASTERCLASS -->
+<div class="mc au6">
+  <div class="mc-stripe"></div>
+
+  <!-- Ship watermark -->
+  <svg style="position:absolute;right:-15px;bottom:-5px;opacity:.08;z-index:0;" width="160" height="100" viewBox="0 0 160 100">
+    <path d="M10 70 L150 70 L144 85 L16 85 Z" fill="white"/>
+    <rect x="30" y="48" width="100" height="22" rx="3" fill="white"/>
+    <rect x="50" y="32" width="60" height="18" rx="3" fill="white"/>
+    <rect x="65" y="18" width="30" height="16" rx="2" fill="white"/>
+    <rect x="74" y="6" width="10" height="18" rx="2" fill="white"/>
+    <path d="M0 70 Q20 60 40 70 Q60 80 80 70 Q100 60 120 70 Q140 80 160 70 L160 100 L0 100Z" fill="white"/>
+  </svg>
+
+  <!-- Airplane streak -->
+  <svg style="position:absolute;right:30px;top:16px;opacity:.15;z-index:0;" width="60" height="30" viewBox="0 0 60 30">
+    <g transform="rotate(-25,30,15)">
+      <ellipse cx="30" cy="15" rx="24" ry="5" fill="white"/>
+      <path d="M54 15 Q62 15 60 17 Q57 18 52 17 Z" fill="white"/>
+      <path d="M22 15 L32 4 L36 4 L30 15 Z" fill="white"/>
+      <path d="M22 15 L32 26 L36 26 L30 15 Z" fill="white"/>
+    </g>
+    <path d="M0 24 Q20 22 40 18" stroke="white" stroke-width="1" fill="none" stroke-dasharray="3,4"/>
+  </svg>
+
+  <div class="mc-body">
+    <div class="mc-tag-row">
+      <div class="mc-tag">★ Featured Masterclass</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <div class="mc-cp">🛡️ Export Beginner</div>
+        <div class="mc-cp">🏆 Advanced</div>
+      </div>
+    </div>
+    <div class="mc-title">Master Import–<br>Export Business</div>
+    <div class="mc-sub">Become a Global Trade Expert ✈️🚢</div>
+    <div class="mc-actions">
+      <div class="mc-enroll">Enroll Now 🚀</div>
+      <div class="mc-date">📅 April · 7:00 PM</div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- ══════════════════════════════════════ -->
+<!-- RECOMMENDED COURSES SECTION -->
+<!-- ══════════════════════════════════════ -->
+<div class="div"></div>
+<div class="sec au4">
+  <div class="sec-t">🎯 Recommended <span>for You</span></div>
+  <a class="sec-link" href="#">View All →</a>
+</div>
+<div class="course-scroll au4">
+
+  <div class="course-card cc-blue">
+    <div class="cc-thumb">
+      <svg width="160" height="100" viewBox="0 0 160 100" style="position:absolute;inset:0;width:100%;height:100%">
+        <rect width="160" height="100" fill="#0A2066"/>
+        <rect x="0" y="0" width="160" height="100" fill="url(#cg1)"/>
+        <defs><linearGradient id="cg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0A2066"/><stop offset="100%" stop-color="#1E5FFF"/></linearGradient></defs>
+        <!-- document icon -->
+        <rect x="52" y="18" width="40" height="50" rx="4" fill="#1040C1" stroke="#88AAFF" stroke-width="1.5"/>
+        <rect x="58" y="28" width="28" height="3" rx="1.5" fill="#88AAFF" opacity=".8"/>
+        <rect x="58" y="34" width="22" height="3" rx="1.5" fill="#88AAFF" opacity=".6"/>
+        <rect x="58" y="40" width="26" height="3" rx="1.5" fill="#88AAFF" opacity=".6"/>
+        <rect x="58" y="46" width="18" height="3" rx="1.5" fill="#88AAFF" opacity=".4"/>
+        <rect x="58" y="52" width="24" height="3" rx="1.5" fill="#88AAFF" opacity=".4"/>
+        <path d="M72 58 L80 68 L88 58" fill="none" stroke="#FFD000" stroke-width="2" stroke-linecap="round"/>
+        <!-- globe behind -->
+        <circle cx="120" cy="25" r="18" fill="none" stroke="#1E5FFF" stroke-width="1" opacity=".3"/>
+        <ellipse cx="120" cy="25" rx="8" ry="18" fill="none" stroke="#1E5FFF" stroke-width="1" opacity=".2"/>
+      </svg>
+      <div class="cc-ov"></div>
+      <div class="cc-badge cc-badge-gold">⭐ Recommended</div>
+      <div class="cc-duration">⏱ 18 hrs</div>
+    </div>
+    <div class="cc-body">
+      <div class="cc-tag" style="color:#88AAFF">Export Fundamentals</div>
+      <div class="cc-name">Complete Export Documentation Masterclass</div>
+      <div class="cc-meta-row">
+        <div class="cc-rating">⭐ 4.9 <span>(1.2k)</span></div>
+        <div class="cc-price">₹2,499</div>
+      </div>
+      <div class="cc-enroll-btn">Enroll Now →</div>
+    </div>
+  </div>
+
+  <div class="course-card cc-red">
+    <div class="cc-thumb">
+      <svg width="160" height="100" viewBox="0 0 160 100" style="position:absolute;inset:0;width:100%;height:100%">
+        <rect width="160" height="100" fill="#6B0000"/>
+        <defs><linearGradient id="cg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6B0000"/><stop offset="100%" stop-color="#C8151B"/></linearGradient></defs>
+        <rect width="160" height="100" fill="url(#cg2)"/>
+        <!-- money/forex -->
+        <circle cx="72" cy="44" r="26" fill="#8B000C" stroke="#FF8888" stroke-width="1.5"/>
+        <text x="63" y="50" font-size="22" fill="#FFD000" font-weight="bold" font-family="sans-serif">₹$</text>
+        <path d="M100 20 Q120 30 115 50 Q110 70 95 72" fill="none" stroke="#FFD000" stroke-width="2" stroke-dasharray="4,3" stroke-linecap="round"/>
+        <polygon points="92,68 100,78 104,66" fill="#FFD000"/>
+        <circle cx="130" cy="22" r="8" fill="#FF8888" opacity=".3"/>
+        <circle cx="140" cy="70" r="6" fill="#FF8888" opacity=".2"/>
+      </svg>
+      <div class="cc-ov"></div>
+      <div class="cc-badge cc-badge-red">🔥 Hot</div>
+      <div class="cc-duration">⏱ 12 hrs</div>
+    </div>
+    <div class="cc-body">
+      <div class="cc-tag" style="color:#FF9999">Finance & Forex</div>
+      <div class="cc-name">Forex &amp; International Payment Terms</div>
+      <div class="cc-meta-row">
+        <div class="cc-rating">⭐ 4.8 <span>(980)</span></div>
+        <div class="cc-price">₹1,999</div>
+      </div>
+      <div class="cc-enroll-btn" style="background:linear-gradient(90deg,#C8151B,#FF2D35)">Enroll Now →</div>
+    </div>
+  </div>
+
+  <div class="course-card cc-gold">
+    <div class="cc-thumb">
+      <svg width="160" height="100" viewBox="0 0 160 100" style="position:absolute;inset:0;width:100%;height:100%">
+        <rect width="160" height="100" fill="#4A2800"/>
+        <defs><linearGradient id="cg3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4A2800"/><stop offset="100%" stop-color="#CC6600"/></linearGradient></defs>
+        <rect width="160" height="100" fill="url(#cg3)"/>
+        <!-- handshake / buyers -->
+        <circle cx="55" cy="38" r="14" fill="#7A4400" stroke="#FFD000" stroke-width="1.5"/>
+        <circle cx="105" cy="38" r="14" fill="#7A4400" stroke="#FFD000" stroke-width="1.5"/>
+        <text x="47" y="44" font-size="16" font-family="sans-serif">👤</text>
+        <text x="97" y="44" font-size="16" font-family="sans-serif">👤</text>
+        <path d="M70 46 Q80 58 90 46" fill="none" stroke="#FFD000" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="80" cy="62" r="6" fill="#FFD000" opacity=".8"/>
+        <!-- globe network dots -->
+        <circle cx="30" cy="75" r="4" fill="#FFD000" opacity=".4"/>
+        <circle cx="130" cy="75" r="4" fill="#FFD000" opacity=".4"/>
+        <line x1="30" y1="75" x2="80" y2="62" stroke="#FFD000" stroke-width="1" opacity=".3"/>
+        <line x1="130" y1="75" x2="80" y2="62" stroke="#FFD000" stroke-width="1" opacity=".3"/>
+      </svg>
+      <div class="cc-ov"></div>
+      <div class="cc-badge cc-badge-gold">🌍 Global</div>
+      <div class="cc-duration">⏱ 22 hrs</div>
+    </div>
+    <div class="cc-body">
+      <div class="cc-tag" style="color:#FFB055">Buyer Acquisition</div>
+      <div class="cc-name">Finding &amp; Closing International Buyers</div>
+      <div class="cc-meta-row">
+        <div class="cc-rating">⭐ 5.0 <span>(2.1k)</span></div>
+        <div class="cc-price">₹3,299</div>
+      </div>
+      <div class="cc-enroll-btn" style="background:linear-gradient(90deg,#8B5500,#CC6600)">Enroll Now →</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- POPULAR COURSES SECTION -->
+<!-- ══════════════════════════════════════ -->
+<div class="div"></div>
+<div class="sec au4">
+  <div class="sec-t">🔥 Popular <span>Courses</span></div>
+  <a class="sec-link" href="#">View All →</a>
+</div>
+<div class="popular-list au4">
+
+  <div class="pop-card">
+    <div class="pop-rank">01</div>
+    <div class="pop-thumb">
+      <svg width="64" height="64" viewBox="0 0 64 64">
+        <rect width="64" height="64" rx="12" fill="#0A2066"/>
+        <rect x="16" y="12" width="32" height="40" rx="3" fill="#1040C1" stroke="#5599FF" stroke-width="1"/>
+        <rect x="20" y="18" width="24" height="3" rx="1.5" fill="#88AAFF" opacity=".9"/>
+        <rect x="20" y="24" width="18" height="2" rx="1" fill="#88AAFF" opacity=".6"/>
+        <rect x="20" y="29" width="21" height="2" rx="1" fill="#88AAFF" opacity=".6"/>
+        <rect x="20" y="34" width="16" height="2" rx="1" fill="#88AAFF" opacity=".4"/>
+        <circle cx="32" cy="44" r="5" fill="#FFD000"/>
+        <text x="29" y="47" font-size="7" fill="#000" font-weight="bold" font-family="sans-serif">IE</text>
+      </svg>
+    </div>
+    <div class="pop-info">
+      <div class="pop-tag" style="color:#88AAFF">Certification</div>
+      <div class="pop-name">Import-Export Business Setup A to Z</div>
+      <div class="pop-meta">⭐ 4.9 · 3,400 students · 24 hrs</div>
+    </div>
+    <div class="pop-price">₹4,999</div>
+  </div>
+
+  <div class="pop-card">
+    <div class="pop-rank">02</div>
+    <div class="pop-thumb">
+      <svg width="64" height="64" viewBox="0 0 64 64">
+        <rect width="64" height="64" rx="12" fill="#5A0006"/>
+        <circle cx="32" cy="30" r="16" fill="#8B000C" stroke="#FF8888" stroke-width="1.5"/>
+        <text x="24" y="35" font-size="14" fill="#FFD000" font-weight="bold" font-family="sans-serif">$₹</text>
+        <path d="M20 50 L44 50" stroke="#FF8888" stroke-width="2" stroke-linecap="round" opacity=".5"/>
+      </svg>
+    </div>
+    <div class="pop-info">
+      <div class="pop-tag" style="color:#FF9999">Finance</div>
+      <div class="pop-name">GST, Customs Duty &amp; Tax Compliance</div>
+      <div class="pop-meta">⭐ 4.8 · 2,100 students · 16 hrs</div>
+    </div>
+    <div class="pop-price">₹2,799</div>
+  </div>
+
+  <div class="pop-card">
+    <div class="pop-rank">03</div>
+    <div class="pop-thumb">
+      <svg width="64" height="64" viewBox="0 0 64 64">
+        <rect width="64" height="64" rx="12" fill="#003A70"/>
+        <!-- ship tiny -->
+        <path d="M12 40 L52 40 L50 48 L14 48 Z" fill="#C8D8FF"/>
+        <rect x="18" y="30" width="28" height="12" rx="2" fill="#E8F0FF"/>
+        <rect x="24" y="22" width="16" height="10" rx="1" fill="#C8D8FF"/>
+        <rect x="20" y="32" width="8" height="6" rx="1" fill="#FF2D35"/>
+        <rect x="30" y="32" width="8" height="6" rx="1" fill="#FFD000"/>
+        <rect x="40" y="32" width="8" height="6" rx="1" fill="#44AAFF"/>
+        <rect x="30" y="14" width="4" height="10" rx="1" fill="#888"/>
+      </svg>
+    </div>
+    <div class="pop-info">
+      <div class="pop-tag" style="color:#66BBFF">Logistics</div>
+      <div class="pop-name">Shipping, Incoterms &amp; Freight Management</div>
+      <div class="pop-meta">⭐ 4.7 · 1,850 students · 20 hrs</div>
+    </div>
+    <div class="pop-price">₹3,499</div>
+  </div>
+
+  <div class="pop-card">
+    <div class="pop-rank">04</div>
+    <div class="pop-thumb">
+      <svg width="64" height="64" viewBox="0 0 64 64">
+        <rect width="64" height="64" rx="12" fill="#1A3A00"/>
+        <circle cx="32" cy="32" r="18" fill="#2A5A00" stroke="#88DD44" stroke-width="1.5"/>
+        <ellipse cx="32" cy="32" rx="7" ry="18" fill="none" stroke="#88DD44" stroke-width="1" opacity=".6"/>
+        <ellipse cx="32" cy="32" rx="18" ry="6" fill="none" stroke="#88DD44" stroke-width="1" opacity=".6"/>
+        <line x1="14" y1="32" x2="50" y2="32" stroke="#88DD44" stroke-width="1" opacity=".5"/>
+        <circle cx="22" cy="24" r="3" fill="#FFD000"/>
+        <circle cx="42" cy="24" r="3" fill="#FFD000"/>
+        <circle cx="32" cy="18" r="3" fill="#FFD000"/>
+      </svg>
+    </div>
+    <div class="pop-info">
+      <div class="pop-tag" style="color:#88DD44">Global Markets</div>
+      <div class="pop-name">Market Research &amp; Product Selection</div>
+      <div class="pop-meta">⭐ 4.9 · 1,560 students · 14 hrs</div>
+    </div>
+    <div class="pop-price">₹2,199</div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- FREE VIDEOS SECTION -->
+<!-- ══════════════════════════════════════ -->
+<div class="div"></div>
+<div class="sec au5">
+  <div class="sec-t">🎁 Free <span>Videos</span></div>
+  <a class="sec-link" href="#">View All →</a>
+</div>
+<div class="course-scroll au5">
+
+  <div class="free-card">
+    <div class="fv-thumb">
+      <svg width="160" height="90" viewBox="0 0 160 90" style="position:absolute;inset:0;width:100%;height:100%">
+        <rect width="160" height="90" fill="#061540"/>
+        <defs><linearGradient id="fg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#061540"/><stop offset="100%" stop-color="#0A2066"/></linearGradient></defs>
+        <rect width="160" height="90" fill="url(#fg1)"/>
+        <circle cx="80" cy="40" r="22" fill="#0D2880" stroke="#1E5FFF" stroke-width="1.5"/>
+        <!-- play button -->
+        <polygon points="72,30 72,50 94,40" fill="#FFD000"/>
+        <!-- sound waves -->
+        <path d="M100 32 Q108 40 100 48" fill="none" stroke="#1E5FFF" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+        <path d="M104 26 Q116 40 104 54" fill="none" stroke="#1E5FFF" stroke-width="1.5" stroke-linecap="round" opacity=".3"/>
+      </svg>
+      <div class="cc-ov"></div>
+      <div class="fv-free-tag">FREE</div>
+      <div class="cc-duration">⏱ 45 min</div>
+    </div>
+    <div class="fv-body">
+      <div class="fv-name">How to Start Export Business in India – Beginners Guide</div>
+      <div class="fv-meta">👁 128K views · 6 months ago</div>
+    </div>
+  </div>
+
+  <div class="free-card">
+    <div class="fv-thumb">
+      <svg width="160" height="90" viewBox="0 0 160 90" style="position:absolute;inset:0;width:100%;height:100%">
+        <rect width="160" height="90" fill="#3D0000"/>
+        <defs><linearGradient id="fg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3D0000"/><stop offset="100%" stop-color="#8B000C"/></linearGradient></defs>
+        <rect width="160" height="90" fill="url(#fg2)"/>
+        <circle cx="80" cy="40" r="22" fill="#6B0008" stroke="#FF8888" stroke-width="1.5"/>
+        <polygon points="72,30 72,50 94,40" fill="#FFD000"/>
+        <path d="M100 32 Q108 40 100 48" fill="none" stroke="#FF8888" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+        <path d="M104 26 Q116 40 104 54" fill="none" stroke="#FF8888" stroke-width="1.5" stroke-linecap="round" opacity=".3"/>
+      </svg>
+      <div class="cc-ov"></div>
+      <div class="fv-free-tag">FREE</div>
+      <div class="cc-duration">⏱ 38 min</div>
+    </div>
+    <div class="fv-body">
+      <div class="fv-name">IEC Code Registration – Step by Step Complete Tutorial</div>
+      <div class="fv-meta">👁 94K views · 8 months ago</div>
+    </div>
+  </div>
+
+  <div class="free-card">
+    <div class="fv-thumb">
+      <svg width="160" height="90" viewBox="0 0 160 90" style="position:absolute;inset:0;width:100%;height:100%">
+        <rect width="160" height="90" fill="#1A3A00"/>
+        <defs><linearGradient id="fg3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1A3A00"/><stop offset="100%" stop-color="#2A6A00"/></linearGradient></defs>
+        <rect width="160" height="90" fill="url(#fg3)"/>
+        <circle cx="80" cy="40" r="22" fill="#2A5A00" stroke="#88DD44" stroke-width="1.5"/>
+        <polygon points="72,30 72,50 94,40" fill="#FFD000"/>
+        <path d="M100 32 Q108 40 100 48" fill="none" stroke="#88DD44" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+        <path d="M104 26 Q116 40 104 54" fill="none" stroke="#88DD44" stroke-width="1.5" stroke-linecap="round" opacity=".3"/>
+      </svg>
+      <div class="cc-ov"></div>
+      <div class="fv-free-tag">FREE</div>
+      <div class="cc-duration">⏱ 52 min</div>
+    </div>
+    <div class="fv-body">
+      <div class="fv-name">Understanding DGFT, Customs &amp; RBI Guidelines for Exporters</div>
+      <div class="fv-meta">👁 76K views · 4 months ago</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SHORT VIDEOS SECTION -->
+<!-- ══════════════════════════════════════ -->
+<div class="div"></div>
+<div class="sec au5">
+  <div class="sec-t">⚡ Short <span>Videos</span></div>
+  <a class="sec-link" href="#">View All →</a>
+</div>
+<div class="shorts-grid au5">
+
+  <div class="short-card">
+    <div class="short-thumb" style="background:linear-gradient(160deg,#0A2066,#1E5FFF)">
+      <svg width="100%" height="100%" viewBox="0 0 90 130" style="position:absolute;inset:0">
+        <circle cx="45" cy="55" r="20" fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/>
+        <polygon points="38,46 38,64 56,55" fill="white" opacity=".9"/>
+        <!-- HS code illustration -->
+        <rect x="20" y="88" width="50" height="4" rx="2" fill="rgba(255,255,255,.3)"/>
+        <rect x="25" y="95" width="40" height="3" rx="1.5" fill="rgba(255,255,255,.2)"/>
+        <rect x="30" y="101" width="30" height="3" rx="1.5" fill="rgba(255,255,255,.15)"/>
+      </svg>
+      <div class="short-dur">0:58</div>
+      <div class="short-views">👁 52K</div>
+    </div>
+    <div class="short-title">What is HS Code? Explained in 60 seconds</div>
+  </div>
+
+  <div class="short-card">
+    <div class="short-thumb" style="background:linear-gradient(160deg,#6B0000,#C8151B)">
+      <svg width="100%" height="100%" viewBox="0 0 90 130" style="position:absolute;inset:0">
+        <circle cx="45" cy="55" r="20" fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/>
+        <polygon points="38,46 38,64 56,55" fill="white" opacity=".9"/>
+        <rect x="20" y="88" width="50" height="4" rx="2" fill="rgba(255,255,255,.3)"/>
+        <rect x="25" y="95" width="40" height="3" rx="1.5" fill="rgba(255,255,255,.2)"/>
+        <rect x="30" y="101" width="30" height="3" rx="1.5" fill="rgba(255,255,255,.15)"/>
+      </svg>
+      <div class="short-dur">0:45</div>
+      <div class="short-views">👁 88K</div>
+    </div>
+    <div class="short-title">Top 3 mistakes new exporters make</div>
+  </div>
+
+  <div class="short-card">
+    <div class="short-thumb" style="background:linear-gradient(160deg,#4A2800,#CC6600)">
+      <svg width="100%" height="100%" viewBox="0 0 90 130" style="position:absolute;inset:0">
+        <circle cx="45" cy="55" r="20" fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/>
+        <polygon points="38,46 38,64 56,55" fill="white" opacity=".9"/>
+        <rect x="20" y="88" width="50" height="4" rx="2" fill="rgba(255,255,255,.3)"/>
+        <rect x="25" y="95" width="40" height="3" rx="1.5" fill="rgba(255,255,255,.2)"/>
+        <rect x="30" y="101" width="30" height="3" rx="1.5" fill="rgba(255,255,255,.15)"/>
+      </svg>
+      <div class="short-dur">1:02</div>
+      <div class="short-views">👁 41K</div>
+    </div>
+    <div class="short-title">How to find buyers on Alibaba fast</div>
+  </div>
+
+  <div class="short-card">
+    <div class="short-thumb" style="background:linear-gradient(160deg,#1A3A00,#2A6A00)">
+      <svg width="100%" height="100%" viewBox="0 0 90 130" style="position:absolute;inset:0">
+        <circle cx="45" cy="55" r="20" fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/>
+        <polygon points="38,46 38,64 56,55" fill="white" opacity=".9"/>
+        <rect x="20" y="88" width="50" height="4" rx="2" fill="rgba(255,255,255,.3)"/>
+        <rect x="25" y="95" width="40" height="3" rx="1.5" fill="rgba(255,255,255,.2)"/>
+        <rect x="30" y="101" width="30" height="3" rx="1.5" fill="rgba(255,255,255,.15)"/>
+      </svg>
+      <div class="short-dur">0:52</div>
+      <div class="short-views">👁 63K</div>
+    </div>
+    <div class="short-title">GST refund for exporters – quick tip</div>
+  </div>
+
+</div>
+<div style="height:4px;"></div>
+
+
+<!-- ══ SOCIAL MEDIA FOOTER ══ -->
+<div class="social-footer au6">
+
+  <!-- Brand block -->
+  <div class="sf-brand">
+    <div class="sf-logo-row">
+      <div class="sf-globe">
+        <svg width="28" height="28" viewBox="0 0 36 36">
+          <circle cx="18" cy="18" r="16" fill="#1040C1" stroke="#5599FF" stroke-width="1.5"/>
+          <ellipse cx="18" cy="18" rx="7" ry="16" fill="none" stroke="#88AAFF" stroke-width="1" opacity=".7"/>
+          <ellipse cx="18" cy="18" rx="16" ry="6" fill="none" stroke="#88AAFF" stroke-width="1" opacity=".7"/>
+          <line x1="2" y1="18" x2="34" y2="18" stroke="#88AAFF" stroke-width="1" opacity=".5"/>
+          <ellipse cx="12" cy="13" rx="4" ry="3" fill="#3A8C3A" opacity=".7"/>
+          <ellipse cx="22" cy="12" rx="5" ry="3" fill="#3A8C3A" opacity=".7"/>
+          <ellipse cx="23" cy="20" rx="3.5" ry="4" fill="#3A8C3A" opacity=".6"/>
+        </svg>
+      </div>
+      <div>
+        <div class="sf-name">SIIEA</div>
+        <div class="sf-tagline">India's #1 Import Export Academy</div>
+      </div>
+    </div>
+    <div class="sf-desc">Empowering Indian entrepreneurs to go global since 1976. Join 12,000+ successful global traders.</div>
+  </div>
+
+  <div class="sf-div"></div>
+
+  <div class="sf-follow-label">Follow Us &amp; Stay Connected</div>
+
+  <!-- Social Icons 4x2 grid -->
+  <div class="sf-icons-grid">
+
+    <!-- Instagram -->
+    <a class="si-btn si-instagram" href="#" aria-label="Instagram">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <rect x="2" y="2" width="20" height="20" rx="6" stroke="white" stroke-width="2"/>
+        <circle cx="12" cy="12" r="4.5" stroke="white" stroke-width="2"/>
+        <circle cx="17.5" cy="6.5" r="1.3" fill="white"/>
+      </svg>
+      <span>Instagram</span>
+    </a>
+
+    <!-- Facebook -->
+    <a class="si-btn si-facebook" href="#" aria-label="Facebook">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M18 2H15C13.67 2 12.4 2.53 11.46 3.46C10.53 4.4 10 5.67 10 7V10H7V14H10V22H14V14H17L18 10H14V7C14 6.73 14.11 6.48 14.29 6.29C14.48 6.1 14.73 6 15 6H18V2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Facebook</span>
+    </a>
+
+    <!-- YouTube -->
+    <a class="si-btn si-youtube" href="#" aria-label="YouTube">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M22.54 6.42C22.4 5.94 22.18 5.51 21.84 5.16C21.5 4.81 21.07 4.55 20.6 4.42C18.88 4 12 4 12 4C12 4 5.12 4 3.4 4.46C2.93 4.59 2.5 4.85 2.16 5.2C1.82 5.55 1.58 5.99 1.46 6.46C1.15 8.21 1 9.98 1 11.75C0.99 13.54 1.14 15.32 1.46 17.08C1.59 17.54 1.84 17.96 2.18 18.29C2.52 18.63 2.94 18.87 3.4 19C5.12 19.46 12 19.46 12 19.46C12 19.46 18.88 19.46 20.6 19C21.07 18.87 21.5 18.61 21.84 18.26C22.18 17.91 22.42 17.47 22.54 17C22.85 15.27 23.01 13.51 23 11.75C23.01 9.96 22.86 8.18 22.54 6.42Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M9.75 15.02L15.5 11.75L9.75 8.48V15.02Z" fill="white"/>
+      </svg>
+      <span>YouTube</span>
+    </a>
+
+    <!-- WhatsApp -->
+    <a class="si-btn si-whatsapp" href="#" aria-label="WhatsApp">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M21 11.5C21 16.19 17.19 20 12.5 20C11.18 20 9.88 19.69 8.7 19.1L3 21L4.9 15.3C4.3 14.12 4 12.82 4 11.5C4 6.81 7.81 3 12.5 3C17.19 3 21 6.81 21 11.5Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M9 10.5C9 10.5 9 8.5 10.5 8.5C12 8.5 12 10 12 10.5C12 11.5 11 12 10.5 12.5C10 13 9.5 14 11 15C12.5 16 13.5 15 13.5 15" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span>WhatsApp</span>
+    </a>
+
+    <!-- X / Twitter -->
+    <a class="si-btn si-twitter" href="#" aria-label="X">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L2.25 2.25h6.994l4.243 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/>
+      </svg>
+      <span>X (Twitter)</span>
+    </a>
+
+    <!-- LinkedIn -->
+    <a class="si-btn si-linkedin" href="#" aria-label="LinkedIn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M16 8C17.59 8 19.12 8.63 20.24 9.76C21.37 10.88 22 12.41 22 14V21H18V14C18 13.47 17.79 12.96 17.41 12.59C17.04 12.21 16.53 12 16 12C15.47 12 14.96 12.21 14.59 12.59C14.21 12.96 14 13.47 14 14V21H10V14C10 12.41 10.63 10.88 11.76 9.76C12.88 8.63 14.41 8 16 8Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M6 9H2V21H6V9Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="4" cy="4" r="2" stroke="white" stroke-width="2"/>
+      </svg>
+      <span>LinkedIn</span>
+    </a>
+
+    <!-- Telegram -->
+    <a class="si-btn si-telegram" href="#" aria-label="Telegram">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M22 2L11 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Telegram</span>
+    </a>
+
+    <!-- Google Play -->
+    <a class="si-btn si-gplay" href="#" aria-label="Play Store">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M3 20.5V3.5C3 2.76 3.74 2.28 4.4 2.6L20.4 10.6C21.2 11 21.2 12 20.4 13L13 17.2L3 20.5Z" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M3 20.5L11 13" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M3 3.5L11 13" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M13 17.2L11 13L20.4 10.6" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Play Store</span>
+    </a>
+
+  </div>
+
+  <div class="sf-div"></div>
+
+  <!-- Quick links -->
+  <div class="sf-links-row">
+    <a class="sf-link" href="#">About Us</a>
+    <span class="sf-dot">·</span>
+    <a class="sf-link" href="#">Courses</a>
+    <span class="sf-dot">·</span>
+    <a class="sf-link" href="#">Contact</a>
+    <span class="sf-dot">·</span>
+    <a class="sf-link" href="#">Privacy</a>
+    <span class="sf-dot">·</span>
+    <a class="sf-link" href="#">Terms</a>
+  </div>
+
+  <!-- Copyright -->
+  <div class="sf-copyright">
+    <span class="sf-copy-flag">🇮🇳</span>
+    <span>© 2025 SIIEA · Made in India with ❤️</span>
+  </div>
+
+</div>
+
+
+<!-- spacer -->
+<div style="height:20px;"></div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bnav">
+  <div class="ni active"><div class="ni-ico">🏠</div><div class="ni-lbl" style="color:var(--bb)">Home</div></div>
+  <div class="ni"><div class="ni-ico">⚡</div><div class="ni-lbl">Shorts</div></div>
+  <div class="ni"><div class="ni-ico">🎓</div><div class="ni-lbl">Courses</div></div>
+  <div class="ni"><div class="ni-ico">👤</div><div class="ni-lbl">Profile</div></div>
+</div>
+
+</body>
+</html>
