@@ -1,9 +1,29 @@
+import 'package:exim_lab/features/courses/data/models/course_model.dart';
 import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart';
 import 'package:exim_lab/features/dashboard/data/repositories/dashboard_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum DashboardOnboardingAction { none, startTour, showInterestDialog, showPromoBanner }
+enum DashboardOnboardingAction {
+  none,
+  startTour,
+  showInterestDialog,
+  showPromoBanner,
+}
+
+class DashboardNavItem {
+  final String labelKey;
+  final IconData icon;
+  final IconData activeIcon;
+  final String identifier; // home, shorts, courses, news, profile
+
+  DashboardNavItem({
+    required this.labelKey,
+    required this.icon,
+    required this.activeIcon,
+    required this.identifier,
+  });
+}
 
 class DashboardProvider extends ChangeNotifier {
   final DashboardRepository _repository = DashboardRepository();
@@ -17,6 +37,43 @@ class DashboardProvider extends ChangeNotifier {
 
   bool get isTourSeen => _isTourSeen;
   bool get isInterestDialogShown => _isInterestDialogShown;
+
+  // --- Processed Data Getters ---
+
+  /// Courses the user is currently taking
+  List<CourseModel> get continueCourses {
+    final section = data?.sections
+        .where((s) => s.key == 'continue')
+        .firstOrNull;
+    return section?.data.cast<CourseModel>() ?? [];
+  }
+
+  /// The primary 'Popular' or 'Recommended' courses section
+  DashboardSection? get popularCourseSection {
+    return data?.sections.where((s) {
+      final key = s.key.toLowerCase();
+      return key == 'course' ||
+          key.contains('popular') ||
+          key.contains('recommended');
+    }).firstOrNull;
+  }
+
+  /// The 'Free Videos' section
+  DashboardSection? get freeVideoSection {
+    return data?.sections.where((s) => s.key == 'freeVideos').firstOrNull;
+  }
+
+  /// All inline banners
+  List<BannerModel> get inlineBanners {
+    final bannerSections = data?.sections.where((s) => s.key == 'banner') ?? [];
+    List<BannerModel> allBanners = [];
+    for (var section in bannerSections) {
+      allBanners.addAll(section.data.cast<BannerModel>());
+    }
+    return allBanners;
+  }
+
+  // --- Onboarding Logic ---
 
   Future<void> initOnboardingState() async {
     final prefs = await SharedPreferences.getInstance();
@@ -57,6 +114,65 @@ class DashboardProvider extends ChangeNotifier {
 
     return DashboardOnboardingAction.none;
   }
+
+  // --- Navigation Schema ---
+
+  List<DashboardNavItem> getNavigationSchema(dynamic moduleProvider) {
+    List<DashboardNavItem> items = [
+      DashboardNavItem(
+        labelKey: 'home',
+        icon: Icons.home_rounded,
+        activeIcon: Icons.home_filled,
+        identifier: 'home',
+      ),
+    ];
+
+    if (moduleProvider.isEnabled('shortVideos')) {
+      items.add(
+        DashboardNavItem(
+          labelKey: 'shorts',
+          icon: Icons.slow_motion_video_rounded,
+          activeIcon: Icons.slow_motion_video,
+          identifier: 'shorts',
+        ),
+      );
+    }
+
+    if (moduleProvider.isEnabled('courses')) {
+      items.add(
+        DashboardNavItem(
+          labelKey: 'courses',
+          icon: Icons.play_circle_outline_rounded,
+          activeIcon: Icons.play_circle_filled_rounded,
+          identifier: 'courses',
+        ),
+      );
+    }
+
+    if (moduleProvider.isEnabled('news')) {
+      items.add(
+        DashboardNavItem(
+          labelKey: 'news',
+          icon: Icons.newspaper_rounded,
+          activeIcon: Icons.newspaper,
+          identifier: 'news',
+        ),
+      );
+    }
+
+    items.add(
+      DashboardNavItem(
+        labelKey: 'profile',
+        icon: Icons.person_outline_rounded,
+        activeIcon: Icons.person_rounded,
+        identifier: 'profile',
+      ),
+    );
+
+    return items;
+  }
+
+  // --- Data Fetching ---
 
   Future<void> fetchDashboardData() async {
     isLoading = true;

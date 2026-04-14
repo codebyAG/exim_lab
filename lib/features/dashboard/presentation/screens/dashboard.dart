@@ -211,8 +211,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
       barrierDismissible: false,
       builder: (context) => const InterestCaptureDialog(),
     ).then((_) {
-      context.read<DashboardProvider>().markInterestDialogAsShown();
-      _handlePostLoadActions(); // Check if promo should be shown after dialog
+      if (mounted) {
+        context.read<DashboardProvider>().markInterestDialogAsShown();
+        _handlePostLoadActions(); // Check if promo should be shown after dialog
+      }
     });
   }
 
@@ -280,68 +282,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
     final cs = theme.colorScheme;
     final moduleProvider = Provider.of<ModuleProvider>(context);
 
-    // Prepare Bottom Navigation Items dynamically
-    List<BottomNavigationBarItem> navItems = [
-      BottomNavigationBarItem(
-        icon: const Icon(Icons.home_rounded),
-        activeIcon: const Icon(Icons.home_filled),
-        label: t.translate('home'),
-      ),
-    ];
-
-    // Parallel list of actions for each tab
-    List<VoidCallback?> navActions = [null];
-
-    if (moduleProvider.isEnabled('shortVideos')) {
-      navItems.add(
-        BottomNavigationBarItem(
-          icon: const Icon(Icons.slow_motion_video_rounded),
-          activeIcon: const Icon(Icons.slow_motion_video),
-          label: t.translate('shorts'),
-        ),
-      );
-      navActions.add(() {
-        AppNavigator.push(context, const ShortsFeedScreen());
-      });
-    }
-
-    if (moduleProvider.isEnabled('courses')) {
-      navItems.add(
-        BottomNavigationBarItem(
-          icon: const Icon(Icons.play_circle_outline_rounded),
-          activeIcon: const Icon(Icons.play_circle_filled_rounded),
-          label: t.translate('courses'),
-        ),
-      );
-      navActions.add(() {
-        AppNavigator.push(context, const CoursesListScreen());
-      });
-    }
-
-    if (moduleProvider.isEnabled('news')) {
-      navItems.add(
-        BottomNavigationBarItem(
-          icon: const Icon(Icons.newspaper_rounded),
-          activeIcon: const Icon(Icons.newspaper),
-          label: t.translate('news'),
-        ),
-      );
-      navActions.add(() {
-        AppNavigator.push(context, const NewsListScreen());
-      });
-    }
-
-    // Always add Profile
-    navItems.add(
-      BottomNavigationBarItem(
-        icon: const Icon(Icons.person_outline_rounded),
-        activeIcon: const Icon(Icons.person_rounded),
-        label: t.translate('profile'),
-      ),
-    );
-    navActions.add(() {
-      AppNavigator.push(context, const ProfileScreen());
-    });
+    // Build Navigation schema
+    final navConfig = _buildNavigationConfig(context, t, moduleProvider);
+    final navItems = navConfig.items;
+    final navActions = navConfig.actions;
 
     return Scaffold(
       backgroundColor: cs.surface,
@@ -353,18 +297,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              onPressed: () {
-                final isPremium =
-                    context.read<AuthProvider>().user?.isPremium ?? false;
-                if (isPremium) {
-                  AppNavigator.push(context, const AiChatScreen());
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (_) => const PremiumUnlockDialog(),
-                  );
-                }
-              },
+              onPressed: () => _handlePremiumGatedTap(
+                context: context,
+                action: () => AppNavigator.push(context, const AiChatScreen()),
+              ),
               child: Icon(Icons.support_agent, color: cs.onPrimary, size: 28),
             )
           : null,
@@ -546,9 +482,6 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         ],
                       ),
                     ),
-
-                    // 6. TRUST STRIP
-                    // _buildTrustStrip(cs),
                   ],
                 ),
               ),
@@ -563,23 +496,13 @@ class _DashboardBodyState extends State<_DashboardBody> {
                   final data = dashboard.data;
                   if (data == null) return const SizedBox();
 
-                  bool assignedPopular = false;
-                  bool assignedFreeVideos = false;
-
-                  final continueSection = data.sections
-                      .where((s) => s.key == 'continue')
-                      .firstOrNull;
-                  final continueCourses = continueSection != null
-                      ? continueSection.data.cast<CourseModel>()
-                      : <CourseModel>[];
-
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: 0.8.h),
 
                       // 3. CONTINUE LEARNING HERO
-                      if (continueCourses.isNotEmpty)
+                      if (dashboard.continueCourses.isNotEmpty)
                         ModuleVisibility(
                           module: 'continueLearning',
                           child: _buildShowcase(
@@ -589,35 +512,28 @@ class _DashboardBodyState extends State<_DashboardBody> {
                             child: Consumer<AuthProvider>(
                               builder: (context, auth, _) {
                                 final isPremium = auth.user?.isPremium ?? false;
-                                final course = continueCourses.first;
+                                final course = dashboard.continueCourses.first;
                                 final isFree = course.basePrice == 0;
                                 final isAccessible = isPremium || isFree;
 
                                 return DashboardContinueHero(
                                   course: course,
                                   isLocked: !isAccessible,
-                                  onTap: () {
-                                    if (isAccessible) {
-                                      AppNavigator.push(
-                                        context,
-                                        CourseDetailsScreen(
-                                          courseId: course.id,
-                                        ),
-                                      );
-                                    } else {
-                                      showDialog(
-                                        context: context,
-                                        builder: (_) =>
-                                            const PremiumUnlockDialog(),
-                                      );
-                                    }
-                                  },
+                                  onTap: () => _handlePremiumGatedTap(
+                                    context: context,
+                                    isFree: isFree,
+                                    action: () => AppNavigator.push(
+                                      context,
+                                      CourseDetailsScreen(courseId: course.id),
+                                    ),
+                                  ),
                                 );
                               },
                             ),
                           ),
                         ),
-                      if (continueCourses.isNotEmpty) SizedBox(height: 0.8.h),
+                      if (dashboard.continueCourses.isNotEmpty)
+                        SizedBox(height: 0.8.h),
 
                       // 6. TOOLS (MOVED UP)
                       ModuleVisibility(
@@ -668,18 +584,12 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       SizedBox(height: 0.8.h),
 
                       // 1.6 MASTERCLASS HIGHLIGHT
-                      Consumer<DashboardProvider>(
-                        builder: (context, dashboard, _) {
-                          final data = dashboard.data;
-                          if (data == null) return const SizedBox();
-                          return _buildShowcase(
-                            key: _masterclassKey,
-                            title: 'Masterclass',
-                            description:
-                                'Watch our complete Import Export Roadmap',
-                            child: MasterclassHighlightCard(data: data),
-                          );
-                        },
+                      _buildShowcase(
+                        key: _masterclassKey,
+                        title: 'Masterclass',
+                        description:
+                            'Watch our complete Import Export Roadmap',
+                        child: MasterclassHighlightCard(data: data),
                       ),
                       SizedBox(height: 1.2.h),
 
@@ -724,20 +634,13 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                       label: t.translate('quizzes_title'),
                                       color: cs.primary,
                                       isLocked: !isPremium,
-                                      onTap: () {
-                                        if (isPremium) {
-                                          AppNavigator.push(
-                                            context,
-                                            const QuizTopicsScreen(),
-                                          );
-                                        } else {
-                                          showDialog(
-                                            context: context,
-                                            builder: (_) =>
-                                                const PremiumUnlockDialog(),
-                                          );
-                                        }
-                                      },
+                                      onTap: () => _handlePremiumGatedTap(
+                                        context: context,
+                                        action: () => AppNavigator.push(
+                                          context,
+                                          const QuizTopicsScreen(),
+                                        ),
+                                      ),
                                     );
                                   },
                                 ),
@@ -758,20 +661,13 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                       label: t.translate('ai_expert'),
                                       color: cs.primary,
                                       isLocked: !isPremium,
-                                      onTap: () {
-                                        if (isPremium) {
-                                          AppNavigator.push(
-                                            context,
-                                            const AiChatScreen(),
-                                          );
-                                        } else {
-                                          showDialog(
-                                            context: context,
-                                            builder: (_) =>
-                                                const PremiumUnlockDialog(),
-                                          );
-                                        }
-                                      },
+                                      onTap: () => _handlePremiumGatedTap(
+                                        context: context,
+                                        action: () => AppNavigator.push(
+                                          context,
+                                          const AiChatScreen(),
+                                        ),
+                                      ),
                                     );
                                   },
                                 ),
@@ -807,7 +703,6 @@ class _DashboardBodyState extends State<_DashboardBody> {
                           description: 'tut_shorts_desc',
                           child: Consumer<AuthProvider>(
                             builder: (context, auth, _) {
-                              final isPremium = auth.user?.isPremium ?? false;
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -828,20 +723,14 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                               ),
                                         ),
                                         TextButton(
-                                          onPressed: () {
-                                            if (isPremium) {
-                                              AppNavigator.push(
-                                                context,
-                                                const ShortsFeedScreen(),
-                                              );
-                                            } else {
-                                              showDialog(
+                                          onPressed: () =>
+                                              _handlePremiumGatedTap(
                                                 context: context,
-                                                builder: (_) =>
-                                                    const PremiumUnlockDialog(),
-                                              );
-                                            }
-                                          },
+                                                action: () => AppNavigator.push(
+                                                  context,
+                                                  const ShortsFeedScreen(),
+                                                ),
+                                              ),
                                           child: Text(
                                             'See All',
                                             style: TextStyle(
@@ -873,125 +762,48 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       SizedBox(height: 0.8.h),
 
                       // 10. DYNAMIC SECTIONS
-                      ...data.sections.map((section) {
-                        if ((section.key == 'course' ||
-                                section.key.contains('Popular') ||
-                                section.key.contains('Recommended')) &&
-                            !assignedPopular) {
-                          final courses = section.data.cast<CourseModel>();
-                          if (courses.isEmpty) return const SizedBox();
-                          assignedPopular = true;
-                          return ModuleVisibility(
-                            module: 'courses',
-                            child: _buildShowcase(
-                              key: _popularCoursesKey,
-                              title: 'tut_popular_courses_title',
-                              description: 'tut_popular_courses_desc',
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w,
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          section.title,
-                                          style: theme.textTheme.titleMedium
-                                              ?.copyWith(
-                                                fontWeight: FontWeight.w800,
-                                              ),
-                                        ),
-                                        Consumer<AuthProvider>(
-                                          builder: (context, auth, _) {
-                                            final isPremium =
-                                                auth.user?.isPremium ?? false;
-                                            return TextButton(
-                                              onPressed: () {
-                                                if (isPremium) {
-                                                  AppNavigator.push(
-                                                    context,
-                                                    const CoursesListScreen(),
-                                                  );
-                                                } else {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder: (_) =>
-                                                        const PremiumUnlockDialog(),
-                                                  );
-                                                }
-                                              },
-                                              child: Text(
-                                                'See All',
-                                                style: TextStyle(
-                                                  color: cs.primary,
-                                                  fontWeight: FontWeight.w700,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(height: 1.h),
-                                  HorizontalCourses(
-                                    courses: courses,
-                                    isPremium:
-                                        context
-                                            .read<AuthProvider>()
-                                            .user
-                                            ?.isPremium ??
-                                        false,
-                                  ),
-                                  SizedBox(height: 0.8.h),
-                                ],
-                              ),
+                                  
+                      // Popular/Recommended Section
+                      if (dashboard.popularCourseSection != null)
+                        ModuleVisibility(
+                          module: 'courses',
+                          child: _buildShowcase(
+                            key: _popularCoursesKey,
+                            title: 'tut_popular_courses_title',
+                            description: 'tut_popular_courses_desc',
+                            child: _buildPopularSection(
+                              context,
+                              dashboard.popularCourseSection!,
                             ),
-                          );
-                        } else if (section.key == 'freeVideos' &&
-                            !assignedFreeVideos) {
-                          final videos = section.data.cast<FreeVideoModel>();
-                          if (videos.isEmpty) return const SizedBox();
-                          assignedFreeVideos = true;
-                          return ModuleVisibility(
-                            module: 'freeVideos',
-                            child: _buildShowcase(
-                              key: _freeVideosKey,
-                              title: 'tut_free_videos_title',
-                              description: 'tut_free_videos_desc',
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SectionHeader(
-                                    title: section.title,
-                                    subtitle: section.subtitle,
-                                  ),
-                                  SizedBox(height: 1.5.h),
-                                  FreeVideosSection(videos: videos),
-                                  SizedBox(height: 0.8.h),
-                                ],
-                              ),
+                          ),
+                        ),
+
+                      // Free Videos Section
+                      if (dashboard.freeVideoSection != null)
+                        ModuleVisibility(
+                          module: 'freeVideos',
+                          child: _buildShowcase(
+                            key: _freeVideosKey,
+                            title: 'tut_free_videos_title',
+                            description: 'tut_free_videos_desc',
+                            child: _buildFreeVideosSection(
+                              context,
+                              dashboard.freeVideoSection!,
                             ),
-                          );
-                        } else if (section.key == 'banner') {
-                          final banners = section.data.cast<BannerModel>();
-                          if (banners.isEmpty) return const SizedBox();
-                          return ModuleVisibility(
-                            module: 'banners',
-                            child: Column(
-                              children: [
-                                InlineBanner(banners: banners),
-                                SizedBox(height: 0.8.h),
-                              ],
-                            ),
-                          );
-                        }
-                        return const SizedBox();
-                      }),
+                          ),
+                        ),
+
+                      // Inline Banners
+                      if (dashboard.inlineBanners.isNotEmpty)
+                        ModuleVisibility(
+                          module: 'banners',
+                          child: Column(
+                            children: [
+                              InlineBanner(banners: dashboard.inlineBanners),
+                              SizedBox(height: 0.8.h),
+                            ],
+                          ),
+                        ),
 
                       // 10. TESTIMONIALS
                       _buildShowcase(
@@ -1030,34 +842,38 @@ class _DashboardBodyState extends State<_DashboardBody> {
       bottomNavigationBar: NavigationBar(
         destinations: List.generate(navItems.length, (index) {
           final item = navItems[index];
-
-          // Determine which key to use based on the label/order
-          // Since items are dynamic, we need to match carefully
-          final label = item.label!.toLowerCase();
+          final schemaItem = navConfig.schema[index];
+          
           GlobalKey? key;
           String title = '';
           String desc = '';
 
-          if (label == t.translate('home').toLowerCase()) {
-            key = _navHomeKey;
-            title = 'tut_nav_home_title';
-            desc = 'tut_nav_home_desc';
-          } else if (label == t.translate('shorts').toLowerCase()) {
-            key = _navShortsKey;
-            title = 'tut_nav_shorts_title';
-            desc = 'tut_nav_shorts_desc';
-          } else if (label == t.translate('courses').toLowerCase()) {
-            key = _navCoursesKey;
-            title = 'tut_nav_courses_title';
-            desc = 'tut_nav_courses_desc';
-          } else if (label == t.translate('news').toLowerCase()) {
-            key = _navNewsKey;
-            title = 'tut_nav_news_title';
-            desc = 'tut_nav_news_desc';
-          } else if (label == t.translate('profile').toLowerCase()) {
-            key = _navProfileKey;
-            title = 'tut_nav_profile_title';
-            desc = 'tut_nav_profile_desc';
+          switch (schemaItem.identifier) {
+            case 'home':
+              key = _navHomeKey;
+              title = 'tut_nav_home_title';
+              desc = 'tut_nav_home_desc';
+              break;
+            case 'shorts':
+              key = _navShortsKey;
+              title = 'tut_nav_shorts_title';
+              desc = 'tut_nav_shorts_desc';
+              break;
+            case 'courses':
+              key = _navCoursesKey;
+              title = 'tut_nav_courses_title';
+              desc = 'tut_nav_courses_desc';
+              break;
+            case 'news':
+              key = _navNewsKey;
+              title = 'tut_nav_news_title';
+              desc = 'tut_nav_news_desc';
+              break;
+            case 'profile':
+              key = _navProfileKey;
+              title = 'tut_nav_profile_title';
+              desc = 'tut_nav_profile_desc';
+              break;
           }
 
           final destination = NavigationDestination(
@@ -1086,4 +902,140 @@ class _DashboardBodyState extends State<_DashboardBody> {
       ),
     );
   }
+
+  _NavigationConfig _buildNavigationConfig(
+    BuildContext context,
+    AppLocalizations t,
+    ModuleProvider moduleProvider,
+  ) {
+    final dashboardProvider = context.read<DashboardProvider>();
+    final schema = dashboardProvider.getNavigationSchema(moduleProvider);
+
+    List<BottomNavigationBarItem> navItems = [];
+    List<VoidCallback?> navActions = [];
+
+    for (var item in schema) {
+      navItems.add(
+        BottomNavigationBarItem(
+          icon: Icon(item.icon),
+          activeIcon: Icon(item.activeIcon),
+          label: t.translate(item.labelKey),
+        ),
+      );
+
+      switch (item.identifier) {
+        case 'home':
+          navActions.add(null);
+          break;
+        case 'shorts':
+          navActions.add(() => AppNavigator.push(context, const ShortsFeedScreen()));
+          break;
+        case 'courses':
+          navActions.add(() => AppNavigator.push(context, const CoursesListScreen()));
+          break;
+        case 'news':
+          navActions.add(() => AppNavigator.push(context, const NewsListScreen()));
+          break;
+        case 'profile':
+          navActions.add(() => AppNavigator.push(context, const ProfileScreen()));
+          break;
+      }
+    }
+
+    return _NavigationConfig(items: navItems, actions: navActions, schema: schema);
+  }
+
+  void _handlePremiumGatedTap({
+    required BuildContext context,
+    required VoidCallback action,
+    bool isFree = false,
+  }) {
+    final isPremium = context.read<AuthProvider>().user?.isPremium ?? false;
+    if (isPremium || isFree) {
+      action();
+    } else {
+      showDialog(
+        context: context,
+        builder: (_) => const PremiumUnlockDialog(),
+      );
+    }
+  }
+
+  Widget _buildPopularSection(BuildContext context, DashboardSection section) {
+    final theme = Theme.of(context);
+    final courses = section.data.cast<CourseModel>();
+    if (courses.isEmpty) return const SizedBox();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5.w),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                section.title,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              TextButton(
+                onPressed: () => _handlePremiumGatedTap(
+                  context: context,
+                  action: () => AppNavigator.push(
+                    context,
+                    const CoursesListScreen(),
+                  ),
+                ),
+                child: Text(
+                  'See All',
+                  style: TextStyle(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 1.h),
+        HorizontalCourses(
+          courses: courses,
+          isPremium: context.read<AuthProvider>().user?.isPremium ?? false,
+        ),
+        SizedBox(height: 0.8.h),
+      ],
+    );
+  }
+
+  Widget _buildFreeVideosSection(
+    BuildContext context,
+    DashboardSection section,
+  ) {
+    final videos = section.data.cast<FreeVideoModel>();
+    if (videos.isEmpty) return const SizedBox();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SectionHeader(title: section.title, subtitle: section.subtitle),
+        SizedBox(height: 1.5.h),
+        FreeVideosSection(videos: videos),
+        SizedBox(height: 0.8.h),
+      ],
+    );
+  }
+}
+
+class _NavigationConfig {
+  final List<BottomNavigationBarItem> items;
+  final List<VoidCallback?> actions;
+  final List<DashboardNavItem> schema;
+
+  _NavigationConfig({
+    required this.items,
+    required this.actions,
+    required this.schema,
+  });
 }
