@@ -7,13 +7,13 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/masterclass_car
 import 'package:exim_lab/features/dashboard/presentation/widgets/premium_course_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/popular_course_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/free_video_card.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_footer.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/notifications/presentation/providers/notifications_provider.dart';
 import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dart';
 import 'package:exim_lab/features/courses/data/models/course_model.dart';
 import 'package:exim_lab/features/freevideos/data/models/free_videos_model.dart';
 import 'package:exim_lab/features/shorts/presentation/providers/shorts_provider.dart';
-import 'package:exim_lab/features/shorts/data/models/short_model.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/premium_short_video_card.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_details_screen.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_list_screen.dart';
@@ -57,6 +57,7 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/testimonials_se
 import 'package:exim_lab/features/dashboard/presentation/widgets/social_connect_section.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/free_counseling_section.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_modern_header.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/tutorial_step_content.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -933,8 +934,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     // ⚡ 4.10 SHORT VIDEOS SECTION
                     Consumer<ShortsProvider>(
                       builder: (context, shortsProvider, _) {
-                        if (shortsProvider.shorts.isEmpty)
+                        if (shortsProvider.shorts.isEmpty) {
                           return const SizedBox.shrink();
+                        }
 
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1003,6 +1005,17 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                     Builder(
                                       builder: (context) {
                                         final short = shortsProvider.shorts[i];
+
+                                        // Extract actual thumbnail from YouTube URL
+                                        final String? videoId =
+                                            YoutubePlayer.convertUrlToId(
+                                              short.videoUrl,
+                                            );
+                                        final String thumbnailUrl =
+                                            videoId != null
+                                            ? 'https://img.youtube.com/vi/$videoId/0.jpg'
+                                            : short.thumbnailUrl;
+
                                         // Array of modern premium gradients
                                         final gradients = [
                                           [
@@ -1025,6 +1038,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
 
                                         return PremiumShortVideoCard(
                                           title: short.title,
+                                          thumbnailUrl: thumbnailUrl,
                                           viewCount: short.viewCount > 0
                                               ? short.viewCount
                                               : 45000 +
@@ -1368,6 +1382,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       description: 'tut_counseling_desc',
                       child: const FreeCounselingSection(),
                     ),
+                    const DashboardFooter(),
                     SizedBox(height: 1.2.h),
                   ],
                 );

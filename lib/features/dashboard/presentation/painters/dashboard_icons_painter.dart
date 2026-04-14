@@ -971,3 +971,56 @@ class ShortsPatternPainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
+
+/// 🌍 SIIEA BRAND LOGO: Detailed Globe with Continents
+class SIIEALogoPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    // Reference SVG ViewBox is 36x36
+    final scale = size.width / 36;
+    
+    // Circle base
+    final circlePaint = Paint()
+      ..color = const Color(0xFF1040C1)
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(Offset(18 * scale, 18 * scale), 16 * scale, circlePaint);
+    
+    final borderPaint = Paint()
+      ..color = const Color(0xFF5599FF)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5 * scale;
+    canvas.drawCircle(Offset(18 * scale, 18 * scale), 16 * scale, borderPaint);
+
+    // Meridian/Latitude Ellipses
+    final linePaint = Paint()
+      ..color = const Color(0xFF88AAFF).withValues(alpha: 0.7)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1 * scale;
+    
+    canvas.drawOval(Rect.fromCenter(center: Offset(18 * scale, 18 * scale), width: 14 * scale, height: 32 * scale), linePaint);
+    canvas.drawOval(Rect.fromCenter(center: Offset(18 * scale, 18 * scale), width: 32 * scale, height: 12 * scale), linePaint);
+
+    // Equator Line
+    final equatorPaint = Paint()..color = const Color(0xFF88AAFF).withValues(alpha: 0.5)..strokeWidth = 1 * scale;
+    canvas.drawLine(Offset(2 * scale, 18 * scale), Offset(34 * scale, 18 * scale), equatorPaint);
+
+    // Continents (Abstract green shapes)
+    final continentPaint = Paint()..style = PaintingStyle.fill;
+    
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(12 * scale, 13 * scale), width: 8 * scale, height: 6 * scale),
+      continentPaint..color = const Color(0xFF3A8C3A).withValues(alpha: 0.7)
+    );
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(22 * scale, 12 * scale), width: 10 * scale, height: 6 * scale),
+      continentPaint..color = const Color(0xFF3A8C3A).withValues(alpha: 0.7)
+    );
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(23 * scale, 20 * scale), width: 7 * scale, height: 8 * scale),
+      continentPaint..color = const Color(0xFF3A8C3A).withValues(alpha: 0.6)
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}

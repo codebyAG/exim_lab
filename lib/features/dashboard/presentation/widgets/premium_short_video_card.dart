@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:exim_lab/features/dashboard/presentation/painters/dashboard_icons_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
@@ -7,6 +8,7 @@ class PremiumShortVideoCard extends StatelessWidget {
   final int viewCount;
   final int durationSeconds;
   final List<Color> gradientColors;
+  final String? thumbnailUrl;
   final VoidCallback? onTap;
 
   const PremiumShortVideoCard({
@@ -15,6 +17,7 @@ class PremiumShortVideoCard extends StatelessWidget {
     required this.viewCount,
     required this.durationSeconds,
     required this.gradientColors,
+    this.thumbnailUrl,
     this.onTap,
   });
 
@@ -50,6 +53,16 @@ class PremiumShortVideoCard extends StatelessWidget {
                   end: Alignment.bottomRight,
                   colors: gradientColors,
                 ),
+                image: thumbnailUrl != null && thumbnailUrl!.isNotEmpty
+                    ? DecorationImage(
+                        image: CachedNetworkImageProvider(thumbnailUrl!),
+                        fit: BoxFit.cover,
+                        colorFilter: ColorFilter.mode(
+                          gradientColors[0].withValues(alpha: 0.4),
+                          BlendMode.darken,
+                        ),
+                      )
+                    : null,
                 borderRadius: BorderRadius.circular(18),
                 boxShadow: [
                   BoxShadow(
