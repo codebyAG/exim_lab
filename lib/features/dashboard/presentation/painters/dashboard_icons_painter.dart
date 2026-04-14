@@ -563,3 +563,165 @@ class MasterclassPlaneWatermarkPainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
+
+/// 📋 COURSE THUMBNAIL: CHECKLIST (Blue Card)
+class CourseChecklistPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final scale = size.width / 160;
+    final paint = Paint()..style = PaintingStyle.fill;
+    
+    // Background already handled by Container gradient in Widget
+
+    // Document icon
+    paint.color = const Color(0xFF1040C1);
+    final docRect = RRect.fromRectAndRadius(Rect.fromLTWH(52 * scale, 18 * scale, 40 * scale, 50 * scale), Radius.circular(4 * scale));
+    canvas.drawRRect(docRect, paint);
+    
+    final strokePaint = Paint()
+      ..color = const Color(0xFF88AAFF)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5 * scale;
+    canvas.drawRRect(docRect, strokePaint);
+
+    // Lines
+    final linePaint = Paint()..color = const Color(0xFF88AAFF);
+    void drawLine(double x, double y, double w, double alpha) {
+      linePaint.color = const Color(0xFF88AAFF).withValues(alpha: alpha);
+      canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(x * scale, y * scale, w * scale, 3 * scale), Radius.circular(1.5 * scale)), linePaint);
+    }
+
+    drawLine(58, 28, 28, 0.8);
+    drawLine(58, 34, 22, 0.6);
+    drawLine(58, 40, 26, 0.6);
+    drawLine(58, 46, 18, 0.4);
+    drawLine(58, 52, 24, 0.4);
+
+    // Yellow check
+    final checkPaint = Paint()
+      ..color = const Color(0xFFFFD000)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2 * scale
+      ..strokeCap = StrokeCap.round;
+    final checkPath = Path();
+    checkPath.moveTo(72 * scale, 58 * scale);
+    checkPath.lineTo(80 * scale, 68 * scale);
+    checkPath.lineTo(88 * scale, 58 * scale);
+    canvas.drawPath(checkPath, checkPaint);
+
+    // Globe behind
+    final globePaint = Paint()
+      ..color = const Color(0xFF1E5FFF).withValues(alpha: 0.3)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1 * scale;
+    canvas.drawCircle(Offset(120 * scale, 25 * scale), 18 * scale, globePaint);
+    
+    globePaint.color = const Color(0xFF1E5FFF).withValues(alpha: 0.2);
+    canvas.drawOval(Rect.fromCenter(center: Offset(120 * scale, 25 * scale), width: 16 * scale, height: 36 * scale), globePaint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+/// 💹 COURSE THUMBNAIL: FOREX (Red Card)
+class CourseForexPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final scale = size.width / 160;
+    
+    // Money/Forex circle
+    final circlePaint = Paint()..color = const Color(0xFF8B000C)..style = PaintingStyle.fill;
+    canvas.drawCircle(Offset(72 * scale, 44 * scale), 26 * scale, circlePaint);
+    
+    final borderPaint = Paint()
+      ..color = const Color(0xFFFF8888)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5 * scale;
+    canvas.drawCircle(Offset(72 * scale, 44 * scale), 26 * scale, borderPaint);
+
+    // Symbols (₹$)
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: "₹\$",
+        style: TextStyle(
+          color: const Color(0xFFFFD000),
+          fontSize: 18 * scale,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout();
+    textPainter.paint(canvas, Offset(64 * scale, 34 * scale));
+
+    // Dashed Arrow
+    final arrowPaint = Paint()
+      ..color = const Color(0xFFFFD000)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2 * scale
+      ..strokeCap = StrokeCap.round;
+    
+    final arrowPath = Path();
+    arrowPath.moveTo(100 * scale, 20 * scale);
+    arrowPath.quadraticBezierTo(120 * scale, 30 * scale, 115 * scale, 50 * scale);
+    arrowPath.quadraticBezierTo(110 * scale, 70 * scale, 95 * scale, 72 * scale);
+    canvas.drawPath(arrowPath, arrowPaint);
+
+    final tipPath = Path();
+    tipPath.moveTo(92 * scale, 68 * scale);
+    tipPath.lineTo(100 * scale, 78 * scale);
+    tipPath.lineTo(104 * scale, 66 * scale);
+    tipPath.close();
+    canvas.drawPath(tipPath, Paint()..color = const Color(0xFFFFD000));
+
+    // Floating dots
+    canvas.drawCircle(Offset(130 * scale, 22 * scale), 8 * scale, Paint()..color = const Color(0xFFFF8888).withValues(alpha: 0.3));
+    canvas.drawCircle(Offset(140 * scale, 70 * scale), 6 * scale, Paint()..color = const Color(0xFFFF8888).withValues(alpha: 0.2));
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+/// 🤝 COURSE THUMBNAIL: BUYERS (Gold Card)
+class CourseBuyersPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final scale = size.width / 160;
+    
+    final paint = Paint()..color = const Color(0xFF7A4400)..style = PaintingStyle.fill;
+    final stroke = Paint()..color = const Color(0xFFFFD000)..style = PaintingStyle.stroke..strokeWidth = 1.5 * scale;
+
+    // Handshake dots
+    canvas.drawCircle(Offset(55 * scale, 38 * scale), 14 * scale, paint);
+    canvas.drawCircle(Offset(55 * scale, 38 * scale), 14 * scale, stroke);
+    
+    canvas.drawCircle(Offset(105 * scale, 38 * scale), 14 * scale, paint);
+    canvas.drawCircle(Offset(105 * scale, 38 * scale), 14 * scale, stroke);
+
+    // Smile connector
+    final smile = Path();
+    smile.moveTo(70 * scale, 46 * scale);
+    smile.quadraticBezierTo(80 * scale, 58 * scale, 90 * scale, 46 * scale);
+    
+    final smilePaint = Paint()
+      ..color = const Color(0xFFFFD000)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.5 * scale
+      ..strokeCap = StrokeCap.round;
+    canvas.drawPath(smile, smilePaint);
+
+    canvas.drawCircle(Offset(80 * scale, 62 * scale), 6 * scale, Paint()..color = const Color(0xFFFFD000).withValues(alpha: 0.8));
+
+    // Network lines
+    final netPaint = Paint()..color = const Color(0xFFFFD000).withValues(alpha: 0.3)..strokeWidth = 1 * scale;
+    canvas.drawCircle(Offset(30 * scale, 75 * scale), 4 * scale, netPaint);
+    canvas.drawCircle(Offset(130 * scale, 75 * scale), 4 * scale, netPaint);
+    canvas.drawLine(Offset(30 * scale, 75 * scale), Offset(80 * scale, 62 * scale), netPaint);
+    canvas.drawLine(Offset(130 * scale, 75 * scale), Offset(80 * scale, 62 * scale), netPaint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}

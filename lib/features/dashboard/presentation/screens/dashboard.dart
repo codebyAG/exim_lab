@@ -4,6 +4,7 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/skill_card.dart
 import 'package:exim_lab/features/dashboard/presentation/widgets/certificate_mini_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/achieve_live_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/masterclass_card.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/premium_course_card.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/notifications/presentation/providers/notifications_provider.dart';
 import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dart';
@@ -626,6 +627,99 @@ class _DashboardBodyState extends State<_DashboardBody> {
                 ),
               ),
             ),
+            SizedBox(height: 2.h),
+
+            // 🎯 4.7 RECOMMENDED FOR YOU SECTION
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                      ),
+                      children: [
+                        const TextSpan(text: "🎯 Recommended "),
+                        TextSpan(
+                          text: "for You",
+                          style: TextStyle(color: const Color(0xFFFFD000)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.8.h),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      border: Border.all(color: const Color(0xFF1E5FFF), width: 1.5),
+                    ),
+                    child: Text(
+                      "View All →",
+                      style: TextStyle(
+                        color: const Color(0xFF1E5FFF),
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 2.5.h),
+
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.only(left: 5.w, bottom: 2.h),
+              child: Row(
+                children: [
+                  PremiumCourseCard(
+                    title: "Complete Export Documentation Masterclass",
+                    category: "Export Fundamentals",
+                    badgeText: "⭐ Recommended",
+                    badgeColor: const Color(0xFFFFD000),
+                    duration: "18 hrs",
+                    rating: "4.9",
+                    reviews: "1.2k",
+                    price: "2,499",
+                    gradientColors: const [Color(0xFF0A2066), Color(0xFF1E5FFF)],
+                    painter: CourseChecklistPainter(),
+                    enrollButtonColor: const Color(0xFF1E5FFF),
+                  ),
+                  PremiumCourseCard(
+                    title: "Forex & International Payment Terms",
+                    category: "Finance & Forex",
+                    badgeText: "🔥 Hot",
+                    badgeColor: const Color(0xFFFF2D35),
+                    duration: "12 hrs",
+                    rating: "4.8",
+                    reviews: "980",
+                    price: "1,999",
+                    gradientColors: const [Color(0xFF6B0000), Color(0xFFC8151B)],
+                    painter: CourseForexPainter(),
+                    enrollButtonColor: const Color(0xFFFF2D35),
+                  ),
+                  PremiumCourseCard(
+                    title: "Finding & Closing International Buyers",
+                    category: "Buyer Acquisition",
+                    badgeText: "🌍 Global",
+                    badgeColor: const Color(0xFFFFD000),
+                    duration: "22 hrs",
+                    rating: "5.0",
+                    reviews: "2.1k",
+                    price: "3,299",
+                    gradientColors: const [Color(0xFF4A2800), Color(0xFFCC6600)],
+                    painter: CourseBuyersPainter(),
+                    enrollButtonColor: const Color(0xFFCC6600),
+                  ),
+                ],
+              ),
+            ),
+
             SizedBox(height: 1.h),
             Consumer<DashboardProvider>(
               builder: (context, dashboard, _) {
