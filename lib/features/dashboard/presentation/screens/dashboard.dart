@@ -408,11 +408,11 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     onTap: () =>
                         AppNavigator.push(context, const ExportJourneyScreen()),
                   ),
-                    ],
-                  ),
-                ),
-              // 3-END. DYNAMIC CONTENT
-              Consumer<DashboardProvider>(
+                ],
+              ),
+            ),
+            // 3-END. DYNAMIC CONTENT
+            Consumer<DashboardProvider>(
               builder: (context, dashboard, _) {
                 if (dashboard.isLoading) return const DashboardShimmer();
                 if (dashboard.error != null) {

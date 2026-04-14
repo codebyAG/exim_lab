@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 
 class AppColorSchemes {
-  // 🌞 LIGHT THEME — Global Academy Navy & Red
+  // 🎨 GLOBAL TRADE THEME — Premium Navy & Red
   static const ColorScheme light = ColorScheme.light(
-    // 🟦 PRIMARY — Pure Navy Blue
-    primary: Color(0xFF000080), 
+    // 🟦 PRIMARY — Deep Global Navy
+    primary: Color(0xFF0A2066),
     onPrimary: Color(0xFFFFFFFF),
+    primaryContainer: Color(0xFFE8F0FF),
+    onPrimaryContainer: Color(0xFF0A2066),
 
-    // 🟥 SECONDARY — Vibrant Red (CTAs)
-    secondary: Color(0xFFD32F2F),
+    // 🟥 SECONDARY — Flag Red
+    secondary: Color(0xFFC8151B),
     onSecondary: Color(0xFFFFFFFF),
+    secondaryContainer: Color(0xFFFFDADA),
+    onSecondaryContainer: Color(0xFF410002),
 
-    // 🧱 SURFACE — Light Off-White / Blue Tint
+    // 🧱 SURFACE — Clean Blue-tinted Off-White
     surface: Color(0xFFF8FAFC),
-    onSurface: Color(0xFF0A1D37), // Navy for text
+    onSurface: Color(0xFF020C28),
+    surfaceContainerHighest: Color(0xFFE1E8F0),
 
     // ❌ ERROR
     error: Color(0xFFB00020),
@@ -22,42 +27,32 @@ class AppColorSchemes {
     // 🧩 OUTLINES
     outline: Color(0xFFBDC3C7),
     outlineVariant: Color(0xFFECF0F1),
-
-    // 🌫 SHADOWS
-    shadow: Color(0xFF000000),
-    scrim: Color(0xFF000000),
-
-    // ✨ MATERIAL OVERLAY
-    surfaceTint: Color(0xFF0A1D37),
   );
 
-  // 🌙 DARK THEME — Deep Navy on Darker Surface
   static const ColorScheme dark = ColorScheme.dark(
-    // 🟦 PRIMARY — Deep Navy
-    primary: Color(0xFF1B2A4E),
+    // 🟦 PRIMARY — Accent Blue / Navy
+    primary: Color(0xFF1E5FFF),
     onPrimary: Color(0xFFFFFFFF),
+    primaryContainer: Color(0xFF0A2066),
+    onPrimaryContainer: Color(0xFFD6E2FF),
 
     // 🟥 SECONDARY — Vibrant Red
-    secondary: Color(0xFFE57373),
+    secondary: Color(0xFFFF2D35),
     onSecondary: Color(0xFFFFFFFF),
+    secondaryContainer: Color(0xFF93000A),
+    onSecondaryContainer: Color(0xFFFFDAD6),
 
-    // 🧱 SURFACE — Deep Charcoal / Navy
-    surface: Color(0xFF0F172A),
-    onSurface: Color(0xFFE2E8F0),
+    // 🧱 SURFACE — Deep Space Navy
+    surface: Color(0xFF020C28),
+    onSurface: Color(0xFFFFFFFF),
+    surfaceContainerHighest: Color(0xFF05133A),
 
     // ❌ ERROR
     error: Color(0xFFF87171),
     onError: Color(0xFFFFFFFF),
 
     // 🧩 OUTLINES
-    outline: Color(0xFF334155),
-    outlineVariant: Color(0xFF1E293B),
-
-    // 🌫 SHADOWS
-    shadow: Color(0xFF000000),
-    scrim: Color(0xFF000000),
-
-    // ✨ MATERIAL OVERLAY
-    surfaceTint: Color(0xFF1B2A4E),
+    outline: Color(0xFF1E293B),
+    outlineVariant: Color(0xFF05133A),
   );
 }
