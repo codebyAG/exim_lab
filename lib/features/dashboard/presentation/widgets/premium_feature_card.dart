@@ -4,6 +4,7 @@ import 'package:sizer/sizer.dart';
 class PremiumFeatureCard extends StatelessWidget {
   final String title;
   final IconData icon;
+  final CustomPainter? painter;
   final String buttonLabel;
   final Color themeColor;
   final VoidCallback onTap;
@@ -12,6 +13,7 @@ class PremiumFeatureCard extends StatelessWidget {
     super.key,
     required this.title,
     required this.icon,
+    this.painter,
     required this.buttonLabel,
     required this.themeColor,
     required this.onTap,
@@ -44,17 +46,24 @@ class PremiumFeatureCard extends StatelessWidget {
                 alignment: Alignment.center,
                 children: [
                   // Subtitle Outline Icon/Pattern if needed
-                  Icon(
-                    icon,
-                    size: 80.sp,
-                    color: Colors.white.withValues(alpha: 0.08),
-                  ),
-                  // Primary Icon
-                  Icon(
-                    icon,
-                    size: 32.sp,
-                    color: Colors.white,
-                  ),
+                  painter != null
+                      ? SizedBox(
+                          width: double.infinity,
+                          height: double.infinity,
+                          child: CustomPaint(painter: painter),
+                        )
+                      : Icon(
+                          icon,
+                          size: 80.sp,
+                          color: Colors.white.withValues(alpha: 0.08),
+                        ),
+                  // Primary Icon (Only show if no painter)
+                  if (painter == null)
+                    Icon(
+                      icon,
+                      size: 32.sp,
+                      color: Colors.white,
+                    ),
                 ],
               ),
             ),

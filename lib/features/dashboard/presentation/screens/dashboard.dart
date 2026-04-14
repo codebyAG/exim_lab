@@ -1,4 +1,5 @@
 import 'package:exim_lab/common/widgets/promo_banner_dialog.dart';
+import 'package:exim_lab/features/dashboard/presentation/painters/dashboard_icons_painter.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/notifications/presentation/providers/notifications_provider.dart';
 import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dart';
@@ -398,6 +399,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     child: PremiumFeatureCard(
                       title: t.translate('gallery'),
                       icon: Icons.photo_library_rounded,
+                      painter: GalleryIconPainter(),
                       buttonLabel: "Success Stories",
                       themeColor: const Color(0xFF0D47A1),
                       onTap: () =>
@@ -408,6 +410,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                   PremiumFeatureCard(
                     title: t.translate('market_updates'),
                     icon: Icons.trending_up_rounded,
+                    painter: MarketUpdatesIconPainter(),
                     buttonLabel: "Live Trends >",
                     themeColor: const Color(0xFFD32F2F),
                     onTap: () =>
@@ -417,6 +420,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                   PremiumFeatureCard(
                     title: t.translate('start_import_journey'),
                     icon: Icons.directions_boat_rounded,
+                    painter: ImportJourneyIconPainter(),
                     buttonLabel: "Continue >",
                     themeColor: const Color(0xFF001A3D),
                     onTap: () =>
@@ -426,6 +430,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                   PremiumFeatureCard(
                     title: t.translate('start_export_journey'),
                     icon: Icons.airplanemode_active_rounded,
+                    painter: ExportJourneyIconPainter(),
                     buttonLabel: "Start Learning >",
                     themeColor: const Color(
                       0xFFC06014,
