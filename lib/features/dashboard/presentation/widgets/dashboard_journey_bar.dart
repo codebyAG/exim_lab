@@ -55,7 +55,7 @@ class DashboardJourneyBar extends StatelessWidget {
                     Text(
                       'Your Progress',
                       style: TextStyle(
-                        fontSize: 16.sp,
+                        fontSize: 20.sp, // Substantially Increased
                         fontWeight: FontWeight.w900,
                         color: Colors.white,
                         fontFamily: 'Plus Jakarta Sans',
@@ -72,7 +72,7 @@ class DashboardJourneyBar extends StatelessWidget {
                     Text(
                       '$percentage%',
                       style: TextStyle(
-                        fontSize: 22.sp,
+                        fontSize: 30.sp, // Substantially Increased
                         fontWeight: FontWeight.w900,
                         color: const Color(0xFFFFD000).withValues(alpha: 0.3),
                         fontFamily: 'jakarta',
@@ -81,7 +81,7 @@ class DashboardJourneyBar extends StatelessWidget {
                     Text(
                       '$percentage%',
                       style: TextStyle(
-                        fontSize: 22.sp,
+                        fontSize: 30.sp, // Substantially Increased
                         fontWeight: FontWeight.w900,
                         color: const Color(0xFFFFD000), // Premium Gold
                         fontFamily: 'jakarta',
@@ -145,8 +145,8 @@ class DashboardJourneyBar extends StatelessWidget {
             Text(
               'Import Fundamentals · $completedCourses of $totalCourses lessons complete',
               style: TextStyle(
-                fontSize: 11.sp,
-                color: Colors.white.withValues(alpha: 0.45),
+                fontSize: 14.sp, // Substantially Increased
+                color: Colors.white.withValues(alpha: 0.55),
                 fontWeight: FontWeight.w500,
               ),
             ),

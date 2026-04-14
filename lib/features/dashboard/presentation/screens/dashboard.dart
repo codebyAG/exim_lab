@@ -369,7 +369,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: Colors.white.withValues(alpha: 0.7),
                           fontWeight: FontWeight.w500,
-                          fontSize: 16.sp,
+                          fontSize: 18.sp, // Increased
                         ),
                       ),
                       Text(
@@ -377,7 +377,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: const Color(0xFFFFD000), // Premium Gold
                           fontWeight: FontWeight.w800,
-                          fontSize: 16.sp,
+                          fontSize: 18.sp, // Increased
                         ),
                       ),
                     ],
@@ -484,8 +484,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       "See All →",
                       style: TextStyle(
                         color: const Color(0xFF1E5FFF),
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w700,
+                        fontSize: 12.5.sp, // Increased
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
                   ),

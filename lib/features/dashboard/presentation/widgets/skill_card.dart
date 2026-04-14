@@ -74,7 +74,10 @@ class SkillCard extends StatelessWidget {
                     child: CustomPaint(painter: painter),
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.4.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 2.5.w,
+                      vertical: 0.4.h,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(4),
@@ -83,7 +86,7 @@ class SkillCard extends StatelessWidget {
                       badge,
                       style: TextStyle(
                         color: Colors.white70,
-                        fontSize: 8.sp,
+                        fontSize: 12.5.sp, // Ultra Increased
                         fontWeight: FontWeight.w800,
                         letterSpacing: 0.5,
                       ),
@@ -99,19 +102,19 @@ class SkillCard extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.white,
                   fontFamily: 'Plus Jakarta Sans',
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w800,
-                  height: 1.2,
+                  fontSize: 18.sp, // Ultra Increased
+                  fontWeight: FontWeight.w900,
+                  height: 1.1,
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(height: 0.5.h),
+              SizedBox(height: 1.h),
               Text(
                 subtitle,
                 style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.55),
-                  fontSize: 9.sp,
+                  color: Colors.white.withValues(alpha: 0.7),
+                  fontSize: 13.5.sp, // Ultra Increased
                   fontWeight: FontWeight.w600,
                 ),
               ),

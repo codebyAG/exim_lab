@@ -58,16 +58,16 @@ class CertificateMiniCard extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.white,
                   fontFamily: 'Plus Jakarta Sans',
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.w800,
+                  fontSize: 13.sp, // Substantially Increased
+                  fontWeight: FontWeight.w900,
                 ),
               ),
               Text(
                 level,
                 style: TextStyle(
                   color: levelColor,
-                  fontSize: 8.5.sp,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 11.sp, // Substantially Increased
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ],
