@@ -337,9 +337,25 @@ class _DashboardBodyState extends State<_DashboardBody> {
               },
             ),
 
+            // 🛠️ PREMIUM SEPARATOR
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+              child: Container(
+                height: 2,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      const Color(0xFFC8151B), // Premium Red
+                      const Color(0xFFC8151B).withValues(alpha: 0.1),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
             // 2. FEATURE TITLE
             Padding(
-              padding: EdgeInsets.fromLTRB(5.w, 3.h, 5.w, 0),
+              padding: EdgeInsets.fromLTRB(5.w, 1.h, 5.w, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -363,18 +379,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 0.5.h),
-                  Container(
-                    width: 15.w,
-                    height: 1.5,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFD32F2F),
-                      borderRadius: BorderRadius.circular(1),
-                    ),
-                  ),
                 ],
               ),
             ),
+            SizedBox(height: 1.5.h),
             // 3. PREMIUM FEATURE CARDS SCROLL (Square Type)
             SizedBox(height: 0.8.h),
             SingleChildScrollView(
@@ -410,7 +418,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     title: t.translate('start_import_journey'),
                     icon: Icons.directions_boat_rounded,
                     buttonLabel: "Continue >",
-                    themeColor: const Color(0xFF0D47A1),
+                    themeColor: const Color(0xFF001A3D),
                     onTap: () =>
                         AppNavigator.push(context, const ImportJourneyScreen()),
                   ),
@@ -418,8 +426,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
                   PremiumFeatureCard(
                     title: t.translate('start_export_journey'),
                     icon: Icons.airplanemode_active_rounded,
-                    buttonLabel: "Start Learning",
-                    themeColor: const Color(0xFFD32F2F),
+                    buttonLabel: "Start Learning >",
+                    themeColor: const Color(
+                      0xFFC06014,
+                    ), // Premium Orange/Bronze
                     onTap: () =>
                         AppNavigator.push(context, const ExportJourneyScreen()),
                   ),
