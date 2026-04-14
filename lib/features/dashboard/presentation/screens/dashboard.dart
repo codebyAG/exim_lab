@@ -455,7 +455,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     text: TextSpan(
                       style: TextStyle(
                         fontFamily: 'Plus Jakarta Sans',
-                        fontSize: 19.sp,
+                        fontSize: 23.sp, // Ultra Increased
                         fontWeight: FontWeight.w900,
                         color: Colors.white,
                       ),

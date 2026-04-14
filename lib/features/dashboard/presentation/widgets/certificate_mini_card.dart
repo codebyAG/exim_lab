@@ -40,11 +40,7 @@ class CertificateMiniCard extends StatelessWidget {
           // 🏷️ Icon Area
           Container(
             padding: EdgeInsets.all(1.5.w),
-            child: SizedBox(
-              width: 5.w,
-              height: 5.w,
-              child: icon,
-            ),
+            child: SizedBox(width: 5.w, height: 5.w, child: icon),
           ),
           SizedBox(width: 2.w),
 
