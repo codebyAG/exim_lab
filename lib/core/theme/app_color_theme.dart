@@ -43,9 +43,9 @@ class AppColorSchemes {
     onSecondaryContainer: Color(0xFFFFDAD6),
 
     // 🧱 SURFACE — Deep Space Navy
-    surface: Color(0xFF020C28),
+    surface: Color(0xFF020C28), // The target premium navy
     onSurface: Color(0xFFFFFFFF),
-    surfaceContainerHighest: Color(0xFF05133A),
+    surfaceContainerHighest: Color(0xFF0A2066),
 
     // ❌ ERROR
     error: Color(0xFFF87171),

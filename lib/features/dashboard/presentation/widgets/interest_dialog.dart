@@ -66,17 +66,29 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      backgroundColor: Colors.transparent,
       child: Stack(
         children: [
           Container(
-            padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+            padding: const EdgeInsets.fromLTRB(24, 32, 24, 32),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
+              color: const Color(0xFF030E30), // Matching Deep Navy
+              borderRadius: BorderRadius.circular(32),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.1),
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.5),
+                  blurRadius: 30,
+                  offset: const Offset(0, 15),
+                ),
+              ],
             ),
             child: SingleChildScrollView(
               child: Column(
@@ -84,97 +96,83 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                 children: [
                   // Avatar Section
                   Container(
-                    height: 90,
-                    width: 90,
+                    height: 100,
+                    width: 100,
                     decoration: BoxDecoration(
                       color: cs.primary.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
+                      border: Border.all(
+                        color: cs.primary.withValues(alpha: 0.2),
+                        width: 2,
+                      ),
                     ),
                     child: const Center(
-                      child: Text("👦", style: TextStyle(fontSize: 50)),
+                      child: Text("👦", style: TextStyle(fontSize: 54)),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  Text(
+                  const SizedBox(height: 20),
+                  const Text(
                     "Hello there! 👋",
                     style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w800,
-                      color: cs.onSurface,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                      fontFamily: 'Plus Jakarta Sans',
                     ),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
+                  Text(
                     "Can you share a bit about you?",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                      color: Colors.white.withValues(alpha: 0.6),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 32),
 
                   // Name Input
                   _buildLabel("Your Name"),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 10),
                   TextField(
                     controller: _nameController,
+                    style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
-                      hintText: "Your Name",
-                      prefixIcon: Icon(Icons.person,
+                      hintText: "Enter your name",
+                      hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
+                      prefixIcon: Icon(Icons.person_rounded,
                           color: cs.primary, size: 22),
                       filled: true,
-                      fillColor: cs.surfaceContainerHighest.withValues(alpha: 0.5),
+                      fillColor: Colors.white.withValues(alpha: 0.05),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide.none,
                       ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.05)),
+                      ),
                       contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 16),
+                          horizontal: 16, vertical: 18),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 24),
 
                   // Interest Selection
                   _buildLabel("Your Interest"),
-                  const SizedBox(height: 8),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 14),
-                    decoration: BoxDecoration(
-                      color: cs.surfaceContainerHighest.withValues(alpha: 0.5),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Select your interest",
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.black54,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Icon(Icons.keyboard_arrow_down_rounded,
-                            color: cs.primary, size: 28),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-
+                  const SizedBox(height: 10),
                   Container(
                     decoration: BoxDecoration(
-                      color: cs.surfaceContainerHighest.withValues(alpha: 0.5),
-                      borderRadius: BorderRadius.circular(16),
+                      color: Colors.white.withValues(alpha: 0.05),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
                     ),
                     child: Column(
                       children: [
                         _buildInterestItem(context, "Import"),
                         Divider(
                             height: 1,
-                            color: Colors.grey.shade200,
+                            color: Colors.white.withValues(alpha: 0.05),
                             indent: 16,
                             endIndent: 16),
                         _buildInterestItem(context, "Export"),
@@ -182,7 +180,7 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                     ),
                   ),
 
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 40),
 
                   // Actions
                   SizedBox(
@@ -192,35 +190,36 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: cs.primary,
                         foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 18),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18),
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                        elevation: 0,
+                        elevation: 10,
+                        shadowColor: cs.primary.withValues(alpha: 0.4),
                       ),
                       child: _isSubmitting
                           ? const SizedBox(
-                              height: 20,
-                              width: 20,
+                              height: 24,
+                              width: 24,
                               child: CircularProgressIndicator(
                                   color: Colors.white, strokeWidth: 2),
                             )
                           : const Text(
                               "Continue",
                               style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w800),
+                                  fontSize: 18, fontWeight: FontWeight.w900),
                             ),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   InkWell(
                     onTap: _isSubmitting ? null : () => Navigator.pop(context),
-                    child: const Text(
+                    child: Text(
                       "Skip",
                       style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                        color: Colors.white.withValues(alpha: 0.4),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
@@ -229,11 +228,11 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
             ),
           ),
           Positioned(
-            right: 12,
-            top: 12,
+            right: 16,
+            top: 16,
             child: IconButton(
               onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.close, color: Colors.black45, size: 24),
+              icon: const Icon(Icons.close_rounded, color: Colors.white54, size: 26),
             ),
           ),
         ],
@@ -248,8 +247,9 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
         text,
         style: const TextStyle(
           fontSize: 14,
-          fontWeight: FontWeight.w700,
-          color: Colors.black87,
+          fontWeight: FontWeight.w800,
+          color: Colors.white,
+          letterSpacing: 0.5,
         ),
       ),
     );
@@ -260,21 +260,32 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
     final isSelected = _selectedInterest == value;
     return InkWell(
       onTap: () => setState(() => _selectedInterest = value),
+      borderRadius: BorderRadius.circular(20),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: Row(
           children: [
-            if (isSelected) 
-              Icon(Icons.check, color: cs.primary, size: 22)
-            else
-              const SizedBox(width: 22),
-            const SizedBox(width: 12),
+            Container(
+              height: 24,
+              width: 24,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isSelected ? cs.primary : Colors.white.withValues(alpha: 0.2),
+                  width: 2,
+                ),
+              ),
+              child: isSelected 
+                ? Center(child: Container(width: 12, height: 12, decoration: BoxDecoration(shape: BoxShape.circle, color: cs.primary)))
+                : null,
+            ),
+            const SizedBox(width: 16),
             Text(
               value,
               style: TextStyle(
-                fontSize: 16,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                color: Colors.black87,
+                fontSize: 17,
+                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.6),
               ),
             ),
           ],

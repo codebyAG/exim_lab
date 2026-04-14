@@ -15,101 +15,139 @@ class DashboardJourneyBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    final progress =
-        totalCourses > 0 ? completedCourses / totalCourses : 0.0;
+    final progress = totalCourses > 0 ? (completedCourses / totalCourses) : 0.0;
+    final percentage = (progress * 100).toInt();
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 5.w),
+      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.2.h),
         decoration: BoxDecoration(
-          color: cs.surface,
-          borderRadius: BorderRadius.circular(16),
+          color: const Color(0xFF030E30), // Matching Deep Navy
+          borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: cs.outlineVariant.withValues(alpha: 0.4),
+            color: const Color(0xFF1E5FFF).withValues(alpha: 0.25),
+            width: 1.5,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 12,
-              offset: const Offset(0, 3),
+              color: const Color(0xFF000000).withValues(alpha: 0.3),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
             ),
           ],
         ),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Course progress
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Your Learning Journey',
-                    style: TextStyle(
-                      fontSize: 14.5.sp,
-                      fontWeight: FontWeight.bold,
-                      color: cs.onSurface,
-                      letterSpacing: -0.4,
+            // 📝 HEADER: TITLE + PERCENTAGE
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    const Text(
+                      '📘',
+                      style: TextStyle(fontSize: 18),
+                    ), // Using emoji for simplicity as per screenshot vibe
+                    SizedBox(width: 3.w),
+                    Text(
+                      'Your Progress',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                        fontFamily: 'Plus Jakarta Sans',
+                        letterSpacing: -0.5,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      Text(
-                        '$completedCourses / $totalCourses Courses',
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w600,
-                          color: cs.primary,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(6),
-                          child: LinearProgressIndicator(
-                            value: progress.clamp(0.0, 1.0),
-                            minHeight: 6,
-                            backgroundColor: cs.primary.withValues(alpha: 0.12),
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              cs.primary,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 12),
-            // Streak chip
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              decoration: BoxDecoration(
-                color: cs.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: cs.primary.withValues(alpha: 0.2),
+                  ],
                 ),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('🔥', style: TextStyle(fontSize: 14)),
-                  const SizedBox(width: 4),
-                  Text(
-                    '$streakDays Day Streak',
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.bold,
-                      color: cs.primary,
+                // 🏆 PERCENTAGE WITH GLOW
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Glow background
+                    Text(
+                      '$percentage%',
+                      style: TextStyle(
+                        fontSize: 22.sp,
+                        fontWeight: FontWeight.w900,
+                        color: const Color(0xFFFFD000).withValues(alpha: 0.3),
+                        fontFamily: 'jakarta',
+                      ),
+                    ),
+                    Text(
+                      '$percentage%',
+                      style: TextStyle(
+                        fontSize: 22.sp,
+                        fontWeight: FontWeight.w900,
+                        color: const Color(0xFFFFD000), // Premium Gold
+                        fontFamily: 'jakarta',
+                        shadows: [
+                          Shadow(
+                            color: const Color(
+                              0xFFFFD000,
+                            ).withValues(alpha: 0.5),
+                            blurRadius: 15,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            SizedBox(height: 1.8.h),
+
+            // 🌊 PREMIUM PROGRESS BAR
+            Stack(
+              children: [
+                // Track
+                Container(
+                  height: 12,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.05),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                // Active Bar with Gradient
+                FractionallySizedBox(
+                  widthFactor: progress.clamp(0.02, 1.0),
+                  child: Container(
+                    height: 12,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF0F47D1), Color(0xFF1E5FFF)],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF1E5FFF).withValues(alpha: 0.4),
+                          blurRadius: 10,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(width: 2),
-                  const Text('🔥', style: TextStyle(fontSize: 14)),
-                ],
+                ),
+              ],
+            ),
+
+            SizedBox(height: 1.2.h),
+
+            // 📍 SUBTITLE
+            Text(
+              'Import Fundamentals · $completedCourses of $totalCourses lessons complete',
+              style: TextStyle(
+                fontSize: 11.sp,
+                color: Colors.white.withValues(alpha: 0.45),
+                fontWeight: FontWeight.w500,
               ),
             ),
           ],

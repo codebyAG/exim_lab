@@ -24,11 +24,15 @@ class PremiumActionCard extends StatelessWidget {
       height: 15.h,
       margin: EdgeInsets.only(right: 4.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF030E30), // Matching Deep Navy
         borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.1),
+          width: 1.2,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withValues(alpha: 0.25),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -58,9 +62,10 @@ class PremiumActionCard extends StatelessWidget {
                     label,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: color,
+                      color: Colors.white,
                       fontWeight: FontWeight.w700,
-                      fontSize: 15.sp,
+                      fontSize: 14.sp,
+                      fontFamily: 'Plus Jakarta Sans',
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -79,16 +84,16 @@ class PremiumActionCard extends StatelessWidget {
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: color.withValues(alpha: 0.15),
-                                  blurRadius: 15,
+                                  color: color.withValues(alpha: 0.2),
+                                  blurRadius: 20,
                                 ),
                               ],
                             ),
                           ),
                           Icon(
                             icon,
-                            size: 28.sp,
-                            color: color.withValues(alpha: 0.9),
+                            size: 26.sp,
+                            color: color.withValues(alpha: 0.95),
                           ),
                         ],
                       ),
@@ -107,14 +112,11 @@ class PremiumActionCard extends StatelessWidget {
                           vertical: 0.7.h,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Colors.white.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.1),
-                              blurRadius: 4,
-                            ),
-                          ],
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.15),
+                          ),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -123,9 +125,9 @@ class PremiumActionCard extends StatelessWidget {
                               child: Text(
                                 "Start >",
                                 style: TextStyle(
-                                  color: color,
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 12.sp,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 11.sp,
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,

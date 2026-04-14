@@ -322,6 +322,21 @@ class _DashboardBodyState extends State<_DashboardBody> {
             // 1.5 ABOUT US SECTION
             const FounderCard(),
 
+            // 📊 YOUR PROGRESS (MOVED UP)
+            Consumer<DashboardProvider>(
+              builder: (context, dashboard, _) {
+                return Consumer<AuthProvider>(
+                  builder: (context, auth, _) {
+                    return DashboardJourneyBar(
+                      completedCourses: auth.user?.stats?.completedCourses ?? 0,
+                      totalCourses: auth.user?.stats?.totalCourses ?? 10,
+                      streakDays: auth.user?.stats?.learningStreak ?? 0,
+                    );
+                  },
+                );
+              },
+            ),
+
             // 2. FEATURE TITLE
             Padding(
               padding: EdgeInsets.fromLTRB(5.w, 3.h, 5.w, 0),
@@ -515,19 +530,6 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       child: MasterclassHighlightCard(data: data),
                     ),
                     SizedBox(height: 1.2.h),
-
-                    // 4. YOUR LEARNING JOURNEY BAR
-                    Consumer<AuthProvider>(
-                      builder: (context, auth, _) {
-                        return DashboardJourneyBar(
-                          completedCourses:
-                              auth.user?.stats?.completedCourses ?? 0,
-                          totalCourses: auth.user?.stats?.totalCourses ?? 10,
-                          streakDays: auth.user?.stats?.learningStreak ?? 0,
-                        );
-                      },
-                    ),
-                    SizedBox(height: 0.8.h),
 
                     // 6. FREE GUIDE BANNER
                     _buildShowcase(

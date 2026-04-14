@@ -9,8 +9,6 @@ class SocialConnectSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
     final t = AppLocalizations.of(context);
 
     return Column(
@@ -25,14 +23,15 @@ class SocialConnectSection extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 4.w),
             decoration: BoxDecoration(
-              color: cs.surface,
+              color: const Color(0xFF030E30), // Matching Deep Navy
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
-                color: cs.outlineVariant.withValues(alpha: 0.5),
+                color: Colors.white.withValues(alpha: 0.1),
+                width: 1.2,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: cs.shadow.withValues(alpha: 0.05),
+                  color: Colors.black.withValues(alpha: 0.2),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),
@@ -80,7 +79,7 @@ class SocialConnectSection extends StatelessWidget {
                 _socialIcon(
                   icon: Icons.language_rounded,
                   label: t.translate('website'),
-                  color: const Color(0xFF0077B5),
+                  color: const Color(0xFF00B0FF), // More vibrant blue for dark
                   onTap: () => launchUrl(
                     Uri.parse("https://www.siiea.in"),
                     mode: LaunchMode.externalApplication,
@@ -109,16 +108,20 @@ class SocialConnectSection extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           assetPath != null
-              ? Image.asset(assetPath, width: 40, height: 40)
-              : Icon(icon, color: color, size: 40),
-          const SizedBox(height: 10),
+              ? Image.asset(assetPath, width: 36, height: 36)
+              : Icon(icon, color: color, size: 36),
+          const SizedBox(height: 8),
           Text(
             label,
             style: TextStyle(
-              fontSize: 14.sp,
+              fontSize: 11.sp,
               fontWeight: FontWeight.w600,
-              color: Colors.black87,
+              color: Colors.white.withValues(alpha: 0.8),
+              fontFamily: 'Plus Jakarta Sans',
             ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
