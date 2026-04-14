@@ -906,3 +906,68 @@ class VideoPlayPainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
+
+/// ⚡ SHORTS PLAY ICON: Centered Play Circle with Triangle
+class ShortsPlayPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    // Reference SVG ViewBox is 90x130
+    final scale = size.width / 90;
+    
+    // Circle base
+    final circlePaint = Paint()
+      ..color = Colors.white.withValues(alpha: 0.1)
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(Offset(45 * scale, 55 * scale), 20 * scale, circlePaint);
+    
+    final strokePaint = Paint()
+      ..color = Colors.white.withValues(alpha: 0.3)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5 * scale;
+    canvas.drawCircle(Offset(45 * scale, 55 * scale), 20 * scale, strokePaint);
+
+    // Play triangle
+    final playPaint = Paint()
+      ..color = Colors.white.withValues(alpha: 0.9)
+      ..style = PaintingStyle.fill;
+    final playPath = Path();
+    playPath.moveTo(38 * scale, 46 * scale);
+    playPath.lineTo(38 * scale, 64 * scale);
+    playPath.lineTo(56 * scale, 55 * scale);
+    playPath.close();
+    canvas.drawPath(playPath, playPaint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+/// 🎞️ SHORTS PATTERN: Abstract Horizontal Stripes
+class ShortsPatternPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final scale = size.width / 90;
+    
+    // Pattern rectangles (centered horizontally)
+    void drawStripe(double y, double width, double height, double opacity) {
+      final paint = Paint()
+        ..color = Colors.white.withValues(alpha: opacity)
+        ..style = PaintingStyle.fill;
+      final x = (90 - width) / 2 * scale;
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(x, y * scale, width * scale, height * scale),
+          Radius.circular(height / 2 * scale),
+        ),
+        paint,
+      );
+    }
+
+    drawStripe(88, 50, 4, 0.3);
+    drawStripe(95, 40, 3, 0.2);
+    drawStripe(101, 30, 3, 0.15);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}

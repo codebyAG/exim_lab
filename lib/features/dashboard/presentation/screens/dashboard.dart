@@ -12,6 +12,9 @@ import 'package:exim_lab/features/notifications/presentation/providers/notificat
 import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dart';
 import 'package:exim_lab/features/courses/data/models/course_model.dart';
 import 'package:exim_lab/features/freevideos/data/models/free_videos_model.dart';
+import 'package:exim_lab/features/shorts/presentation/providers/shorts_provider.dart';
+import 'package:exim_lab/features/shorts/data/models/short_model.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/premium_short_video_card.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_details_screen.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_list_screen.dart';
 import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart';
@@ -655,10 +658,16 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.8.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 4.w,
+                      vertical: 0.8.h,
+                    ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
-                      border: Border.all(color: const Color(0xFF1E5FFF), width: 1.5),
+                      border: Border.all(
+                        color: const Color(0xFF1E5FFF),
+                        width: 1.5,
+                      ),
                     ),
                     child: Text(
                       "View All →",
@@ -688,7 +697,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     rating: "4.9",
                     reviews: "1.2k",
                     price: "2,499",
-                    gradientColors: const [Color(0xFF0A2066), Color(0xFF1E5FFF)],
+                    gradientColors: const [
+                      Color(0xFF0A2066),
+                      Color(0xFF1E5FFF),
+                    ],
                     painter: CourseChecklistPainter(),
                     enrollButtonColor: const Color(0xFF1E5FFF),
                   ),
@@ -701,7 +713,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     rating: "4.8",
                     reviews: "980",
                     price: "1,999",
-                    gradientColors: const [Color(0xFF6B0000), Color(0xFFC8151B)],
+                    gradientColors: const [
+                      Color(0xFF6B0000),
+                      Color(0xFFC8151B),
+                    ],
                     painter: CourseForexPainter(),
                     enrollButtonColor: const Color(0xFFFF2D35),
                   ),
@@ -714,7 +729,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     rating: "5.0",
                     reviews: "2.1k",
                     price: "3,299",
-                    gradientColors: const [Color(0xFF4A2800), Color(0xFFCC6600)],
+                    gradientColors: const [
+                      Color(0xFF4A2800),
+                      Color(0xFFCC6600),
+                    ],
                     painter: CourseBuyersPainter(),
                     enrollButtonColor: const Color(0xFFCC6600),
                   ),
@@ -747,10 +765,16 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.8.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 4.w,
+                      vertical: 0.8.h,
+                    ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
-                      border: Border.all(color: const Color(0xFF1E5FFF), width: 1.5),
+                      border: Border.all(
+                        color: const Color(0xFF1E5FFF),
+                        width: 1.5,
+                      ),
                     ),
                     child: Text(
                       "View All →",
@@ -829,7 +853,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (freeVideoSection != null && freeVideoSection.data.isNotEmpty) ...[
+                    if (freeVideoSection != null &&
+                        freeVideoSection.data.isNotEmpty) ...[
                       SizedBox(height: 2.5.h),
                       // 🎁 4.9 FREE VIDEOS SECTION
                       Padding(
@@ -849,16 +874,24 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                   const TextSpan(text: "🎁 Free "),
                                   TextSpan(
                                     text: "Videos",
-                                    style: TextStyle(color: const Color(0xFFFFD000)),
+                                    style: TextStyle(
+                                      color: const Color(0xFFFFD000),
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.8.h),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 4.w,
+                                vertical: 0.8.h,
+                              ),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(100),
-                                border: Border.all(color: const Color(0xFF1E5FFF), width: 1.5),
+                                border: Border.all(
+                                  color: const Color(0xFF1E5FFF),
+                                  width: 1.5,
+                                ),
                               ),
                               child: Text(
                                 "View All →",
@@ -877,13 +910,17 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         scrollDirection: Axis.horizontal,
                         padding: EdgeInsets.only(left: 5.w, bottom: 2.h),
                         child: Row(
-                          children: freeVideoSection.data.cast<FreeVideoModel>().map((video) {
+                          children: freeVideoSection.data.cast<FreeVideoModel>().map((
+                            video,
+                          ) {
                             return FreeVideoCard(
                               title: video.title,
                               thumbnailUrl: video.thumbnailUrl,
                               durationSeconds: video.durationSeconds,
-                              views: "128K views", // Mock view count as it's not in the model
-                              timeAgo: "6 months ago", // Mock time ago as it's not in the model
+                              views:
+                                  "128K views", // Mock view count as it's not in the model
+                              timeAgo:
+                                  "6 months ago", // Mock time ago as it's not in the model
                               onTap: () {
                                 // Navigate to video player if applicable
                               },
@@ -892,6 +929,130 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         ),
                       ),
                     ],
+
+                    // ⚡ 4.10 SHORT VIDEOS SECTION
+                    Consumer<ShortsProvider>(
+                      builder: (context, shortsProvider, _) {
+                        if (shortsProvider.shorts.isEmpty)
+                          return const SizedBox.shrink();
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 1.5.h),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 5.w),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                        fontFamily: 'Plus Jakarta Sans',
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.white,
+                                      ),
+                                      children: [
+                                        const TextSpan(text: "⚡ Short "),
+                                        TextSpan(
+                                          text: "Videos",
+                                          style: TextStyle(
+                                            color: const Color(0xFFFFD000),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 4.w,
+                                      vertical: 0.8.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(100),
+                                      border: Border.all(
+                                        color: const Color(0xFF1E5FFF),
+                                        width: 1.5,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      "View All →",
+                                      style: TextStyle(
+                                        color: const Color(0xFF1E5FFF),
+                                        fontSize: 10.sp,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 2.h),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              padding: EdgeInsets.only(left: 5.w, bottom: 2.h),
+                              child: Row(
+                                children: [
+                                  for (
+                                    int i = 0;
+                                    i < shortsProvider.shorts.length;
+                                    i++
+                                  )
+                                    Builder(
+                                      builder: (context) {
+                                        final short = shortsProvider.shorts[i];
+                                        // Array of modern premium gradients
+                                        final gradients = [
+                                          [
+                                            const Color(0xFF0A2066),
+                                            const Color(0xFF1E5FFF),
+                                          ], // Blue
+                                          [
+                                            const Color(0xFF6B0000),
+                                            const Color(0xFFC8151B),
+                                          ], // Red
+                                          [
+                                            const Color(0xFF994400),
+                                            const Color(0xFFFF8800),
+                                          ], // Orange
+                                          [
+                                            const Color(0xFF004411),
+                                            const Color(0xFF008822),
+                                          ], // Green
+                                        ];
+
+                                        return PremiumShortVideoCard(
+                                          title: short.title,
+                                          viewCount: short.viewCount > 0
+                                              ? short.viewCount
+                                              : 45000 +
+                                                    (i *
+                                                        1200), // Fallback for aesthetic
+                                          durationSeconds:
+                                              short.durationSeconds > 0
+                                              ? short.durationSeconds
+                                              : 55 + (i * 5),
+                                          gradientColors:
+                                              gradients[i % gradients.length],
+                                          onTap: () {
+                                            AppNavigator.push(
+                                              context,
+                                              ShortsFeedScreen(initialIndex: i),
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 1.h),
+                          ],
+                        );
+                      },
+                    ),
                     SizedBox(height: 0.8.h),
 
                     // 3. CONTINUE LEARNING HERO
