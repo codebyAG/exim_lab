@@ -45,7 +45,7 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/free_pdf_promo_
 import 'package:exim_lab/features/dashboard/presentation/widgets/testimonials_section.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/social_connect_section.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/free_counseling_section.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_header_widgets.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_modern_header.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/tutorial_step_content.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -304,538 +304,460 @@ class _DashboardBodyState extends State<_DashboardBody> {
               child: Icon(Icons.support_agent, color: cs.onPrimary, size: 28),
             )
           : null,
-      body: SafeArea(
-        bottom: false,
-        child: RefreshIndicator(
-          onRefresh: () =>
-              context.read<DashboardProvider>().fetchDashboardData(),
-          child: ListView(
-            controller: _scrollController,
-            cacheExtent: 1000,
-            padding: EdgeInsets.zero,
-            children: [
-              // 1 & 2. NAVY TOP HEADER SECTION
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.white,
-                      cs.surfaceContainerHighest.withValues(alpha: 0.1),
+      body: RefreshIndicator(
+        onRefresh: () => context.read<DashboardProvider>().fetchDashboardData(),
+        child: ListView(
+          controller: _scrollController,
+          cacheExtent: 1000,
+          padding: EdgeInsets.zero,
+          children: [
+            // 🏆 MODERN PREMIUM HEADER SECTION
+            _buildShowcase(
+              key: _headerKey,
+              title: 'tut_header_title',
+              description: 'tut_header_desc',
+              child: const DashboardModernHeader(),
+            ),
+
+            // 1.5 ABOUT US SECTION
+            const FounderCard(),
+
+            // 2. FEATURE TITLE
+            Padding(
+              padding: EdgeInsets.fromLTRB(5.w, 3.h, 5.w, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        "What would you like to ",
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: cs.onSurfaceVariant,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16.sp,
+                        ),
+                      ),
+                      Text(
+                        "Learn Today?",
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: const Color(0xFF001A3D),
+                          fontWeight: FontWeight.w800,
+                          fontSize: 16.sp,
+                        ),
+                      ),
                     ],
                   ),
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(32),
-                    bottomRight: Radius.circular(32),
+                  SizedBox(height: 0.5.h),
+                  Container(
+                    width: 15.w,
+                    height: 1.5,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFD32F2F),
+                      borderRadius: BorderRadius.circular(1),
+                    ),
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: cs.shadow.withValues(alpha: 0.04),
-                      blurRadius: 20,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    // 1. HEADER
-                    _buildShowcase(
-                      key: _headerKey,
-                      title: 'tut_header_title',
-                      description: 'tut_header_desc',
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(5.w, 3.h, 5.w, 0),
-                        child: Row(
-                          children: [
-                            // 🏛️ LOGO
-                            SizedBox(
-                              height: 6.h,
-                              child: Image.asset(
-                                'assets/startup_india_import_export_academy_logo.png',
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                            const Spacer(),
-
-                            // 🔍 SEARCH
-                            HeaderCircleIcon(
-                              icon: Icons.search_rounded,
-                              onTap: () {
-                                // Search functionality to be handled by user
-                              },
-                            ),
-                            const SizedBox(width: 8),
-
-                            // 🔔 NOTIFICATIONS
-                            const NotificationIcon(),
-                            const SizedBox(width: 8),
-
-                            // 👤 PROFILE
-                            const ProfileIcon(),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    // 1.5 ABOUT US SECTION
-                    const FounderCard(),
-
-                    // 2. FEATURE TITLE
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(5.w, 3.h, 5.w, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "What would you like to ",
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: cs.onSurfaceVariant,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16.sp,
-                                ),
-                              ),
-                              Text(
-                                "Learn Today?",
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: const Color(0xFF001A3D),
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 16.sp,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 0.5.h),
-                          Container(
-                            width: 15.w,
-                            height: 1.5,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFD32F2F),
-                              borderRadius: BorderRadius.circular(1),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // 3. PREMIUM FEATURE CARDS SCROLL (Square Type)
-                    SizedBox(height: 0.8.h),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 5.w,
-                        vertical: 1.h,
-                      ),
-                      child: Row(
-                        children: [
-                          // 📸 GALLERY
-                          _buildShowcase(
-                            key: _galleryCardKey,
-                            title: 'tut_gallery_title',
-                            description: 'tut_gallery_desc',
-                            child: PremiumFeatureCard(
-                              title: t.translate('gallery'),
-                              icon: Icons.photo_library_rounded,
-                              buttonLabel: "Success Stories",
-                              themeColor: const Color(0xFF0D47A1),
-                              onTap: () => AppNavigator.push(
-                                context,
-                                const GalleryScreen(),
-                              ),
-                            ),
-                          ),
-                          // 📊 MARKET UPDATES
-                          PremiumFeatureCard(
-                            title: t.translate('market_updates'),
-                            icon: Icons.trending_up_rounded,
-                            buttonLabel: "Live Trends >",
-                            themeColor: const Color(0xFFD32F2F),
-                            onTap: () => AppNavigator.push(
-                              context,
-                              const NewsListScreen(),
-                            ),
-                          ),
-                          // 🚢 IMPORT JOURNEY
-                          PremiumFeatureCard(
-                            title: t.translate('start_import_journey'),
-                            icon: Icons.directions_boat_rounded,
-                            buttonLabel: "Continue >",
-                            themeColor: const Color(0xFF0D47A1),
-                            onTap: () => AppNavigator.push(
-                              context,
-                              const ImportJourneyScreen(),
-                            ),
-                          ),
-                          // ✈️ EXPORT JOURNEY
-                          PremiumFeatureCard(
-                            title: t.translate('start_export_journey'),
-                            icon: Icons.airplanemode_active_rounded,
-                            buttonLabel: "Start Learning",
-                            themeColor: const Color(0xFFD32F2F),
-                            onTap: () => AppNavigator.push(
-                              context,
-                              const ExportJourneyScreen(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                ],
               ),
-
+            ),
+            // 3. PREMIUM FEATURE CARDS SCROLL (Square Type)
+            SizedBox(height: 0.8.h),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+              child: Row(
+                children: [
+                  // 📸 GALLERY
+                  _buildShowcase(
+                    key: _galleryCardKey,
+                    title: 'tut_gallery_title',
+                    description: 'tut_gallery_desc',
+                    child: PremiumFeatureCard(
+                      title: t.translate('gallery'),
+                      icon: Icons.photo_library_rounded,
+                      buttonLabel: "Success Stories",
+                      themeColor: const Color(0xFF0D47A1),
+                      onTap: () =>
+                          AppNavigator.push(context, const GalleryScreen()),
+                    ),
+                  ),
+                  // 📊 MARKET UPDATES
+                  PremiumFeatureCard(
+                    title: t.translate('market_updates'),
+                    icon: Icons.trending_up_rounded,
+                    buttonLabel: "Live Trends >",
+                    themeColor: const Color(0xFFD32F2F),
+                    onTap: () =>
+                        AppNavigator.push(context, const NewsListScreen()),
+                  ),
+                  // 🚢 IMPORT JOURNEY
+                  PremiumFeatureCard(
+                    title: t.translate('start_import_journey'),
+                    icon: Icons.directions_boat_rounded,
+                    buttonLabel: "Continue >",
+                    themeColor: const Color(0xFF0D47A1),
+                    onTap: () =>
+                        AppNavigator.push(context, const ImportJourneyScreen()),
+                  ),
+                  // ✈️ EXPORT JOURNEY
+                  PremiumFeatureCard(
+                    title: t.translate('start_export_journey'),
+                    icon: Icons.airplanemode_active_rounded,
+                    buttonLabel: "Start Learning",
+                    themeColor: const Color(0xFFD32F2F),
+                    onTap: () =>
+                        AppNavigator.push(context, const ExportJourneyScreen()),
+                  ),
+                    ],
+                  ),
+                ),
               // 3-END. DYNAMIC CONTENT
               Consumer<DashboardProvider>(
-                builder: (context, dashboard, _) {
-                  if (dashboard.isLoading) return const DashboardShimmer();
-                  if (dashboard.error != null) {
-                    return Center(child: Text('Error: ${dashboard.error}'));
-                  }
-                  final data = dashboard.data;
-                  if (data == null) return const SizedBox();
+              builder: (context, dashboard, _) {
+                if (dashboard.isLoading) return const DashboardShimmer();
+                if (dashboard.error != null) {
+                  return Center(child: Text('Error: ${dashboard.error}'));
+                }
+                final data = dashboard.data;
+                if (data == null) return const SizedBox();
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 0.8.h),
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 0.8.h),
 
-                      // 3. CONTINUE LEARNING HERO
-                      if (dashboard.continueCourses.isNotEmpty)
-                        ModuleVisibility(
-                          module: 'continueLearning',
-                          child: _buildShowcase(
-                            key: _continueKey,
-                            title: 'tut_continue_title',
-                            description: 'tut_continue_desc',
-                            child: Consumer<AuthProvider>(
-                              builder: (context, auth, _) {
-                                final isPremium = auth.user?.isPremium ?? false;
-                                final course = dashboard.continueCourses.first;
-                                final isFree = course.basePrice == 0;
-                                final isAccessible = isPremium || isFree;
-
-                                return DashboardContinueHero(
-                                  course: course,
-                                  isLocked: !isAccessible,
-                                  onTap: () => _handlePremiumGatedTap(
-                                    context: context,
-                                    isFree: isFree,
-                                    action: () => AppNavigator.push(
-                                      context,
-                                      CourseDetailsScreen(courseId: course.id),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      if (dashboard.continueCourses.isNotEmpty)
-                        SizedBox(height: 0.8.h),
-
-                      // 6. TOOLS (MOVED UP)
+                    // 3. CONTINUE LEARNING HERO
+                    if (dashboard.continueCourses.isNotEmpty)
                       ModuleVisibility(
-                        module: 'tools',
+                        module: 'continueLearning',
                         child: _buildShowcase(
-                          key: _toolsKey,
-                          title: 'tut_tools_title',
-                          description: 'tut_tools_desc',
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      t.translate('tools_section_title'),
-                                      style: theme.textTheme.titleLarge
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.w900,
-                                            fontSize: 18,
-                                          ),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {},
-                                      child: Text(
-                                        'See All',
-                                        style: TextStyle(
-                                          color: cs.primary,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 1.h),
-                              Consumer<AuthProvider>(
-                                builder: (context, auth, _) => ToolsSection(
-                                  isPremium: auth.user?.isPremium ?? false,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 0.8.h),
-
-                      // 1.6 MASTERCLASS HIGHLIGHT
-                      _buildShowcase(
-                        key: _masterclassKey,
-                        title: 'Masterclass',
-                        description: 'Watch our complete Import Export Roadmap',
-                        child: MasterclassHighlightCard(data: data),
-                      ),
-                      SizedBox(height: 1.2.h),
-
-                      // 4. YOUR LEARNING JOURNEY BAR
-                      Consumer<AuthProvider>(
-                        builder: (context, auth, _) {
-                          return DashboardJourneyBar(
-                            completedCourses:
-                                auth.user?.stats?.completedCourses ?? 0,
-                            totalCourses: auth.user?.stats?.totalCourses ?? 10,
-                            streakDays: auth.user?.stats?.learningStreak ?? 0,
-                          );
-                        },
-                      ),
-                      SizedBox(height: 0.8.h),
-
-                      // 6. FREE GUIDE BANNER
-                      _buildShowcase(
-                        key: _pdfPromoKey,
-                        title: 'tut_pdf_promo_title',
-                        description: 'tut_pdf_promo_desc',
-                        child: const FreePdfPromoCard(),
-                      ),
-                      SizedBox(height: 0.8.h),
-
-                      // 4. QUICK ACTIONS ROW 2: QUIZZES & AI EXPERT (MOVED ABOVE CAROUSEL)
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(5.w, 1.h, 5.w, 1.5.h),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: _buildShowcase(
-                                key: _quizzesCardKey,
-                                title: 'tut_quizzes_title',
-                                description: 'tut_quizzes_desc',
-                                child: Consumer<AuthProvider>(
-                                  builder: (context, auth, _) {
-                                    final isPremium =
-                                        auth.user?.isPremium ?? false;
-                                    return PremiumActionCard(
-                                      icon: Icons.quiz_rounded,
-                                      label: t.translate('quizzes_title'),
-                                      color: cs.primary,
-                                      isLocked: !isPremium,
-                                      onTap: () => _handlePremiumGatedTap(
-                                        context: context,
-                                        action: () => AppNavigator.push(
-                                          context,
-                                          const QuizTopicsScreen(),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 4.w),
-                            Expanded(
-                              child: _buildShowcase(
-                                key: _aiExpertCardKey,
-                                title: 'tut_ai_expert_title',
-                                description: 'tut_ai_expert_desc',
-                                child: Consumer<AuthProvider>(
-                                  builder: (context, auth, _) {
-                                    final isPremium =
-                                        auth.user?.isPremium ?? false;
-                                    return PremiumActionCard(
-                                      icon: Icons.smart_toy_rounded,
-                                      label: t.translate('ai_expert'),
-                                      color: cs.primary,
-                                      isLocked: !isPremium,
-                                      onTap: () => _handlePremiumGatedTap(
-                                        context: context,
-                                        action: () => AppNavigator.push(
-                                          context,
-                                          const AiChatScreen(),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // 6. CAROUSEL
-                      if (data.addons.carousel.isNotEmpty) ...[
-                        ModuleVisibility(
-                          module: 'carousel',
-                          child: FadeIn(
-                            duration: const Duration(milliseconds: 800),
-                            child: _buildShowcase(
-                              key: _carouselKey,
-                              title: 'tut_carousel_title',
-                              description: 'tut_carousel_desc',
-                              child: CtaCarousel(banners: data.addons.carousel),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 0.8.h),
-                      ],
-
-                      // 7. SHORTS
-                      ModuleVisibility(
-                        module: 'shortVideos',
-                        child: _buildShowcase(
-                          key: _shortsKey,
-                          title: 'tut_shorts_title',
-                          description: 'tut_shorts_desc',
+                          key: _continueKey,
+                          title: 'tut_continue_title',
+                          description: 'tut_continue_desc',
                           child: Consumer<AuthProvider>(
                             builder: (context, auth, _) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.w,
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'Short Learning Videos',
-                                          style: theme.textTheme.titleLarge
-                                              ?.copyWith(
-                                                fontWeight: FontWeight.w900,
-                                                fontSize: 18,
-                                              ),
-                                        ),
-                                        TextButton(
-                                          onPressed: () =>
-                                              _handlePremiumGatedTap(
-                                                context: context,
-                                                action: () => AppNavigator.push(
-                                                  context,
-                                                  const ShortsFeedScreen(),
-                                                ),
-                                              ),
-                                          child: Text(
-                                            'See All',
-                                            style: TextStyle(
-                                              color: cs.primary,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                              final isPremium = auth.user?.isPremium ?? false;
+                              final course = dashboard.continueCourses.first;
+                              final isFree = course.basePrice == 0;
+                              final isAccessible = isPremium || isFree;
+
+                              return DashboardContinueHero(
+                                course: course,
+                                isLocked: !isAccessible,
+                                onTap: () => _handlePremiumGatedTap(
+                                  context: context,
+                                  isFree: isFree,
+                                  action: () => AppNavigator.push(
+                                    context,
+                                    CourseDetailsScreen(courseId: course.id),
                                   ),
-                                  InkWell(
-                                    onTap: () {
-                                      AppNavigator.push(
-                                        context,
-                                        const ShortsFeedScreen(),
-                                      );
-                                    },
-                                    child: const IgnorePointer(
-                                      child: HomeShortsSection(),
-                                    ),
-                                  ),
-                                ],
+                                ),
                               );
                             },
                           ),
                         ),
                       ),
+                    if (dashboard.continueCourses.isNotEmpty)
                       SizedBox(height: 0.8.h),
 
-                      // 10. DYNAMIC SECTIONS
+                    // 6. TOOLS (MOVED UP)
+                    ModuleVisibility(
+                      module: 'tools',
+                      child: _buildShowcase(
+                        key: _toolsKey,
+                        title: 'tut_tools_title',
+                        description: 'tut_tools_desc',
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 5.w),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    t.translate('tools_section_title'),
+                                    style: theme.textTheme.titleLarge?.copyWith(
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {},
+                                    child: Text(
+                                      'See All',
+                                      style: TextStyle(
+                                        color: cs.primary,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 1.h),
+                            Consumer<AuthProvider>(
+                              builder: (context, auth, _) => ToolsSection(
+                                isPremium: auth.user?.isPremium ?? false,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 0.8.h),
 
-                      // Popular/Recommended Section
-                      if (dashboard.popularCourseSection != null)
-                        ModuleVisibility(
-                          module: 'courses',
-                          child: _buildShowcase(
-                            key: _popularCoursesKey,
-                            title: 'tut_popular_courses_title',
-                            description: 'tut_popular_courses_desc',
-                            child: _buildPopularSection(
-                              context,
-                              dashboard.popularCourseSection!,
+                    // 1.6 MASTERCLASS HIGHLIGHT
+                    _buildShowcase(
+                      key: _masterclassKey,
+                      title: 'Masterclass',
+                      description: 'Watch our complete Import Export Roadmap',
+                      child: MasterclassHighlightCard(data: data),
+                    ),
+                    SizedBox(height: 1.2.h),
+
+                    // 4. YOUR LEARNING JOURNEY BAR
+                    Consumer<AuthProvider>(
+                      builder: (context, auth, _) {
+                        return DashboardJourneyBar(
+                          completedCourses:
+                              auth.user?.stats?.completedCourses ?? 0,
+                          totalCourses: auth.user?.stats?.totalCourses ?? 10,
+                          streakDays: auth.user?.stats?.learningStreak ?? 0,
+                        );
+                      },
+                    ),
+                    SizedBox(height: 0.8.h),
+
+                    // 6. FREE GUIDE BANNER
+                    _buildShowcase(
+                      key: _pdfPromoKey,
+                      title: 'tut_pdf_promo_title',
+                      description: 'tut_pdf_promo_desc',
+                      child: const FreePdfPromoCard(),
+                    ),
+                    SizedBox(height: 0.8.h),
+
+                    // 4. QUICK ACTIONS ROW 2: QUIZZES & AI EXPERT (MOVED ABOVE CAROUSEL)
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(5.w, 1.h, 5.w, 1.5.h),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: _buildShowcase(
+                              key: _quizzesCardKey,
+                              title: 'tut_quizzes_title',
+                              description: 'tut_quizzes_desc',
+                              child: Consumer<AuthProvider>(
+                                builder: (context, auth, _) {
+                                  final isPremium =
+                                      auth.user?.isPremium ?? false;
+                                  return PremiumActionCard(
+                                    icon: Icons.quiz_rounded,
+                                    label: t.translate('quizzes_title'),
+                                    color: cs.primary,
+                                    isLocked: !isPremium,
+                                    onTap: () => _handlePremiumGatedTap(
+                                      context: context,
+                                      action: () => AppNavigator.push(
+                                        context,
+                                        const QuizTopicsScreen(),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                           ),
-                        ),
-
-                      // Free Videos Section
-                      if (dashboard.freeVideoSection != null)
-                        ModuleVisibility(
-                          module: 'freeVideos',
-                          child: _buildShowcase(
-                            key: _freeVideosKey,
-                            title: 'tut_free_videos_title',
-                            description: 'tut_free_videos_desc',
-                            child: _buildFreeVideosSection(
-                              context,
-                              dashboard.freeVideoSection!,
+                          SizedBox(width: 4.w),
+                          Expanded(
+                            child: _buildShowcase(
+                              key: _aiExpertCardKey,
+                              title: 'tut_ai_expert_title',
+                              description: 'tut_ai_expert_desc',
+                              child: Consumer<AuthProvider>(
+                                builder: (context, auth, _) {
+                                  final isPremium =
+                                      auth.user?.isPremium ?? false;
+                                  return PremiumActionCard(
+                                    icon: Icons.smart_toy_rounded,
+                                    label: t.translate('ai_expert'),
+                                    color: cs.primary,
+                                    isLocked: !isPremium,
+                                    onTap: () => _handlePremiumGatedTap(
+                                      context: context,
+                                      action: () => AppNavigator.push(
+                                        context,
+                                        const AiChatScreen(),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                           ),
-                        ),
+                        ],
+                      ),
+                    ),
 
-                      // Inline Banners
-                      if (dashboard.inlineBanners.isNotEmpty)
-                        ModuleVisibility(
-                          module: 'banners',
-                          child: Column(
-                            children: [
-                              InlineBanner(banners: dashboard.inlineBanners),
-                              SizedBox(height: 0.8.h),
-                            ],
+                    // 6. CAROUSEL
+                    if (data.addons.carousel.isNotEmpty) ...[
+                      ModuleVisibility(
+                        module: 'carousel',
+                        child: FadeIn(
+                          duration: const Duration(milliseconds: 800),
+                          child: _buildShowcase(
+                            key: _carouselKey,
+                            title: 'tut_carousel_title',
+                            description: 'tut_carousel_desc',
+                            child: CtaCarousel(banners: data.addons.carousel),
                           ),
                         ),
-
-                      // 10. TESTIMONIALS
-                      _buildShowcase(
-                        key: _testimonialsKey,
-                        title: 'tut_testimonials_title',
-                        description: 'tut_testimonials_desc',
-                        child: const TestimonialsSection(),
                       ),
-                      SizedBox(height: 1.2.h),
-
-                      // 11. SOCIAL
-                      _buildShowcase(
-                        key: _socialKey,
-                        title: 'tut_social_title',
-                        description: 'tut_social_desc',
-                        child: const SocialConnectSection(),
-                      ),
-                      SizedBox(height: 1.2.h),
-
-                      // 12. FREE COUNSELING
-                      _buildShowcase(
-                        key: _counselingKey,
-                        title: 'tut_counseling_title',
-                        description: 'tut_counseling_desc',
-                        child: const FreeCounselingSection(),
-                      ),
-                      SizedBox(height: 1.2.h),
+                      SizedBox(height: 0.8.h),
                     ],
-                  );
-                },
-              ),
-            ],
-          ),
+
+                    // 7. SHORTS
+                    ModuleVisibility(
+                      module: 'shortVideos',
+                      child: _buildShowcase(
+                        key: _shortsKey,
+                        title: 'tut_shorts_title',
+                        description: 'tut_shorts_desc',
+                        child: Consumer<AuthProvider>(
+                          builder: (context, auth, _) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 5.w,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Short Learning Videos',
+                                        style: theme.textTheme.titleLarge
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.w900,
+                                              fontSize: 18,
+                                            ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => _handlePremiumGatedTap(
+                                          context: context,
+                                          action: () => AppNavigator.push(
+                                            context,
+                                            const ShortsFeedScreen(),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'See All',
+                                          style: TextStyle(
+                                            color: cs.primary,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    AppNavigator.push(
+                                      context,
+                                      const ShortsFeedScreen(),
+                                    );
+                                  },
+                                  child: const IgnorePointer(
+                                    child: HomeShortsSection(),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 0.8.h),
+
+                    // 10. DYNAMIC SECTIONS
+
+                    // Popular/Recommended Section
+                    if (dashboard.popularCourseSection != null)
+                      ModuleVisibility(
+                        module: 'courses',
+                        child: _buildShowcase(
+                          key: _popularCoursesKey,
+                          title: 'tut_popular_courses_title',
+                          description: 'tut_popular_courses_desc',
+                          child: _buildPopularSection(
+                            context,
+                            dashboard.popularCourseSection!,
+                          ),
+                        ),
+                      ),
+
+                    // Free Videos Section
+                    if (dashboard.freeVideoSection != null)
+                      ModuleVisibility(
+                        module: 'freeVideos',
+                        child: _buildShowcase(
+                          key: _freeVideosKey,
+                          title: 'tut_free_videos_title',
+                          description: 'tut_free_videos_desc',
+                          child: _buildFreeVideosSection(
+                            context,
+                            dashboard.freeVideoSection!,
+                          ),
+                        ),
+                      ),
+
+                    // Inline Banners
+                    if (dashboard.inlineBanners.isNotEmpty)
+                      ModuleVisibility(
+                        module: 'banners',
+                        child: Column(
+                          children: [
+                            InlineBanner(banners: dashboard.inlineBanners),
+                            SizedBox(height: 0.8.h),
+                          ],
+                        ),
+                      ),
+
+                    // 10. TESTIMONIALS
+                    _buildShowcase(
+                      key: _testimonialsKey,
+                      title: 'tut_testimonials_title',
+                      description: 'tut_testimonials_desc',
+                      child: const TestimonialsSection(),
+                    ),
+                    SizedBox(height: 1.2.h),
+
+                    // 11. SOCIAL
+                    _buildShowcase(
+                      key: _socialKey,
+                      title: 'tut_social_title',
+                      description: 'tut_social_desc',
+                      child: const SocialConnectSection(),
+                    ),
+                    SizedBox(height: 1.2.h),
+
+                    // 12. FREE COUNSELING
+                    _buildShowcase(
+                      key: _counselingKey,
+                      title: 'tut_counseling_title',
+                      description: 'tut_counseling_desc',
+                      child: const FreeCounselingSection(),
+                    ),
+                    SizedBox(height: 1.2.h),
+                  ],
+                );
+              },
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: NavigationBar(

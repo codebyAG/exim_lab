@@ -175,7 +175,6 @@ class FounderCard extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildPillBadge(String text, Color? color, {bool isWhite = false}) {
     return Container(
       padding: EdgeInsets.symmetric(
