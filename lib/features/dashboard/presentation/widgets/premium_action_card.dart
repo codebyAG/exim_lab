@@ -28,7 +28,7 @@ class PremiumActionCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -79,7 +79,7 @@ class PremiumActionCard extends StatelessWidget {
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: color.withOpacity(0.15),
+                                  color: color.withValues(alpha: 0.15),
                                   blurRadius: 15,
                                 ),
                               ],
@@ -88,7 +88,7 @@ class PremiumActionCard extends StatelessWidget {
                           Icon(
                             icon,
                             size: 28.sp,
-                            color: color.withOpacity(0.9),
+                            color: color.withValues(alpha: 0.9),
                           ),
                         ],
                       ),
@@ -111,7 +111,7 @@ class PremiumActionCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
+                              color: Colors.black.withValues(alpha: 0.1),
                               blurRadius: 4,
                             ),
                           ],
@@ -143,7 +143,7 @@ class PremiumActionCard extends StatelessWidget {
             // 🔒 LOCK OVERLAY
             if (isLocked)
               Container(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 child: const Center(
                   child: Icon(
                     Icons.lock_rounded,
@@ -166,7 +166,7 @@ class _CardWavePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = color.withOpacity(0.4)
+      ..color = color.withValues(alpha: 0.4)
       ..style = PaintingStyle.fill;
 
     final path = Path();

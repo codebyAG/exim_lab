@@ -45,9 +45,9 @@ class MasterclassHighlightCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
             decoration: BoxDecoration(
-              color: cs.secondary.withOpacity(0.1),
+              color: cs.secondary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(30),
-              border: Border.all(color: cs.secondary.withOpacity(0.2)),
+              border: Border.all(color: cs.secondary.withValues(alpha: 0.2)),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -87,11 +87,11 @@ class MasterclassHighlightCard extends StatelessWidget {
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [cs.primary, cs.primary.withOpacity(0.8)],
+                    colors: [cs.primary, cs.primary.withValues(alpha: 0.8)],
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: cs.primary.withOpacity(0.3),
+                      color: cs.primary.withValues(alpha: 0.3),
                       blurRadius: 30,
                       offset: const Offset(0, 15),
                     ),
@@ -121,8 +121,8 @@ class MasterclassHighlightCard extends StatelessWidget {
                           begin: Alignment.centerLeft,
                           end: Alignment.centerRight,
                           colors: [
-                            cs.primary.withOpacity(0.95),
-                            cs.primary.withOpacity(0.4),
+                            cs.primary.withValues(alpha: 0.95),
+                            cs.primary.withValues(alpha: 0.4),
                             Colors.transparent,
                           ],
                         ),
@@ -140,7 +140,7 @@ class MasterclassHighlightCard extends StatelessWidget {
                             horizontal: 10,
                             vertical: 6,
                           ),
-                          color: Colors.white.withOpacity(0.1),
+                          color: Colors.white.withValues(alpha: 0.1),
                           child: const Row(
                             children: [
                               Icon(
@@ -173,10 +173,10 @@ class MasterclassHighlightCard extends StatelessWidget {
                           height: 64,
                           width: 64,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.15),
+                            color: Colors.white.withValues(alpha: 0.15),
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: Colors.white.withOpacity(0.3),
+                              color: Colors.white.withValues(alpha: 0.3),
                               width: 1,
                             ),
                           ),
@@ -229,7 +229,7 @@ class MasterclassHighlightCard extends StatelessWidget {
                           Text(
                             "The Ultimate 2026\nBeginner-to-Pro\nRoadmap Training",
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.8),
+                              color: Colors.white.withValues(alpha: 0.8),
                               fontSize: 11.sp,
                               fontWeight: FontWeight.w600,
                               height: 1.3,

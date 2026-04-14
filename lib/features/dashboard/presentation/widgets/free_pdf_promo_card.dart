@@ -19,7 +19,7 @@ class FreePdfPromoCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: cs.primary.withOpacity(0.2),
+              color: cs.primary.withValues(alpha: 0.2),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -48,7 +48,7 @@ class FreePdfPromoCard extends StatelessWidget {
                     Text(
                       "Complete beginner guide to start business",
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),

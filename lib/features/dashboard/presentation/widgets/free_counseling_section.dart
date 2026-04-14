@@ -17,14 +17,14 @@ class FreeCounselingSection extends StatelessWidget {
         padding: EdgeInsets.all(6.w),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [cs.primary, cs.primary.withOpacity(0.7)],
+            colors: [cs.primary, cs.primary.withValues(alpha: 0.7)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: cs.primary.withOpacity(0.35),
+              color: cs.primary.withValues(alpha: 0.35),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -35,7 +35,7 @@ class FreeCounselingSection extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
@@ -65,7 +65,7 @@ class FreeCounselingSection extends StatelessWidget {
             Text(
               "Book a 1:1 session with our industry experts",
               style: TextStyle(
-                color: Colors.white.withOpacity(0.85),
+                color: Colors.white.withValues(alpha: 0.85),
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),

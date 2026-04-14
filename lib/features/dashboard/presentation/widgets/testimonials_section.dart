@@ -75,7 +75,7 @@ class TestimonialsSection extends StatelessWidget {
                   border: Border.all(color: cs.outlineVariant),
                   boxShadow: [
                     BoxShadow(
-                      color: cs.shadow.withOpacity(0.04),
+                      color: cs.shadow.withValues(alpha: 0.04),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -88,7 +88,7 @@ class TestimonialsSection extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 20,
-                          backgroundColor: cs.primary.withOpacity(0.1),
+                          backgroundColor: cs.primary.withValues(alpha: 0.1),
                           child: Icon(
                             Icons.person,
                             color: cs.primary,

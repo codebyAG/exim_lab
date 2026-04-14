@@ -28,11 +28,11 @@ class SocialConnectSection extends StatelessWidget {
               color: cs.surface,
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
-                color: cs.outlineVariant.withOpacity(0.5),
+                color: cs.outlineVariant.withValues(alpha: 0.5),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: cs.shadow.withOpacity(0.05),
+                  color: cs.shadow.withValues(alpha: 0.05),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),

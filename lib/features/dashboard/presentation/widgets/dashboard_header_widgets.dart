@@ -26,7 +26,7 @@ class HeaderCircleIcon extends StatelessWidget {
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: cs.shadow.withOpacity(0.1),
+            color: cs.shadow.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -46,7 +46,6 @@ class NotificationIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
     return Consumer<NotificationsProvider>(
       builder: (context, notifProvider, child) {
         return Stack(

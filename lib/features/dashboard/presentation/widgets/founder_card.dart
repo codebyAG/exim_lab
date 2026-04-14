@@ -104,7 +104,7 @@ class FounderCard extends StatelessWidget {
                           Text(
                             "\"Empowering India in Global Trade\"",
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.9), // Changed withValues -> withOpacity for stability
+                              color: Colors.white.withValues(alpha: 0.9), // Changed withValues -> withOpacity for stability
                               fontSize: 12.sp,
                               fontStyle: FontStyle.italic,
                             ),
@@ -137,13 +137,13 @@ class FounderCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(30),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFFD32F2F).withOpacity(0.4),
+                            color: const Color(0xFFD32F2F).withValues(alpha: 0.4),
                             blurRadius: 10,
                             offset: const Offset(0, 5),
                           ),
                         ],
                         border: Border.all(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           width: 1.5,
                         ),
                       ),
@@ -185,12 +185,12 @@ class FounderCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: isWhite
             ? Colors.white
-            : (color?.withOpacity(0.2) ?? Colors.white10),
+            : (color?.withValues(alpha: 0.2) ?? Colors.white10),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: isWhite
               ? Colors.white
-              : (color?.withOpacity(0.3) ?? Colors.white24),
+              : (color?.withValues(alpha: 0.3) ?? Colors.white24),
           width: 0.8,
         ),
       ),
@@ -267,7 +267,7 @@ class FounderCard extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 35,
-                          backgroundColor: cs.primaryContainer.withOpacity(0.3),
+                          backgroundColor: cs.primaryContainer.withValues(alpha: 0.3),
                           backgroundImage: const AssetImage(
                             'assets/ashok_sir_image.png',
                           ),
@@ -418,7 +418,7 @@ class _SirCardPainter extends CustomPainter {
 
     // Draw Globe/Grid lines (Subtle)
     final gridPaint = Paint()
-      ..color = Colors.white.withOpacity(0.08)
+      ..color = Colors.white.withValues(alpha: 0.08)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
 
@@ -440,9 +440,9 @@ class _SirCardPainter extends CustomPainter {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          Colors.white.withOpacity(0.4),
+          Colors.white.withValues(alpha: 0.4),
           Colors.transparent,
-          Colors.white.withOpacity(0.15),
+          Colors.white.withValues(alpha: 0.15),
         ],
       ).createShader(Offset.zero & size);
     canvas.drawPath(path, borderPaint);
@@ -481,7 +481,7 @@ class _ProfileGlowPainter extends CustomPainter {
     final ringPaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.5
-      ..color = Colors.white.withOpacity(0.9);
+      ..color = Colors.white.withValues(alpha: 0.9);
     canvas.drawCircle(center, radius - 7, ringPaint);
   }
 
