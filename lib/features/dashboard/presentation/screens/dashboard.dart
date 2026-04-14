@@ -26,7 +26,6 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/home_shorts_sec
 import 'package:exim_lab/features/shorts/presentation/screens/shorts_feed_screen.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/cta_carasoul.dart';
 import 'package:exim_lab/features/gallery/presentation/screens/gallery_screen.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/horizontal_courses.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/inline_banner.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/section_header.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/tool_section.dart';
