@@ -24,7 +24,8 @@ import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/home_shorts_section.dart';
 import 'package:exim_lab/features/shorts/presentation/screens/shorts_feed_screen.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/cta_carasoul.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/home_shorts_section.dart';
+import 'package:exim_lab/features/shorts/presentation/screens/shorts_feed_screen.dart';
 import 'package:exim_lab/features/gallery/presentation/screens/gallery_screen.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/inline_banner.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/section_header.dart';
@@ -92,7 +93,6 @@ class _DashboardBodyState extends State<_DashboardBody> {
   final GlobalKey _notifKey = GlobalKey();
   final GlobalKey _userProfileKey = GlobalKey();
 
-  final GlobalKey _carouselKey = GlobalKey();
   final GlobalKey _shortsKey = GlobalKey();
 
   final GlobalKey _coursesCardKey = GlobalKey();
@@ -185,7 +185,6 @@ class _DashboardBodyState extends State<_DashboardBody> {
         _notifKey,
         _userProfileKey,
         _galleryHeaderKey,
-        _carouselKey,
         _shortsKey,
         _coursesCardKey,
         _quizzesCardKey,
@@ -947,15 +946,6 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     ),
                     SizedBox(height: 0.8.h),
 
-                    // 1.6 MASTERCLASS HIGHLIGHT
-                    _buildShowcase(
-                      key: _masterclassKey,
-                      title: 'Masterclass',
-                      description: 'Watch our complete Import Export Roadmap',
-                      child: MasterclassHighlightCard(data: data),
-                    ),
-                    SizedBox(height: 1.2.h),
-
                     // 6. FREE GUIDE BANNER
                     _buildShowcase(
                       key: _pdfPromoKey,
@@ -1027,89 +1017,6 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       ),
                     ),
 
-                    // 6. CAROUSEL
-                    if (data.addons.carousel.isNotEmpty) ...[
-                      ModuleVisibility(
-                        module: 'carousel',
-                        child: FadeIn(
-                          duration: const Duration(milliseconds: 800),
-                          child: _buildShowcase(
-                            key: _carouselKey,
-                            title: 'tut_carousel_title',
-                            description: 'tut_carousel_desc',
-                            child: CtaCarousel(banners: data.addons.carousel),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 0.8.h),
-                    ],
-
-                    // 7. SHORTS
-                    ModuleVisibility(
-                      module: 'shortVideos',
-                      child: _buildShowcase(
-                        key: _shortsKey,
-                        title: 'tut_shorts_title',
-                        description: 'tut_shorts_desc',
-                        child: Consumer<AuthProvider>(
-                          builder: (context, auth, _) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 5.w,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'Short Learning Videos',
-                                        style: theme.textTheme.titleLarge
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.w900,
-                                              fontSize: 18,
-                                            ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () => _handlePremiumGatedTap(
-                                          context: context,
-                                          action: () => AppNavigator.push(
-                                            context,
-                                            const ShortsFeedScreen(),
-                                          ),
-                                        ),
-                                        child: Text(
-                                          'See All',
-                                          style: TextStyle(
-                                            color: cs.primary,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    AppNavigator.push(
-                                      context,
-                                      const ShortsFeedScreen(),
-                                    );
-                                  },
-                                  child: const IgnorePointer(
-                                    child: HomeShortsSection(),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 0.8.h),
-
                     // 10. DYNAMIC SECTIONS
 
                     // Popular Courses (Default)
@@ -1155,21 +1062,6 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         dashboard.marketSection!,
                         null,
                         'courses',
-                      ),
-
-                    // Free Videos Section
-                    if (dashboard.freeVideoSection != null)
-                      ModuleVisibility(
-                        module: 'freeVideos',
-                        child: _buildShowcase(
-                          key: _freeVideosKey,
-                          title: 'tut_free_videos_title',
-                          description: 'tut_free_videos_desc',
-                          child: _buildFreeVideosSection(
-                            context,
-                            dashboard.freeVideoSection!,
-                          ),
-                        ),
                       ),
 
                     // Inline Banners
