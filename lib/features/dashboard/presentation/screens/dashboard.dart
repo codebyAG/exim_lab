@@ -1,5 +1,7 @@
 import 'package:exim_lab/common/widgets/promo_banner_dialog.dart';
 import 'package:exim_lab/features/dashboard/presentation/painters/dashboard_icons_painter.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/skill_card.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/certificate_mini_card.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/notifications/presentation/providers/notifications_provider.dart';
 import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dart';
@@ -441,7 +443,180 @@ class _DashboardBodyState extends State<_DashboardBody> {
                 ],
               ),
             ),
-            // 3-END. DYNAMIC CONTENT
+            SizedBox(height: 2.h),
+
+            // 🛠️ 4. SKILLS YOU'LL LEARN (Header + 2x2 Grid)
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontSize: 19.sp,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                      ),
+                      children: [
+                        const TextSpan(text: "Skills You'll "),
+                        TextSpan(
+                          text: "Learn",
+                          style: TextStyle(color: const Color(0xFFFFD000)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 4.w,
+                      vertical: 0.6.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1E5FFF).withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: const Color(0xFF1E5FFF).withValues(alpha: 0.3),
+                      ),
+                    ),
+                    child: Text(
+                      "See All →",
+                      style: TextStyle(
+                        color: const Color(0xFF1E5FFF),
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 2.h),
+
+            // 🔥 SKILLS GRID
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              child: GridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                mainAxisSpacing: 3.w,
+                crossAxisSpacing: 3.w,
+                childAspectRatio: 1.15,
+                children: [
+                  SkillCard(
+                    title: "Export Price Calculator",
+                    subtitle: "Profit · Pricing",
+                    badge: "TOOL",
+                    gradientColors: const [
+                      Color(0xFF0A2066),
+                      Color(0xFF153580),
+                    ],
+                    painter: ExportPriceIconPainter(),
+                  ),
+                  SkillCard(
+                    title: "Import Calculator",
+                    subtitle: "Cost · Duty",
+                    badge: "TOOL",
+                    gradientColors: const [
+                      Color(0xFF5A0006),
+                      Color(0xFF8B000C),
+                    ],
+                    painter: ImportCalcIconPainter(),
+                  ),
+                  SkillCard(
+                    title: "Logistics & Shipping",
+                    subtitle: "Routes · Freight",
+                    badge: "MODULE",
+                    gradientColors: const [
+                      Color(0xFF003A70),
+                      Color(0xFF005AAA),
+                    ],
+                    painter: LogisticsIconPainter(),
+                  ),
+                  SkillCard(
+                    title: "Buyer Acquisition",
+                    subtitle: "Leads · Markets",
+                    badge: "MODULE",
+                    gradientColors: const [
+                      Color(0xFF4A2800),
+                      Color(0xFF7A4400),
+                    ],
+                    painter: BuyerIconPainter(),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 2.5.h),
+
+            // 🏅 5. CERTIFICATES MINI ROW
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              child: Row(
+                children: [
+                  CertificateMiniCard(
+                    title: "Export",
+                    level: "Beginner",
+                    levelColor: const Color(0xFF88AAFF),
+                    gradientColors: const [
+                      Color(0xFF0A2066),
+                      Color(0xFF1040C1),
+                    ],
+                    icon: CustomPaint(painter: CertStarIconPainter()),
+                  ),
+                  CertificateMiniCard(
+                    title: "Documentation",
+                    level: "Expert",
+                    levelColor: const Color(0xFFFF9999),
+                    gradientColors: const [
+                      Color(0xFF5A0006),
+                      Color(0xFFC8151B),
+                    ],
+                    icon: Text("📋", style: TextStyle(fontSize: 16.sp)),
+                  ),
+                  CertificateMiniCard(
+                    title: "Trade",
+                    level: "Analyst",
+                    levelColor: const Color(0xFF88AAFF),
+                    gradientColors: const [
+                      Color(0xFF0A2066),
+                      Color(0xFF1040C1),
+                    ],
+                    icon: Text("⚔️", style: TextStyle(fontSize: 16.sp)),
+                  ),
+                  CertificateMiniCard(
+                    title: "Trade",
+                    level: "Advanced",
+                    levelColor: const Color(0xFFFFD000),
+                    gradientColors: const [
+                      Color(0xFF4A2800),
+                      Color(0xFF8B5500),
+                    ],
+                    icon: Text("🏆", style: TextStyle(fontSize: 16.sp)),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 1.5.h),
+
+            // 🛠️ PREMIUM DIVIDER
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+              child: Container(
+                height: 2,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      const Color(0xFFC8151B),
+                      const Color(0xFFC8151B).withValues(alpha: 0.1),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 1.h),
             Consumer<DashboardProvider>(
               builder: (context, dashboard, _) {
                 if (dashboard.isLoading) return const DashboardShimmer();
