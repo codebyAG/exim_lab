@@ -466,3 +466,100 @@ class CertStarIconPainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
+
+/// 🚢 MASTERCLASS SHIP WATERMARK
+class MasterclassShipWatermarkPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final scale = size.width / 160;
+    final paint = Paint()..color = Colors.white..style = PaintingStyle.fill;
+
+    // Hull
+    final hull = Path();
+    hull.moveTo(10 * scale, 70 * scale);
+    hull.lineTo(150 * scale, 70 * scale);
+    hull.lineTo(144 * scale, 85 * scale);
+    hull.lineTo(16 * scale, 85 * scale);
+    hull.close();
+    canvas.drawPath(hull, paint);
+
+    // Bridge levels
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(30 * scale, 48 * scale, 100 * scale, 22 * scale), Radius.circular(3 * scale)), paint);
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(50 * scale, 32 * scale, 60 * scale, 18 * scale), Radius.circular(3 * scale)), paint);
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(65 * scale, 18 * scale, 30 * scale, 16 * scale), Radius.circular(2 * scale)), paint);
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(74 * scale, 6 * scale, 10 * scale, 18 * scale), Radius.circular(2 * scale)), paint);
+
+    // Waves
+    final waves = Path();
+    waves.moveTo(0, 70 * scale);
+    waves.quadraticBezierTo(20 * scale, 60 * scale, 40 * scale, 70 * scale);
+    waves.quadraticBezierTo(60 * scale, 80 * scale, 80 * scale, 70 * scale);
+    waves.quadraticBezierTo(100 * scale, 60 * scale, 120 * scale, 70 * scale);
+    waves.quadraticBezierTo(140 * scale, 80 * scale, 160 * scale, 70 * scale);
+    waves.lineTo(160 * scale, 100 * scale);
+    waves.lineTo(0, 100 * scale);
+    waves.close();
+    canvas.drawPath(waves, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+/// ✈️ MASTERCLASS PLANE WATERMARK
+class MasterclassPlaneWatermarkPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final scale = size.width / 100;
+    
+    canvas.save();
+    canvas.rotate(-25 * 3.14159 / 180);
+
+    final paint = Paint()..color = Colors.white..style = PaintingStyle.fill;
+
+    // Body
+    canvas.drawOval(Rect.fromCenter(center: Offset(30 * scale, 15 * scale), width: 48 * scale, height: 10 * scale), paint);
+
+    // Tail
+    final tail = Path();
+    tail.moveTo(54 * scale, 15 * scale);
+    tail.quadraticBezierTo(62 * scale, 15 * scale, 60 * scale, 17 * scale);
+    tail.quadraticBezierTo(57 * scale, 18 * scale, 52 * scale, 17 * scale);
+    tail.close();
+    canvas.drawPath(tail, paint);
+
+    // Wings
+    final topWing = Path();
+    topWing.moveTo(22 * scale, 15 * scale);
+    topWing.lineTo(32 * scale, 4 * scale);
+    topWing.lineTo(36 * scale, 4 * scale);
+    topWing.lineTo(30 * scale, 15 * scale);
+    topWing.close();
+    canvas.drawPath(topWing, paint);
+
+    final botWing = Path();
+    botWing.moveTo(22 * scale, 15 * scale);
+    botWing.lineTo(32 * scale, 26 * scale);
+    botWing.lineTo(36 * scale, 26 * scale);
+    botWing.lineTo(30 * scale, 15 * scale);
+    botWing.close();
+    canvas.drawPath(botWing, paint);
+
+    canvas.restore();
+
+    // Dash trail
+    final trailPaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1 * scale;
+    
+    final trailPath = Path();
+    trailPath.moveTo(0 * scale, 24 * scale);
+    trailPath.quadraticBezierTo(20 * scale, 22 * scale, 40 * scale, 18 * scale);
+    
+    canvas.drawPath(trailPath, trailPaint); 
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}

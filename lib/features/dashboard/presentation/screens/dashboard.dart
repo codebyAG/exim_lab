@@ -3,6 +3,7 @@ import 'package:exim_lab/features/dashboard/presentation/painters/dashboard_icon
 import 'package:exim_lab/features/dashboard/presentation/widgets/skill_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/certificate_mini_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/achieve_live_card.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/masterclass_card.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/notifications/presentation/providers/notifications_provider.dart';
 import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dart';
@@ -604,6 +605,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
             SizedBox(height: 1.h),
 
             const AchieveLiveCard(),
+            SizedBox(height: 1.h),
+
+            // 🚀 4.6 FEATURED MASTERCLASS
+            const MasterclassCard(),
             SizedBox(height: 1.5.h),
 
             // 🛠️ PREMIUM DIVIDER
