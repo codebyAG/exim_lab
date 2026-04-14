@@ -5,10 +5,13 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/certificate_min
 import 'package:exim_lab/features/dashboard/presentation/widgets/achieve_live_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/masterclass_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/premium_course_card.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/popular_course_card.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/free_video_card.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/notifications/presentation/providers/notifications_provider.dart';
 import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dart';
 import 'package:exim_lab/features/courses/data/models/course_model.dart';
+import 'package:exim_lab/features/freevideos/data/models/free_videos_model.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_details_screen.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_list_screen.dart';
 import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart';
@@ -24,7 +27,6 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/horizontal_cour
 import 'package:exim_lab/features/dashboard/presentation/widgets/inline_banner.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/section_header.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/tool_section.dart';
-import 'package:exim_lab/features/freevideos/data/models/free_videos_model.dart';
 import 'package:exim_lab/features/freevideos/presentation/widgets/free_video_section.dart';
 import 'package:exim_lab/features/news/presentation/screens/news_list_screen.dart';
 import 'package:exim_lab/localization/app_localization.dart';
@@ -719,6 +721,98 @@ class _DashboardBodyState extends State<_DashboardBody> {
                 ],
               ),
             ),
+            SizedBox(height: 2.5.h),
+
+            // 🔥 4.8 POPULAR COURSES SECTION
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                      ),
+                      children: [
+                        const TextSpan(text: "🔥 Popular "),
+                        TextSpan(
+                          text: "Courses",
+                          style: TextStyle(color: const Color(0xFFFFD000)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.8.h),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      border: Border.all(color: const Color(0xFF1E5FFF), width: 1.5),
+                    ),
+                    child: Text(
+                      "View All →",
+                      style: TextStyle(
+                        color: const Color(0xFF1E5FFF),
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 2.h),
+
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              child: Column(
+                children: [
+                  PopularCourseCard(
+                    rank: "01",
+                    title: "Import-Export Business Setup A to Z",
+                    category: "Certification",
+                    meta: "⭐ 4.9 · 3,400 students · 24 hrs",
+                    price: "4,999",
+                    iconPainter: PopularCertPainter(),
+                    categoryColor: const Color(0xFF88AAFF),
+                    iconBgColors: const [Color(0xFF0A2066), Color(0xFF1040C1)],
+                  ),
+                  PopularCourseCard(
+                    rank: "02",
+                    title: "GST, Customs Duty & Tax Compliance",
+                    category: "Finance",
+                    meta: "⭐ 4.8 · 2,100 students · 16 hrs",
+                    price: "2,799",
+                    iconPainter: PopularFinancePainter(),
+                    categoryColor: const Color(0xFFFF9999),
+                    iconBgColors: const [Color(0xFF5A0006), Color(0xFF8B000C)],
+                  ),
+                  PopularCourseCard(
+                    rank: "03",
+                    title: "Shipping, Incoterms & Freight Management",
+                    category: "Logistics",
+                    meta: "⭐ 4.7 · 1,850 students · 20 hrs",
+                    price: "3,499",
+                    iconPainter: PopularLogisticsPainter(),
+                    categoryColor: const Color(0xFF66BBFF),
+                    iconBgColors: const [Color(0xFF003A70), Color(0xFF0055AA)],
+                  ),
+                  PopularCourseCard(
+                    rank: "04",
+                    title: "Market Research & Product Selection",
+                    category: "Global Markets",
+                    meta: "⭐ 4.9 · 1,560 students · 14 hrs",
+                    price: "2,199",
+                    iconPainter: PopularMarketPainter(),
+                    categoryColor: const Color(0xFF88FF88),
+                    iconBgColors: const [Color(0xFF004411), Color(0xFF008822)],
+                  ),
+                ],
+              ),
+            ),
 
             SizedBox(height: 1.h),
             Consumer<DashboardProvider>(
@@ -730,9 +824,74 @@ class _DashboardBodyState extends State<_DashboardBody> {
                 final data = dashboard.data;
                 if (data == null) return const SizedBox();
 
+                final freeVideoSection = dashboard.freeVideoSection;
+
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    if (freeVideoSection != null && freeVideoSection.data.isNotEmpty) ...[
+                      SizedBox(height: 2.5.h),
+                      // 🎁 4.9 FREE VIDEOS SECTION
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 5.w),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            RichText(
+                              text: TextSpan(
+                                style: TextStyle(
+                                  fontFamily: 'Plus Jakarta Sans',
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white,
+                                ),
+                                children: [
+                                  const TextSpan(text: "🎁 Free "),
+                                  TextSpan(
+                                    text: "Videos",
+                                    style: TextStyle(color: const Color(0xFFFFD000)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.8.h),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                border: Border.all(color: const Color(0xFF1E5FFF), width: 1.5),
+                              ),
+                              child: Text(
+                                "View All →",
+                                style: TextStyle(
+                                  color: const Color(0xFF1E5FFF),
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        padding: EdgeInsets.only(left: 5.w, bottom: 2.h),
+                        child: Row(
+                          children: freeVideoSection.data.cast<FreeVideoModel>().map((video) {
+                            return FreeVideoCard(
+                              title: video.title,
+                              thumbnailUrl: video.thumbnailUrl,
+                              durationSeconds: video.durationSeconds,
+                              views: "128K views", // Mock view count as it's not in the model
+                              timeAgo: "6 months ago", // Mock time ago as it's not in the model
+                              onTap: () {
+                                // Navigate to video player if applicable
+                              },
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ],
                     SizedBox(height: 0.8.h),
 
                     // 3. CONTINUE LEARNING HERO

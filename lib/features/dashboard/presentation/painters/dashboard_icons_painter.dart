@@ -725,3 +725,184 @@ class CourseBuyersPainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
+
+/// 📜 POPULAR COURSE ICON: CERTIFICATION (Blue)
+class PopularCertPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final scale = size.width / 64;
+    final paint = Paint()..style = PaintingStyle.fill;
+    
+    // Document
+    paint.color = const Color(0xFF1040C1);
+    final docRect = RRect.fromRectAndRadius(Rect.fromLTWH(16 * scale, 12 * scale, 32 * scale, 40 * scale), Radius.circular(3 * scale));
+    canvas.drawRRect(docRect, paint);
+    canvas.drawRRect(docRect, Paint()..color = const Color(0xFF5599FF)..style = PaintingStyle.stroke..strokeWidth = 1 * scale);
+
+    // Lines
+    final linePaint = Paint()..color = const Color(0xFF88AAFF);
+    void drawLine(double y, double w, double alpha) {
+      linePaint.color = const Color(0xFF88AAFF).withValues(alpha: alpha);
+      canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(20 * scale, y * scale, w * scale, 3 * scale), Radius.circular(1.5 * scale)), linePaint);
+    }
+    drawLine(18, 24, 0.9);
+    drawLine(24, 18, 0.6);
+    drawLine(29, 21, 0.6);
+    drawLine(34, 16, 0.4);
+
+    // Seal
+    canvas.drawCircle(Offset(32 * scale, 44 * scale), 5 * scale, Paint()..color = const Color(0xFFFFD000));
+    final textPainter = TextPainter(
+      text: TextSpan(text: "IE", style: TextStyle(color: Colors.black, fontSize: 6 * scale, fontWeight: FontWeight.bold)),
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout();
+    textPainter.paint(canvas, Offset(29.5 * scale, 41 * scale));
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+/// 💰 POPULAR COURSE ICON: FINANCE (Red)
+class PopularFinancePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final scale = size.width / 64;
+    
+    canvas.drawCircle(Offset(32 * scale, 30 * scale), 16 * scale, Paint()..color = const Color(0xFF8B000C));
+    canvas.drawCircle(Offset(32 * scale, 30 * scale), 16 * scale, Paint()..color = const Color(0xFFFF8888)..style = PaintingStyle.stroke..strokeWidth = 1.5 * scale);
+
+    final textPainter = TextPainter(
+      text: TextSpan(text: "\$₹", style: TextStyle(color: const Color(0xFFFFD000), fontSize: 13 * scale, fontWeight: FontWeight.bold)),
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout();
+    textPainter.paint(canvas, Offset(23 * scale, 22 * scale));
+
+    canvas.drawLine(Offset(20 * scale, 50 * scale), Offset(44 * scale, 50 * scale), Paint()..color = const Color(0xFFFF8888).withValues(alpha: 0.5)..strokeWidth = 2 * scale..strokeCap = StrokeCap.round);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+/// 🚢 POPULAR COURSE ICON: LOGISTICS (Teal)
+class PopularLogisticsPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final scale = size.width / 64;
+    
+    // Hull
+    canvas.drawPath(Path()
+      ..moveTo(12 * scale, 40 * scale)..lineTo(52 * scale, 40 * scale)..lineTo(50 * scale, 48 * scale)..lineTo(14 * scale, 48 * scale)..close(),
+      Paint()..color = const Color(0xFFC8D8FF));
+
+    // Containers
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(18 * scale, 30 * scale, 28 * scale, 12 * scale), Radius.circular(2 * scale)), Paint()..color = const Color(0xFFE8F0FF));
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(24 * scale, 22 * scale, 16 * scale, 10 * scale), Radius.circular(1 * scale)), Paint()..color = const Color(0xFFC8D8FF));
+
+    // Colored boxes
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(20 * scale, 32 * scale, 8 * scale, 6 * scale), Radius.circular(1 * scale)), Paint()..color = const Color(0xFFFF2D35));
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(30 * scale, 32 * scale, 8 * scale, 6 * scale), Radius.circular(1 * scale)), Paint()..color = const Color(0xFFFFD000));
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(40 * scale, 32 * scale, 8 * scale, 6 * scale), Radius.circular(1 * scale)), Paint()..color = const Color(0xFF44AAFF));
+
+    // Smoke stack
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(30 * scale, 14 * scale, 4 * scale, 10 * scale), Radius.circular(1 * scale)), Paint()..color = Colors.grey);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+/// 🌐 POPULAR COURSE ICON: MARKET (Green)
+class PopularMarketPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final scale = size.width / 64;
+    final strokePaint = Paint()
+      ..color = const Color(0xFFFFD000).withValues(alpha: 0.8)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5 * scale;
+    
+    // Globe outline
+    canvas.drawCircle(Offset(32 * scale, 32 * scale), 20 * scale, strokePaint);
+    
+    // Grid lines
+    final gridPaint = Paint()
+      ..color = const Color(0xFFFFD000).withValues(alpha: 0.4)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5 * scale;
+    canvas.drawOval(Rect.fromCenter(center: Offset(32 * scale, 32 * scale), width: 12 * scale, height: 40 * scale), gridPaint);
+    canvas.drawLine(Offset(12 * scale, 32 * scale), Offset(52 * scale, 32 * scale), gridPaint);
+    
+    // Nodes
+    final nodePaint = Paint()..color = const Color(0xFFFFD000);
+    canvas.drawCircle(Offset(32 * scale, 12 * scale), 3 * scale, nodePaint);
+    canvas.drawCircle(Offset(18 * scale, 22 * scale), 3 * scale, nodePaint);
+    canvas.drawCircle(Offset(46 * scale, 22 * scale), 3 * scale, nodePaint);
+    canvas.drawCircle(Offset(32 * scale, 52 * scale), 3 * scale, nodePaint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+/// ▶️ VIDEO PLAY ICON: Standard Play Button with Sound Waves
+class VideoPlayPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    // Reference SVG ViewBox is 160x90
+    final scale = size.width / 160;
+    
+    // Circle base
+    final circlePaint = Paint()
+      ..color = const Color(0xFF0D2880)
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(Offset(80 * scale, 45 * scale), 22 * scale, circlePaint);
+    
+    final strokePaint = Paint()
+      ..color = const Color(0xFF1E5FFF)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5 * scale;
+    canvas.drawCircle(Offset(80 * scale, 45 * scale), 22 * scale, strokePaint);
+
+    // Play triangle
+    final playPaint = Paint()..color = const Color(0xFFFFD000)..style = PaintingStyle.fill;
+    final playPath = Path();
+    playPath.moveTo(74 * scale, 35 * scale);
+    playPath.lineTo(74 * scale, 55 * scale);
+    playPath.lineTo(94 * scale, 45 * scale);
+    playPath.close();
+    canvas.drawPath(playPath, playPaint);
+
+    // Sound waves
+    
+    // Inner wave
+    final wave1 = Path();
+    wave1.moveTo(106 * scale, 37 * scale);
+    wave1.quadraticBezierTo(114 * scale, 45 * scale, 106 * scale, 53 * scale);
+    
+    final wave1Paint = Paint()
+      ..color = const Color(0xFF1E5FFF).withValues(alpha: 0.6)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2 * scale
+      ..strokeCap = StrokeCap.round;
+    canvas.drawPath(wave1, wave1Paint);
+
+    // Outer wave
+    final wave2 = Path();
+    wave2.moveTo(110 * scale, 31 * scale);
+    wave2.quadraticBezierTo(122 * scale, 45 * scale, 110 * scale, 59 * scale);
+    
+    final wave2Paint = Paint()
+      ..color = const Color(0xFF1E5FFF).withValues(alpha: 0.3)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5 * scale
+      ..strokeCap = StrokeCap.round;
+    canvas.drawPath(wave2, wave2Paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
