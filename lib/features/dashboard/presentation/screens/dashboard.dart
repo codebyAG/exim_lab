@@ -587,8 +587,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       _buildShowcase(
                         key: _masterclassKey,
                         title: 'Masterclass',
-                        description:
-                            'Watch our complete Import Export Roadmap',
+                        description: 'Watch our complete Import Export Roadmap',
                         child: MasterclassHighlightCard(data: data),
                       ),
                       SizedBox(height: 1.2.h),
@@ -762,7 +761,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       SizedBox(height: 0.8.h),
 
                       // 10. DYNAMIC SECTIONS
-                                  
+
                       // Popular/Recommended Section
                       if (dashboard.popularCourseSection != null)
                         ModuleVisibility(
@@ -843,7 +842,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
         destinations: List.generate(navItems.length, (index) {
           final item = navItems[index];
           final schemaItem = navConfig.schema[index];
-          
+
           GlobalKey? key;
           String title = '';
           String desc = '';
@@ -928,21 +927,33 @@ class _DashboardBodyState extends State<_DashboardBody> {
           navActions.add(null);
           break;
         case 'shorts':
-          navActions.add(() => AppNavigator.push(context, const ShortsFeedScreen()));
+          navActions.add(
+            () => AppNavigator.push(context, const ShortsFeedScreen()),
+          );
           break;
         case 'courses':
-          navActions.add(() => AppNavigator.push(context, const CoursesListScreen()));
+          navActions.add(
+            () => AppNavigator.push(context, const CoursesListScreen()),
+          );
           break;
         case 'news':
-          navActions.add(() => AppNavigator.push(context, const NewsListScreen()));
+          navActions.add(
+            () => AppNavigator.push(context, const NewsListScreen()),
+          );
           break;
         case 'profile':
-          navActions.add(() => AppNavigator.push(context, const ProfileScreen()));
+          navActions.add(
+            () => AppNavigator.push(context, const ProfileScreen()),
+          );
           break;
       }
     }
 
-    return _NavigationConfig(items: navItems, actions: navActions, schema: schema);
+    return _NavigationConfig(
+      items: navItems,
+      actions: navActions,
+      schema: schema,
+    );
   }
 
   void _handlePremiumGatedTap({
@@ -954,10 +965,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
     if (isPremium || isFree) {
       action();
     } else {
-      showDialog(
-        context: context,
-        builder: (_) => const PremiumUnlockDialog(),
-      );
+      showDialog(context: context, builder: (_) => const PremiumUnlockDialog());
     }
   }
 
@@ -983,10 +991,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
               TextButton(
                 onPressed: () => _handlePremiumGatedTap(
                   context: context,
-                  action: () => AppNavigator.push(
-                    context,
-                    const CoursesListScreen(),
-                  ),
+                  action: () =>
+                      AppNavigator.push(context, const CoursesListScreen()),
                 ),
                 child: Text(
                   'See All',
