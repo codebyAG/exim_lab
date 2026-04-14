@@ -12,7 +12,9 @@ class DashboardFooter extends StatelessWidget {
       margin: EdgeInsets.all(5.w),
       padding: EdgeInsets.all(6.w),
       decoration: BoxDecoration(
-        color: const Color(0xFF030E30).withValues(alpha: 0.5), // Translucent Navy
+        color: const Color(
+          0xFF030E30,
+        ).withValues(alpha: 0.5), // Translucent Navy
         borderRadius: BorderRadius.circular(30),
         border: Border.all(
           color: const Color(0xFF1E5FFF).withValues(alpha: 0.2),
@@ -44,7 +46,7 @@ class DashboardFooter extends StatelessWidget {
                       "SIIEA",
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 18.sp,
+                        fontSize: 22.sp,
                         fontWeight: FontWeight.w900,
                         fontFamily: 'Plus Jakarta Sans',
                         letterSpacing: 0.5,
@@ -54,7 +56,7 @@ class DashboardFooter extends StatelessWidget {
                       "India's #1 Import Export Academy",
                       style: TextStyle(
                         color: const Color(0xFFFFD000),
-                        fontSize: 9.sp,
+                        fontSize: 11.sp,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
@@ -68,7 +70,7 @@ class DashboardFooter extends StatelessWidget {
             "Empowering Indian entrepreneurs to go global since 1976. Join 12,000+ successful global traders.",
             style: TextStyle(
               color: Colors.white70,
-              fontSize: 10.sp,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
               height: 1.5,
             ),
@@ -90,7 +92,7 @@ class DashboardFooter extends StatelessWidget {
               "Follow Us & Stay Connected",
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 14.sp,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.w900,
                 fontFamily: 'Plus Jakarta Sans',
               ),
@@ -105,49 +107,41 @@ class DashboardFooter extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             mainAxisSpacing: 3.w,
             crossAxisSpacing: 3.w,
-            childAspectRatio: 0.9,
+            childAspectRatio: 0.75,
             children: [
-              _buildSocialBtn(
-                "Instagram",
-                FontAwesomeIcons.instagram,
-                const [Color(0xFF833AB4), Color(0xFFFD1D1D), Color(0xFFFCB045)],
-              ),
-              _buildSocialBtn(
-                "Facebook",
-                FontAwesomeIcons.facebookF,
-                const [Color(0xFF1877F2), Color(0xFF1877F2)],
-              ),
-              _buildSocialBtn(
-                "YouTube",
-                FontAwesomeIcons.youtube,
-                const [Color(0xFFFF0000), Color(0xFFCC0000)],
-              ),
-              _buildSocialBtn(
-                "WhatsApp",
-                FontAwesomeIcons.whatsapp,
-                const [Color(0xFF25D366), Color(0xFF128C7E)],
-              ),
-              _buildSocialBtn(
-                "X (Twitter)",
-                FontAwesomeIcons.xTwitter,
-                const [Color(0xFF000000), Color(0xFF000000)],
-                isOutline: true,
-              ),
-              _buildSocialBtn(
-                "LinkedIn",
-                FontAwesomeIcons.linkedinIn,
-                const [Color(0xFF0A66C2), Color(0xFF0A66C2)],
-              ),
-              _buildSocialBtn(
-                "Telegram",
-                FontAwesomeIcons.telegram,
-                const [Color(0xFF229ED9), Color(0xFF229ED9)],
-              ),
-              _buildSocialBtn(
-                "Play Store",
-                FontAwesomeIcons.googlePlay,
-                const [Color(0xFF3BBD70), Color(0xFF1E5FFF)],
-              ),
+              _buildSocialBtn("Instagram", FontAwesomeIcons.instagram, const [
+                Color(0xFF833AB4),
+                Color(0xFFFD1D1D),
+                Color(0xFFFCB045),
+              ]),
+              _buildSocialBtn("Facebook", FontAwesomeIcons.facebookF, const [
+                Color(0xFF1877F2),
+                Color(0xFF1877F2),
+              ]),
+              _buildSocialBtn("YouTube", FontAwesomeIcons.youtube, const [
+                Color(0xFFFF0000),
+                Color(0xFFCC0000),
+              ]),
+              _buildSocialBtn("WhatsApp", FontAwesomeIcons.whatsapp, const [
+                Color(0xFF25D366),
+                Color(0xFF128C7E),
+              ]),
+              _buildSocialBtn("X (Twitter)", FontAwesomeIcons.xTwitter, const [
+                Color(0xFF000000),
+                Color(0xFF000000),
+              ], isOutline: true),
+              _buildSocialBtn("LinkedIn", FontAwesomeIcons.linkedinIn, const [
+                Color(0xFF0A66C2),
+                Color(0xFF0A66C2),
+              ]),
+              _buildSocialBtn("Telegram", FontAwesomeIcons.telegram, const [
+                Color(0xFF229ED9),
+                Color(0xFF229ED9),
+              ]),
+              _buildSocialBtn("Play Store", FontAwesomeIcons.googlePlay, const [
+                Color(0xFF3BBD70),
+                Color(0xFF1E5FFF),
+              ]),
             ],
           ),
 
@@ -187,7 +181,7 @@ class DashboardFooter extends StatelessWidget {
                 "© 2025 SIIEA · Made in India with ❤️",
                 style: TextStyle(
                   color: Colors.white38,
-                  fontSize: 8.5.sp,
+                  fontSize: 12.sp,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -198,13 +192,17 @@ class DashboardFooter extends StatelessWidget {
     );
   }
 
-  Widget _buildSocialBtn(String label, dynamic icon, List<Color> colors,
-      {bool isOutline = false}) {
+  Widget _buildSocialBtn(
+    String label,
+    dynamic icon,
+    List<Color> colors, {
+    bool isOutline = false,
+  }) {
     return Column(
       children: [
         Container(
-          width: 14.w,
-          height: 14.w,
+          width: 16.w,
+          height: 16.w,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -212,7 +210,9 @@ class DashboardFooter extends StatelessWidget {
               colors: colors,
             ),
             borderRadius: BorderRadius.circular(16),
-            border: isOutline ? Border.all(color: Colors.white30, width: 1) : null,
+            border: isOutline
+                ? Border.all(color: Colors.white30, width: 1)
+                : null,
             boxShadow: [
               BoxShadow(
                 color: colors[0].withValues(alpha: 0.3),
@@ -222,7 +222,11 @@ class DashboardFooter extends StatelessWidget {
             ],
           ),
           child: Center(
-            child: Icon(icon, color: Colors.white, size: 16.sp),
+            child: FaIcon(
+              icon as FaIconData?,
+              color: Colors.white,
+              size: 20.sp,
+            ),
           ),
         ),
         SizedBox(height: 0.8.h),
@@ -230,7 +234,7 @@ class DashboardFooter extends StatelessWidget {
           label,
           style: TextStyle(
             color: Colors.white70,
-            fontSize: 7.sp,
+            fontSize: 10.sp,
             fontWeight: FontWeight.w800,
           ),
           textAlign: TextAlign.center,
@@ -245,7 +249,7 @@ class DashboardFooter extends StatelessWidget {
       label,
       style: TextStyle(
         color: const Color(0xFF1E5FFF),
-        fontSize: 9.sp,
+        fontSize: 12.sp,
         fontWeight: FontWeight.w800,
       ),
     );
@@ -258,7 +262,7 @@ class DashboardFooter extends StatelessWidget {
         "·",
         style: TextStyle(
           color: Colors.white24,
-          fontSize: 10.sp,
+          fontSize: 12.sp,
           fontWeight: FontWeight.w900,
         ),
       ),
