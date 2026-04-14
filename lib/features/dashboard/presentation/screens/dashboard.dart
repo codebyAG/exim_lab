@@ -33,7 +33,6 @@ import 'package:sizer/sizer.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_shimmer.dart';
 import 'package:showcaseview/showcaseview.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/premium_unlock_dialog.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_continue_hero.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_journey_bar.dart';
@@ -59,10 +58,10 @@ class DashboardScreen extends StatelessWidget {
     return ShowCaseWidget(
       enableAutoScroll: true,
       onFinish: () async {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setBool('dashboard_v3_tour_seen', true);
-        // Run post-tour logic (Interest Dialog etc.)
-        _bodyKey.currentState?._checkTourStatus();
+        // Notify provider that tour is complete
+        context.read<DashboardProvider>().markTourAsSeen();
+        // Trigger next logical action (e.g. Interest Dialog or Promo)
+        _bodyKey.currentState?._handlePostLoadActions();
       },
       builder: (context) => _DashboardBody(key: _bodyKey),
     );
@@ -119,105 +118,109 @@ class _DashboardBodyState extends State<_DashboardBody> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // Fetch Dashboard Data
       if (mounted) {
         context.read<AnalyticsService>().logEvent('home_view');
-        await context.read<DashboardProvider>().fetchDashboardData();
-        if (mounted) {
-          await context.read<NotificationsProvider>().fetchUnreadCount();
-        }
-        if (mounted) {
-          await context.read<AuthProvider>().refreshMembershipStatus();
-        }
+        final dashboardProvider = context.read<DashboardProvider>();
 
-        // Show Tutorial if not seen, otherwise show Promo Banner immediately
+        // Load onboarding state (tour status etc.) alongside data
+        await Future.wait([
+          dashboardProvider.fetchDashboardData(),
+          dashboardProvider.initOnboardingState(),
+          context.read<NotificationsProvider>().fetchUnreadCount(),
+          context.read<AuthProvider>().refreshMembershipStatus(),
+        ]);
+
         if (mounted) {
-          _checkTourStatus();
+          _handlePostLoadActions();
         }
       }
     });
   }
 
-  void triggerPromoBanner() {
-    if (mounted) {
-      final data = context.read<DashboardProvider>().data;
-      if (data?.addons.popup != null) {
-        _showPromoBanner(data!.addons.popup!);
-      }
-    }
-  }
-
-  Future<void> _checkTourStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    final tourSeen = prefs.getBool('dashboard_v3_tour_seen') ?? false;
-
+  Future<void> _handlePostLoadActions() async {
     if (!mounted) return;
 
-    // Check interest status
+    final dashboardProvider = context.read<DashboardProvider>();
     final user = context.read<AuthProvider>().user;
-    final interestDialogShown = prefs.getBool('interest_dialog_shown') ?? false;
 
-    if (!tourSeen && mounted) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        final List<GlobalKey> showcaseList = [
-          _headerKey,
-          _notifKey,
-          _userProfileKey,
-          _galleryHeaderKey,
-          _carouselKey,
-          _shortsKey,
-          _coursesCardKey,
-          _quizzesCardKey,
-          _aiExpertCardKey,
-          _galleryCardKey,
-          _continueKey,
-          _popularCoursesKey,
-          _toolsKey,
-          _freeVideosKey,
-          _pdfPromoKey,
-          _testimonialsKey,
-          _socialKey,
-          _counselingKey,
-          _navHomeKey,
-          _navShortsKey,
-          _navCoursesKey,
-          _navNewsKey,
-          _navProfileKey,
-        ];
+    final hasNoInterest =
+        user?.interestedIn == null ||
+        user!.interestedIn!.isEmpty ||
+        user.interestedIn == '';
 
-        // Filter out keys that are not present in the widget tree (e.g. empty sections)
-        final List<GlobalKey> activeKeys = showcaseList.where((key) {
-          return key.currentContext != null;
-        }).toList();
+    final nextAction = dashboardProvider.getNextOnboardingAction(
+      hasNoInterests: hasNoInterest,
+    );
 
-        if (activeKeys.isNotEmpty && mounted) {
-          ShowCaseWidget.of(context).startShowCase(activeKeys);
-        }
-      });
-      _markTourSeen();
-    } else {
-      // Tour already seen, now check interest status or show promo banner
-      final hasNoInterest =
-          user?.interestedIn == null ||
-          user!.interestedIn!.isEmpty ||
-          user.interestedIn == '';
-
-      if (hasNoInterest && !interestDialogShown && mounted) {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) => const InterestCaptureDialog(),
-        );
-        prefs.setBool('interest_dialog_shown', true);
-      } else {
-        triggerPromoBanner();
-      }
+    switch (nextAction) {
+      case DashboardOnboardingAction.startTour:
+        _startShowcase();
+        break;
+      case DashboardOnboardingAction.showInterestDialog:
+        _showInterestDialog();
+        break;
+      case DashboardOnboardingAction.showPromoBanner:
+        _triggerPromoBanner();
+        break;
+      case DashboardOnboardingAction.none:
+        break;
     }
   }
 
-  void _markTourSeen() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('dashboard_v3_tour_seen', true);
+  void _startShowcase() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final List<GlobalKey> showcaseList = [
+        _headerKey,
+        _notifKey,
+        _userProfileKey,
+        _galleryHeaderKey,
+        _carouselKey,
+        _shortsKey,
+        _coursesCardKey,
+        _quizzesCardKey,
+        _aiExpertCardKey,
+        _galleryCardKey,
+        _continueKey,
+        _popularCoursesKey,
+        _toolsKey,
+        _freeVideosKey,
+        _pdfPromoKey,
+        _testimonialsKey,
+        _socialKey,
+        _counselingKey,
+        _navHomeKey,
+        _navShortsKey,
+        _navCoursesKey,
+        _navNewsKey,
+        _navProfileKey,
+      ];
+
+      final List<GlobalKey> activeKeys = showcaseList
+          .where((key) => key.currentContext != null)
+          .toList();
+
+      if (activeKeys.isNotEmpty && mounted) {
+        ShowCaseWidget.of(context).startShowCase(activeKeys);
+      }
+    });
+  }
+
+  void _showInterestDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const InterestCaptureDialog(),
+    ).then((_) {
+      context.read<DashboardProvider>().markInterestDialogAsShown();
+      _handlePostLoadActions(); // Check if promo should be shown after dialog
+    });
+  }
+
+  void _triggerPromoBanner() {
+    final data = context.read<DashboardProvider>().data;
+    if (data?.addons.popup != null) {
+      _showPromoBanner(data!.addons.popup!);
+    }
   }
 
   Widget _buildShowcase({
