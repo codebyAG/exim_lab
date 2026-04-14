@@ -288,7 +288,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
     final navActions = navConfig.actions;
 
     return Scaffold(
-      backgroundColor: cs.surface,
+      backgroundColor: const Color(0xFF020C28), // Deep Premium Navy
       floatingActionButton: moduleProvider.isEnabled('aiChat')
           ? FloatingActionButton(
               backgroundColor: cs.primary,
@@ -333,7 +333,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       Text(
                         "What would you like to ",
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: cs.onSurfaceVariant,
+                          color: Colors.white.withValues(alpha: 0.7),
                           fontWeight: FontWeight.w500,
                           fontSize: 16.sp,
                         ),
@@ -341,7 +341,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       Text(
                         "Learn Today?",
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: const Color(0xFF001A3D),
+                          color: const Color(0xFFFFD000), // Premium Gold
                           fontWeight: FontWeight.w800,
                           fontSize: 16.sp,
                         ),
