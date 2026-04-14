@@ -160,7 +160,7 @@ class DashboardModernHeader extends StatelessWidget {
                                     name,
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 28.sp,
+                                      fontSize: 24.sp,
                                       fontWeight: FontWeight.w900,
                                       letterSpacing: -1.2,
                                       height: 1,
