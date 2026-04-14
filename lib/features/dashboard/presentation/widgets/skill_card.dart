@@ -86,7 +86,7 @@ class SkillCard extends StatelessWidget {
                       badge,
                       style: TextStyle(
                         color: Colors.white70,
-                        fontSize: 12.5.sp, // Ultra Increased
+                        fontSize: 9.5.sp, // Reduced to safer size
                         fontWeight: FontWeight.w800,
                         letterSpacing: 0.5,
                       ),
@@ -102,8 +102,8 @@ class SkillCard extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.white,
                   fontFamily: 'Plus Jakarta Sans',
-                  fontSize: 18.sp, // Ultra Increased
-                  fontWeight: FontWeight.w900,
+                  fontSize: 15.sp, // Stabilized to avoid overflow
+                  fontWeight: FontWeight.w800,
                   height: 1.1,
                 ),
                 maxLines: 2,
@@ -113,8 +113,8 @@ class SkillCard extends StatelessWidget {
               Text(
                 subtitle,
                 style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.7),
-                  fontSize: 13.5.sp, // Ultra Increased
+                  color: Colors.white.withValues(alpha: 0.6),
+                  fontSize: 12.sp, // Stabilized
                   fontWeight: FontWeight.w600,
                 ),
               ),

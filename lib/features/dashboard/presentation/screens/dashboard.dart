@@ -369,7 +369,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: Colors.white.withValues(alpha: 0.7),
                           fontWeight: FontWeight.w500,
-                          fontSize: 18.sp, // Increased
+                          fontSize: 16.sp, // Increased
                         ),
                       ),
                       Text(
@@ -377,7 +377,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: const Color(0xFFFFD000), // Premium Gold
                           fontWeight: FontWeight.w800,
-                          fontSize: 18.sp, // Increased
+                          fontSize: 16.sp, // Reverted to avoid overflow
                         ),
                       ),
                     ],
@@ -455,7 +455,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     text: TextSpan(
                       style: TextStyle(
                         fontFamily: 'Plus Jakarta Sans',
-                        fontSize: 23.sp, // Ultra Increased
+                        fontSize: 20.sp, // Ultra Increased
                         fontWeight: FontWeight.w900,
                         color: Colors.white,
                       ),
@@ -493,11 +493,11 @@ class _DashboardBodyState extends State<_DashboardBody> {
               ),
             ),
             SizedBox(height: 2.h),
-
             // 🔥 SKILLS GRID
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.w),
               child: GridView.count(
+                padding: EdgeInsets.zero,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 crossAxisCount: 2,
