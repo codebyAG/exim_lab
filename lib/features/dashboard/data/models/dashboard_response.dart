@@ -39,10 +39,17 @@ class DashboardSection {
     List rawData = (json['data'] as List?) ?? [];
     List parsedData = [];
 
-    if (key == 'course' ||
-        key.contains('Popular') ||
-        key.contains('Recommended') ||
-        key == 'continue') {
+    final normalizedKey = key.toLowerCase();
+    if (normalizedKey == 'course' ||
+        normalizedKey.contains('popular') ||
+        normalizedKey.contains('recommended') ||
+        normalizedKey == 'continue' ||
+        normalizedKey.contains('certified') ||
+        normalizedKey.contains('forex') ||
+        normalizedKey.contains('finance') ||
+        normalizedKey.contains('logistics') ||
+        normalizedKey.contains('market') ||
+        normalizedKey.contains('sourcing')) {
       parsedData = rawData.map((e) => CourseModel.fromJson(e)).toList();
     } else if (key == 'freeVideos') {
       parsedData = rawData.map((e) => FreeVideoModel.fromJson(e)).toList();

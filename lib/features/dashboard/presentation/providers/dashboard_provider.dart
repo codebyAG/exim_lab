@@ -48,20 +48,38 @@ class DashboardProvider extends ChangeNotifier {
     return section?.data.cast<CourseModel>() ?? [];
   }
 
-  /// The primary 'Popular' or 'Recommended' courses section
-  DashboardSection? get popularCourseSection {
+  /// Helper to get a section by key or generic type
+  DashboardSection? getSection(String key) {
     return data?.sections.where((s) {
-      final key = s.key.toLowerCase();
-      return key == 'course' ||
-          key.contains('popular') ||
-          key.contains('recommended');
+      final normalized = s.key.toLowerCase();
+      return normalized == key.toLowerCase() ||
+          normalized.contains(key.toLowerCase());
     }).firstOrNull;
   }
 
+  /// The primary 'Popular' or 'Recommended' courses section
+  DashboardSection? get popularCourseSection =>
+      getSection('popular') ??
+      getSection('recommended') ??
+      getSection('course');
+
+  /// 🎓 Certified Courses
+  DashboardSection? get certifiedSection =>
+      getSection('certified') ?? getSection('certification');
+
+  /// 📈 Forex & Finance
+  DashboardSection? get forexSection =>
+      getSection('forex') ?? getSection('finance');
+
+  /// 🚛 Logistics & Supply Chain
+  DashboardSection? get logisticsSection => getSection('logistics');
+
+  /// 🤝 Market Entry & Buyers
+  DashboardSection? get marketSection =>
+      getSection('market') ?? getSection('sourcing');
+
   /// The 'Free Videos' section
-  DashboardSection? get freeVideoSection {
-    return data?.sections.where((s) => s.key == 'freeVideos').firstOrNull;
-  }
+  DashboardSection? get freeVideoSection => getSection('freeVideos');
 
   /// All inline banners
   List<BannerModel> get inlineBanners {

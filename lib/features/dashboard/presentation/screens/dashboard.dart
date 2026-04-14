@@ -1314,21 +1314,26 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     SizedBox(height: 0.8.h),
 
                     // 10. DYNAMIC SECTIONS
-
-                    // Popular/Recommended Section
+                    
+                    // Popular Courses (Default)
                     if (dashboard.popularCourseSection != null)
-                      ModuleVisibility(
-                        module: 'courses',
-                        child: _buildShowcase(
-                          key: _popularCoursesKey,
-                          title: 'tut_popular_courses_title',
-                          description: 'tut_popular_courses_desc',
-                          child: _buildPopularSection(
-                            context,
-                            dashboard.popularCourseSection!,
-                          ),
-                        ),
-                      ),
+                      _buildDynamicCourseBlock(context, dashboard.popularCourseSection!, _popularCoursesKey, 'courses'),
+
+                    // Certified Courses
+                    if (dashboard.certifiedSection != null)
+                      _buildDynamicCourseBlock(context, dashboard.certifiedSection!, null, 'courses'),
+
+                    // Forex & Finance
+                    if (dashboard.forexSection != null)
+                      _buildDynamicCourseBlock(context, dashboard.forexSection!, null, 'courses'),
+
+                    // Logistics
+                    if (dashboard.logisticsSection != null)
+                      _buildDynamicCourseBlock(context, dashboard.logisticsSection!, null, 'courses'),
+
+                    // Market Entry
+                    if (dashboard.marketSection != null)
+                      _buildDynamicCourseBlock(context, dashboard.marketSection!, null, 'courses'),
 
                     // Free Videos Section
                     if (dashboard.freeVideoSection != null)
@@ -1383,7 +1388,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       child: const FreeCounselingSection(),
                     ),
                     const DashboardFooter(),
-                    SizedBox(height: 1.2.h),
+                    SizedBox(height: 5.h), // Extra padding at very bottom for scrolling comfort
                   ],
                 );
               },
@@ -1522,10 +1527,52 @@ class _DashboardBodyState extends State<_DashboardBody> {
     }
   }
 
+  Widget _buildDynamicCourseBlock(BuildContext context, DashboardSection section, GlobalKey? showcaseKey, String module) {
+    final widget = _buildPopularSection(context, section);
+    final block = showcaseKey != null 
+      ? _buildShowcase(
+          key: showcaseKey,
+          title: 'Section Highlight',
+          description: 'Explore dynamic content from ${section.title}',
+          child: widget,
+        )
+      : widget;
+
+    return ModuleVisibility(
+      module: module,
+      child: block,
+    );
+  }
+
   Widget _buildPopularSection(BuildContext context, DashboardSection section) {
     final theme = Theme.of(context);
     final courses = section.data.cast<CourseModel>();
     if (courses.isEmpty) return const SizedBox();
+
+    final key = section.key.toLowerCase();
+    
+    // Branding Mapping
+    CustomPainter painter = PopularCertPainter(); // Default
+    Color accentColor = const Color(0xFF1E5FFF);
+    List<Color> bgGradients = [const Color(0xFF030E30), const Color(0xFF1040C1)];
+
+    if (key.contains('certified') || key.contains('certification')) {
+      painter = PopularCertPainter();
+      accentColor = const Color(0xFFFF8800);
+      bgGradients = [const Color(0xFF442200), const Color(0xFF994400)];
+    } else if (key.contains('forex') || key.contains('finance')) {
+      painter = PopularFinancePainter();
+      accentColor = const Color(0xFFC8151B);
+      bgGradients = [const Color(0xFF440000), const Color(0xFF6B0000)];
+    } else if (key.contains('logistics')) {
+      painter = PopularLogisticsPainter();
+      accentColor = const Color(0xFF1E5FFF);
+      bgGradients = [const Color(0xFF030E30), const Color(0xFF1040C1)];
+    } else if (key.contains('market') || key.contains('sourcing')) {
+      painter = PopularMarketPainter();
+      accentColor = const Color(0xFF00C853);
+      bgGradients = [const Color(0xFF003811), const Color(0xFF004D1A)];
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1559,9 +1606,23 @@ class _DashboardBodyState extends State<_DashboardBody> {
           ),
         ),
         SizedBox(height: 1.h),
-        HorizontalCourses(
-          courses: courses,
-          isPremium: context.read<AuthProvider>().user?.isPremium ?? false,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5.w),
+          child: Column(
+            children: List.generate(courses.length, (index) {
+              final course = courses[index];
+              return PopularCourseCard(
+                rank: "#${index + 1}",
+                title: course.title,
+                category: section.title.split(' ').first,
+                meta: "${course.learnersCount ?? 1200}+ Learners · ${course.rating ?? 4.8} ★",
+                price: course.basePrice.toStringAsFixed(0),
+                iconPainter: painter,
+                categoryColor: accentColor,
+                iconBgColors: bgGradients,
+              );
+            }),
+          ),
         ),
         SizedBox(height: 0.8.h),
       ],
