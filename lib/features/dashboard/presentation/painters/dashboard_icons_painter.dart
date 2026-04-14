@@ -1024,3 +1024,110 @@ class SIIEALogoPainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
+
+/// ❓ QUIZ TOPIC ICON PAINTER
+class QuizTopicPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final centerX = size.width / 2;
+    final centerY = size.height / 2;
+    final scale = size.width / 100;
+
+    // Glowing Background
+    final glowPaint = Paint()
+      ..color = const Color(0xFFFFD000).withValues(alpha: 0.1)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 15);
+    canvas.drawCircle(Offset(centerX, centerY), 35 * scale, glowPaint);
+
+    // Question Mark Silhouette
+    final qPaint = Paint()
+      ..color = const Color(0xFFFFD000)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4 * scale
+      ..strokeCap = StrokeCap.round;
+
+    final qPath = Path();
+    qPath.moveTo(centerX - 12 * scale, centerY - 15 * scale);
+    qPath.quadraticBezierTo(centerX - 10 * scale, centerY - 28 * scale, centerX, centerY - 28 * scale);
+    qPath.quadraticBezierTo(centerX + 15 * scale, centerY - 28 * scale, centerX + 15 * scale, centerY - 15 * scale);
+    qPath.quadraticBezierTo(centerX + 15 * scale, centerY - 5 * scale, centerX, centerY);
+    qPath.lineTo(centerX, centerY + 8 * scale);
+    canvas.drawPath(qPath, qPaint);
+
+    // Question Mark Dot
+    canvas.drawCircle(Offset(centerX, centerY + 18 * scale), 3 * scale, Paint()..color = const Color(0xFFFFD000));
+
+    // Floating Sparkles
+    final sparklePaint = Paint()..color = const Color(0xFFFFD000).withValues(alpha: 0.6);
+    canvas.drawCircle(Offset(centerX - 22 * scale, centerY - 20 * scale), 2.5 * scale, sparklePaint);
+    canvas.drawCircle(Offset(centerX + 25 * scale, centerY + 10 * scale), 2 * scale, sparklePaint);
+    canvas.drawCircle(Offset(centerX + 5 * scale, centerY - 35 * scale), 1.5 * scale, sparklePaint);
+
+    // Connecting Nodes
+    final nodePaint = Paint()
+      ..color = const Color(0xFF1E5FFF).withValues(alpha: 0.4)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1 * scale;
+    canvas.drawLine(Offset(centerX - 25 * scale, centerY + 20 * scale), Offset(centerX - 10 * scale, centerY + 10 * scale), nodePaint);
+    canvas.drawLine(Offset(centerX + 25 * scale, centerY - 20 * scale), Offset(centerX + 10 * scale, centerY - 10 * scale), nodePaint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+/// 🤖 AI EXPERT ICON PAINTER
+class AiExpertPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final centerX = size.width / 2;
+    final centerY = size.height / 2;
+    final scale = size.width / 100;
+
+    // Cerebral Glow
+    final brainGlow = Paint()
+      ..color = const Color(0xFF1E5FFF).withValues(alpha: 0.15)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 20);
+    canvas.drawCircle(Offset(centerX, centerY), 30 * scale, brainGlow);
+
+    // Robot Head Silhouette
+    final headPaint = Paint()
+      ..color = const Color(0xFF0A2066)
+      ..style = PaintingStyle.fill;
+    final headStroke = Paint()
+      ..color = const Color(0xFF1E5FFF)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2 * scale;
+
+    final headRect = Rect.fromCenter(center: Offset(centerX, centerY + 5 * scale), width: 44 * scale, height: 36 * scale);
+    canvas.drawRRect(RRect.fromRectAndRadius(headRect, Radius.circular(8 * scale)), headPaint);
+    canvas.drawRRect(RRect.fromRectAndRadius(headRect, Radius.circular(8 * scale)), headStroke);
+
+    // Eyes (Digital Look)
+    final eyePaint = Paint()..color = const Color(0xFF44FFBB);
+    canvas.drawRect(Rect.fromLTWH(centerX - 12 * scale, centerY + 2 * scale, 8 * scale, 3 * scale), eyePaint);
+    canvas.drawRect(Rect.fromLTWH(centerX + 4 * scale, centerY + 2 * scale, 8 * scale, 3 * scale), eyePaint);
+
+    // Neural Grid Lines
+    final gridPaint = Paint()
+      ..color = const Color(0xFF1E5FFF).withValues(alpha: 0.5)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 0.8 * scale;
+    
+    for (int i = 0; i < 3; i++) {
+      canvas.drawLine(
+        Offset(centerX - 15 * scale + (i * 15 * scale), centerY - 13 * scale),
+        Offset(centerX - 15 * scale + (i * 15 * scale), centerY - 25 * scale),
+        gridPaint,
+      );
+      canvas.drawCircle(Offset(centerX - 15 * scale + (i * 15 * scale), centerY - 28 * scale), 2 * scale, Paint()..color = const Color(0xFF1E5FFF).withValues(alpha: 0.3));
+    }
+
+    // Mouth / Sound Pattern
+    final soundPaint = Paint()..color = const Color(0xFF1E5FFF).withValues(alpha: 0.6);
+    canvas.drawRect(Rect.fromCenter(center: Offset(centerX, centerY + 13 * scale), width: 14 * scale, height: 1.5 * scale), soundPaint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}

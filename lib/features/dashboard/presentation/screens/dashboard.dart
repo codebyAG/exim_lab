@@ -970,9 +970,11 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                   final isPremium =
                                       auth.user?.isPremium ?? false;
                                   return PremiumActionCard(
-                                    icon: Icons.quiz_rounded,
+                                    painter: QuizTopicPainter(),
                                     label: t.translate('quizzes_title'),
-                                    color: cs.primary,
+                                    color: const Color(
+                                      0xFFFFD000,
+                                    ), // Premium Gold
                                     isLocked: !isPremium,
                                     onTap: () => _handlePremiumGatedTap(
                                       context: context,
@@ -997,9 +999,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                   final isPremium =
                                       auth.user?.isPremium ?? false;
                                   return PremiumActionCard(
-                                    icon: Icons.smart_toy_rounded,
+                                    painter: AiExpertPainter(),
                                     label: t.translate('ai_expert'),
-                                    color: cs.primary,
+                                    color: const Color(0xFF1E5FFF), // AI Blue
                                     isLocked: !isPremium,
                                     onTap: () => _handlePremiumGatedTap(
                                       context: context,

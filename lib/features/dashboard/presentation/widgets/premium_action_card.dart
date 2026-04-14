@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 class PremiumActionCard extends StatelessWidget {
-  final IconData icon;
+  final IconData? icon;
+  final CustomPainter? painter;
   final String label;
   final VoidCallback onTap;
   final Color color;
@@ -10,7 +11,8 @@ class PremiumActionCard extends StatelessWidget {
 
   const PremiumActionCard({
     super.key,
-    required this.icon,
+    this.icon,
+    this.painter,
     required this.label,
     required this.onTap,
     required this.color,
@@ -90,11 +92,18 @@ class PremiumActionCard extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Icon(
-                            icon,
-                            size: 26.sp,
-                            color: color.withValues(alpha: 0.95),
-                          ),
+                          if (painter != null)
+                            SizedBox(
+                              width: 35.sp,
+                              height: 35.sp,
+                              child: CustomPaint(painter: painter),
+                            )
+                          else if (icon != null)
+                            Icon(
+                              icon,
+                              size: 26.sp,
+                              color: color.withValues(alpha: 0.95),
+                            ),
                         ],
                       ),
                     ),
