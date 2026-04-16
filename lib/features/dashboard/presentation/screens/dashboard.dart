@@ -4,7 +4,6 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/skill_card.dart
 import 'package:exim_lab/features/dashboard/presentation/widgets/certificate_mini_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/achieve_live_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/masterclass_card.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/premium_course_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/popular_course_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/free_video_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_footer.dart';
@@ -22,16 +21,11 @@ import 'package:exim_lab/features/quiz/presentation/screens/quiz_topics_screen.d
 import 'package:exim_lab/features/dashboard/presentation/providers/dashboard_provider.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/home_shorts_section.dart';
-import 'package:exim_lab/features/shorts/presentation/screens/shorts_feed_screen.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/home_shorts_section.dart';
-import 'package:exim_lab/features/shorts/presentation/screens/shorts_feed_screen.dart';
 import 'package:exim_lab/features/gallery/presentation/screens/gallery_screen.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/inline_banner.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/section_header.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/tool_section.dart';
-import 'package:exim_lab/features/freevideos/presentation/widgets/free_video_section.dart';
 import 'package:exim_lab/features/news/presentation/screens/news_list_screen.dart';
+import 'package:exim_lab/features/shorts/presentation/screens/shorts_feed_screen.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:exim_lab/features/profile/presentation/screens/profile_screen.dart';
 import 'package:exim_lab/features/module_manager/presentation/widgets/module_visibility.dart';
@@ -41,7 +35,6 @@ import 'package:exim_lab/features/journey/presentation/screens/export_journey_sc
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-import 'package:animate_do/animate_do.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_shimmer.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/premium_unlock_dialog.dart';
@@ -51,11 +44,7 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/interest_dialog
 import 'package:exim_lab/features/dashboard/presentation/widgets/founder_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/premium_feature_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/premium_action_card.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/masterclass_highlight_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/free_pdf_promo_card.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/testimonials_section.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/social_connect_section.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/free_counseling_section.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_modern_header.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/tutorial_step_content.dart';
@@ -115,7 +104,6 @@ class _DashboardBodyState extends State<_DashboardBody> {
   final GlobalKey _navProfileKey = GlobalKey();
 
   final GlobalKey _popularCoursesKey = GlobalKey();
-  final GlobalKey _masterclassKey = GlobalKey();
 
   final ScrollController _scrollController = ScrollController();
 
@@ -1323,24 +1311,6 @@ class _DashboardBodyState extends State<_DashboardBody> {
             }),
           ),
         ),
-        SizedBox(height: 0.8.h),
-      ],
-    );
-  }
-
-  Widget _buildFreeVideosSection(
-    BuildContext context,
-    DashboardSection section,
-  ) {
-    final videos = section.data.cast<FreeVideoModel>();
-    if (videos.isEmpty) return const SizedBox();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SectionHeader(title: section.title, subtitle: section.subtitle),
-        SizedBox(height: 1.5.h),
-        FreeVideosSection(videos: videos),
         SizedBox(height: 0.8.h),
       ],
     );

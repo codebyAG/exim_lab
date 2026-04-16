@@ -1131,3 +1131,265 @@ class AiExpertPainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
+
+/// 📚 GUIDE BOOK ICON PAINTER (For PDF Guide)
+class GuideBookPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final centerX = size.width / 2;
+    final centerY = size.height / 2;
+    final scale = size.width / 100;
+
+    final shadowPaint = Paint()..color = Colors.black.withValues(alpha: 0.2);
+
+    // Book Shadow
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(centerX - 18 * scale, centerY - 22 * scale, 40 * scale, 50 * scale), Radius.circular(4 * scale)), shadowPaint);
+
+    // Book Cover
+    final coverPaint = Paint()..color = const Color(0xFF1040C1);
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(centerX - 20 * scale, centerY - 25 * scale, 40 * scale, 50 * scale), Radius.circular(4 * scale)), coverPaint);
+
+    // Binding
+    final bindPaint = Paint()..color = const Color(0xFF0A2066);
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(centerX - 20 * scale, centerY - 25 * scale, 8 * scale, 50 * scale), Radius.circular(4 * scale)), bindPaint);
+
+    // Ornament (Gold)
+    final goldPaint = Paint()..color = const Color(0xFFFFD000);
+    canvas.drawCircle(Offset(centerX + 5 * scale, centerY - 5 * scale), 8 * scale, goldPaint);
+    
+    // Ribbon
+    final ribbonPaint = Paint()..color = const Color(0xFFFF2D35);
+    final rPath = Path();
+    rPath.moveTo(centerX - 5 * scale, centerY - 25 * scale);
+    rPath.lineTo(centerX - 5 * scale, centerY);
+    rPath.lineTo(centerX, centerY - 5 * scale);
+    rPath.lineTo(centerX + 5 * scale, centerY);
+    rPath.lineTo(centerX + 5 * scale, centerY - 25 * scale);
+    rPath.close();
+    canvas.drawPath(rPath, ribbonPaint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+/// 🔍 HSN FINDER ICON PAINTER
+class HsnFinderPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final scale = size.width / 100;
+    final paint = Paint()..color = const Color(0xFF00C853)..style = PaintingStyle.fill;
+    final stroke = Paint()..color = Colors.white.withValues(alpha: 0.8)..style = PaintingStyle.stroke..strokeWidth = 2 * scale;
+
+    // Search Circle
+    canvas.drawCircle(Offset(40 * scale, 40 * scale), 25 * scale, paint);
+    canvas.drawCircle(Offset(40 * scale, 40 * scale), 25 * scale, stroke);
+
+    // Handle
+    canvas.save();
+    canvas.translate(40 * scale, 40 * scale);
+    canvas.rotate(45 * 3.14159 / 180);
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(20 * scale, -4 * scale, 30 * scale, 8 * scale), Radius.circular(4 * scale)), paint);
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(20 * scale, -4 * scale, 30 * scale, 8 * scale), Radius.circular(4 * scale)), stroke);
+    canvas.restore();
+
+    // Code lines (Simulating HSN code)
+    final textPaint = Paint()..color = Colors.white.withValues(alpha: 0.6);
+    canvas.drawRect(Rect.fromLTWH(25 * scale, 35 * scale, 12 * scale, 2 * scale), textPaint);
+    canvas.drawRect(Rect.fromLTWH(42 * scale, 35 * scale, 12 * scale, 2 * scale), textPaint);
+    canvas.drawRect(Rect.fromLTWH(30 * scale, 45 * scale, 20 * scale, 2 * scale), textPaint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+/// 📐 CBM CALCULATOR ICON PAINTER
+class CbmCalculatorPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final scale = size.width / 100;
+    final paint = Paint()..color = const Color(0xFF00B0FF)..style = PaintingStyle.fill;
+    
+    // Isometric Box
+    final path = Path();
+    path.moveTo(50 * scale, 20 * scale); // Top
+    path.lineTo(80 * scale, 35 * scale);
+    path.lineTo(50 * scale, 50 * scale);
+    path.lineTo(20 * scale, 35 * scale);
+    path.close();
+    canvas.drawPath(path, paint);
+
+    path.reset();
+    path.moveTo(20 * scale, 35 * scale);
+    path.lineTo(50 * scale, 50 * scale);
+    path.lineTo(50 * scale, 85 * scale);
+    path.lineTo(20 * scale, 70 * scale);
+    path.close();
+    canvas.drawPath(path, paint..color = const Color(0xFF0091EA));
+
+    path.reset();
+    path.moveTo(50 * scale, 50 * scale);
+    path.lineTo(80 * scale, 35 * scale);
+    path.lineTo(80 * scale, 70 * scale);
+    path.lineTo(50 * scale, 85 * scale);
+    path.close();
+    canvas.drawPath(path, paint..color = const Color(0xFF01579B));
+
+    // Dimension lines
+    final linePaint = Paint()..color = Colors.white.withValues(alpha: 0.8)..style = PaintingStyle.stroke..strokeWidth = 1 * scale;
+    canvas.drawLine(Offset(10 * scale, 35 * scale), Offset(10 * scale, 70 * scale), linePaint);
+    canvas.drawLine(Offset(5 * scale, 35 * scale), Offset(15 * scale, 35 * scale), linePaint);
+    canvas.drawLine(Offset(5 * scale, 70 * scale), Offset(15 * scale, 70 * scale), linePaint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+/// 🧾 GST CALCULATOR ICON PAINTER
+class GstCalculatorPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final scale = size.width / 100;
+    final paint = Paint()..color = const Color(0xFFFF6D00)..style = PaintingStyle.fill;
+    
+    // Calculator Base
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(20 * scale, 15 * scale, 60 * scale, 70 * scale), Radius.circular(6 * scale)), paint);
+    
+    // Display
+    canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(28 * scale, 25 * scale, 44 * scale, 15 * scale), Radius.circular(2 * scale)), Paint()..color = Colors.black.withValues(alpha: 0.3));
+    
+    // Buttons (%)
+    final btnPaint = Paint()..color = Colors.white.withValues(alpha: 0.4);
+    for (int r = 0; r < 3; r++) {
+      for (int c = 0; c < 3; c++) {
+        canvas.drawCircle(Offset(32 * scale + (c * 18 * scale), 50 * scale + (r * 12 * scale)), 4 * scale, btnPaint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+/// ✅ PRODUCT CERTIFICATION PAINTER
+class ProductCertPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final scale = size.width / 100;
+    final paint = Paint()..color = const Color(0xFF283593)..style = PaintingStyle.fill;
+    
+    // Shield
+    final path = Path();
+    path.moveTo(50 * scale, 15 * scale);
+    path.quadraticBezierTo(85 * scale, 15 * scale, 85 * scale, 45 * scale);
+    path.quadraticBezierTo(85 * scale, 75 * scale, 50 * scale, 90 * scale);
+    path.quadraticBezierTo(15 * scale, 75 * scale, 15 * scale, 45 * scale);
+    path.quadraticBezierTo(15 * scale, 15 * scale, 50 * scale, 15 * scale);
+    path.close();
+    canvas.drawPath(path, paint);
+    canvas.drawPath(path, Paint()..color = const Color(0xFF5C6BC0)..style = PaintingStyle.stroke..strokeWidth = 2 * scale);
+
+    // Check mark
+    final checkPaint = Paint()..color = const Color(0xFF44FFBB)..style = PaintingStyle.stroke..strokeWidth = 5 * scale..strokeCap = StrokeCap.round;
+    final check = Path();
+    check.moveTo(35 * scale, 50 * scale);
+    check.lineTo(45 * scale, 60 * scale);
+    check.lineTo(65 * scale, 35 * scale);
+    canvas.drawPath(check, checkPaint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+/// 💹 FOREX CONVERTER PAINTER
+class ForexConverterPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final scale = size.width / 100;
+    
+    // Two circles
+    canvas.drawCircle(Offset(35 * scale, 40 * scale), 20 * scale, Paint()..color = const Color(0xFF2E7D32));
+    canvas.drawCircle(Offset(65 * scale, 60 * scale), 20 * scale, Paint()..color = const Color(0xFF1B5E20));
+
+    // Exchange Arrows
+    final arrowPaint = Paint()..color = const Color(0xFFFFD000)..style = PaintingStyle.stroke..strokeWidth = 2.5 * scale..strokeCap = StrokeCap.round;
+    final arrowPath = Path();
+    arrowPath.moveTo(45 * scale, 30 * scale);
+    arrowPath.quadraticBezierTo(60 * scale, 35 * scale, 70 * scale, 50 * scale);
+    canvas.drawPath(arrowPath, arrowPaint);
+    
+    arrowPath.reset();
+    arrowPath.moveTo(55 * scale, 70 * scale);
+    arrowPath.quadraticBezierTo(40 * scale, 65 * scale, 30 * scale, 50 * scale);
+    canvas.drawPath(arrowPath, arrowPaint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+/// 🏛️ GOV BENEFITS PAINTER
+class GovBenefitsPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final scale = size.width / 100;
+    final paint = Paint()..color = const Color(0xFF7B1FA2)..style = PaintingStyle.fill;
+    
+    // Building
+    canvas.drawRect(Rect.fromLTWH(20 * scale, 45 * scale, 60 * scale, 35 * scale), paint);
+    
+    // Pillars
+    final pillarPaint = Paint()..color = const Color(0xFFCE93D8);
+    for (int i = 0; i < 4; i++) {
+        canvas.drawRect(Rect.fromLTWH(25 * scale + (i * 14 * scale), 50 * scale, 6 * scale, 30 * scale), pillarPaint);
+    }
+    
+    // Roof
+    final path = Path();
+    path.moveTo(15 * scale, 45 * scale);
+    path.lineTo(50 * scale, 25 * scale);
+    path.lineTo(85 * scale, 45 * scale);
+    path.close();
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+/// 📖 INCOTERMS PAINTER
+class IncotermsPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final scale = size.width / 100;
+    final paint = Paint()..color = const Color(0xFF455A64)..style = PaintingStyle.fill;
+    
+    // Opened Book
+    final left = Path();
+    left.moveTo(50 * scale, 30 * scale);
+    left.quadraticBezierTo(30 * scale, 25 * scale, 15 * scale, 35 * scale);
+    left.lineTo(15 * scale, 75 * scale);
+    left.quadraticBezierTo(30 * scale, 65 * scale, 50 * scale, 70 * scale);
+    left.close();
+    canvas.drawPath(left, paint);
+
+    final right = Path();
+    right.moveTo(50 * scale, 30 * scale);
+    right.quadraticBezierTo(70 * scale, 25 * scale, 85 * scale, 35 * scale);
+    right.lineTo(85 * scale, 75 * scale);
+    right.quadraticBezierTo(70 * scale, 65 * scale, 50 * scale, 70 * scale);
+    right.close();
+    canvas.drawPath(right, paint..color = const Color(0xFF263238));
+
+    // Lines
+    final linePaint = Paint()..color = Colors.white.withValues(alpha: 0.3)..strokeWidth = 1.5 * scale;
+    canvas.drawLine(Offset(25 * scale, 45 * scale), Offset(40 * scale, 40 * scale), linePaint);
+    canvas.drawLine(Offset(25 * scale, 55 * scale), Offset(40 * scale, 50 * scale), linePaint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}

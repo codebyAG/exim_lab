@@ -12,6 +12,7 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/premium_unlock_
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:exim_lab/localization/app_localization.dart';
+import 'package:exim_lab/features/dashboard/presentation/painters/dashboard_icons_painter.dart';
 import 'tool_card.dart';
 
 class ToolsSection extends StatelessWidget {
@@ -38,7 +39,7 @@ class ToolsSection extends StatelessWidget {
         child: Row(
           children: [
             ToolCard(
-              icon: Icons.calculate,
+              painter: ExportPriceIconPainter(),
               title: t.translate('tool_export_calc'),
               subtitle: t.translate('tool_export_calc_sub'),
               buttonLabel: "Calculate >",
@@ -48,7 +49,7 @@ class ToolsSection extends StatelessWidget {
                   _onToolTap(context, const ExportPriceCalculatorScreen()),
             ),
             ToolCard(
-              icon: Icons.receipt_long_rounded,
+              painter: ImportCalcIconPainter(),
               title: t.translate('tool_import_calc'),
               subtitle: t.translate('tool_import_calc_sub'),
               buttonLabel: "Estimate >",
@@ -57,7 +58,7 @@ class ToolsSection extends StatelessWidget {
               onTap: () => _onToolTap(context, const ImportCalculatorScreen()),
             ),
             ToolCard(
-              icon: Icons.search_rounded,
+              painter: HsnFinderPainter(),
               title: t.translate('tool_hsn_finder'),
               subtitle: t.translate('tool_hsn_finder_sub'),
               buttonLabel: "Find Now >",
@@ -66,7 +67,7 @@ class ToolsSection extends StatelessWidget {
               onTap: () => _onToolTap(context, const HsnFinderScreen()),
             ),
             ToolCard(
-              icon: Icons.aspect_ratio_rounded,
+              painter: CbmCalculatorPainter(),
               title: t.translate('tool_cbm_calc'),
               subtitle: t.translate('tool_cbm_calc_sub'),
               buttonLabel: "Measure >",
@@ -76,7 +77,7 @@ class ToolsSection extends StatelessWidget {
                   AppNavigator.push(context, const CbmCalculatorScreen()),
             ),
             ToolCard(
-              icon: Icons.percent_rounded,
+              painter: GstCalculatorPainter(),
               title: t.translate('tool_gst_calc'),
               subtitle: t.translate('tool_gst_calc_sub'),
               buttonLabel: "Compute >",
@@ -85,7 +86,7 @@ class ToolsSection extends StatelessWidget {
               onTap: () => _onToolTap(context, const GstCalculatorScreen()),
             ),
             ToolCard(
-              icon: Icons.verified_user_rounded,
+              painter: ProductCertPainter(),
               title: t.translate('tool_prod_cert'),
               subtitle: t.translate('tool_prod_cert_sub'),
               buttonLabel: "Verify >",
@@ -94,7 +95,7 @@ class ToolsSection extends StatelessWidget {
               onTap: () => _onToolTap(context, const ProductCertScreen()),
             ),
             ToolCard(
-              icon: Icons.currency_exchange_rounded,
+              painter: ForexConverterPainter(),
               title: t.translate('tool_forex'),
               subtitle: t.translate('tool_forex_sub'),
               buttonLabel: "Convert >",
@@ -103,7 +104,7 @@ class ToolsSection extends StatelessWidget {
               onTap: () => _onToolTap(context, const ForexConverterScreen()),
             ),
             ToolCard(
-              icon: Icons.account_balance_rounded,
+              painter: GovBenefitsPainter(),
               title: t.translate('tool_gov_benefits'),
               subtitle: t.translate('tool_gov_benefits_sub'),
               buttonLabel: "Explore >",
@@ -112,7 +113,7 @@ class ToolsSection extends StatelessWidget {
               onTap: () => _onToolTap(context, const GovBenefitsScreen()),
             ),
             ToolCard(
-              icon: Icons.menu_book_rounded,
+              painter: IncotermsPainter(),
               title: t.translate('tool_incoterms_2026'),
               subtitle: t.translate('tool_incoterms_sub'),
               buttonLabel: "Read More >",
