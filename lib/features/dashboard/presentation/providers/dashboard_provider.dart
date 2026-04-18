@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:exim_lab/features/courses/data/models/course_model.dart';
 import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart';
 import 'package:exim_lab/features/dashboard/data/repositories/dashboard_repository.dart';
@@ -32,8 +33,8 @@ class DashboardProvider extends ChangeNotifier {
   bool isLoading = false;
   String? error;
 
-  bool _isTourSeen = true;
-  bool _isInterestDialogShown = true;
+  bool _isTourSeen = false;
+  bool _isInterestDialogShown = false;
 
   bool get isTourSeen => _isTourSeen;
   bool get isInterestDialogShown => _isInterestDialogShown;
@@ -85,6 +86,14 @@ class DashboardProvider extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     _isTourSeen = prefs.getBool('dashboard_v3_tour_seen') ?? false;
     _isInterestDialogShown = prefs.getBool('interest_dialog_shown') ?? false;
+
+    developer.log(
+      '📦 Onboarding State Initialized:\n'
+      '   - dashboard_v3_tour_seen: $_isTourSeen\n'
+      '   - interest_dialog_shown: $_isInterestDialogShown',
+      name: 'ONBOARDING',
+    );
+
     notifyListeners();
   }
 
@@ -92,6 +101,12 @@ class DashboardProvider extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('dashboard_v3_tour_seen', true);
     _isTourSeen = true;
+
+    developer.log(
+      '💾 Persisting State: dashboard_v3_tour_seen -> true',
+      name: 'ONBOARDING',
+    );
+
     notifyListeners();
   }
 

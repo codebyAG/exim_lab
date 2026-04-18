@@ -177,7 +177,12 @@ class _DashboardBodyState extends State<_DashboardBody> {
   }
 
   void _startShowcase() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // Small delay to ensure all list items have performed their first paint
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      if (!mounted) return;
+
       final List<GlobalKey> showcaseList = [
         _headerKey,
         _notifKey,
@@ -217,9 +222,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
         ShowCaseWidget.of(context).startShowCase(activeKeys);
       } else {
         developer.log(
-          '⚠️ No visible keys found for tour. Skipping...',
+          '⚠️ No visible keys found for tour. Marking as seen to prevent UI blockage.',
           name: 'ONBOARDING',
         );
+        // Only mark as seen if we've truly given it a chance to render
         context.read<DashboardProvider>().markTourAsSeen();
         _handlePostLoadActions();
       }
@@ -227,6 +233,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
   }
 
   void _showInterestDialog() {
+    developer.log('🎯 Pushing InterestCaptureDialog...', name: 'ONBOARDING');
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -239,9 +246,14 @@ class _DashboardBodyState extends State<_DashboardBody> {
     });
   }
 
-  void _triggerPromoBanner() {
+  Future<void> _triggerPromoBanner() async {
+    // Safety delay to ensure dashboard build and tour logic have settled
+    await Future.delayed(const Duration(milliseconds: 500));
+    if (!mounted) return;
+
     final data = context.read<DashboardProvider>().data;
     if (data?.addons.popup != null) {
+      developer.log('🎁 Pushing PromoBannerDialog...', name: 'ONBOARDING');
       _showPromoBanner(data!.addons.popup!);
     }
   }

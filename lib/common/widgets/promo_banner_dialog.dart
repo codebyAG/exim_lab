@@ -33,6 +33,26 @@ class PromoBannerDialog extends StatelessWidget {
                 imageUrl,
                 fit: BoxFit.cover,
                 width: double.infinity,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Container(
+                    height: 200,
+                    width: double.infinity,
+                    color: Colors.black12,
+                    child: const Center(
+                      child: CircularProgressIndicator(color: Colors.white70),
+                    ),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  // If image fails, don't leave a ghost dialog. Close it.
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (Navigator.canPop(context)) {
+                      Navigator.pop(context);
+                    }
+                  });
+                  return const SizedBox.shrink();
+                },
               ),
             ),
           ),
