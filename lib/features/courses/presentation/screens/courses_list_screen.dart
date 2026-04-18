@@ -1,4 +1,5 @@
 import 'package:exim_lab/features/courses/data/models/course_model.dart';
+import 'package:exim_lab/features/courses/presentation/screens/course_search_delegate.dart';
 
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_details_screen.dart';
@@ -66,7 +67,7 @@ class _CoursesListScreenState extends State<CoursesListScreen>
                   buttonName: 'search_courses',
                   screenName: 'courses_list',
                 );
-                // Future: Implement actual search view
+                showSearch(context: context, delegate: CourseSearchDelegate());
               },
               icon: Icon(
                 Icons.search,

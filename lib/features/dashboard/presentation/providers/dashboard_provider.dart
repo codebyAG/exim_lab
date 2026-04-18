@@ -57,26 +57,14 @@ class DashboardProvider extends ChangeNotifier {
     }).firstOrNull;
   }
 
-  /// The primary 'Popular' or 'Recommended' courses section
-  DashboardSection? get popularCourseSection =>
-      getSection('popular') ??
-      getSection('recommended') ??
-      getSection('course');
+  /// 📈 Popular Courses
+  DashboardSection? get popularCourseSection => getSection('popular');
 
-  /// 🎓 Certified Courses
-  DashboardSection? get certifiedSection =>
-      getSection('certified') ?? getSection('certification');
+  /// ⭐ Recommended Courses
+  DashboardSection? get recommendedCourseSection => getSection('recommended');
 
-  /// 📈 Forex & Finance
-  DashboardSection? get forexSection =>
-      getSection('forex') ?? getSection('finance');
-
-  /// 🚛 Logistics & Supply Chain
-  DashboardSection? get logisticsSection => getSection('logistics');
-
-  /// 🤝 Market Entry & Buyers
-  DashboardSection? get marketSection =>
-      getSection('market') ?? getSection('sourcing');
+  /// 🎓 All / Standard Courses
+  DashboardSection? get allCourseSection => getSection('course');
 
   /// The 'Free Videos' section
   DashboardSection? get freeVideoSection => getSection('freeVideos');

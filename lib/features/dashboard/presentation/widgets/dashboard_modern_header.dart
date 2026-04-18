@@ -232,7 +232,6 @@ class HeaderActionButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _buildActionBtn(Icons.search_rounded),
         const SizedBox(width: 8),
         Consumer<NotificationsProvider>(
           builder: (context, notif, _) => Stack(

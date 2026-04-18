@@ -1,5 +1,6 @@
 import 'package:exim_lab/common/widgets/promo_banner_dialog.dart';
 import 'package:exim_lab/features/dashboard/presentation/painters/dashboard_icons_painter.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/premium_short_video_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/skill_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/certificate_mini_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/achieve_live_card.dart';
@@ -13,7 +14,8 @@ import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dar
 import 'package:exim_lab/features/courses/data/models/course_model.dart';
 import 'package:exim_lab/features/freevideos/data/models/free_videos_model.dart';
 import 'package:exim_lab/features/shorts/presentation/providers/shorts_provider.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/premium_short_video_card.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/animated_search_bar.dart';
+import 'package:exim_lab/features/courses/presentation/screens/course_search_delegate.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_details_screen.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_list_screen.dart';
 import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart';
@@ -317,6 +319,25 @@ class _DashboardBodyState extends State<_DashboardBody> {
               child: const DashboardModernHeader(),
             ),
 
+            // 🔍 PREMIUM SEARCH BAR
+            Padding(
+              padding: EdgeInsets.fromLTRB(5.w, 1.5.h, 5.w, 1.h),
+              child: AnimatedSearchBar(
+                hints: const [
+                  "Search Courses...",
+                  "How to Export?",
+                  "Find HSN Code",
+                  "Market Trends",
+                ],
+                onTap: () {
+                  showSearch(
+                    context: context,
+                    delegate: CourseSearchDelegate(),
+                  );
+                },
+              ),
+            ),
+
             // 1.5 ABOUT US SECTION
             const FounderCard(),
 
@@ -352,30 +373,19 @@ class _DashboardBodyState extends State<_DashboardBody> {
             ),
 
             // 2. FEATURE TITLE
-            Padding(
-              padding: EdgeInsets.fromLTRB(5.w, 1.h, 5.w, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            RichText(
+              text: TextSpan(
+                style: TextStyle(
+                  fontFamily: 'Plus Jakarta Sans',
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
+                ),
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        "What would you like to ",
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: Colors.white.withValues(alpha: 0.7),
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16.sp, // Increased
-                        ),
-                      ),
-                      Text(
-                        "Learn Today?",
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: const Color(0xFFFFD000), // Premium Gold
-                          fontWeight: FontWeight.w800,
-                          fontSize: 16.sp, // Reverted to avoid overflow
-                        ),
-                      ),
-                    ],
+                  const TextSpan(text: "🚀 Explore "),
+                  TextSpan(
+                    text: "Gallery",
+                    style: TextStyle(color: const Color(0xFFFFD000)),
                   ),
                 ],
               ),
@@ -902,11 +912,23 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    t.translate('tools_section_title'),
-                                    style: theme.textTheme.titleLarge?.copyWith(
-                                      fontWeight: FontWeight.w900,
-                                      fontSize: 18,
+                                  RichText(
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                        fontFamily: 'Plus Jakarta Sans',
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.white,
+                                      ),
+                                      children: [
+                                        const TextSpan(text: "🛠️ Practical "),
+                                        TextSpan(
+                                          text: "Tools",
+                                          style: TextStyle(
+                                            color: const Color(0xFFFFD000),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   TextButton(
@@ -914,8 +936,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                     child: Text(
                                       'See All',
                                       style: TextStyle(
-                                        color: cs.primary,
-                                        fontWeight: FontWeight.w700,
+                                        color: const Color(0xFF1E5FFF),
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 12.sp,
                                       ),
                                     ),
                                   ),
@@ -1007,51 +1030,39 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       ),
                     ),
 
-                    // 10. DYNAMIC SECTIONS
+                    // 10. DYNAMIC SECTIONS (Unified Approach)
 
-                    // Popular Courses (Default)
+                    // Popular Courses
                     if (dashboard.popularCourseSection != null)
                       _buildDynamicCourseBlock(
                         context,
                         dashboard.popularCourseSection!,
                         _popularCoursesKey,
                         'courses',
+                        "🔥 Popular ",
+                        "Courses",
                       ),
 
-                    // Certified Courses
-                    if (dashboard.certifiedSection != null)
+                    // Recommended Courses
+                    if (dashboard.recommendedCourseSection != null)
                       _buildDynamicCourseBlock(
                         context,
-                        dashboard.certifiedSection!,
+                        dashboard.recommendedCourseSection!,
                         null,
                         'courses',
+                        "🎯 Recommended ",
+                        "for You",
                       ),
 
-                    // Forex & Finance
-                    if (dashboard.forexSection != null)
+                    // All Courses
+                    if (dashboard.allCourseSection != null)
                       _buildDynamicCourseBlock(
                         context,
-                        dashboard.forexSection!,
+                        dashboard.allCourseSection!,
                         null,
                         'courses',
-                      ),
-
-                    // Logistics
-                    if (dashboard.logisticsSection != null)
-                      _buildDynamicCourseBlock(
-                        context,
-                        dashboard.logisticsSection!,
-                        null,
-                        'courses',
-                      ),
-
-                    // Market Entry
-                    if (dashboard.marketSection != null)
-                      _buildDynamicCourseBlock(
-                        context,
-                        dashboard.marketSection!,
-                        null,
-                        'courses',
+                        "📚 All ",
+                        "Courses",
                       ),
 
                     // Inline Banners
@@ -1213,8 +1224,15 @@ class _DashboardBodyState extends State<_DashboardBody> {
     DashboardSection section,
     GlobalKey? showcaseKey,
     String module,
+    String titlePrefix,
+    String titleAccent,
   ) {
-    final widget = _buildPopularSection(context, section);
+    final widget = _buildPopularSection(
+      context,
+      section,
+      titlePrefix,
+      titleAccent,
+    );
     final block = showcaseKey != null
         ? _buildShowcase(
             key: showcaseKey,
@@ -1227,7 +1245,12 @@ class _DashboardBodyState extends State<_DashboardBody> {
     return ModuleVisibility(module: module, child: block);
   }
 
-  Widget _buildPopularSection(BuildContext context, DashboardSection section) {
+  Widget _buildPopularSection(
+    BuildContext context,
+    DashboardSection section,
+    String titlePrefix,
+    String titleAccent,
+  ) {
     final theme = Theme.of(context);
     final courses = section.data.cast<CourseModel>();
     if (courses.isEmpty) return const SizedBox();
@@ -1268,10 +1291,21 @@ class _DashboardBodyState extends State<_DashboardBody> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                section.title,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w800,
+              RichText(
+                text: TextSpan(
+                  style: TextStyle(
+                    fontFamily: 'Plus Jakarta Sans',
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                  ),
+                  children: [
+                    TextSpan(text: titlePrefix),
+                    TextSpan(
+                      text: titleAccent,
+                      style: TextStyle(color: const Color(0xFFFFD000)),
+                    ),
+                  ],
                 ),
               ),
               TextButton(
