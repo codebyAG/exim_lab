@@ -252,13 +252,11 @@ class _CourseTile extends StatelessWidget {
           final isPremium = auth.user?.isPremium ?? false;
           
           developer.log(
-            '🛡️ Course Access Check -> [Tile: $title]',
+            '🛡️ Course Access Check -> [Tile: $title]\n'
+            '   - User Premium: $isPremium\n'
+            '   - Course Locked: $isLocked\n'
+            '   - Result: ${!isLocked ? "✅ ACCESS GRANTED" : "❌ ACCESS DENIED"}',
             name: 'PREMIUM',
-            error: {
-              'userPremium': isPremium,
-              'courseLocked': isLocked,
-              'accessGranted': !isLocked,
-            },
           );
 
           if (isLocked) {
@@ -438,14 +436,12 @@ class _MyCourseCard extends StatelessWidget {
                     final isLocked = !isPremium && !isFree;
 
                     developer.log(
-                      '🛡️ Course Access Check -> [MyCourseCard: ${course.title}]',
+                      '🛡️ Course Access Check -> [MyCourseCard: ${course.title}]\n'
+                      '   - User Premium: $isPremium\n'
+                      '   - Course Free: $isFree\n'
+                      '   - Course Locked: $isLocked\n'
+                      '   - Result: ${!isLocked ? "✅ ACCESS GRANTED" : "❌ ACCESS DENIED"}',
                       name: 'PREMIUM',
-                      error: {
-                        'userPremium': isPremium,
-                        'isFree': isFree,
-                        'courseLocked': isLocked,
-                        'accessGranted': !isLocked,
-                      },
                     );
 
                     if (isLocked) {

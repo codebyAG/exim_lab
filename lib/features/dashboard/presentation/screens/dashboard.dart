@@ -1221,13 +1221,11 @@ class _DashboardBodyState extends State<_DashboardBody> {
     final isPremium = context.read<AuthProvider>().user?.isPremium ?? false;
 
     developer.log(
-      '🛡️ Gated Access Check -> [$sectionName]',
+      '🛡️ Gated Access Check -> [$sectionName]\n'
+      '   - User Premium: $isPremium\n'
+      '   - Section Free: $isFree\n'
+      '   - Result: ${isPremium || isFree ? "✅ ACCESS GRANTED" : "❌ ACCESS DENIED"}',
       name: 'PREMIUM',
-      error: {
-        'userPremium': isPremium,
-        'sectionFree': isFree,
-        'accessGranted': isPremium || isFree,
-      },
     );
 
     if (isPremium || isFree) {
