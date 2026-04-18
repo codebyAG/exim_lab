@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:exim_lab/features/login/data/data_sources/auth_data_source.dart';
 import 'package:exim_lab/features/login/data/models/user_model.dart';
@@ -224,6 +225,10 @@ class AuthProvider extends ChangeNotifier {
     try {
       if (_user == null) return;
       final response = await _dataSource.checkMembership();
+      final isActive = response['active'] == true;
+      
+      developer.log('💎 Membership Check Result -> active: $isActive', name: 'AUTH');
+
       if (response['active'] != null && _user != null) {
         final updatedUser = UserModel(
           id: _user!.id,

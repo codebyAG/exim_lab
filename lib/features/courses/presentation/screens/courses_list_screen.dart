@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:exim_lab/features/courses/data/models/course_model.dart';
 import 'package:exim_lab/features/courses/presentation/screens/course_search_delegate.dart';
 
@@ -247,6 +248,19 @@ class _CourseTile extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () {
+          final auth = context.read<AuthProvider>();
+          final isPremium = auth.user?.isPremium ?? false;
+          
+          developer.log(
+            '🛡️ Course Access Check -> [Tile: $title]',
+            name: 'PREMIUM',
+            error: {
+              'userPremium': isPremium,
+              'courseLocked': isLocked,
+              'accessGranted': !isLocked,
+            },
+          );
+
           if (isLocked) {
             showDialog(
               context: context,
@@ -419,6 +433,21 @@ class _MyCourseCard extends StatelessWidget {
 
                 return GestureDetector(
                   onTap: () {
+                    final isPremium = auth.user?.isPremium ?? false;
+                    final isFree = course.basePrice == 0;
+                    final isLocked = !isPremium && !isFree;
+
+                    developer.log(
+                      '🛡️ Course Access Check -> [MyCourseCard: ${course.title}]',
+                      name: 'PREMIUM',
+                      error: {
+                        'userPremium': isPremium,
+                        'isFree': isFree,
+                        'courseLocked': isLocked,
+                        'accessGranted': !isLocked,
+                      },
+                    );
+
                     if (isLocked) {
                       showDialog(
                         context: context,

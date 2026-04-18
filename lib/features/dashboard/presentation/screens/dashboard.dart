@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:exim_lab/common/widgets/promo_banner_dialog.dart';
 import 'package:exim_lab/features/dashboard/presentation/painters/dashboard_icons_painter.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/premium_short_video_card.dart';
@@ -299,6 +300,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
               ),
               onPressed: () => _handlePremiumGatedTap(
                 context: context,
+                sectionName: 'Floating Action: AI Support',
                 action: () => AppNavigator.push(context, const AiChatScreen()),
               ),
               child: Icon(Icons.support_agent, color: cs.onPrimary, size: 28),
@@ -883,6 +885,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                 isLocked: !isAccessible,
                                 onTap: () => _handlePremiumGatedTap(
                                   context: context,
+                                  sectionName:
+                                      'Continue Learning: ${course.title}',
                                   isFree: isFree,
                                   action: () => AppNavigator.push(
                                     context,
@@ -989,6 +993,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                     isLocked: !isPremium,
                                     onTap: () => _handlePremiumGatedTap(
                                       context: context,
+                                      sectionName: 'Dashboard: Quizzes',
                                       action: () => AppNavigator.push(
                                         context,
                                         const QuizTopicsScreen(),
@@ -1016,6 +1021,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                     isLocked: !isPremium,
                                     onTap: () => _handlePremiumGatedTap(
                                       context: context,
+                                      sectionName: 'Dashboard: AI Expert',
                                       action: () => AppNavigator.push(
                                         context,
                                         const AiChatScreen(),
@@ -1209,9 +1215,21 @@ class _DashboardBodyState extends State<_DashboardBody> {
   void _handlePremiumGatedTap({
     required BuildContext context,
     required VoidCallback action,
+    required String sectionName,
     bool isFree = false,
   }) {
     final isPremium = context.read<AuthProvider>().user?.isPremium ?? false;
+
+    developer.log(
+      '🛡️ Gated Access Check -> [$sectionName]',
+      name: 'PREMIUM',
+      error: {
+        'userPremium': isPremium,
+        'sectionFree': isFree,
+        'accessGranted': isPremium || isFree,
+      },
+    );
+
     if (isPremium || isFree) {
       action();
     } else {
@@ -1311,6 +1329,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
               TextButton(
                 onPressed: () => _handlePremiumGatedTap(
                   context: context,
+                  sectionName:
+                      'Course Section View All: $titlePrefix$titleAccent',
                   action: () =>
                       AppNavigator.push(context, const CoursesListScreen()),
                 ),
