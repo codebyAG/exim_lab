@@ -54,6 +54,7 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/free_pdf_promo_
 import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_modern_header.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/tutorial_step_content.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/premium_bottom_bar.dart';
 
 class DashboardScreen extends StatelessWidget {
   DashboardScreen({super.key});
@@ -320,7 +321,6 @@ class _DashboardBodyState extends State<_DashboardBody> {
 
     // Build Navigation schema
     final navConfig = _buildNavigationConfig(context, t, moduleProvider);
-    final navItems = navConfig.items;
     final navActions = navConfig.actions;
 
     return Scaffold(
@@ -1204,9 +1204,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       ),
 
                     const DashboardFooter(),
-                    SizedBox(
-                      height: 5.h,
-                    ), // Extra padding at very bottom for scrolling comfort
+                    SizedBox(height: 8.h), // Padding for pinned navigation bar
                   ],
                 );
               },
@@ -1214,62 +1212,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
           ],
         ),
       ),
-      bottomNavigationBar: NavigationBar(
-        destinations: List.generate(navItems.length, (index) {
-          final item = navItems[index];
-          final schemaItem = navConfig.schema[index];
-
-          GlobalKey? key;
-          String title = '';
-          String desc = '';
-
-          switch (schemaItem.identifier) {
-            case 'home':
-              key = _navHomeKey;
-              title = 'tut_nav_home_title';
-              desc = 'tut_nav_home_desc';
-              break;
-            case 'shorts':
-              key = _navShortsKey;
-              title = 'tut_nav_shorts_title';
-              desc = 'tut_nav_shorts_desc';
-              break;
-            case 'courses':
-              key = _navCoursesKey;
-              title = 'tut_nav_courses_title';
-              desc = 'tut_nav_courses_desc';
-              break;
-            case 'news':
-              key = _navNewsKey;
-              title = 'tut_nav_news_title';
-              desc = 'tut_nav_news_desc';
-              break;
-            case 'profile':
-              key = _navProfileKey;
-              title = 'tut_nav_profile_title';
-              desc = 'tut_nav_profile_desc';
-              break;
-          }
-
-          final destination = NavigationDestination(
-            icon: item.icon,
-            selectedIcon: item.activeIcon,
-            label: item.label!,
-          );
-
-          if (key != null) {
-            return _buildShowcase(
-              key: key,
-              title: title,
-              description: desc,
-              child: destination,
-            );
-          }
-
-          return destination;
-        }),
+      bottomNavigationBar: PremiumBottomBar(
+        items: navConfig.schema,
         selectedIndex: 0,
-        onDestinationSelected: (index) {
+        onItemSelected: (index) {
           if (index < navActions.length && navActions[index] != null) {
             navActions[index]!();
           }
