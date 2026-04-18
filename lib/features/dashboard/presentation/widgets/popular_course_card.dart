@@ -11,6 +11,8 @@ class PopularCourseCard extends StatelessWidget {
   final Color categoryColor;
   final List<Color> iconBgColors;
 
+  final VoidCallback? onTap;
+ 
   const PopularCourseCard({
     super.key,
     required this.rank,
@@ -21,11 +23,15 @@ class PopularCourseCard extends StatelessWidget {
     required this.iconPainter,
     required this.categoryColor,
     required this.iconBgColors,
+    this.onTap,
   });
-
+ 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(24),
+      child: Container(
       margin: EdgeInsets.only(bottom: 1.5.h),
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
@@ -120,6 +126,7 @@ class PopularCourseCard extends StatelessWidget {
           ),
         ],
       ),
+     ),
     );
   }
 }

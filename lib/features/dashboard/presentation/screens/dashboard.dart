@@ -19,6 +19,9 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/animated_search
 import 'package:exim_lab/features/courses/presentation/screens/course_search_delegate.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_details_screen.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_list_screen.dart';
+import 'package:exim_lab/features/freevideos/presentation/screens/free_videos_details_screen.dart';
+import 'package:exim_lab/features/tools/presentation/screens/export_price_calculator.dart';
+import 'package:exim_lab/features/tools/presentation/screens/import_calculator_screen.dart';
 import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart';
 import 'package:exim_lab/features/quiz/presentation/screens/quiz_topics_screen.dart';
 import 'package:exim_lab/features/dashboard/presentation/providers/dashboard_provider.dart';
@@ -507,24 +510,33 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       ],
                     ),
                   ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 4.w,
-                      vertical: 0.6.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1E5FFF).withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: const Color(0xFF1E5FFF).withValues(alpha: 0.3),
+                  GestureDetector(
+                    onTap: () {
+                      developer.log(
+                        '📂 Navigation -> Skills: See All',
+                        name: 'NAVIGATION',
+                      );
+                      AppNavigator.push(context, const CoursesListScreen());
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 4.w,
+                        vertical: 0.6.h,
                       ),
-                    ),
-                    child: Text(
-                      "See All →",
-                      style: TextStyle(
-                        color: const Color(0xFF1E5FFF),
-                        fontSize: 12.5.sp, // Increased
-                        fontWeight: FontWeight.w800,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1E5FFF).withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: const Color(0xFF1E5FFF).withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Text(
+                        "See All →",
+                        style: TextStyle(
+                          color: const Color(0xFF1E5FFF),
+                          fontSize: 12.5.sp, // Increased
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                     ),
                   ),
@@ -553,6 +565,16 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       Color(0xFF153580),
                     ],
                     painter: ExportPriceIconPainter(),
+                    onTap: () {
+                      developer.log(
+                        '📂 Navigation -> Tool: Export Price Calculator',
+                        name: 'NAVIGATION',
+                      );
+                      AppNavigator.push(
+                        context,
+                        const ExportPriceCalculatorScreen(),
+                      );
+                    },
                   ),
                   SkillCard(
                     title: "Import Calculator",
@@ -563,6 +585,16 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       Color(0xFF8B000C),
                     ],
                     painter: ImportCalcIconPainter(),
+                    onTap: () {
+                      developer.log(
+                        '📂 Navigation -> Tool: Import Calculator',
+                        name: 'NAVIGATION',
+                      );
+                      AppNavigator.push(
+                        context,
+                        const ImportCalculatorScreen(),
+                      );
+                    },
                   ),
                   SkillCard(
                     title: "Logistics & Shipping",
@@ -573,6 +605,13 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       Color(0xFF005AAA),
                     ],
                     painter: LogisticsIconPainter(),
+                    onTap: () {
+                      developer.log(
+                        '📂 Navigation -> Module: Logistics',
+                        name: 'NAVIGATION',
+                      );
+                      AppNavigator.push(context, const CoursesListScreen());
+                    },
                   ),
                   SkillCard(
                     title: "Buyer Acquisition",
@@ -583,6 +622,13 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       Color(0xFF7A4400),
                     ],
                     painter: BuyerIconPainter(),
+                    onTap: () {
+                      developer.log(
+                        '📂 Navigation -> Module: Buyer Acquisition',
+                        name: 'NAVIGATION',
+                      );
+                      AppNavigator.push(context, const CoursesListScreen());
+                    },
                   ),
                 ],
               ),
@@ -710,24 +756,36 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                 ],
                               ),
                             ),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 4.w,
-                                vertical: 0.8.h,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                border: Border.all(
-                                  color: const Color(0xFF1E5FFF),
-                                  width: 1.5,
+                            GestureDetector(
+                              onTap: () {
+                                developer.log(
+                                  '📂 Navigation -> Free Videos: View All',
+                                  name: 'NAVIGATION',
+                                );
+                                AppNavigator.push(
+                                  context,
+                                  const CoursesListScreen(),
+                                );
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 4.w,
+                                  vertical: 0.8.h,
                                 ),
-                              ),
-                              child: Text(
-                                "View All →",
-                                style: TextStyle(
-                                  color: const Color(0xFF1E5FFF),
-                                  fontSize: 10.sp,
-                                  fontWeight: FontWeight.w800,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  border: Border.all(
+                                    color: const Color(0xFF1E5FFF),
+                                    width: 1.5,
+                                  ),
+                                ),
+                                child: Text(
+                                  "View All →",
+                                  style: TextStyle(
+                                    color: const Color(0xFF1E5FFF),
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.w800,
+                                  ),
                                 ),
                               ),
                             ),
@@ -751,7 +809,14 @@ class _DashboardBodyState extends State<_DashboardBody> {
                               timeAgo:
                                   "6 months ago", // Mock time ago as it's not in the model
                               onTap: () {
-                                // Navigate to video player if applicable
+                                developer.log(
+                                  '📂 Navigation -> Free Video: ${video.title}',
+                                  name: 'NAVIGATION',
+                                );
+                                AppNavigator.push(
+                                  context,
+                                  FreeVideoDetailsScreen(video: video),
+                                );
                               },
                             );
                           }).toList(),
@@ -795,24 +860,38 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                       ],
                                     ),
                                   ),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 4.w,
-                                      vertical: 0.8.h,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(100),
-                                      border: Border.all(
-                                        color: const Color(0xFF1E5FFF),
-                                        width: 1.5,
+                                  GestureDetector(
+                                    onTap: () {
+                                      developer.log(
+                                        '📂 Navigation -> Shorts: View All',
+                                        name: 'NAVIGATION',
+                                      );
+                                      AppNavigator.push(
+                                        context,
+                                        const ShortsFeedScreen(),
+                                      );
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 4.w,
+                                        vertical: 0.8.h,
                                       ),
-                                    ),
-                                    child: Text(
-                                      "View All →",
-                                      style: TextStyle(
-                                        color: const Color(0xFF1E5FFF),
-                                        fontSize: 10.sp,
-                                        fontWeight: FontWeight.w800,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                          100,
+                                        ),
+                                        border: Border.all(
+                                          color: const Color(0xFF1E5FFF),
+                                          width: 1.5,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        "View All →",
+                                        style: TextStyle(
+                                          color: const Color(0xFF1E5FFF),
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w800,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -968,7 +1047,16 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                     ),
                                   ),
                                   TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      developer.log(
+                                        '📂 Navigation -> Tools: See All',
+                                        name: 'NAVIGATION',
+                                      );
+                                      AppNavigator.push(
+                                        context,
+                                        const CoursesListScreen(),
+                                      );
+                                    },
                                     child: Text(
                                       'See All',
                                       style: TextStyle(
@@ -1391,6 +1479,16 @@ class _DashboardBodyState extends State<_DashboardBody> {
                 iconPainter: painter,
                 categoryColor: accentColor,
                 iconBgColors: bgGradients,
+                onTap: () {
+                  developer.log(
+                    '📂 Navigation -> Popular Course: ${course.title}',
+                    name: 'NAVIGATION',
+                  );
+                  AppNavigator.push(
+                    context,
+                    CourseDetailsScreen(courseId: course.id),
+                  );
+                },
               );
             }),
           ),

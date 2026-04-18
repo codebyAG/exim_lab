@@ -8,6 +8,8 @@ class SkillCard extends StatelessWidget {
   final List<Color> gradientColors;
   final CustomPainter painter;
 
+  final VoidCallback? onTap;
+ 
   const SkillCard({
     super.key,
     required this.title,
@@ -15,11 +17,15 @@ class SkillCard extends StatelessWidget {
     required this.badge,
     required this.gradientColors,
     required this.painter,
+    this.onTap,
   });
-
+ 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(24),
+      child: Container(
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -121,6 +127,7 @@ class SkillCard extends StatelessWidget {
             ],
           ),
         ],
+       ),
       ),
     );
   }

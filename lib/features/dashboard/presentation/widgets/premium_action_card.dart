@@ -21,149 +21,148 @@ class PremiumActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 15.h,
-      height: 15.h,
-      margin: EdgeInsets.only(right: 4.w),
-      decoration: BoxDecoration(
-        color: const Color(0xFF030E30), // Matching Deep Navy
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
-          width: 1.2,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.25),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(24),
+      child: Container(
+        width: 15.h,
+        height: 15.h,
+        margin: EdgeInsets.only(right: 4.w),
+        decoration: BoxDecoration(
+          color: const Color(0xFF030E30), // Matching Deep Navy
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.1),
+            width: 1.2,
           ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: Stack(
-          children: [
-            // 🌊 BOTTOM ACCENT WAVE
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: 10.h,
-              child: CustomPaint(painter: _CardWavePainter(color: color)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.25),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
             ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+          child: Stack(
+            children: [
+              // 🌊 BOTTOM ACCENT WAVE
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: 10.h,
+                child: CustomPaint(painter: _CardWavePainter(color: color)),
+              ),
 
-            // 📦 DYNAMIC CONTENT COLUMN
-            Padding(
-              padding: EdgeInsets.fromLTRB(3.w, 1.5.h, 3.w, 1.h),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // 📝 TITLE
-                  Text(
-                    label,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14.sp,
-                      fontFamily: 'Plus Jakarta Sans',
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-
-                  // 🎨 ICON AREA
-                  Expanded(
-                    child: Center(
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Container(
-                            width: 15.sp,
-                            height: 15.sp,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: color.withValues(alpha: 0.2),
-                                  blurRadius: 20,
-                                ),
-                              ],
-                            ),
-                          ),
-                          if (painter != null)
-                            SizedBox(
-                              width: 35.sp,
-                              height: 35.sp,
-                              child: CustomPaint(painter: painter),
-                            )
-                          else if (icon != null)
-                            Icon(
-                              icon,
-                              size: 26.sp,
-                              color: color.withValues(alpha: 0.95),
-                            ),
-                        ],
+              // 📦 DYNAMIC CONTENT COLUMN
+              Padding(
+                padding: EdgeInsets.fromLTRB(3.w, 1.5.h, 3.w, 1.h),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // 📝 TITLE
+                    Text(
+                      label,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14.sp,
+                        fontFamily: 'Plus Jakarta Sans',
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
 
-                  // 🔘 ACTION PILL
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: onTap,
-                      borderRadius: BorderRadius.circular(20),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 4.w,
-                          vertical: 0.7.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.15),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
+                    // 🎨 ICON AREA
+                    Expanded(
+                      child: Center(
+                        child: Stack(
+                          alignment: Alignment.center,
                           children: [
-                            Flexible(
-                              child: Text(
-                                "Start >",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 11.sp,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                            Container(
+                              width: 15.sp,
+                              height: 15.sp,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: color.withValues(alpha: 0.2),
+                                    blurRadius: 20,
+                                  ),
+                                ],
                               ),
                             ),
+                            if (painter != null)
+                              SizedBox(
+                                width: 35.sp,
+                                height: 35.sp,
+                                child: CustomPaint(painter: painter),
+                              )
+                            else if (icon != null)
+                              Icon(
+                                icon,
+                                size: 26.sp,
+                                color: color.withValues(alpha: 0.95),
+                              ),
                           ],
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
 
-            // 🔒 LOCK OVERLAY
-            if (isLocked)
-              Container(
-                color: Colors.black.withValues(alpha: 0.2),
-                child: const Center(
-                  child: Icon(
-                    Icons.lock_rounded,
-                    color: Colors.white,
-                    size: 24,
-                  ),
+                    // 🔘 ACTION PILL
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 4.w,
+                        vertical: 0.7.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.15),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              "Start >",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 11.sp,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
-          ],
+
+              // 🔒 LOCK OVERLAY
+              if (isLocked)
+                Positioned.fill(
+                  child: Container(
+                    color: Colors.black.withValues(alpha: 0.4),
+                    child: const Center(
+                      child: Icon(
+                        Icons.lock_rounded,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

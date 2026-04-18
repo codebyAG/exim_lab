@@ -26,166 +26,171 @@ class ToolCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 46.w,
-      height: 28.h,
-      margin: EdgeInsets.only(right: 4.w),
-      decoration: BoxDecoration(
-        color: const Color(0xFF030E30), // Deep Premium Navy
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
-          width: 1.2,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(24),
+      child: Container(
+        width: 46.w,
+        height: 28.h,
+        margin: EdgeInsets.only(right: 4.w),
+        decoration: BoxDecoration(
+          color: const Color(0xFF030E30), // Deep Premium Navy
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.1),
+            width: 1.2,
           ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: Stack(
-          children: [
-            // 🌊 BOTTOM ACCENT WAVE
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: 12.h,
-              child: CustomPaint(
-                painter: PremiumCardWavePainter(color: themeColor.withValues(alpha: 0.4)),
-              ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.3),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
             ),
-
-            // 📦 DYNAMIC CONTENT COLUMN
-            Padding(
-              padding: EdgeInsets.fromLTRB(3.w, 2.h, 3.w, 1.5.h),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // 📝 TITLE & SUBTITLE
-                  Column(
-                    children: [
-                      Text(
-                        title,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 14.sp,
-                          fontFamily: 'Plus Jakarta Sans',
-                          letterSpacing: -0.5,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      SizedBox(height: 0.5.h),
-                      Text(
-                        subtitle,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.5),
-                          fontWeight: FontWeight.w500,
-                          fontSize: 10.sp,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+          child: Stack(
+            children: [
+              // 🌊 BOTTOM ACCENT WAVE
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: 12.h,
+                child: CustomPaint(
+                  painter: PremiumCardWavePainter(
+                    color: themeColor.withValues(alpha: 0.4),
                   ),
+                ),
+              ),
 
-                  // 🎨 ICON AREA
-                  Expanded(
-                    child: Center(
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Container(
-                            width: 35.sp,
-                            height: 35.sp,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: themeColor.withValues(alpha: 0.2),
-                                  blurRadius: 20,
-                                ),
-                              ],
-                            ),
+              // 📦 DYNAMIC CONTENT COLUMN
+              Padding(
+                padding: EdgeInsets.fromLTRB(3.w, 2.h, 3.w, 1.5.h),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // 📝 TITLE & SUBTITLE
+                    Column(
+                      children: [
+                        Text(
+                          title,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 14.sp,
+                            fontFamily: 'Plus Jakarta Sans',
+                            letterSpacing: -0.5,
                           ),
-                          if (painter != null)
-                            SizedBox(
-                              width: 38.sp,
-                              height: 38.sp,
-                              child: CustomPaint(painter: painter),
-                            )
-                          else if (icon != null)
-                            SafePremiumIcon(
-                              icon: isLocked ? Icons.lock_outline_rounded : icon,
-                              size: 34.sp,
-                              color: themeColor.withValues(alpha: 0.95),
-                            ),
-                        ],
-                      ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(height: 0.5.h),
+                        Text(
+                          subtitle,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.5),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 10.sp,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
-                  ),
 
-                  // 🔘 GLASS ACTION PILL
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: onTap,
-                      borderRadius: BorderRadius.circular(16),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 4.w,
-                          vertical: 0.8.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.15),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
+                    // 🎨 ICON AREA
+                    Expanded(
+                      child: Center(
+                        child: Stack(
+                          alignment: Alignment.center,
                           children: [
-                            Flexible(
-                              child: Text(
-                                buttonLabel,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 11.sp,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                            Container(
+                              width: 35.sp,
+                              height: 35.sp,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: themeColor.withValues(alpha: 0.2),
+                                    blurRadius: 20,
+                                  ),
+                                ],
                               ),
                             ),
+                            if (painter != null)
+                              SizedBox(
+                                width: 38.sp,
+                                height: 38.sp,
+                                child: CustomPaint(painter: painter),
+                              )
+                            else if (icon != null)
+                              SafePremiumIcon(
+                                icon: isLocked
+                                    ? Icons.lock_outline_rounded
+                                    : icon,
+                                size: 34.sp,
+                                color: themeColor.withValues(alpha: 0.95),
+                              ),
                           ],
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
 
-            // 🔒 LOCK OVERLAY (SUBTLE)
-            if (isLocked)
-              Positioned.fill(
-                child: Container(
-                  color: Colors.black.withValues(alpha: 0.2),
-                  child: const Center(
-                    child: Icon(Icons.lock_rounded, color: Colors.white54, size: 24),
-                  ),
+                    // 🔘 GLASS ACTION PILL
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 4.w,
+                        vertical: 0.8.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.15),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              buttonLabel,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 11.sp,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
-          ],
+
+              // 🔒 LOCK OVERLAY (SUBTLE)
+              if (isLocked)
+                Positioned.fill(
+                  child: Container(
+                    color: Colors.black.withValues(alpha: 0.2),
+                    child: const Center(
+                      child: Icon(
+                        Icons.lock_rounded,
+                        color: Colors.white54,
+                        size: 24,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

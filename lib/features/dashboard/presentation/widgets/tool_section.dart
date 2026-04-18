@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/tools/presentation/screens/cbm_calculator.dart';
 import 'package:exim_lab/features/tools/presentation/screens/export_price_calculator.dart';
@@ -20,7 +21,14 @@ class ToolsSection extends StatelessWidget {
 
   const ToolsSection({super.key, this.isPremium = false});
 
-  void _onToolTap(BuildContext context, Widget screen) {
+  void _onToolTap(BuildContext context, Widget screen, String toolName) {
+    developer.log(
+      '🛠️ Tool Action Triggered -> [$toolName]\n'
+      '   - User Premium: $isPremium\n'
+      '   - Action: ${isPremium ? "✅ OPENING TOOL" : "❌ TRIGGERING DIALOG"}',
+      name: 'NAVIGATION',
+    );
+
     if (isPremium) {
       AppNavigator.push(context, screen);
     } else {
@@ -45,8 +53,11 @@ class ToolsSection extends StatelessWidget {
               buttonLabel: "Calculate >",
               themeColor: const Color(0xFF0D47A1), // Navy
               isLocked: !isPremium,
-              onTap: () =>
-                  _onToolTap(context, const ExportPriceCalculatorScreen()),
+              onTap: () => _onToolTap(
+                context,
+                const ExportPriceCalculatorScreen(),
+                t.translate('tool_export_calc'),
+              ),
             ),
             ToolCard(
               painter: ImportCalcIconPainter(),
@@ -55,7 +66,11 @@ class ToolsSection extends StatelessWidget {
               buttonLabel: "Estimate >",
               themeColor: const Color(0xFFD32F2F), // Red
               isLocked: !isPremium,
-              onTap: () => _onToolTap(context, const ImportCalculatorScreen()),
+              onTap: () => _onToolTap(
+                context,
+                const ImportCalculatorScreen(),
+                t.translate('tool_import_calc'),
+              ),
             ),
             ToolCard(
               painter: HsnFinderPainter(),
@@ -64,7 +79,11 @@ class ToolsSection extends StatelessWidget {
               buttonLabel: "Find Now >",
               themeColor: const Color(0xFF00C853), // Green
               isLocked: !isPremium,
-              onTap: () => _onToolTap(context, const HsnFinderScreen()),
+              onTap: () => _onToolTap(
+                context,
+                const HsnFinderScreen(),
+                t.translate('tool_hsn_finder'),
+              ),
             ),
             ToolCard(
               painter: CbmCalculatorPainter(),
@@ -83,7 +102,11 @@ class ToolsSection extends StatelessWidget {
               buttonLabel: "Compute >",
               themeColor: const Color(0xFFFF6D00), // Orange
               isLocked: !isPremium,
-              onTap: () => _onToolTap(context, const GstCalculatorScreen()),
+              onTap: () => _onToolTap(
+                context,
+                const GstCalculatorScreen(),
+                t.translate('tool_gst_calc'),
+              ),
             ),
             ToolCard(
               painter: ProductCertPainter(),
@@ -92,7 +115,11 @@ class ToolsSection extends StatelessWidget {
               buttonLabel: "Verify >",
               themeColor: const Color(0xFF283593), // Indigo
               isLocked: !isPremium,
-              onTap: () => _onToolTap(context, const ProductCertScreen()),
+              onTap: () => _onToolTap(
+                context,
+                const ProductCertScreen(),
+                t.translate('tool_prod_cert'),
+              ),
             ),
             ToolCard(
               painter: ForexConverterPainter(),
@@ -101,7 +128,11 @@ class ToolsSection extends StatelessWidget {
               buttonLabel: "Convert >",
               themeColor: const Color(0xFF2E7D32), // Dark Green
               isLocked: !isPremium,
-              onTap: () => _onToolTap(context, const ForexConverterScreen()),
+              onTap: () => _onToolTap(
+                context,
+                const ForexConverterScreen(),
+                t.translate('tool_forex'),
+              ),
             ),
             ToolCard(
               painter: GovBenefitsPainter(),
@@ -110,7 +141,11 @@ class ToolsSection extends StatelessWidget {
               buttonLabel: "Explore >",
               themeColor: const Color(0xFF7B1FA2), // Purple
               isLocked: !isPremium,
-              onTap: () => _onToolTap(context, const GovBenefitsScreen()),
+              onTap: () => _onToolTap(
+                context,
+                const GovBenefitsScreen(),
+                t.translate('tool_gov_benefits'),
+              ),
             ),
             ToolCard(
               painter: IncotermsPainter(),
@@ -119,7 +154,11 @@ class ToolsSection extends StatelessWidget {
               buttonLabel: "Read More >",
               themeColor: const Color(0xFF455A64), // Blue Grey
               isLocked: !isPremium,
-              onTap: () => _onToolTap(context, const IncotermsScreen()),
+              onTap: () => _onToolTap(
+                context,
+                const IncotermsScreen(),
+                t.translate('tool_incoterms_2026'),
+              ),
             ),
           ],
         ),
