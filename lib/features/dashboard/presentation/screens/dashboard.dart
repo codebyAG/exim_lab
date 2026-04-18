@@ -62,6 +62,7 @@ class DashboardScreen extends StatelessWidget {
     return ShowCaseWidget(
       enableAutoScroll: true,
       onFinish: () async {
+        developer.log('🏁 ShowCase Tour Finished.', name: 'ONBOARDING');
         // Notify provider that tour is complete
         context.read<DashboardProvider>().markTourAsSeen();
         // Trigger next logical action (e.g. Interest Dialog or Promo)
@@ -154,6 +155,11 @@ class _DashboardBodyState extends State<_DashboardBody> {
       hasNoInterests: hasNoInterest,
     );
 
+    developer.log(
+      '🎬 Onboarding Action Triggered -> [$nextAction]',
+      name: 'ONBOARDING',
+    );
+
     switch (nextAction) {
       case DashboardOnboardingAction.startTour:
         _startShowcase();
@@ -165,6 +171,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
         _triggerPromoBanner();
         break;
       case DashboardOnboardingAction.none:
+        developer.log('✅ No onboarding actions pending.', name: 'ONBOARDING');
         break;
     }
   }
@@ -200,8 +207,21 @@ class _DashboardBodyState extends State<_DashboardBody> {
           .where((key) => key.currentContext != null)
           .toList();
 
+      developer.log(
+        '🔍 Tour Keys Found: ${activeKeys.length} / ${showcaseList.length}',
+        name: 'ONBOARDING',
+      );
+
       if (activeKeys.isNotEmpty && mounted) {
+        developer.log('🚀 Starting ShowCase Tour...', name: 'ONBOARDING');
         ShowCaseWidget.of(context).startShowCase(activeKeys);
+      } else {
+        developer.log(
+          '⚠️ No visible keys found for tour. Skipping...',
+          name: 'ONBOARDING',
+        );
+        context.read<DashboardProvider>().markTourAsSeen();
+        _handlePostLoadActions();
       }
     });
   }
