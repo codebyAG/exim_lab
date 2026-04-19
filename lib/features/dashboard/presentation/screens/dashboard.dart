@@ -86,13 +86,9 @@ class _DashboardBody extends StatefulWidget {
 
 class _DashboardBodyState extends State<_DashboardBody> {
   final GlobalKey _headerKey = GlobalKey();
-  final GlobalKey _galleryHeaderKey = GlobalKey();
-  final GlobalKey _notifKey = GlobalKey();
-  final GlobalKey _userProfileKey = GlobalKey();
 
   final GlobalKey _shortsKey = GlobalKey();
 
-  final GlobalKey _coursesCardKey = GlobalKey();
   final GlobalKey _quizzesCardKey = GlobalKey();
   final GlobalKey _aiExpertCardKey = GlobalKey();
   final GlobalKey _galleryCardKey = GlobalKey();
@@ -101,13 +97,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
   final GlobalKey _toolsKey = GlobalKey();
   final GlobalKey _freeVideosKey = GlobalKey();
   final GlobalKey _pdfPromoKey = GlobalKey();
-  final GlobalKey _testimonialsKey = GlobalKey();
-  final GlobalKey _socialKey = GlobalKey();
-  final GlobalKey _counselingKey = GlobalKey();
 
   final GlobalKey _navHomeKey = GlobalKey();
-  final GlobalKey _navShortsKey = GlobalKey();
-  final GlobalKey _navCoursesKey = GlobalKey();
   final GlobalKey _navNewsKey = GlobalKey();
   final GlobalKey _navProfileKey = GlobalKey();
 
@@ -232,18 +223,22 @@ class _DashboardBodyState extends State<_DashboardBody> {
       }
 
       // 6. Practical Tools
-      if (moduleProvider.isEnabled('tools')) showcaseList.add(_toolsKey);
+      if (moduleProvider.isEnabled('tools')) {
+        showcaseList.add(_toolsKey);
+      }
 
       // 7. Free PDF Guide
       showcaseList.add(_pdfPromoKey);
 
       // 8. Quizzes
-      if (moduleProvider.isEnabled('quizzes'))
+      if (moduleProvider.isEnabled('quizzes')) {
         showcaseList.add(_quizzesCardKey);
+      }
 
       // 9. AI Expert
-      if (moduleProvider.isEnabled('aiChat'))
+      if (moduleProvider.isEnabled('aiChat')) {
         showcaseList.add(_aiExpertCardKey);
+      }
 
       // 10. Popular Courses
       if (dashboardProvider.popularCourseSection != null) {
@@ -254,7 +249,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
       showcaseList.add(_navHomeKey);
 
       // 12. Navigation: News
-      if (moduleProvider.isEnabled('news')) showcaseList.add(_navNewsKey);
+      if (moduleProvider.isEnabled('news')) {
+        showcaseList.add(_navNewsKey);
+      }
 
       // 13. Navigation: Profile
       showcaseList.add(_navProfileKey);
