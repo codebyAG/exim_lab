@@ -200,39 +200,66 @@ class _DashboardBodyState extends State<_DashboardBody> {
 
       if (!mounted) return;
 
+      final moduleProvider = context.read<ModuleProvider>();
+      final dashboardProvider = context.read<DashboardProvider>();
+
       final List<GlobalKey> showcaseList = [
-        _headerKey,
-        _notifKey,
-        _userProfileKey,
-        _galleryHeaderKey,
-        _shortsKey,
-        _coursesCardKey,
-        _quizzesCardKey,
-        _aiExpertCardKey,
-        _galleryCardKey,
-        _continueKey,
-        _popularCoursesKey,
-        _toolsKey,
-        _freeVideosKey,
-        _pdfPromoKey,
-        _testimonialsKey,
-        _socialKey,
-        _counselingKey,
-        _navHomeKey,
-        _navShortsKey,
-        _navCoursesKey,
-        _navNewsKey,
-        _navProfileKey,
+        _headerKey, // 1. Welcome
+        _galleryCardKey, // 2. Success Stories (Gallery)
       ];
+
+      // 3. Free Videos
+      if (dashboardProvider.freeVideoSection != null &&
+          dashboardProvider.freeVideoSection!.data.isNotEmpty) {
+        showcaseList.add(_freeVideosKey);
+      }
+
+      // 4. Shorts
+      final shortsProvider = context.read<ShortsProvider>();
+      if (moduleProvider.isEnabled('shortVideos') &&
+          shortsProvider.shorts.isNotEmpty) {
+        showcaseList.add(_shortsKey);
+      }
+
+      // 5. Continue Learning
+      if (moduleProvider.isEnabled('continueLearning') &&
+          dashboardProvider.continueCourses.isNotEmpty) {
+        showcaseList.add(_continueKey);
+      }
+
+      // 6. Practical Tools
+      if (moduleProvider.isEnabled('tools')) showcaseList.add(_toolsKey);
+
+      // 7. Free PDF Guide
+      showcaseList.add(_pdfPromoKey);
+
+      // 8. Quizzes
+      if (moduleProvider.isEnabled('quizzes')) showcaseList.add(_quizzesCardKey);
+
+      // 9. AI Expert
+      if (moduleProvider.isEnabled('aiChat')) showcaseList.add(_aiExpertCardKey);
+
+      // 10. Popular Courses
+      if (dashboardProvider.popularCourseSection != null) {
+        showcaseList.add(_popularCoursesKey);
+      }
+
+      // 11. Navigation: Home
+      showcaseList.add(_navHomeKey);
+
+      // 12. Navigation: News
+      if (moduleProvider.isEnabled('news')) showcaseList.add(_navNewsKey);
+
+      // 13. Navigation: Profile
+      showcaseList.add(_navProfileKey);
 
       final List<MapEntry<String, GlobalKey>> itemsWithContext = showcaseList
           .map((k) => MapEntry(k.toString(), k))
           .where((e) => e.value.currentContext != null)
           .toList();
 
-      final List<GlobalKey> activeKeys = itemsWithContext
-          .map((e) => e.value)
-          .toList();
+      final List<GlobalKey> activeKeys =
+          itemsWithContext.map((e) => e.value).toList();
 
       developer.log(
         '🔍 Tour Keys Check:\n'
@@ -363,7 +390,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
         onRefresh: () => context.read<DashboardProvider>().fetchDashboardData(),
         child: ListView(
           controller: _scrollController,
-          cacheExtent: 1000,
+          cacheExtent: 3000,
           padding: EdgeInsets.zero,
           children: [
             // 🏆 MODERN PREMIUM HEADER SECTION
@@ -750,64 +777,69 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         freeVideoSection.data.isNotEmpty) ...[
                       SizedBox(height: 2.5.h),
                       // 🎁 4.9 FREE VIDEOS SECTION
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 5.w),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            RichText(
-                              text: TextSpan(
-                                style: TextStyle(
-                                  fontFamily: 'Plus Jakarta Sans',
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.white,
+                      _buildShowcase(
+                        key: _freeVideosKey,
+                        title: 'tut_free_videos_title',
+                        description: 'tut_free_videos_desc',
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5.w),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                  style: TextStyle(
+                                    fontFamily: 'Plus Jakarta Sans',
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.white,
+                                  ),
+                                  children: [
+                                    const TextSpan(text: "🎁 Free "),
+                                    TextSpan(
+                                      text: "Videos",
+                                      style: TextStyle(
+                                        color: const Color(0xFFFFD000),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                children: [
-                                  const TextSpan(text: "🎁 Free "),
-                                  TextSpan(
-                                    text: "Videos",
-                                    style: TextStyle(
-                                      color: const Color(0xFFFFD000),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  developer.log(
+                                    '📂 Navigation -> Free Videos: View All',
+                                    name: 'NAVIGATION',
+                                  );
+                                  AppNavigator.push(
+                                    context,
+                                    const CoursesListScreen(),
+                                  );
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 4.w,
+                                    vertical: 0.8.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    border: Border.all(
+                                      color: const Color(0xFF1E5FFF),
+                                      width: 1.5,
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                developer.log(
-                                  '📂 Navigation -> Free Videos: View All',
-                                  name: 'NAVIGATION',
-                                );
-                                AppNavigator.push(
-                                  context,
-                                  const CoursesListScreen(),
-                                );
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 4.w,
-                                  vertical: 0.8.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  border: Border.all(
-                                    color: const Color(0xFF1E5FFF),
-                                    width: 1.5,
-                                  ),
-                                ),
-                                child: Text(
-                                  "View All →",
-                                  style: TextStyle(
-                                    color: const Color(0xFF1E5FFF),
-                                    fontSize: 10.sp,
-                                    fontWeight: FontWeight.w800,
+                                  child: Text(
+                                    "View All →",
+                                    style: TextStyle(
+                                      color: const Color(0xFF1E5FFF),
+                                      fontSize: 10.sp,
+                                      fontWeight: FontWeight.w800,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(height: 2.h),
@@ -853,67 +885,72 @@ class _DashboardBodyState extends State<_DashboardBody> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: 1.5.h),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 5.w),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  RichText(
-                                    text: TextSpan(
-                                      style: TextStyle(
-                                        fontFamily: 'Plus Jakarta Sans',
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.w900,
-                                        color: Colors.white,
+                            _buildShowcase(
+                              key: _shortsKey,
+                              title: 'tut_shorts_title',
+                              description: 'tut_shorts_desc',
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    RichText(
+                                      text: TextSpan(
+                                        style: TextStyle(
+                                          fontFamily: 'Plus Jakarta Sans',
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.w900,
+                                          color: Colors.white,
+                                        ),
+                                        children: [
+                                          const TextSpan(text: "⚡ Short "),
+                                          TextSpan(
+                                            text: "Videos",
+                                            style: TextStyle(
+                                              color: const Color(0xFFFFD000),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      children: [
-                                        const TextSpan(text: "⚡ Short "),
-                                        TextSpan(
-                                          text: "Videos",
-                                          style: TextStyle(
-                                            color: const Color(0xFFFFD000),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        developer.log(
+                                          '📂 Navigation -> Shorts: View All',
+                                          name: 'NAVIGATION',
+                                        );
+                                        AppNavigator.push(
+                                          context,
+                                          const ShortsFeedScreen(),
+                                        );
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 4.w,
+                                          vertical: 0.8.h,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            100,
+                                          ),
+                                          border: Border.all(
+                                            color: const Color(0xFF1E5FFF),
+                                            width: 1.5,
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      developer.log(
-                                        '📂 Navigation -> Shorts: View All',
-                                        name: 'NAVIGATION',
-                                      );
-                                      AppNavigator.push(
-                                        context,
-                                        const ShortsFeedScreen(),
-                                      );
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 4.w,
-                                        vertical: 0.8.h,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                          100,
-                                        ),
-                                        border: Border.all(
-                                          color: const Color(0xFF1E5FFF),
-                                          width: 1.5,
-                                        ),
-                                      ),
-                                      child: Text(
-                                        "View All →",
-                                        style: TextStyle(
-                                          color: const Color(0xFF1E5FFF),
-                                          fontSize: 10.sp,
-                                          fontWeight: FontWeight.w800,
+                                        child: Text(
+                                          "View All →",
+                                          style: TextStyle(
+                                            color: const Color(0xFF1E5FFF),
+                                            fontSize: 10.sp,
+                                            fontWeight: FontWeight.w800,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                             SizedBox(height: 2.h),
