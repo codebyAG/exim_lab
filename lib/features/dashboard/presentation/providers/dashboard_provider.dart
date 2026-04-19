@@ -84,7 +84,7 @@ class DashboardProvider extends ChangeNotifier {
 
   Future<void> initOnboardingState() async {
     final prefs = await SharedPreferences.getInstance();
-    _isTourSeen = prefs.getBool('dashboard_v3_tour_seen') ?? false;
+    _isTourSeen = prefs.getBool('dashboard_v4_tour_seen') ?? false;
     _isInterestDialogShown = prefs.getBool('interest_dialog_shown') ?? false;
 
     developer.log(
@@ -99,11 +99,11 @@ class DashboardProvider extends ChangeNotifier {
 
   Future<void> markTourAsSeen() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('dashboard_v3_tour_seen', true);
+    await prefs.setBool('dashboard_v4_tour_seen', true);
     _isTourSeen = true;
 
     developer.log(
-      '💾 Persisting State: dashboard_v3_tour_seen -> true',
+      '💾 Persisting State: dashboard_v4_tour_seen -> true',
       name: 'ONBOARDING',
     );
 

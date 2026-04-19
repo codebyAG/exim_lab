@@ -155,12 +155,21 @@ class _DashboardBodyState extends State<_DashboardBody> {
         user!.interestedIn!.isEmpty ||
         user.interestedIn == '';
 
+    developer.log(
+      '🕵️ Pre-Onboarding Diagnostic:\n'
+      '   - Provider initialized: ${dashboardProvider.data != null}\n'
+      '   - Tour Seen Flag: ${dashboardProvider.isTourSeen}\n'
+      '   - Interests Shown Flag: ${dashboardProvider.isInterestDialogShown}\n'
+      '   - Has No Interests check: $hasNoInterest',
+      name: 'ONBOARDING',
+    );
+
     final nextAction = dashboardProvider.getNextOnboardingAction(
       hasNoInterests: hasNoInterest,
     );
 
     developer.log(
-      '🎬 Onboarding Action Triggered -> [$nextAction]',
+      '🎬 Onboarding Action Calculated -> [$nextAction]',
       name: 'ONBOARDING',
     );
 
@@ -181,6 +190,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
   }
 
   void _startShowcase() {
+    developer.log(
+      '🚦 _startShowcase() invoked. Waiting for paint...',
+      name: 'ONBOARDING',
+    );
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // Increased delay to ensure list items have performed their first paint on slower devices
       await Future.delayed(const Duration(milliseconds: 1000));
@@ -217,8 +230,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
           .where((e) => e.value.currentContext != null)
           .toList();
 
-      final List<GlobalKey> activeKeys =
-          itemsWithContext.map((e) => e.value).toList();
+      final List<GlobalKey> activeKeys = itemsWithContext
+          .map((e) => e.value)
+          .toList();
 
       developer.log(
         '🔍 Tour Keys Check:\n'
@@ -232,11 +246,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
         ShowCaseWidget.of(context).startShowCase(activeKeys);
       } else {
         developer.log(
-          '⚠️ No visible keys found for tour. Skipping this attempt (will retry next load).',
+          '⚠️ No visible keys found for tour. Skipping onboarding logic for now (will retry on next load).',
           name: 'ONBOARDING',
         );
-        // Do NOT mark as seen here, as that would permanently disable the tour if it fails once.
-        _handlePostLoadActions();
+        // Removed recursion to avoid infinite loops if UI hasn't fully rendered.
       }
     });
   }
