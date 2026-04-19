@@ -129,12 +129,16 @@ class _DashboardBodyState extends State<_DashboardBody> {
         context.read<AnalyticsService>().logEvent('home_view');
         final dashboardProvider = context.read<DashboardProvider>();
 
+        final moduleProvider = context.read<ModuleProvider>();
+
         // Load onboarding state (tour status etc.) alongside data
         await Future.wait([
           dashboardProvider.fetchDashboardData(),
           dashboardProvider.initOnboardingState(),
           context.read<NotificationsProvider>().fetchUnreadCount(),
           context.read<AuthProvider>().refreshMembershipStatus(),
+          if (moduleProvider.isEnabled('shortVideos'))
+            context.read<ShortsProvider>().fetchShorts(),
         ]);
 
         if (mounted) {
@@ -234,10 +238,12 @@ class _DashboardBodyState extends State<_DashboardBody> {
       showcaseList.add(_pdfPromoKey);
 
       // 8. Quizzes
-      if (moduleProvider.isEnabled('quizzes')) showcaseList.add(_quizzesCardKey);
+      if (moduleProvider.isEnabled('quizzes'))
+        showcaseList.add(_quizzesCardKey);
 
       // 9. AI Expert
-      if (moduleProvider.isEnabled('aiChat')) showcaseList.add(_aiExpertCardKey);
+      if (moduleProvider.isEnabled('aiChat'))
+        showcaseList.add(_aiExpertCardKey);
 
       // 10. Popular Courses
       if (dashboardProvider.popularCourseSection != null) {
@@ -258,8 +264,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
           .where((e) => e.value.currentContext != null)
           .toList();
 
-      final List<GlobalKey> activeKeys =
-          itemsWithContext.map((e) => e.value).toList();
+      final List<GlobalKey> activeKeys = itemsWithContext
+          .map((e) => e.value)
+          .toList();
 
       developer.log(
         '🔍 Tour Keys Check:\n'
@@ -875,159 +882,170 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     ],
 
                     // ⚡ 4.10 SHORT VIDEOS SECTION
-                    Consumer<ShortsProvider>(
-                      builder: (context, shortsProvider, _) {
-                        if (shortsProvider.shorts.isEmpty) {
-                          return const SizedBox.shrink();
-                        }
+                    ModuleVisibility(
+                      module: 'shortVideos',
+                      child: Consumer<ShortsProvider>(
+                        builder: (context, shortsProvider, _) {
+                          if (shortsProvider.shorts.isEmpty) {
+                            return const SizedBox.shrink();
+                          }
 
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 1.5.h),
-                            _buildShowcase(
-                              key: _shortsKey,
-                              title: 'tut_shorts_title',
-                              description: 'tut_shorts_desc',
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    RichText(
-                                      text: TextSpan(
-                                        style: TextStyle(
-                                          fontFamily: 'Plus Jakarta Sans',
-                                          fontSize: 18.sp,
-                                          fontWeight: FontWeight.w900,
-                                          color: Colors.white,
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 1.5.h),
+                              _buildShowcase(
+                                key: _shortsKey,
+                                title: 'tut_shorts_title',
+                                description: 'tut_shorts_desc',
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 5.w,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      RichText(
+                                        text: TextSpan(
+                                          style: TextStyle(
+                                            fontFamily: 'Plus Jakarta Sans',
+                                            fontSize: 18.sp,
+                                            fontWeight: FontWeight.w900,
+                                            color: Colors.white,
+                                          ),
+                                          children: [
+                                            const TextSpan(text: "⚡ Short "),
+                                            TextSpan(
+                                              text: "Videos",
+                                              style: TextStyle(
+                                                color: const Color(0xFFFFD000),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        children: [
-                                          const TextSpan(text: "⚡ Short "),
-                                          TextSpan(
-                                            text: "Videos",
-                                            style: TextStyle(
-                                              color: const Color(0xFFFFD000),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          developer.log(
+                                            '📂 Navigation -> Shorts: View All',
+                                            name: 'NAVIGATION',
+                                          );
+                                          AppNavigator.push(
+                                            context,
+                                            const ShortsFeedScreen(),
+                                          );
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 4.w,
+                                            vertical: 0.8.h,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              100,
+                                            ),
+                                            border: Border.all(
+                                              color: const Color(0xFF1E5FFF),
+                                              width: 1.5,
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        developer.log(
-                                          '📂 Navigation -> Shorts: View All',
-                                          name: 'NAVIGATION',
-                                        );
-                                        AppNavigator.push(
-                                          context,
-                                          const ShortsFeedScreen(),
-                                        );
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 4.w,
-                                          vertical: 0.8.h,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            100,
-                                          ),
-                                          border: Border.all(
-                                            color: const Color(0xFF1E5FFF),
-                                            width: 1.5,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          "View All →",
-                                          style: TextStyle(
-                                            color: const Color(0xFF1E5FFF),
-                                            fontSize: 10.sp,
-                                            fontWeight: FontWeight.w800,
+                                          child: Text(
+                                            "View All →",
+                                            style: TextStyle(
+                                              color: const Color(0xFF1E5FFF),
+                                              fontSize: 10.sp,
+                                              fontWeight: FontWeight.w800,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 2.h),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                padding: EdgeInsets.only(
+                                  left: 5.w,
+                                  bottom: 2.h,
+                                ),
+                                child: Row(
+                                  children: [
+                                    for (
+                                      int i = 0;
+                                      i < shortsProvider.shorts.length;
+                                      i++
+                                    )
+                                      Builder(
+                                        builder: (context) {
+                                          final short =
+                                              shortsProvider.shorts[i];
+
+                                          // Extract actual thumbnail from YouTube URL
+                                          final String? videoId =
+                                              YoutubePlayer.convertUrlToId(
+                                                short.videoUrl,
+                                              );
+                                          final String thumbnailUrl =
+                                              videoId != null
+                                              ? 'https://img.youtube.com/vi/$videoId/0.jpg'
+                                              : short.thumbnailUrl;
+
+                                          // Array of modern premium gradients
+                                          final gradients = [
+                                            [
+                                              const Color(0xFF0A2066),
+                                              const Color(0xFF1E5FFF),
+                                            ], // Blue
+                                            [
+                                              const Color(0xFF6B0000),
+                                              const Color(0xFFC8151B),
+                                            ], // Red
+                                            [
+                                              const Color(0xFF994400),
+                                              const Color(0xFFFF8800),
+                                            ], // Orange
+                                            [
+                                              const Color(0xFF004411),
+                                              const Color(0xFF008822),
+                                            ], // Green
+                                          ];
+
+                                          return PremiumShortVideoCard(
+                                            title: short.title,
+                                            thumbnailUrl: thumbnailUrl,
+                                            viewCount: short.viewCount > 0
+                                                ? short.viewCount
+                                                : 45000 +
+                                                      (i *
+                                                          1200), // Fallback for aesthetic
+                                            durationSeconds:
+                                                short.durationSeconds > 0
+                                                ? short.durationSeconds
+                                                : 55 + (i * 5),
+                                            gradientColors:
+                                                gradients[i % gradients.length],
+                                            onTap: () {
+                                              AppNavigator.push(
+                                                context,
+                                                ShortsFeedScreen(
+                                                  initialIndex: i,
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        },
+                                      ),
                                   ],
                                 ),
                               ),
-                            ),
-                            SizedBox(height: 2.h),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              padding: EdgeInsets.only(left: 5.w, bottom: 2.h),
-                              child: Row(
-                                children: [
-                                  for (
-                                    int i = 0;
-                                    i < shortsProvider.shorts.length;
-                                    i++
-                                  )
-                                    Builder(
-                                      builder: (context) {
-                                        final short = shortsProvider.shorts[i];
-
-                                        // Extract actual thumbnail from YouTube URL
-                                        final String? videoId =
-                                            YoutubePlayer.convertUrlToId(
-                                              short.videoUrl,
-                                            );
-                                        final String thumbnailUrl =
-                                            videoId != null
-                                            ? 'https://img.youtube.com/vi/$videoId/0.jpg'
-                                            : short.thumbnailUrl;
-
-                                        // Array of modern premium gradients
-                                        final gradients = [
-                                          [
-                                            const Color(0xFF0A2066),
-                                            const Color(0xFF1E5FFF),
-                                          ], // Blue
-                                          [
-                                            const Color(0xFF6B0000),
-                                            const Color(0xFFC8151B),
-                                          ], // Red
-                                          [
-                                            const Color(0xFF994400),
-                                            const Color(0xFFFF8800),
-                                          ], // Orange
-                                          [
-                                            const Color(0xFF004411),
-                                            const Color(0xFF008822),
-                                          ], // Green
-                                        ];
-
-                                        return PremiumShortVideoCard(
-                                          title: short.title,
-                                          thumbnailUrl: thumbnailUrl,
-                                          viewCount: short.viewCount > 0
-                                              ? short.viewCount
-                                              : 45000 +
-                                                    (i *
-                                                        1200), // Fallback for aesthetic
-                                          durationSeconds:
-                                              short.durationSeconds > 0
-                                              ? short.durationSeconds
-                                              : 55 + (i * 5),
-                                          gradientColors:
-                                              gradients[i % gradients.length],
-                                          onTap: () {
-                                            AppNavigator.push(
-                                              context,
-                                              ShortsFeedScreen(initialIndex: i),
-                                            );
-                                          },
-                                        );
-                                      },
-                                    ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 1.h),
-                          ],
-                        );
-                      },
+                              SizedBox(height: 1.h),
+                            ],
+                          );
+                        },
+                      ),
                     ),
                     SizedBox(height: 0.8.h),
 
