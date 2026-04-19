@@ -182,8 +182,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
 
   void _startShowcase() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // Small delay to ensure all list items have performed their first paint
-      await Future.delayed(const Duration(milliseconds: 500));
+      // Increased delay to ensure list items have performed their first paint on slower devices
+      await Future.delayed(const Duration(milliseconds: 1000));
 
       if (!mounted) return;
 
@@ -212,12 +212,18 @@ class _DashboardBodyState extends State<_DashboardBody> {
         _navProfileKey,
       ];
 
-      final List<GlobalKey> activeKeys = showcaseList
-          .where((key) => key.currentContext != null)
+      final List<MapEntry<String, GlobalKey>> itemsWithContext = showcaseList
+          .map((k) => MapEntry(k.toString(), k))
+          .where((e) => e.value.currentContext != null)
           .toList();
 
+      final List<GlobalKey> activeKeys =
+          itemsWithContext.map((e) => e.value).toList();
+
       developer.log(
-        '🔍 Tour Keys Found: ${activeKeys.length} / ${showcaseList.length}',
+        '🔍 Tour Keys Check:\n'
+        '   - Found: ${activeKeys.length} / ${showcaseList.length}\n'
+        '   - Missing: ${showcaseList.length - activeKeys.length}',
         name: 'ONBOARDING',
       );
 
@@ -226,11 +232,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
         ShowCaseWidget.of(context).startShowCase(activeKeys);
       } else {
         developer.log(
-          '⚠️ No visible keys found for tour. Marking as seen to prevent UI blockage.',
+          '⚠️ No visible keys found for tour. Skipping this attempt (will retry next load).',
           name: 'ONBOARDING',
         );
-        // Only mark as seen if we've truly given it a chance to render
-        context.read<DashboardProvider>().markTourAsSeen();
+        // Do NOT mark as seen here, as that would permanently disable the tour if it fails once.
         _handlePostLoadActions();
       }
     });
