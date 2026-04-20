@@ -4,6 +4,8 @@ import 'package:exim_lab/features/dashboard/presentation/painters/dashboard_icon
 import 'package:exim_lab/features/dashboard/presentation/widgets/premium_short_video_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/skill_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/certificate_mini_card.dart';
+import 'package:exim_lab/features/dashboard/presentation/providers/exchange_rate_provider.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/exchange_rate_ticker.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/achieve_live_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/masterclass_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/popular_course_card.dart';
@@ -127,6 +129,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
           moduleProvider.fetchModules(),
           dashboardProvider.fetchDashboardData(),
           dashboardProvider.initOnboardingState(),
+          context.read<ExchangeRateProvider>().fetchRates(),
           context.read<NotificationsProvider>().fetchUnreadCount(),
           context.read<AuthProvider>().refreshMembershipStatus(),
         ]);
@@ -401,6 +404,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
           cacheExtent: 3000,
           padding: EdgeInsets.zero,
           children: [
+            // 💹 LIVE FOREX MARQUEE TICKER (In SafeArea to avoid status bar overlap)
+            const SafeArea(bottom: false, child: ExchangeRateTicker()),
+
             // 🏆 MODERN PREMIUM HEADER SECTION
             _buildShowcase(
               key: _headerKey,

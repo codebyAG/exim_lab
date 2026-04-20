@@ -24,9 +24,9 @@ class DashboardModernHeader extends StatelessWidget {
 
           // 2. MAIN CONTENT
           Padding(
-            padding: EdgeInsets.fromLTRB(
+            padding: const EdgeInsets.fromLTRB(
               18,
-              14 + MediaQuery.of(context).padding.top,
+              14,
               18,
               14,
             ),

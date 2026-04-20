@@ -22,6 +22,7 @@ class ApiConstants {
   static const String verifyOtp = '$baseUrl/api/auth/verify-otp';
   static const String userProfile = '$baseUrl/api/user/profile';
   static const String dashboard = '$baseUrl/api/dashboard';
+  static const String exchangeRates = '$baseUrl/api/dashboard/exchange-rates';
   static const String news = '$baseUrl/api/news';
   static const String notifications = '$baseUrl/api/notifications';
   static const String appModules = '$baseUrl/api/app-modules';

@@ -21,7 +21,7 @@ class PremiumBottomBar extends StatelessWidget {
     
     return Container(
       width: 100.w,
-      height: 9.5.h,
+      height: 12.h, // Increased further to prevent remaining 12px overflow
       decoration: BoxDecoration(
         color: const Color(0xFF020C28), // Deep Navy from HTML
         border: Border(
@@ -75,30 +75,33 @@ class _BottomBarItem extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 0.8.h),
+        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 0.5.h), // Reduced from 0.8.h
         decoration: BoxDecoration(
           color: isSelected 
             ? const Color(0xFF1E5FFF).withValues(alpha: 0.18) 
             : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildIcon(item.identifier, isSelected),
-            SizedBox(height: 0.5.h),
-            Text(
-              label,
-              style: TextStyle(
-                color: isSelected ? const Color(0xFF1E5FFF) : const Color(0xFF7A90C4),
-                fontSize: 9.5.sp,
-                fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
-                fontFamily: 'Plus Jakarta Sans',
-                letterSpacing: 0.4,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildIcon(item.identifier, isSelected),
+              SizedBox(height: 0.5.h),
+              Text(
+                label,
+                style: TextStyle(
+                  color: isSelected ? const Color(0xFF1E5FFF) : const Color(0xFF7A90C4),
+                  fontSize: 9.5.sp,
+                  fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
+                  fontFamily: 'Plus Jakarta Sans',
+                  letterSpacing: 0.4,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
