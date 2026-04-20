@@ -6,6 +6,7 @@ import 'package:exim_lab/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:exim_lab/features/dashboard/presentation/screens/dashboard.dart';
+import 'package:exim_lab/features/module_manager/presentation/providers/module_provider.dart';
 import 'package:provider/provider.dart';
 
 class OtpScreen extends StatefulWidget {
@@ -73,6 +74,10 @@ class _OtpScreenState extends State<OtpScreen> {
     final success = await authProvider.verifyOtp(_otp);
 
     if (success && mounted) {
+      // 🚀 REFRESH MODULES FOR THE NEW USER
+      await context.read<ModuleProvider>().fetchModules();
+      
+      if (!mounted) return;
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (_) => DashboardScreen()),

@@ -124,13 +124,17 @@ class _DashboardBodyState extends State<_DashboardBody> {
 
         // Load onboarding state (tour status etc.) alongside data
         await Future.wait([
+          moduleProvider.fetchModules(),
           dashboardProvider.fetchDashboardData(),
           dashboardProvider.initOnboardingState(),
           context.read<NotificationsProvider>().fetchUnreadCount(),
           context.read<AuthProvider>().refreshMembershipStatus(),
-          if (moduleProvider.isEnabled('shortVideos'))
-            context.read<ShortsProvider>().fetchShorts(),
         ]);
+
+        if (moduleProvider.isEnabled('shortVideos')) {
+          // ignore: use_build_context_synchronously
+          context.read<ShortsProvider>().fetchShorts();
+        }
 
         if (mounted) {
           _handlePostLoadActions();
@@ -1272,13 +1276,12 @@ class _DashboardBodyState extends State<_DashboardBody> {
                           ],
                         ),
                       ),
-
-                    const DashboardFooter(),
-                    SizedBox(height: 8.h), // Padding for pinned navigation bar
                   ],
                 );
               },
             ),
+            const DashboardFooter(),
+            SizedBox(height: 8.h), // Padding for pinned navigation bar
           ],
         ),
       ),
