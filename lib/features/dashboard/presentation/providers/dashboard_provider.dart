@@ -201,12 +201,76 @@ class DashboardProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      data = await _repository.getDashboardData();
+      // 1. Fetch Skeleton (Sections + Popup)
+      final skeleton = await _repository.getSections();
+      data = skeleton;
+      notifyListeners();
+
+      // 2. Fetch Banners and content sections in parallel
+      await Future.wait([
+        _fetchBanners(),
+        _fetchAndStitch('popular', _repository.getPopularCourses()),
+        _fetchAndStitch('recommended', _repository.getRecommendedCourses()),
+        _fetchAndStitch('continue', _repository.getContinueCourses()),
+        _fetchAndStitch('freeVideos', _repository.getFreeVideos()),
+        _fetchAndStitch('shorts', _repository.getShorts()),
+      ]);
+
+      developer.log("✅ Dashboard Split Fetch Complete", name: "API_SPLIT");
     } catch (e) {
       error = e.toString();
+      developer.log("❌ Dashboard Split Fetch Error: $e", name: "API_SPLIT");
     } finally {
       isLoading = false;
       notifyListeners();
+    }
+  }
+
+  /// Helper to fetch content for a specific section and update the data state
+  Future<void> _fetchAndStitch(String key, Future<List<dynamic>> fetchCall) async {
+    try {
+      final results = await fetchCall;
+      if (data == null) return;
+
+      final updatedSections = data!.sections.map((section) {
+        if (section.key.toLowerCase() == key.toLowerCase() ||
+            (section.sectionType?.toLowerCase() == key.toLowerCase())) {
+          return section.copyWith(data: results);
+        }
+        return section;
+      }).toList();
+
+      data = data!.copyWith(sections: updatedSections);
+      notifyListeners();
+    } catch (e) {
+      developer.log("⚠️ Failed to load section '$key': $e", name: "API_SPLIT");
+    }
+  }
+
+  /// Specialized fetch for Banners (updates carousel in addons + inline sections)
+  Future<void> _fetchBanners() async {
+    try {
+      final bannerMap = await _repository.getBanners();
+      if (data == null) return;
+
+      final carousel = bannerMap['carousel'] ?? [];
+      final inline = bannerMap['inline'] ?? [];
+
+      // Update Carousel in Addons
+      final updatedAddons = data!.addons.copyWith(carousel: carousel);
+
+      // Update Inline Banner Sections
+      final updatedSections = data!.sections.map((section) {
+        if (section.key.toLowerCase() == 'banner') {
+          return section.copyWith(data: inline);
+        }
+        return section;
+      }).toList();
+
+      data = data!.copyWith(addons: updatedAddons, sections: updatedSections);
+      notifyListeners();
+    } catch (e) {
+      developer.log("⚠️ Failed to load banners: $e", name: "API_SPLIT");
     }
   }
 }

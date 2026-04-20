@@ -22,6 +22,15 @@ class ApiConstants {
   static const String verifyOtp = '$baseUrl/api/auth/verify-otp';
   static const String userProfile = '$baseUrl/api/user/profile';
   static const String dashboard = '$baseUrl/api/dashboard';
+  static const String dashboardSections = '$baseUrl/api/dashboard/sections';
+  static const String dashboardBanners = '$baseUrl/api/dashboard/banners';
+  static const String dashboardPopular =
+      '$baseUrl/api/dashboard/courses/popular';
+  static const String dashboardRecommended =
+      '$baseUrl/api/dashboard/courses/recommended';
+  static const String dashboardContinue = '$baseUrl/api/dashboard/continue';
+  static const String dashboardFreeVideos = '$baseUrl/api/dashboard/free-videos';
+  static const String dashboardShorts = '$baseUrl/api/dashboard/shorts';
   static const String exchangeRates = '$baseUrl/api/dashboard/exchange-rates';
   static const String news = '$baseUrl/api/news';
   static const String notifications = '$baseUrl/api/notifications';

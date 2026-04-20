@@ -17,6 +17,17 @@ class DashboardResponse {
           [],
     );
   }
+
+  /// Creates a copy of DashboardResponse with certain parts updated.
+  DashboardResponse copyWith({
+    AddonsData? addons,
+    List<DashboardSection>? sections,
+  }) {
+    return DashboardResponse(
+      addons: addons ?? this.addons,
+      sections: sections ?? this.sections,
+    );
+  }
 }
 
 class DashboardSection {
@@ -24,6 +35,8 @@ class DashboardSection {
   final String title;
   final String subtitle;
   final int order;
+  final bool isActive;
+  final String? sectionType;
   final List<dynamic> data; // Can be List<CourseModel>, List<BannerModel>, etc.
 
   DashboardSection({
@@ -31,6 +44,8 @@ class DashboardSection {
     required this.title,
     required this.subtitle,
     required this.order,
+    this.isActive = true,
+    this.sectionType,
     required this.data,
   });
 
@@ -40,20 +55,19 @@ class DashboardSection {
     List parsedData = [];
 
     final normalizedKey = key.toLowerCase();
+    final type = (json['sectionType'] ?? '').toString().toLowerCase();
+
+    // Mapping based on Key OR SectionType
     if (normalizedKey == 'course' ||
-        normalizedKey.contains('popular') ||
-        normalizedKey.contains('recommended') ||
         normalizedKey == 'continue' ||
-        normalizedKey.contains('certified') ||
-        normalizedKey.contains('forex') ||
-        normalizedKey.contains('finance') ||
-        normalizedKey.contains('logistics') ||
-        normalizedKey.contains('market') ||
-        normalizedKey.contains('sourcing')) {
+        type == 'popular' ||
+        type == 'recommended') {
       parsedData = rawData.map((e) => CourseModel.fromJson(e)).toList();
-    } else if (key == 'freeVideos') {
+    } else if (normalizedKey == 'freevideos' ||
+        normalizedKey == 'shorts' ||
+        type == 'shorts') {
       parsedData = rawData.map((e) => FreeVideoModel.fromJson(e)).toList();
-    } else if (key == 'banner') {
+    } else if (normalizedKey == 'banner') {
       parsedData = rawData.map((e) => BannerModel.fromJson(e)).toList();
     }
 
@@ -62,7 +76,25 @@ class DashboardSection {
       title: json['title'] ?? '',
       subtitle: json['subtitle'] ?? '',
       order: json['order'] ?? 0,
+      isActive: json['isActive'] ?? true,
+      sectionType: json['sectionType'],
       data: parsedData,
+    );
+  }
+
+  DashboardSection copyWith({
+    List<dynamic>? data,
+    String? title,
+    String? subtitle,
+  }) {
+    return DashboardSection(
+      key: key,
+      title: title ?? this.title,
+      subtitle: subtitle ?? this.subtitle,
+      order: order,
+      isActive: isActive,
+      sectionType: sectionType,
+      data: data ?? this.data,
     );
   }
 }
@@ -119,6 +151,27 @@ class AddonsData {
       popup: json['popup'] != null ? BannerModel.fromJson(json['popup']) : null,
     );
   }
+
+  AddonsData copyWith({
+    List<BannerModel>? carousel,
+    BannerModel? popup,
+  }) {
+    return AddonsData(
+      language: language,
+      darkMode: darkMode,
+      theme: theme,
+      font: font,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      fontColor: fontColor,
+      backgroundColor: backgroundColor,
+      borderRadius: borderRadius,
+      primaryColor: primaryColor,
+      secondaryColor: secondaryColor,
+      carousel: carousel ?? this.carousel,
+      popup: popup ?? this.popup,
+    );
+  }
 }
 
 class BannerModel {
@@ -146,7 +199,7 @@ class BannerModel {
       description: json['description'] ?? '',
       imageUrl: json['imageUrl'] ?? '',
       ctaText: json['ctaText'] ?? '',
-      ctaUrl: json['ctaUrl'] ?? json['link'] ?? '',
+      ctaUrl: json['ctaUrl'] ?? json['linkUrl'] ?? json['link'] ?? '',
       isActive: json['isActive'] ?? false,
       type: json['type'] ?? '',
     );
