@@ -98,7 +98,7 @@ void main() async {
   await localeProvider.loadLocale();
 
   final moduleProvider = ModuleProvider(ModuleService());
-  await moduleProvider.fetchModules();
+  // Removed await moduleProvider.fetchModules() — handled in Splash/Dashboard
 
   final shortsProvider = ShortsProvider(ShortsService());
   // await shortsProvider.fetchShorts(); // Maybe await this too if critical, or let it load in background
