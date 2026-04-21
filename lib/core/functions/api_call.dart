@@ -15,13 +15,8 @@ Future<T> callApi<T>(
   String contentType = 'application/json',
   MethodType methodType = MethodType.get,
   ProgressCallback? progressCallback,
-  bool logErrorEvent = true, // Added to prevent analytics recursion
+  bool logErrorEvent = true, 
 }) async {
-  log("➡️ API URL: $url");
-  if (requestData != null) {
-    log("➡️ REQUEST DATA: $requestData");
-  }
-
   // 🛡️ Add Bearer Token if available
   final sharedPref = SharedPrefService();
   final authToken = await sharedPref.getToken();
@@ -30,6 +25,14 @@ Future<T> callApi<T>(
   if (authToken != null && authToken.isNotEmpty) {
     finalHeaders['Authorization'] = 'Bearer $authToken';
   }
+
+  // 📝 LOG REQUEST
+  log("------------------------------------------------------------------");
+  log("🚀 API REQUEST: [${methodType.methodType}] $url");
+  log("📂 HEADERS: $finalHeaders");
+  if (queryParameters != null) log("🔍 QUERY PARAMS: $queryParameters");
+  if (requestData != null) log("📦 BODY: $requestData");
+  log("------------------------------------------------------------------");
 
   final options = Options(
     headers: finalHeaders,
@@ -59,7 +62,9 @@ Future<T> callApi<T>(
       onReceiveProgress: progressCallback,
     );
 
-    log("✅ RESPONSE (${response.statusCode}): ${response.data}");
+    log("✅ RESPONSE [${response.statusCode}] $url");
+    log("📄 DATA: ${response.data}");
+    log("------------------------------------------------------------------");
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       return parser(response.data);
@@ -70,10 +75,12 @@ Future<T> callApi<T>(
       );
     }
   } on DioException catch (e) {
-    log("❌ DIO ERROR: ${e.message}");
+    log("❌ API ERROR [${e.response?.statusCode}] $url");
+    log("⚠️ MESSAGE: ${e.message}");
     if (e.response?.data != null) {
-      log("❌ DIO ERROR DATA: ${e.response?.data}");
+      log("📄 ERROR DATA: ${e.response?.data}");
     }
+    log("------------------------------------------------------------------");
 
     String errorMessage = dioExceptionMessage(e.type);
 

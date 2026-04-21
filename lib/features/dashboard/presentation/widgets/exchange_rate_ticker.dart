@@ -61,7 +61,7 @@ class _ExchangeRateTickerState extends State<ExchangeRateTicker> {
         }
 
         return Container(
-          height: 48,
+          height: 60, // Increased height for more prominence
           width: double.infinity,
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -69,13 +69,13 @@ class _ExchangeRateTickerState extends State<ExchangeRateTicker> {
                 const Color(0xFF01081C).withValues(alpha: 0.95),
                 const Color(0xFF021B4B),
               ],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
+              begin: Alignment.topCenter, // Vertical gradient for more depth
+              end: Alignment.bottomCenter,
             ),
             border: const Border(
               bottom: BorderSide(
                 color: Color(0xFF1E5FFF),
-                width: 1.0,
+                width: 1.5, // Thicker border
               ),
             ),
           ),
@@ -90,10 +90,10 @@ class _ExchangeRateTickerState extends State<ExchangeRateTicker> {
   Widget _buildLoadingState() {
     return const Center(
       child: SizedBox(
-        width: 16,
-        height: 16,
+        width: 18,
+        height: 18,
         child: CircularProgressIndicator(
-          strokeWidth: 2,
+          strokeWidth: 2.5,
           color: Color(0xFFFFD000),
         ),
       ),
@@ -107,60 +107,61 @@ class _ExchangeRateTickerState extends State<ExchangeRateTicker> {
     return ListView.builder(
       controller: _scrollController,
       scrollDirection: Axis.horizontal,
-      physics: const NeverScrollableScrollPhysics(), // Handled by timer
+      physics: const NeverScrollableScrollPhysics(), 
       itemCount: displayList.length,
-      padding: EdgeInsets.symmetric(horizontal: 10.w),
+      padding: EdgeInsets.zero, // Removed external padding
       itemBuilder: (context, index) {
         final rate = displayList[index];
         final color = rate.isUp ? Colors.greenAccent : Colors.redAccent;
         final icon = rate.isUp ? Icons.arrow_drop_up : Icons.arrow_drop_down;
 
         return Container(
-          padding: EdgeInsets.symmetric(horizontal: 6.w),
+          padding: EdgeInsets.symmetric(horizontal: 3.5.w), // Tightened horizontal spacing
           child: Row(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 rate.symbol,
                 style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.w600,
+                  color: Colors.white.withValues(alpha: 0.7),
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.bold,
                   fontFamily: 'Plus Jakarta Sans',
                 ),
               ),
-              SizedBox(width: 2.w),
+              SizedBox(width: 2.w), // Reduced gap
               Text(
                 rate.value.toStringAsFixed(2),
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 13.sp,
+                  fontSize: 18.sp,
                   fontWeight: FontWeight.w900,
                   fontFamily: 'Plus Jakarta Sans',
                   letterSpacing: 0.5,
                 ),
               ),
-              SizedBox(width: 1.5.w),
               Icon(
                 icon,
                 color: color,
-                size: 20.sp,
+                size: 24.sp, // Slightly smaller icon to save space
               ),
               Text(
                 "${rate.diffPercent.abs().toStringAsFixed(2)}%",
                 style: TextStyle(
                   color: color,
-                  fontSize: 9.sp,
-                  fontWeight: FontWeight.w800,
+                  fontSize: 11.sp,
+                  fontWeight: FontWeight.w900,
                   fontFamily: 'Plus Jakarta Sans',
                 ),
               ),
-              SizedBox(width: 4.w),
+              SizedBox(width: 3.5.w), // Reduced gap before separator
               Text(
-                "•",
+                "|",
                 style: TextStyle(
-                  color: Colors.white24,
-                  fontSize: 12.sp,
+                  color: Colors.white10,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w100,
                 ),
               ),
             ],
