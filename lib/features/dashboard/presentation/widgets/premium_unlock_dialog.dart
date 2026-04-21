@@ -127,7 +127,8 @@ class PremiumUnlockDialog extends StatelessWidget {
                         _PremiumFeatureTile(
                           icon: '🏆',
                           title: 'Certificates & Gallery',
-                          subtitle: 'Earn certificates & exclusive event gallery',
+                          subtitle:
+                              'Earn certificates & exclusive event gallery',
                           isLast: true,
                         ),
                       ],
@@ -200,10 +201,7 @@ class PremiumUnlockDialog extends StatelessWidget {
               right: 8,
               child: IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: const Icon(
-                  Icons.close_rounded,
-                  color: Colors.white70,
-                ),
+                icon: const Icon(Icons.close_rounded, color: Colors.white70),
               ),
             ),
           ],
@@ -281,7 +279,9 @@ class _PremiumFeatureTile extends StatelessWidget {
               // Checkmark
               const Icon(
                 Icons.check_circle_rounded,
-                color: Color(0xFFD32F2F), // Use theme red directly if needed, or cs.secondary
+                color: Color(
+                  0xFFD32F2F,
+                ), // Use theme red directly if needed, or cs.secondary
                 size: 20,
               ),
             ],
