@@ -58,16 +58,17 @@ class DashboardSection {
     final type = (json['sectionType'] ?? '').toString().toLowerCase();
 
     // Mapping based on Key OR SectionType
-    if (normalizedKey == 'course' ||
-        normalizedKey == 'continue' ||
-        type == 'popular' ||
-        type == 'recommended') {
-      parsedData = rawData.map((e) => CourseModel.fromJson(e)).toList();
-    } else if (normalizedKey == 'freevideos' ||
+    // 🛡️ High Priority: Always check for Video/Shorts first to prevent key hijacking
+    if (normalizedKey == 'freevideos' ||
         normalizedKey == 'shorts' ||
         type == 'shorts' ||
         type == 'freevideos') {
       parsedData = rawData.map((e) => FreeVideoModel.fromJson(e)).toList();
+    } else if (normalizedKey == 'course' ||
+        normalizedKey == 'continue' ||
+        type == 'popular' ||
+        type == 'recommended') {
+      parsedData = rawData.map((e) => CourseModel.fromJson(e)).toList();
     } else if (normalizedKey == 'banner') {
       parsedData = rawData.map((e) => BannerModel.fromJson(e)).toList();
     }

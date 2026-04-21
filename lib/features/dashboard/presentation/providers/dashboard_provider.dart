@@ -242,14 +242,20 @@ class DashboardProvider extends ChangeNotifier {
 
         // Match on key OR sectionType
         if (sectionKey == targetKey || sectionType == targetKey) {
-          // Safety: Prevent Video sections from being overwritten by Course data or vice-versa
-          if (targetKey.contains('video') || targetKey.contains('short')) {
-            // Only block if it looks like a course section AND the type doesn't actually match our target
-            if (sectionKey.contains('course') && sectionType != targetKey) {
-              return section;
+          // 🛡️ CRITICAL SAFETY:
+          // If this section is explicitly a Video section (by key),
+          // block any Course data (like 'recommended' or 'popular') from entering it.
+          if (sectionKey.contains('video') || sectionKey.contains('short')) {
+            if (!targetKey.contains('video') && !targetKey.contains('short')) {
+              return section; // Block Course data from the Video section
             }
           }
 
+          final count = results.length;
+          developer.log(
+            "✅ Stitched [$targetKey] with $count items into section [$sectionKey]",
+            name: "API_SPLIT",
+          );
           return section.copyWith(data: results);
         }
         return section;
