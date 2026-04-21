@@ -53,8 +53,8 @@ class DashboardProvider extends ChangeNotifier {
   DashboardSection? getSection(String key) {
     return data?.sections.where((s) {
       final normalized = s.key.toLowerCase();
-      return normalized == key.toLowerCase() ||
-          normalized.contains(key.toLowerCase());
+      final type = s.sectionType?.toLowerCase() ?? '';
+      return normalized == key.toLowerCase() || type == key.toLowerCase();
     }).firstOrNull;
   }
 
@@ -227,14 +227,29 @@ class DashboardProvider extends ChangeNotifier {
   }
 
   /// Helper to fetch content for a specific section and update the data state
-  Future<void> _fetchAndStitch(String key, Future<List<dynamic>> fetchCall) async {
+  Future<void> _fetchAndStitch(
+    String key,
+    Future<List<dynamic>> fetchCall,
+  ) async {
     try {
       final results = await fetchCall;
       if (data == null) return;
 
       final updatedSections = data!.sections.map((section) {
-        if (section.key.toLowerCase() == key.toLowerCase() ||
-            (section.sectionType?.toLowerCase() == key.toLowerCase())) {
+        final sectionKey = section.key.toLowerCase();
+        final sectionType = section.sectionType?.toLowerCase() ?? '';
+        final targetKey = key.toLowerCase();
+
+        // Match on key OR sectionType
+        if (sectionKey == targetKey || sectionType == targetKey) {
+          // Safety: Prevent Video sections from being overwritten by Course data or vice-versa
+          if (targetKey.contains('video') || targetKey.contains('short')) {
+            // Only block if it looks like a course section AND the type doesn't actually match our target
+            if (sectionKey.contains('course') && sectionType != targetKey) {
+              return section;
+            }
+          }
+
           return section.copyWith(data: results);
         }
         return section;

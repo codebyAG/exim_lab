@@ -861,7 +861,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         scrollDirection: Axis.horizontal,
                         padding: EdgeInsets.only(left: 5.w, bottom: 2.h),
                         child: Row(
-                          children: freeVideoSection.data.cast<FreeVideoModel>().map((
+                          children: freeVideoSection.data.whereType<FreeVideoModel>().map((
                             video,
                           ) {
                             return FreeVideoCard(

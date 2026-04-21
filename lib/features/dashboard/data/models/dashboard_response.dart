@@ -65,7 +65,8 @@ class DashboardSection {
       parsedData = rawData.map((e) => CourseModel.fromJson(e)).toList();
     } else if (normalizedKey == 'freevideos' ||
         normalizedKey == 'shorts' ||
-        type == 'shorts') {
+        type == 'shorts' ||
+        type == 'freevideos') {
       parsedData = rawData.map((e) => FreeVideoModel.fromJson(e)).toList();
     } else if (normalizedKey == 'banner') {
       parsedData = rawData.map((e) => BannerModel.fromJson(e)).toList();
