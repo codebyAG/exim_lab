@@ -51,10 +51,28 @@ class DashboardProvider extends ChangeNotifier {
 
   /// Helper to get a section by key or generic type
   DashboardSection? getSection(String key) {
-    return data?.sections.where((s) {
-      final normalized = s.key.toLowerCase();
-      final type = s.sectionType?.toLowerCase() ?? '';
-      return normalized == key.toLowerCase() || type == key.toLowerCase();
+    if (data == null) return null;
+
+    final target = key.toLowerCase();
+    return data!.sections.where((s) {
+      final sectionKey = s.key.toLowerCase();
+      final sectionType = s.sectionType?.toLowerCase() ?? '';
+
+      // Match on key OR sectionType
+      bool matches = sectionKey == target || sectionType == target;
+
+      // 🛡️ BLOCKER: If we are looking for a COURSE section (popular/recommended),
+      // we must EXCLUDE any section that is actually a Video or Short by its KEY.
+      if (matches &&
+          (target == 'popular' ||
+              target == 'recommended' ||
+              target == 'course')) {
+        if (sectionKey.contains('video') || sectionKey.contains('short')) {
+          return false; // Skip because it's actually a video section
+        }
+      }
+
+      return matches;
     }).firstOrNull;
   }
 
