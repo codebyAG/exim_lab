@@ -6,11 +6,11 @@ import 'dart:developer' as developer;
 class ExchangeRateProvider extends ChangeNotifier {
   final ExchangeRateService _service = ExchangeRateService();
 
-  ExchangeRateData? _rates;
+  ExchangeRateResponse? _data;
   bool _isLoading = false;
   String? _error;
 
-  ExchangeRateData? get rates => _rates;
+  ExchangeRateResponse? get data => _data;
   bool get isLoading => _isLoading;
   String? get error => _error;
 
@@ -21,8 +21,8 @@ class ExchangeRateProvider extends ChangeNotifier {
 
     try {
       final response = await _service.fetchExchangeRates();
-      _rates = response.data;
-      developer.log("💹 Forex Ticker -> Successfully fetched dynamic rates.");
+      _data = response;
+      developer.log("💹 Forex Ticker -> Successfully fetched rich rates.");
     } catch (e) {
       _error = e.toString();
       developer.log("💹 Forex Ticker -> API Error: $e");
