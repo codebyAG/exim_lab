@@ -43,10 +43,11 @@ class DashboardProvider extends ChangeNotifier {
 
   /// Courses the user is currently taking
   List<CourseModel> get continueCourses {
-    final section = data?.sections
+    if (data == null) return [];
+    final section = data!.sections
         .where((s) => s.key == 'continue')
         .firstOrNull;
-    return section?.data.cast<CourseModel>() ?? [];
+    return section?.data.whereType<CourseModel>().toList() ?? [];
   }
 
   /// Helper to get a section by key or generic type
@@ -93,7 +94,7 @@ class DashboardProvider extends ChangeNotifier {
     final bannerSections = data?.sections.where((s) => s.key == 'banner') ?? [];
     List<BannerModel> allBanners = [];
     for (var section in bannerSections) {
-      allBanners.addAll(section.data.cast<BannerModel>());
+      allBanners.addAll(section.data.whereType<BannerModel>());
     }
     return allBanners;
   }

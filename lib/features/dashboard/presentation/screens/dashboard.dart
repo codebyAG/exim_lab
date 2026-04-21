@@ -1413,7 +1413,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
     String titleAccent,
   ) {
     final theme = Theme.of(context);
-    final courses = section.data.cast<CourseModel>();
+    final courses = section.data.whereType<CourseModel>().toList();
     if (courses.isEmpty) return const SizedBox();
 
     final key = section.key.toLowerCase();
