@@ -1,7 +1,11 @@
+import 'package:exim_lab/core/functions/whatsapp_utils.dart';
+import 'package:exim_lab/core/navigation/app_navigator.dart';
+import 'package:exim_lab/features/courses/presentation/screens/courses_list_screen.dart';
 import 'package:exim_lab/features/dashboard/presentation/painters/dashboard_icons_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DashboardFooter extends StatelessWidget {
   const DashboardFooter({super.key});
@@ -109,39 +113,58 @@ class DashboardFooter extends StatelessWidget {
             crossAxisSpacing: 3.w,
             childAspectRatio: 0.75,
             children: [
-              _buildSocialBtn("Instagram", FontAwesomeIcons.instagram, const [
-                Color(0xFF833AB4),
-                Color(0xFFFD1D1D),
-                Color(0xFFFCB045),
-              ]),
-              _buildSocialBtn("Facebook", FontAwesomeIcons.facebookF, const [
-                Color(0xFF1877F2),
-                Color(0xFF1877F2),
-              ]),
-              _buildSocialBtn("YouTube", FontAwesomeIcons.youtube, const [
-                Color(0xFFFF0000),
-                Color(0xFFCC0000),
-              ]),
-              _buildSocialBtn("WhatsApp", FontAwesomeIcons.whatsapp, const [
-                Color(0xFF25D366),
-                Color(0xFF128C7E),
-              ]),
-              _buildSocialBtn("X (Twitter)", FontAwesomeIcons.xTwitter, const [
-                Color(0xFF000000),
-                Color(0xFF000000),
-              ], isOutline: true),
-              _buildSocialBtn("LinkedIn", FontAwesomeIcons.linkedinIn, const [
-                Color(0xFF0A66C2),
-                Color(0xFF0A66C2),
-              ]),
-              _buildSocialBtn("Telegram", FontAwesomeIcons.telegram, const [
-                Color(0xFF229ED9),
-                Color(0xFF229ED9),
-              ]),
-              _buildSocialBtn("Play Store", FontAwesomeIcons.googlePlay, const [
-                Color(0xFF3BBD70),
-                Color(0xFF1E5FFF),
-              ]),
+              _buildSocialBtn(
+                context,
+                "Instagram",
+                FontAwesomeIcons.instagram,
+                const [Color(0xFF833AB4), Color(0xFFFD1D1D), Color(0xFFFCB045)],
+                url: "https://www.instagram.com/siieadigital",
+              ),
+              _buildSocialBtn(
+                context,
+                "Facebook",
+                FontAwesomeIcons.facebookF,
+                const [Color(0xFF1877F2), Color(0xFF1877F2)],
+              ),
+              _buildSocialBtn(
+                context,
+                "YouTube",
+                FontAwesomeIcons.youtube,
+                const [Color(0xFFFF0000), Color(0xFFCC0000)],
+                url: "https://youtu.be/f7eSa2jkUZM?si=Krq_Ke-2fPaj6obO",
+              ),
+              _buildSocialBtn(
+                context,
+                "WhatsApp",
+                FontAwesomeIcons.whatsapp,
+                const [Color(0xFF25D366), Color(0xFF128C7E)],
+                url: "WHATSAPP",
+              ),
+              _buildSocialBtn(
+                context,
+                "X (Twitter)",
+                FontAwesomeIcons.xTwitter,
+                const [Color(0xFF000000), Color(0xFF000000)],
+                isOutline: true,
+              ),
+              _buildSocialBtn(
+                context,
+                "LinkedIn",
+                FontAwesomeIcons.linkedinIn,
+                const [Color(0xFF0A66C2), Color(0xFF0A66C2)],
+              ),
+              _buildSocialBtn(
+                context,
+                "Telegram",
+                FontAwesomeIcons.telegram,
+                const [Color(0xFF229ED9), Color(0xFF229ED9)],
+              ),
+              _buildSocialBtn(
+                context,
+                "Play Store",
+                FontAwesomeIcons.googlePlay,
+                const [Color(0xFF3BBD70), Color(0xFF1E5FFF)],
+              ),
             ],
           ),
 
@@ -158,15 +181,19 @@ class DashboardFooter extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildFooterLink("About Us"),
+              _buildFooterLink(
+                context,
+                "About Us",
+                url: "https://www.siiea.in",
+              ),
               _buildDot(),
-              _buildFooterLink("Courses"),
+              _buildFooterLink(context, "Courses", isCourseLink: true),
               _buildDot(),
-              _buildFooterLink("Contact"),
+              _buildFooterLink(context, "Contact"),
               _buildDot(),
-              _buildFooterLink("Privacy"),
+              _buildFooterLink(context, "Privacy"),
               _buildDot(),
-              _buildFooterLink("Terms"),
+              _buildFooterLink(context, "Terms"),
             ],
           ),
           SizedBox(height: 2.h),
@@ -193,64 +220,124 @@ class DashboardFooter extends StatelessWidget {
   }
 
   Widget _buildSocialBtn(
+    BuildContext context,
     String label,
     dynamic icon,
     List<Color> colors, {
     bool isOutline = false,
+    String? url,
   }) {
-    return Column(
-      children: [
-        Container(
-          width: 16.w,
-          height: 16.w,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: colors,
-            ),
-            borderRadius: BorderRadius.circular(16),
-            border: isOutline
-                ? Border.all(color: Colors.white30, width: 1)
-                : null,
-            boxShadow: [
-              BoxShadow(
-                color: colors[0].withValues(alpha: 0.3),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
+    return InkWell(
+      onTap: () {
+        if (url == "WHATSAPP") {
+          WhatsAppUtils.launch(
+            message: "Hi SIIEA team, I want to know more about your courses.",
+          );
+        } else if (url != null) {
+          _launchSocialURL(context, url);
+        } else {
+          _showComingSoon(context, label);
+        }
+      },
+      borderRadius: BorderRadius.circular(16),
+      child: Column(
+        children: [
+          Container(
+            width: 16.w,
+            height: 16.w,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: colors,
               ),
-            ],
-          ),
-          child: Center(
-            child: FaIcon(
-              icon as FaIconData?,
-              color: Colors.white,
-              size: 20.sp,
+              borderRadius: BorderRadius.circular(16),
+              border: isOutline
+                  ? Border.all(color: Colors.white30, width: 1)
+                  : null,
+              boxShadow: [
+                BoxShadow(
+                  color: colors[0].withValues(alpha: 0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Center(
+              child: FaIcon(
+                icon as FaIconData?,
+                color: Colors.white,
+                size: 20.sp,
+              ),
             ),
           ),
-        ),
-        SizedBox(height: 0.8.h),
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.white70,
-            fontSize: 10.sp,
-            fontWeight: FontWeight.w800,
+          SizedBox(height: 0.8.h),
+          Text(
+            label,
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: 10.sp,
+              fontWeight: FontWeight.w800,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
           ),
-          textAlign: TextAlign.center,
-          maxLines: 1,
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  Widget _buildFooterLink(String label) {
-    return Text(
-      label,
-      style: TextStyle(
-        color: const Color(0xFF1E5FFF),
-        fontSize: 12.sp,
-        fontWeight: FontWeight.w800,
+  Widget _buildFooterLink(
+    BuildContext context,
+    String label, {
+    String? url,
+    bool isCourseLink = false,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        if (isCourseLink) {
+          AppNavigator.push(context, const CoursesListScreen());
+        } else if (url != null) {
+          _launchSocialURL(context, url);
+        } else {
+          _showComingSoon(context, label);
+        }
+      },
+      child: Text(
+        label,
+        style: TextStyle(
+          color: const Color(0xFF1E5FFF),
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+    );
+  }
+
+  void _launchSocialURL(BuildContext context, String url) async {
+    try {
+      final uri = Uri.parse(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        if (context.mounted) _showComingSoon(context, url);
+      }
+    } catch (e) {
+      if (context.mounted) _showComingSoon(context, url);
+    }
+  }
+
+  void _showComingSoon(BuildContext context, String feature) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          "🚀 $feature is coming soon!",
+          style: const TextStyle(fontWeight: FontWeight.w900),
+        ),
+        backgroundColor: const Color(0xFF1E5FFF),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        duration: const Duration(seconds: 2),
       ),
     );
   }
