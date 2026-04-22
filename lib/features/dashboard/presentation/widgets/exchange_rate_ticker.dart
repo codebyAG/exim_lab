@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:exim_lab/core/navigation/app_navigator.dart';
+import 'package:exim_lab/features/tools/presentation/screens/forex_converter_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exim_lab/features/dashboard/presentation/providers/exchange_rate_provider.dart';
@@ -16,11 +18,25 @@ class _ExchangeRateTickerState extends State<ExchangeRateTicker> {
   late ScrollController _scrollController;
   Timer? _timer;
 
+  // 🌍 Top 10 Trade Partner Currencies
+  static const List<String> _popularCurrencies = [
+    'USD', // USA
+    'CNY', // China
+    'AED', // UAE
+    'SAR', // Saudi Arabia
+    'EUR', // Germany/EU
+    'RUB', // Russia
+    'SGD', // Singapore
+    'JPY', // Japan
+    'GBP', // UK
+    'KRW', // S. Korea
+  ];
+
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    
+
     // Start automatic scrolling after a small delay
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _startAutoScroll();
@@ -39,7 +55,7 @@ class _ExchangeRateTickerState extends State<ExchangeRateTicker> {
       if (_scrollController.hasClients) {
         double maxScroll = _scrollController.position.maxScrollExtent;
         double currentScroll = _scrollController.position.pixels;
-        
+
         // Loop back to start smoothly
         if (currentScroll >= maxScroll) {
           _scrollController.jumpTo(0);
@@ -54,34 +70,43 @@ class _ExchangeRateTickerState extends State<ExchangeRateTicker> {
   Widget build(BuildContext context) {
     return Consumer<ExchangeRateProvider>(
       builder: (context, provider, child) {
-        final rates = provider.data?.getDisplayRates() ?? [];
-        
+        // 🔍 Filter by popular currencies
+        final allRates = provider.data?.getDisplayRates() ?? [];
+        final rates = allRates
+            .where((rate) => _popularCurrencies.contains(rate.currency))
+            .toList();
+
         if (rates.isEmpty && !provider.isLoading) {
           return const SizedBox.shrink();
         }
 
-        return Container(
-          height: 60, // Increased height for more prominence
-          width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                const Color(0xFF01081C).withValues(alpha: 0.95),
-                const Color(0xFF021B4B),
-              ],
-              begin: Alignment.topCenter, // Vertical gradient for more depth
-              end: Alignment.bottomCenter,
-            ),
-            border: const Border(
-              bottom: BorderSide(
-                color: Color(0xFF1E5FFF),
-                width: 1.5, // Thicker border
+        return GestureDetector(
+          onTap: () {
+            AppNavigator.push(context, const ForexConverterScreen());
+          },
+          child: Container(
+            height: 60, // Increased height for more prominence
+            width: double.infinity,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  const Color(0xFF01081C).withValues(alpha: 0.95),
+                  const Color(0xFF021B4B),
+                ],
+                begin: Alignment.topCenter, // Vertical gradient for more depth
+                end: Alignment.bottomCenter,
+              ),
+              border: const Border(
+                bottom: BorderSide(
+                  color: Color(0xFF1E5FFF),
+                  width: 1.5, // Thicker border
+                ),
               ),
             ),
+            child: provider.isLoading
+                ? _buildLoadingState()
+                : _buildScrollingList(rates),
           ),
-          child: provider.isLoading
-              ? _buildLoadingState()
-              : _buildScrollingList(rates),
         );
       },
     );
