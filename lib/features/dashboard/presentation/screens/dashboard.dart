@@ -709,6 +709,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       Color(0xFF1040C1),
                     ],
                     icon: CustomPaint(painter: CertStarIconPainter()),
+                    onTap: () => _showCertificateGuidanceDialog(context),
                   ),
                   CertificateMiniCard(
                     title: "Documentation",
@@ -719,6 +720,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       Color(0xFFC8151B),
                     ],
                     icon: Text("📋", style: TextStyle(fontSize: 16.sp)),
+                    onTap: () => _showCertificateGuidanceDialog(context),
                   ),
                   CertificateMiniCard(
                     title: "Trade",
@@ -729,6 +731,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       Color(0xFF1040C1),
                     ],
                     icon: Text("⚔️", style: TextStyle(fontSize: 16.sp)),
+                    onTap: () => _showCertificateGuidanceDialog(context),
                   ),
                   CertificateMiniCard(
                     title: "Trade",
@@ -739,6 +742,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                       Color(0xFF8B5500),
                     ],
                     icon: Text("🏆", style: TextStyle(fontSize: 16.sp)),
+                    onTap: () => _showCertificateGuidanceDialog(context),
                   ),
                 ],
               ),
@@ -1354,6 +1358,61 @@ class _DashboardBodyState extends State<_DashboardBody> {
       items: navItems,
       actions: navActions,
       schema: schema,
+    );
+  }
+
+  void _showCertificateGuidanceDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF030E30),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: Row(
+          children: [
+            const Text("🏆 ", style: TextStyle(fontSize: 24)),
+            const Text(
+              "Earn Certification",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+                fontFamily: 'Plus Jakarta Sans',
+              ),
+            ),
+          ],
+        ),
+        content: const Text(
+          "Please explore courses or join our certified programs to earn this professional badge.",
+          style: TextStyle(color: Colors.white70, fontSize: 16),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              "Maybe Later",
+              style: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              AppNavigator.push(context, const CoursesListScreen());
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF1E5FFF),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: const Text(
+              "Explore Courses",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

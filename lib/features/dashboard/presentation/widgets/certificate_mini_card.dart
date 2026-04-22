@@ -8,6 +8,8 @@ class CertificateMiniCard extends StatelessWidget {
   final Widget icon;
   final Color levelColor;
 
+  final VoidCallback onTap;
+
   const CertificateMiniCard({
     super.key,
     required this.title,
@@ -15,11 +17,15 @@ class CertificateMiniCard extends StatelessWidget {
     required this.gradientColors,
     required this.icon,
     required this.levelColor,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.2.h),
       margin: EdgeInsets.only(right: 3.w),
       decoration: BoxDecoration(
@@ -69,6 +75,7 @@ class CertificateMiniCard extends StatelessWidget {
             ],
           ),
         ],
+      ),
       ),
     );
   }
