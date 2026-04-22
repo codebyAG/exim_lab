@@ -148,38 +148,195 @@ class FreePdfPromoCard extends StatelessWidget {
   }
 
   void _showPdfSelectionDialog(BuildContext context) {
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Choose Your Guide"),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
+      backgroundColor: const Color(0xFF030E30),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            bool isLoading = false;
+            String? loadingFile;
+
+            Future<void> handleOpen(String path, String name) async {
+              setModalState(() {
+                isLoading = true;
+                loadingFile = name;
+              });
+
+              try {
+                await PdfUtils.openAssetPdf(path);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("✅ $name opened successfully!"),
+                      backgroundColor: Colors.green,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                  Navigator.pop(context);
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("❌ Error: $e"),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              } finally {
+                if (context.mounted) {
+                  setModalState(() => isLoading = false);
+                }
+              }
+            }
+
+            return Container(
+              padding: EdgeInsets.fromLTRB(6.w, 3.h, 6.w, 5.h),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 🏁 HANDLE
+                  Center(
+                    child: Container(
+                      width: 12.w,
+                      height: 5,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 3.h),
+
+                  const Text(
+                    "Select Your Guide",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w900,
+                      fontFamily: 'Plus Jakarta Sans',
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Download or open our expert demo guides",
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.6),
+                      fontSize: 14,
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+
+                  // 📘 VOL 1
+                  _buildPdfOption(
+                    title: "Import Export Guide Vol 1",
+                    subtitle: "Basics of global trade & setup",
+                    icon: Icons.auto_stories_rounded,
+                    color: const Color(0xFF1E5FFF),
+                    isDownloading: isLoading && loadingFile == "Vol 1",
+                    onTap: isLoading
+                        ? null
+                        : () => handleOpen('assets/pdf/Import_Export_Guide.pdf', "Vol 1"),
+                  ),
+                  SizedBox(height: 2.h),
+
+                  // 📗 VOL 2
+                  _buildPdfOption(
+                    title: "Import Export Guide Vol 2",
+                    subtitle: "Advanced logistics & buyer sourcing",
+                    icon: Icons.menu_book_rounded,
+                    color: const Color(0xFFFF8800),
+                    isDownloading: isLoading && loadingFile == "Vol 2",
+                    onTap: isLoading
+                        ? null
+                        : () => handleOpen('assets/pdf/Import_Export_Guide2.pdf', "Vol 2"),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildPdfOption({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required Color color,
+    required bool isDownloading,
+    required VoidCallback? onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: EdgeInsets.all(4.w),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isDownloading ? color : Colors.white.withValues(alpha: 0.1),
+            width: 1.5,
+          ),
+        ),
+        child: Row(
           children: [
-            ListTile(
-              leading: const Icon(Icons.picture_as_pdf, color: Colors.red),
-              title: const Text("Import Export Guide Vol 1"),
-              onTap: () {
-                Navigator.pop(context);
-                PdfUtils.openAssetPdf('assets/pdf/Import_Export_Guide.pdf');
-              },
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: color, size: 24),
             ),
-            ListTile(
-              leading: const Icon(Icons.picture_as_pdf, color: Colors.red),
-              title: const Text("Import Export Guide Vol 2"),
-              onTap: () {
-                Navigator.pop(context);
-                PdfUtils.openAssetPdf('assets/pdf/Import_Export_Guide2.pdf');
-              },
+            SizedBox(width: 4.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.5),
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
             ),
+            if (isDownloading)
+              SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  valueColor: AlwaysStoppedAnimation<Color>(color),
+                ),
+              )
+            else
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: Colors.white.withValues(alpha: 0.3),
+                size: 16,
+              ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Close"),
-          ),
-        ],
       ),
     );
   }
