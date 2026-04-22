@@ -30,12 +30,12 @@ class _ForexConverterScreenState extends State<ForexConverterScreen> {
   void _calculateResult(ExchangeRateResponse? data) {
     if (data == null) return;
     final amount = double.tryParse(_amountController.text) ?? 1.0;
-    
+
     // Logic: Convert From -> Base (INR) -> To
-    // Our API base is INR. 
+    // Our API base is INR.
     // Rate for USD is roughly 0.012 (1/83.5).
     // To get 1 USD in INR: 1 / USD_RATE
-    
+
     final fromRate = data.data.conversionRates[_fromCurrency] ?? 1.0;
     final toRate = data.data.conversionRates[_toCurrency] ?? 1.0;
 
@@ -78,7 +78,7 @@ class _ForexConverterScreenState extends State<ForexConverterScreen> {
                       SizedBox(height: 3.h),
                       _buildInfoCard(cs, theme),
                       SizedBox(height: 4.h),
-                      
+
                       // 📊 FULL RATES LIST HEADER
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -92,7 +92,10 @@ class _ForexConverterScreenState extends State<ForexConverterScreen> {
                             ),
                           ),
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 2.w,
+                              vertical: 0.5.h,
+                            ),
                             decoration: BoxDecoration(
                               color: Colors.green.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(8),
@@ -109,12 +112,14 @@ class _ForexConverterScreenState extends State<ForexConverterScreen> {
                         ],
                       ),
                       SizedBox(height: 2.h),
-                      
+
                       // 📋 THE LIST
                       if (data != null)
                         _buildFullRatesList(data)
                       else
-                        const Center(child: Text("Unable to load latest rates")),
+                        const Center(
+                          child: Text("Unable to load latest rates"),
+                        ),
                     ],
                   ),
                 ),
@@ -123,9 +128,15 @@ class _ForexConverterScreenState extends State<ForexConverterScreen> {
     );
   }
 
-  Widget _buildConverterCard(ColorScheme cs, ThemeData theme, ExchangeRateResponse? data) {
-    final availableCurrencies = data?.data.conversionRates.keys.toList() ?? ['USD', 'INR', 'EUR', 'GBP', 'AED', 'CNY'];
-    
+  Widget _buildConverterCard(
+    ColorScheme cs,
+    ThemeData theme,
+    ExchangeRateResponse? data,
+  ) {
+    final availableCurrencies =
+        data?.data.conversionRates.keys.toList() ??
+        ['USD', 'INR', 'EUR', 'GBP', 'AED', 'CNY'];
+
     return Container(
       padding: EdgeInsets.all(6.w),
       decoration: BoxDecoration(
@@ -145,12 +156,23 @@ class _ForexConverterScreenState extends State<ForexConverterScreen> {
             controller: _amountController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             onChanged: (_) => setState(() {}),
-            style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.w900, color: const Color(0xFF030E30)),
+            style: TextStyle(
+              fontSize: 24.sp,
+              fontWeight: FontWeight.w900,
+              color: const Color(0xFF030E30),
+            ),
             decoration: InputDecoration(
               labelText: "Amount to Convert",
-              labelStyle: TextStyle(color: Colors.grey, fontSize: 12.sp, fontWeight: FontWeight.bold),
+              labelStyle: TextStyle(
+                color: Colors.grey,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.bold,
+              ),
               border: InputBorder.none,
-              prefixIcon: const Icon(Icons.account_balance_wallet_rounded, color: Color(0xFF1E5FFF)),
+              prefixIcon: const Icon(
+                Icons.account_balance_wallet_rounded,
+                color: Color(0xFF1E5FFF),
+              ),
             ),
           ),
           const Padding(
@@ -169,7 +191,10 @@ class _ForexConverterScreenState extends State<ForexConverterScreen> {
                   color: Color(0xFFF0F4FF),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.sync_alt_rounded, color: Color(0xFF1E5FFF)),
+                child: const Icon(
+                  Icons.sync_alt_rounded,
+                  color: Color(0xFF1E5FFF),
+                ),
               ),
               _buildCurrencyDropdown(_toCurrency, availableCurrencies, (v) {
                 setState(() => _toCurrency = v!);
@@ -188,12 +213,20 @@ class _ForexConverterScreenState extends State<ForexConverterScreen> {
               children: [
                 Text(
                   "Converted Amount",
-                  style: TextStyle(color: Colors.grey, fontSize: 11.sp, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 SizedBox(height: 1.h),
                 Text(
                   "${_customResult?.toStringAsFixed(2) ?? '0.00'} $_toCurrency",
-                  style: TextStyle(fontSize: 28.sp, fontWeight: FontWeight.w900, color: const Color(0xFF1E5FFF)),
+                  style: TextStyle(
+                    fontSize: 28.sp,
+                    fontWeight: FontWeight.w900,
+                    color: const Color(0xFF1E5FFF),
+                  ),
                 ),
               ],
             ),
@@ -203,7 +236,11 @@ class _ForexConverterScreenState extends State<ForexConverterScreen> {
     );
   }
 
-  Widget _buildCurrencyDropdown(String value, List<String> items, ValueChanged<String?> onChanged) {
+  Widget _buildCurrencyDropdown(
+    String value,
+    List<String> items,
+    ValueChanged<String?> onChanged,
+  ) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 4.w),
       decoration: BoxDecoration(
@@ -216,13 +253,19 @@ class _ForexConverterScreenState extends State<ForexConverterScreen> {
           value: value,
           menuMaxHeight: 40.h,
           items: items
-              .map((e) => DropdownMenuItem(
-                    value: e,
-                    child: Text(
-                      e,
-                      style: TextStyle(fontWeight: FontWeight.w900, fontSize: 14.sp, color: const Color(0xFF030E30)),
+              .map(
+                (e) => DropdownMenuItem(
+                  value: e,
+                  child: Text(
+                    e,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 14.sp,
+                      color: const Color(0xFF030E30),
                     ),
-                  ))
+                  ),
+                ),
+              )
               .toList(),
           onChanged: onChanged,
         ),
@@ -232,7 +275,7 @@ class _ForexConverterScreenState extends State<ForexConverterScreen> {
 
   Widget _buildFullRatesList(ExchangeRateResponse data) {
     final rates = data.getDisplayRates();
-    
+
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -248,7 +291,9 @@ class _ForexConverterScreenState extends State<ForexConverterScreen> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: const Color(0xFFE0E7FF).withValues(alpha: 0.5)),
+            border: Border.all(
+              color: const Color(0xFFE0E7FF).withValues(alpha: 0.5),
+            ),
           ),
           child: Row(
             children: [
@@ -268,7 +313,7 @@ class _ForexConverterScreenState extends State<ForexConverterScreen> {
                 ),
               ),
               SizedBox(width: 4.w),
-              
+
               // NAMES
               Expanded(
                 child: Column(
@@ -293,7 +338,7 @@ class _ForexConverterScreenState extends State<ForexConverterScreen> {
                   ],
                 ),
               ),
-              
+
               // VALUES
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -334,9 +379,21 @@ class _ForexConverterScreenState extends State<ForexConverterScreen> {
 
   String _getCurrencyEmoji(String code) {
     final Map<String, String> emojis = {
-      'USD': '🇺🇸', 'EUR': '🇪🇺', 'GBP': '🇬🇧', 'JPY': '🇯🇵', 'AED': '🇦🇪',
-      'CNY': '🇨🇳', 'SAR': '🇸🇦', 'CAD': '🇨🇦', 'AUD': '🇦🇺', 'SGD': '🇸🇬',
-      'INR': '🇮🇳', 'RUB': '🇷🇺', 'KRW': '🇰🇷', 'CHF': '🇨🇭', 'NZD': '🇳🇿',
+      'USD': '🇺🇸',
+      'EUR': '🇪🇺',
+      'GBP': '🇬🇧',
+      'JPY': '🇯🇵',
+      'AED': '🇦🇪',
+      'CNY': '🇨🇳',
+      'SAR': '🇸🇦',
+      'CAD': '🇨🇦',
+      'AUD': '🇦🇺',
+      'SGD': '🇸🇬',
+      'INR': '🇮🇳',
+      'RUB': '🇷🇺',
+      'KRW': '🇰🇷',
+      'CHF': '🇨🇭',
+      'NZD': '🇳🇿',
     };
     return emojis[code] ?? '💰';
   }
@@ -347,7 +404,9 @@ class _ForexConverterScreenState extends State<ForexConverterScreen> {
       decoration: BoxDecoration(
         color: const Color(0xFFE0E7FF).withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFF1E5FFF).withValues(alpha: 0.1)),
+        border: Border.all(
+          color: const Color(0xFF1E5FFF).withValues(alpha: 0.1),
+        ),
       ),
       child: Row(
         children: [
@@ -357,9 +416,10 @@ class _ForexConverterScreenState extends State<ForexConverterScreen> {
             child: Text(
               "Rates are indicative live market prices for reference. Settlement rates may vary.",
               style: TextStyle(
-                  color: const Color(0xFF1E5FFF),
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.bold),
+                color: const Color(0xFF1E5FFF),
+                fontSize: 10.sp,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
