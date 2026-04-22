@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:exim_lab/features/dashboard/presentation/painters/dashboard_icons_painter.dart';
+import 'package:exim_lab/core/functions/whatsapp_utils.dart';
 
 class MasterclassCard extends StatelessWidget {
   const MasterclassCard({super.key});
@@ -128,31 +129,38 @@ class MasterclassCard extends StatelessWidget {
                       // ENROLL BUTTON
                       Expanded(
                         flex: 3,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 2.h),
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFFC8151B), Color(0xFFFF2D35)],
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(
-                                  0xFFC8151B,
-                                ).withValues(alpha: 0.6),
-                                blurRadius: 20,
-                                spreadRadius: 2,
-                                offset: const Offset(0, 8),
-                              ),
-                            ],
+                        child: InkWell(
+                          onTap: () => WhatsAppUtils.launch(
+                            message:
+                                "Hi, I want to enroll in the Master Import-Export Business class.",
                           ),
-                          child: Center(
-                            child: Text(
-                              "Enroll Now 🚀",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w900,
+                          borderRadius: BorderRadius.circular(20),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 2.h),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFFC8151B), Color(0xFFFF2D35)],
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(
+                                    0xFFC8151B,
+                                  ).withValues(alpha: 0.6),
+                                  blurRadius: 20,
+                                  spreadRadius: 2,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Enroll Now 🚀",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w900,
+                                ),
                               ),
                             ),
                           ),

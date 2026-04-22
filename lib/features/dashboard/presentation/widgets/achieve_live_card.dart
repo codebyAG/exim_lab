@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:exim_lab/core/functions/whatsapp_utils.dart';
 
 class AchieveLiveCard extends StatelessWidget {
   const AchieveLiveCard({super.key});
@@ -143,29 +144,38 @@ class AchieveLiveCard extends StatelessWidget {
                       const Spacer(),
 
                       // 🔘 REGISTER BUTTON
-                      Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.symmetric(vertical: 1.4.h),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF0F47D1), Color(0xFF1E5FFF)],
-                          ),
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFF1E5FFF).withValues(alpha: 0.4),
-                              blurRadius: 12,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
+                      InkWell(
+                        onTap: () => WhatsAppUtils.launch(
+                          message:
+                              "Hi, I want to register for the upcoming LIVE Import-Export Webinar.",
                         ),
-                        child: Center(
-                          child: Text(
-                            "Register Now →",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.w900,
+                        borderRadius: BorderRadius.circular(16),
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(vertical: 1.4.h),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF0F47D1), Color(0xFF1E5FFF)],
+                            ),
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(
+                                  0xFF1E5FFF,
+                                ).withValues(alpha: 0.4),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Center(
+                            child: Text(
+                              "Register Now →",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w900,
+                              ),
                             ),
                           ),
                         ),
