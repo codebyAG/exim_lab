@@ -286,7 +286,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                     ),
 
-                    const Spacer(),
+                    // Spacer replaced with fixed gap to prevent 1px overflow on small screens
+                    const SizedBox(height: 40),
 
                     // FOOTER
                     Center(
