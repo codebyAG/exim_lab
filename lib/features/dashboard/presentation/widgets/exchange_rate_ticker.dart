@@ -82,7 +82,7 @@ class _ExchangeRateTickerState extends State<ExchangeRateTicker> {
 
         return GestureDetector(
           onTap: () {
-            AppNavigator.push(context,  ForexRatesListScreen());
+            AppNavigator.push(context, const ForexRatesListScreen());
           },
           child: Container(
             height: 60, // Increased height for more prominence
@@ -128,11 +128,11 @@ class _ExchangeRateTickerState extends State<ExchangeRateTicker> {
   Widget _buildScrollingList(List<DisplayRate> rates) {
     // Duplicate the list several times to create a seamless infinite feel
     final displayList = [...rates, ...rates, ...rates, ...rates];
-    
+
     return ListView.builder(
       controller: _scrollController,
       scrollDirection: Axis.horizontal,
-      physics: const NeverScrollableScrollPhysics(), 
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: displayList.length,
       padding: EdgeInsets.zero, // Removed external padding
       itemBuilder: (context, index) {
@@ -141,7 +141,9 @@ class _ExchangeRateTickerState extends State<ExchangeRateTicker> {
         final icon = rate.isUp ? Icons.arrow_drop_up : Icons.arrow_drop_down;
 
         return Container(
-          padding: EdgeInsets.symmetric(horizontal: 3.5.w), // Tightened horizontal spacing
+          padding: EdgeInsets.symmetric(
+            horizontal: 3.5.w,
+          ), // Tightened horizontal spacing
           child: Row(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
