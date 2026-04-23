@@ -1,3 +1,5 @@
+import 'package:exim_lab/features/tools/presentation/screens/forex_rates_list_screen.dart';
+import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/dashboard/data/models/exchange_rate_model.dart';
 import 'package:exim_lab/features/dashboard/presentation/providers/exchange_rate_provider.dart';
 import 'package:flutter/material.dart';
@@ -79,52 +81,51 @@ class _ForexConverterScreenState extends State<ForexConverterScreen> {
                       _buildInfoCard(cs, theme),
                       SizedBox(height: 4.h),
 
-                      // 📊 FULL RATES LIST HEADER
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Global Exchange Rates",
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w900,
-                              color: const Color(0xFF030E30),
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 2.w,
-                              vertical: 0.5.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.green.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              "LIVE",
-                              style: TextStyle(
-                                color: Colors.green,
-                                fontSize: 9.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 2.h),
-
-                      // 📋 THE LIST
-                      if (data != null)
-                        _buildFullRatesList(data)
-                      else
-                        const Center(
-                          child: Text("Unable to load latest rates"),
-                        ),
+                      // 📊 VIEW ALL BUTTON
+                      _buildViewAllButton(context),
                     ],
                   ),
                 ),
         );
       },
+    );
+  }
+
+  Widget _buildViewAllButton(BuildContext context) {
+    return InkWell(
+      onTap: () => AppNavigator.push(context, const ForexRatesListScreen()),
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: EdgeInsets.all(5.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: const Color(0xFF1E5FFF).withValues(alpha: 0.1),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.list_alt_rounded, color: Color(0xFF1E5FFF)),
+            SizedBox(width: 3.w),
+            Text(
+              "View Global Exchange Rates",
+              style: TextStyle(
+                fontSize: 13.sp,
+                fontWeight: FontWeight.w900,
+                color: const Color(0xFF1E5FFF),
+              ),
+            ),
+            const Spacer(),
+            const Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 16,
+              color: Color(0xFF1E5FFF),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -271,131 +272,6 @@ class _ForexConverterScreenState extends State<ForexConverterScreen> {
         ),
       ),
     );
-  }
-
-  Widget _buildFullRatesList(ExchangeRateResponse data) {
-    final rates = data.getDisplayRates();
-
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: rates.length,
-      separatorBuilder: (_, _) => SizedBox(height: 1.5.h),
-      itemBuilder: (context, index) {
-        final rate = rates[index];
-        final isUp = rate.isUp;
-        final color = isUp ? Colors.green : Colors.red;
-
-        return Container(
-          padding: EdgeInsets.all(4.w),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: const Color(0xFFE0E7FF).withValues(alpha: 0.5),
-            ),
-          ),
-          child: Row(
-            children: [
-              // FLAG/ICON PLACEHOLDER
-              Container(
-                width: 10.w,
-                height: 10.w,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF0F4FF),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                  child: Text(
-                    _getCurrencyEmoji(rate.currency),
-                    style: TextStyle(fontSize: 16.sp),
-                  ),
-                ),
-              ),
-              SizedBox(width: 4.w),
-
-              // NAMES
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      rate.currency,
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w900,
-                        color: const Color(0xFF030E30),
-                      ),
-                    ),
-                    Text(
-                      "to INR",
-                      style: TextStyle(
-                        fontSize: 10.sp,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // VALUES
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    "₹${rate.value.toStringAsFixed(2)}",
-                    style: TextStyle(
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w900,
-                      color: const Color(0xFF030E30),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        isUp ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                        color: color,
-                        size: 16.sp,
-                      ),
-                      Text(
-                        "${rate.diffPercent.abs().toStringAsFixed(2)}%",
-                        style: TextStyle(
-                          color: color,
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  String _getCurrencyEmoji(String code) {
-    final Map<String, String> emojis = {
-      'USD': '🇺🇸',
-      'EUR': '🇪🇺',
-      'GBP': '🇬🇧',
-      'JPY': '🇯🇵',
-      'AED': '🇦🇪',
-      'CNY': '🇨🇳',
-      'SAR': '🇸🇦',
-      'CAD': '🇨🇦',
-      'AUD': '🇦🇺',
-      'SGD': '🇸🇬',
-      'INR': '🇮🇳',
-      'RUB': '🇷🇺',
-      'KRW': '🇰🇷',
-      'CHF': '🇨🇭',
-      'NZD': '🇳🇿',
-    };
-    return emojis[code] ?? '💰';
   }
 
   Widget _buildInfoCard(ColorScheme cs, ThemeData theme) {

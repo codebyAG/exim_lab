@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
-import 'package:exim_lab/features/tools/presentation/screens/forex_converter_screen.dart';
+import 'package:exim_lab/features/tools/presentation/screens/forex_rates_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exim_lab/features/dashboard/presentation/providers/exchange_rate_provider.dart';
@@ -82,7 +82,7 @@ class _ExchangeRateTickerState extends State<ExchangeRateTicker> {
 
         return GestureDetector(
           onTap: () {
-            AppNavigator.push(context, const ForexConverterScreen());
+            AppNavigator.push(context,  ForexRatesListScreen());
           },
           child: Container(
             height: 60, // Increased height for more prominence
