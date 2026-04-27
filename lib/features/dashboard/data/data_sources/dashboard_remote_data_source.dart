@@ -5,7 +5,17 @@ import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart'
 import 'package:exim_lab/features/courses/data/models/course_model.dart';
 import 'package:exim_lab/features/freevideos/data/models/free_videos_model.dart';
 
+import 'package:exim_lab/features/dashboard/data/models/founder_model.dart';
+
 class DashboardRemoteDataSource {
+  /// Fetch Founder Info
+  Future<FounderModel> getFounderData() async {
+    return await callApi(
+      ApiConstants.founder,
+      parser: (json) => FounderModel.fromJson(json['data']),
+    );
+  }
+
   /// Fetch the skeleton (Popup + Section List)
   Future<DashboardResponse> getSections() async {
     return await callApi(

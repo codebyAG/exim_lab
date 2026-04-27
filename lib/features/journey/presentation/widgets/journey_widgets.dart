@@ -416,7 +416,7 @@ class DashedLinePainter extends CustomPainter {
 class JourneyQuestionDialog extends StatefulWidget {
   final String title;
   final List<JourneyQuestion> questions;
-  final Function(Map<String, String>) onComplete;
+  final Function(Map<int, String>) onComplete;
 
   const JourneyQuestionDialog({
     super.key,
@@ -430,7 +430,7 @@ class JourneyQuestionDialog extends StatefulWidget {
 }
 
 class _JourneyQuestionDialogState extends State<JourneyQuestionDialog> {
-  final Map<String, String> _answers = {};
+  final Map<int, String> _answers = {};
   int _currentQuestionIndex = 0;
 
   @override

@@ -36,7 +36,11 @@ import 'package:exim_lab/features/dashboard/presentation/providers/exchange_rate
 import 'package:exim_lab/features/shorts/data/services/shorts_service.dart';
 import 'package:exim_lab/features/shorts/presentation/providers/shorts_provider.dart';
 
+import 'package:exim_lab/features/chat/presentation/providers/chat_provider.dart';
+
 import 'package:exim_lab/features/dashboard/data/services/referrer_service.dart';
+
+import 'package:exim_lab/features/journey/presentation/providers/journey_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -120,6 +124,8 @@ void main() async {
         ChangeNotifierProvider.value(value: shortsProvider),
         ChangeNotifierProvider(create: (_) => ExchangeRateProvider()),
         ChangeNotifierProvider(create: (_) => DashboardProvider()),
+        ChangeNotifierProvider(create: (_) => JourneyProvider()),
+        ChangeNotifierProvider(create: (_) => ChatProvider()),
         ChangeNotifierProvider(create: (_) => NewsProvider(newsService)),
         ChangeNotifierProvider(create: (_) => NotificationsProvider()),
         ChangeNotifierProvider.value(value: moduleProvider),

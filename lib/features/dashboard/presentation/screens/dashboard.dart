@@ -35,6 +35,7 @@ import 'package:exim_lab/features/quiz/presentation/screens/quiz_topics_screen.d
 import 'package:exim_lab/features/dashboard/presentation/widgets/inline_banner.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/tool_section.dart';
 import 'package:exim_lab/features/news/presentation/screens/news_list_screen.dart';
+import 'package:exim_lab/features/chat/presentation/screens/community_chat_screen.dart';
 import 'package:exim_lab/features/shorts/presentation/screens/shorts_feed_screen.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:exim_lab/features/profile/presentation/screens/profile_screen.dart';
@@ -556,6 +557,17 @@ class _DashboardBodyState extends State<_DashboardBody> {
                           themeColor: const Color(0xFF0D47A1),
                           onTap: () =>
                               AppNavigator.push(context, const GalleryScreen()),
+                        ),
+                      ),
+                      // 💬 COMMUNITY
+                      PremiumFeatureCard(
+                        title: t.translate('exclusive_community'),
+                        icon: Icons.forum_rounded,
+                        buttonLabel: t.translate('join_community_subtitle'),
+                        themeColor: const Color(0xFF00C853), // Green for Community
+                        onTap: () => AppNavigator.push(
+                          context,
+                          const CommunityChatScreen(),
                         ),
                       ),
                       // 📊 MARKET UPDATES

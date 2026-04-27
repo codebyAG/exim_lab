@@ -1,10 +1,13 @@
 import 'package:exim_lab/features/dashboard/data/data_sources/dashboard_remote_data_source.dart';
 import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart';
 import 'package:exim_lab/features/courses/data/models/course_model.dart';
+import 'package:exim_lab/features/dashboard/data/models/founder_model.dart';
 import 'package:exim_lab/features/freevideos/data/models/free_videos_model.dart';
 
 class DashboardRepository {
   final DashboardRemoteDataSource _dataSource = DashboardRemoteDataSource();
+
+  Future<FounderModel> getFounderInfo() => _dataSource.getFounderData();
 
   Future<DashboardResponse> getSections() => _dataSource.getSections();
 

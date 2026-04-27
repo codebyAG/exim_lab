@@ -40,6 +40,17 @@ class ApiConstants {
   static const String logInstall = '$baseUrl/api/analytics/log-install';
   static const String checkMembership = '$baseUrl/api/subscriptions/me/status';
 
+  // 👤 FOUNDER API
+  static const String founder = '$baseUrl/api/founder';
+
+  // 🗺️ JOURNEY API
+  static const String journeyConfig = '$baseUrl/api/journey/config';
+  static const String journeyProgress = '$baseUrl/api/journey/progress';
+
+  // 💬 COMMUNITY CHAT API
+  static const String chatRooms = '$baseUrl/api/chat/rooms';
+  static String chatMessages(String roomId) => '$baseUrl/api/chat/rooms/$roomId/messages';
+
   // ⏱ TIMEOUTS
   static const int connectTimeout = 15000;
   static const int receiveTimeout = 15000;

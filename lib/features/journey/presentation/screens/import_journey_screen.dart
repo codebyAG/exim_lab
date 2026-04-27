@@ -3,10 +3,10 @@ import 'package:sizer/sizer.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:provider/provider.dart';
 import '../../data/models/journey_model.dart';
-import '../../data/dummy_journey_data.dart';
 import '../widgets/journey_widgets.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/premium_unlock_dialog.dart';
+import 'package:exim_lab/features/journey/presentation/providers/journey_provider.dart';
 
 class ImportJourneyScreen extends StatefulWidget {
   const ImportJourneyScreen({super.key});
@@ -16,17 +16,19 @@ class ImportJourneyScreen extends StatefulWidget {
 }
 
 class _ImportJourneyScreenState extends State<ImportJourneyScreen> {
-  late List<JourneyStep> _steps;
-
   @override
   void initState() {
     super.initState();
-    _steps = DummyJourneyData.getImportSteps();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<JourneyProvider>().fetchJourney('import');
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final bool isPremium = context.watch<AuthProvider>().user?.isPremium ?? false;
+    final journeyProvider = context.watch<JourneyProvider>();
+    final steps = journeyProvider.importSteps;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -51,39 +53,43 @@ class _ImportJourneyScreenState extends State<ImportJourneyScreen> {
           SizedBox(width: 4.w),
         ],
       ),
-      body: ListView(
-        padding: EdgeInsets.all(5.w),
-        physics: const BouncingScrollPhysics(),
-        children: [
-          const JourneyHeader(
-            title: 'Import Journey',
-            subtitle: '11 Steps to master importing',
-          ),
-          SizedBox(height: 3.h),
-          ..._steps.asMap().entries.map((entry) {
-            final index = entry.key;
-            final step = entry.value;
-            return FadeInUp(
-              duration: const Duration(milliseconds: 500),
-              delay: Duration(milliseconds: 100 * index),
-              child: JourneyStepCard(
-                step: step,
-                isLast: index == _steps.length - 1,
-                isPremiumLocked: step.isPremium && !isPremium,
-                onTap: () => _onStepTap(step, index),
-              ),
-            );
-          }),
-          SizedBox(height: 4.h),
-        ],
-      ),
+      body: journeyProvider.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : journeyProvider.error != null
+              ? Center(child: Text('Error: ${journeyProvider.error}'))
+              : ListView(
+                  padding: EdgeInsets.all(5.w),
+                  physics: const BouncingScrollPhysics(),
+                  children: [
+                    const JourneyHeader(
+                      title: 'Import Journey',
+                      subtitle: 'Master your import business step-by-step',
+                    ),
+                    SizedBox(height: 3.h),
+                    ...steps.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final step = entry.value;
+                      return FadeInUp(
+                        duration: const Duration(milliseconds: 500),
+                        delay: Duration(milliseconds: 100 * index),
+                        child: JourneyStepCard(
+                          step: step,
+                          isLast: index == steps.length - 1,
+                          isPremiumLocked: step.isPremium && !isPremium,
+                          onTap: () => _onStepTap(step, index),
+                        ),
+                      );
+                    }),
+                    SizedBox(height: 4.h),
+                  ],
+                ),
     );
   }
 
   void _onStepTap(JourneyStep step, int index) {
     final bool isPremium = context.read<AuthProvider>().user?.isPremium ?? false;
 
-    // Gate premium steps (Step 5 onwards / Index 4+)
+    // Gate premium steps
     if (step.isPremium && !isPremium) {
       showDialog(
         context: context,
@@ -102,37 +108,21 @@ class _ImportJourneyScreenState extends State<ImportJourneyScreen> {
           questions: step.questions!,
           onComplete: (answers) {
             Navigator.pop(context);
-            _advanceStep(index);
+            _advanceStep(step.id);
           },
         ),
       );
     } else {
-      _advanceStep(index);
+      _advanceStep(step.id);
     }
   }
 
-  void _advanceStep(int currentIndex) {
-    final bool isPremium = context.read<AuthProvider>().user?.isPremium ?? false;
-
-    setState(() {
-      // Complete current step
-      _steps[currentIndex] = _steps[currentIndex].copyWith(status: JourneyStepStatus.completed);
-      
-      // Unlock next step if it's NOT premium locked for this user
-      if (currentIndex + 1 < _steps.length) {
-        final nextStep = _steps[currentIndex + 1];
-        if (!nextStep.isPremium || isPremium) {
-          _steps[currentIndex + 1] = nextStep.copyWith(status: JourneyStepStatus.active);
-        } else {
-          // It remains locked, but user will get the premium prompt on click
-          _steps[currentIndex + 1] = nextStep.copyWith(status: JourneyStepStatus.locked);
-        }
-      }
-    });
+  void _advanceStep(int stepId) {
+    context.read<JourneyProvider>().markStepCompleted('import', stepId);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Step ${currentIndex + 1} completed!'),
+        content: const Text('Step completed and synced!'),
         backgroundColor: Colors.green,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

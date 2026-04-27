@@ -1,6 +1,7 @@
 import 'dart:developer' as developer;
 import 'package:exim_lab/features/courses/data/models/course_model.dart';
 import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart';
+import 'package:exim_lab/features/dashboard/data/models/founder_model.dart';
 import 'package:exim_lab/features/dashboard/data/repositories/dashboard_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,6 +31,7 @@ class DashboardProvider extends ChangeNotifier {
   final DashboardRepository _repository = DashboardRepository();
 
   DashboardResponse? data;
+  FounderModel? founderInfo;
   bool isLoading = false;
   String? error;
 
@@ -225,8 +227,9 @@ class DashboardProvider extends ChangeNotifier {
       data = skeleton;
       notifyListeners();
 
-      // 2. Fetch Banners and content sections in parallel
+      // 2. Fetch Founder, Banners and content sections in parallel
       await Future.wait([
+        _fetchFounderInfo(),
         _fetchBanners(),
         _fetchAndStitch('popular', _repository.getPopularCourses()),
         _fetchAndStitch('recommended', _repository.getRecommendedCourses()),
@@ -311,6 +314,16 @@ class DashboardProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       developer.log("⚠️ Failed to load banners: $e", name: "API_SPLIT");
+    }
+  }
+
+  /// Fetch Founder Info
+  Future<void> _fetchFounderInfo() async {
+    try {
+      founderInfo = await _repository.getFounderInfo();
+      notifyListeners();
+    } catch (e) {
+      developer.log("⚠️ Failed to load founder info: $e", name: "API_SPLIT");
     }
   }
 }

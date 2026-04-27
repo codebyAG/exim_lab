@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:exim_lab/localization/app_localization.dart';
+import 'package:exim_lab/features/dashboard/presentation/providers/dashboard_provider.dart';
+import 'package:provider/provider.dart';
 
 class FounderCard extends StatelessWidget {
   const FounderCard({super.key});
@@ -11,6 +13,25 @@ class FounderCard extends StatelessWidget {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final t = AppLocalizations.of(context);
+    final founder = context.watch<DashboardProvider>().founderInfo;
+
+    // 🕒 LOADING STATE
+    if (founder == null) {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.2.h),
+        child: Container(
+          height: 22.h,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: const Color(0xFF0A2066),
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: const Center(
+            child: CircularProgressIndicator(color: Colors.white24),
+          ),
+        ),
+      );
+    }
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.2.h),
@@ -148,15 +169,20 @@ class FounderCard extends StatelessWidget {
                                     ),
                                   ),
                                   child: ClipOval(
-                                    child: Image.asset(
-                                      'assets/ashok_sir_image.png',
+                                    child: Image.network(
+                                      founder.imageUrl,
                                       fit: BoxFit.cover,
                                       errorBuilder:
                                           (context, error, stackTrace) =>
-                                              Icon(
-                                                Icons.person,
-                                                color: Colors.white,
-                                                size: 10.w,
+                                              Image.asset(
+                                                'assets/ashok_sir_image.png',
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (context, error, stackTrace) =>
+                                                  Icon(
+                                                    Icons.person,
+                                                    color: Colors.white,
+                                                    size: 10.w,
+                                                  ),
                                               ),
                                     ),
                                   ),
@@ -171,7 +197,7 @@ class FounderCard extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Mr. Ashok Gupta\nKinkkar",
+                                  founder.name,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 18.sp,
@@ -182,7 +208,7 @@ class FounderCard extends StatelessWidget {
                                 ),
                                 SizedBox(height: 0.5.h),
                                 Text(
-                                  "Founder & Global Mentor",
+                                  founder.designation,
                                   style: TextStyle(
                                     color: const Color(0xFFF5A800),
                                     fontSize: 12.sp,
@@ -204,7 +230,7 @@ class FounderCard extends StatelessWidget {
                                       SizedBox(width: 3.w),
                                       Expanded(
                                         child: Text(
-                                          "\"Empowering India\nin Global Trade\"",
+                                          "\"${founder.message}\"",
                                           style: TextStyle(
                                             color: Colors.white.withValues(
                                               alpha: 0.7,
