@@ -35,9 +35,9 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
     final interest = _selectedInterest?.toLowerCase() ?? "import";
 
     if (name.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter your name")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Please enter your name")));
       return;
     }
 
@@ -139,9 +139,14 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                     style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       hintText: "Enter your name",
-                      hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
-                      prefixIcon: Icon(Icons.person_rounded,
-                          color: cs.primary, size: 22),
+                      hintStyle: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.3),
+                      ),
+                      prefixIcon: Icon(
+                        Icons.person_rounded,
+                        color: cs.primary,
+                        size: 22,
+                      ),
                       filled: true,
                       fillColor: Colors.white.withValues(alpha: 0.05),
                       border: OutlineInputBorder(
@@ -150,10 +155,14 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.05)),
+                        borderSide: BorderSide(
+                          color: Colors.white.withValues(alpha: 0.05),
+                        ),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 18),
+                        horizontal: 16,
+                        vertical: 18,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -165,16 +174,19 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.05),
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.05),
+                      ),
                     ),
                     child: Column(
                       children: [
                         _buildInterestItem(context, "Import"),
                         Divider(
-                            height: 1,
-                            color: Colors.white.withValues(alpha: 0.05),
-                            indent: 16,
-                            endIndent: 16),
+                          height: 1,
+                          color: Colors.white.withValues(alpha: 0.05),
+                          indent: 16,
+                          endIndent: 16,
+                        ),
                         _buildInterestItem(context, "Export"),
                       ],
                     ),
@@ -202,12 +214,16 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                               height: 24,
                               width: 24,
                               child: CircularProgressIndicator(
-                                  color: Colors.white, strokeWidth: 2),
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
                             )
                           : const Text(
                               "Continue",
                               style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w900),
+                                fontSize: 18,
+                                fontWeight: FontWeight.w900,
+                              ),
                             ),
                     ),
                   ),
@@ -232,7 +248,11 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
             top: 16,
             child: IconButton(
               onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.close_rounded, color: Colors.white54, size: 26),
+              icon: const Icon(
+                Icons.close_rounded,
+                color: Colors.white54,
+                size: 26,
+              ),
             ),
           ),
         ],
@@ -271,13 +291,24 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isSelected ? cs.primary : Colors.white.withValues(alpha: 0.2),
+                  color: isSelected
+                      ? cs.primary
+                      : Colors.white.withValues(alpha: 0.2),
                   width: 2,
                 ),
               ),
-              child: isSelected 
-                ? Center(child: Container(width: 12, height: 12, decoration: BoxDecoration(shape: BoxShape.circle, color: cs.primary)))
-                : null,
+              child: isSelected
+                  ? Center(
+                      child: Container(
+                        width: 12,
+                        height: 12,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: cs.primary,
+                        ),
+                      ),
+                    )
+                  : null,
             ),
             const SizedBox(width: 16),
             Text(
@@ -285,7 +316,9 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
               style: TextStyle(
                 fontSize: 17,
                 fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.6),
+                color: isSelected
+                    ? Colors.white
+                    : Colors.white.withValues(alpha: 0.6),
               ),
             ),
           ],
