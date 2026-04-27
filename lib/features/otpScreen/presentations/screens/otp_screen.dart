@@ -8,6 +8,8 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:exim_lab/features/dashboard/presentation/screens/dashboard.dart';
 import 'package:exim_lab/features/module_manager/presentation/providers/module_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_auth/smart_auth.dart';
+import 'package:flutter/foundation.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({super.key});
@@ -20,16 +22,42 @@ class _OtpScreenState extends State<OtpScreen> {
   String _otp = "";
   int _resendSeconds = 30;
   Timer? _resendTimer;
+  final TextEditingController _pinController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _startResendTimer();
+    _initSmsListener();
+  }
+
+  Future<void> _initSmsListener() async {
+    try {
+      final res = await SmartAuth.instance.getSmsWithUserConsentApi();
+
+      if (!mounted) return;
+
+      final code = res.data?.code;
+      if (code != null) {
+        setState(() {
+          _pinController.text = code;
+          _otp = code;
+        });
+        _handleVerify();
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("OTP AutoFill Error: $e");
+      }
+    }
   }
 
   @override
   void dispose() {
     _resendTimer?.cancel();
+    _pinController.dispose();
+    // In SmartAuth 3.x, remove listeners to be safe
+    SmartAuth.instance.removeUserConsentApiListener();
     super.dispose();
   }
 
@@ -197,6 +225,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       delay: const Duration(milliseconds: 350),
                       duration: const Duration(milliseconds: 500),
                       child: PinCodeTextField(
+                        controller: _pinController,
                         appContext: context,
                         length: 4,
                         keyboardType: TextInputType.number,
