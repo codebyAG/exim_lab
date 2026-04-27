@@ -24,6 +24,8 @@ import 'package:exim_lab/features/courses/presentation/screens/courses_list_scre
 import 'package:exim_lab/features/freevideos/presentation/screens/free_videos_details_screen.dart';
 import 'package:exim_lab/features/tools/presentation/screens/export_price_calculator.dart';
 import 'package:exim_lab/features/tools/presentation/screens/import_calculator_screen.dart';
+import 'package:exim_lab/features/tools/presentation/screens/hsn_finder_screen.dart';
+import 'package:exim_lab/features/tools/presentation/screens/cbm_calculator.dart';
 import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart';
 import 'package:exim_lab/features/quiz/presentation/screens/quiz_topics_screen.dart';
 import 'package:exim_lab/features/dashboard/presentation/providers/dashboard_provider.dart';
@@ -38,6 +40,7 @@ import 'package:exim_lab/localization/app_localization.dart';
 import 'package:exim_lab/features/profile/presentation/screens/profile_screen.dart';
 import 'package:exim_lab/features/module_manager/presentation/widgets/module_visibility.dart';
 import 'package:exim_lab/features/module_manager/presentation/providers/module_provider.dart';
+import 'package:exim_lab/features/tools/presentation/screens/all_tools_screen.dart';
 import 'package:exim_lab/features/journey/presentation/screens/import_journey_screen.dart';
 import 'package:exim_lab/features/journey/presentation/screens/export_journey_screen.dart';
 import 'package:flutter/material.dart';
@@ -546,6 +549,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
             ),
             SizedBox(height: 2.h),
 
+            // 🛠️ 4. BUSINESS TOOLS (REPLACED SKILLS)
+            /*
             // 🛠️ 4. SKILLS YOU'LL LEARN (Header + 2x2 Grid)
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.w),
@@ -692,6 +697,239 @@ class _DashboardBodyState extends State<_DashboardBody> {
                 ],
               ),
             ),
+            */
+
+             Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontSize: 20.sp, 
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                      ),
+                      children: [
+                        const TextSpan(text: "Business "),
+                        TextSpan(
+                          text: "Tools",
+                          style: TextStyle(color: const Color(0xFFFFD000)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      developer.log(
+                        '📂 Navigation -> Tools: See All',
+                        name: 'NAVIGATION',
+                      );
+                      AppNavigator.push(context, const AllToolsScreen());
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 4.w,
+                        vertical: 0.6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1E5FFF).withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: const Color(0xFF1E5FFF).withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Text(
+                        "See All →",
+                        style: TextStyle(
+                          color: const Color(0xFF1E5FFF),
+                          fontSize: 12.5.sp, 
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 2.h),
+            
+            // 🔥 TOOLS GRID
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              child: GridView.count(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                mainAxisSpacing: 3.w,
+                crossAxisSpacing: 3.w,
+                childAspectRatio: 1.15,
+                children: [
+                   SkillCard(
+                    title: "Export Price Calculator",
+                    subtitle: "Profit · Pricing",
+                    badge: "TOOL",
+                    gradientColors: const [
+                      Color(0xFF0A2066),
+                      Color(0xFF153580),
+                    ],
+                    painter: ExportPriceIconPainter(),
+                    onTap: () => _handlePremiumGatedTap(
+                      context: context,
+                      sectionName: 'Tool: Export Price Calculator',
+                      action: () => AppNavigator.push(
+                        context,
+                        const ExportPriceCalculatorScreen(),
+                      ),
+                    ),
+                  ),
+                   SkillCard(
+                    title: "Import Calculator",
+                    subtitle: "Cost · Duty",
+                    badge: "TOOL",
+                    gradientColors: const [
+                      Color(0xFF5A0006),
+                      Color(0xFF8B000C),
+                    ],
+                    painter: ImportCalcIconPainter(),
+                    onTap: () => _handlePremiumGatedTap(
+                      context: context,
+                      sectionName: 'Tool: Import Calculator',
+                      action: () => AppNavigator.push(
+                        context,
+                        const ImportCalculatorScreen(),
+                      ),
+                    ),
+                  ),
+                   SkillCard(
+                    title: "HSN Finder",
+                    subtitle: "Codes · Classification",
+                    badge: "TOOL",
+                    gradientColors: const [
+                      Color(0xFF003A70),
+                      Color(0xFF005AAA),
+                    ],
+                    painter: HsnFinderPainter(),
+                    onTap: () => _handlePremiumGatedTap(
+                      context: context,
+                      sectionName: 'Tool: HSN Finder',
+                      action: () => AppNavigator.push(
+                        context,
+                        const HsnFinderScreen(),
+                      ),
+                    ),
+                  ),
+                   SkillCard(
+                    title: "CBM Calculator",
+                    subtitle: "Volume · Weight",
+                    badge: "TOOL",
+                    gradientColors: const [
+                      Color(0xFF4A2800),
+                      Color(0xFF7A4400),
+                    ],
+                    painter: CbmCalculatorPainter(),
+                    onTap: () => _handlePremiumGatedTap(
+                      context: context,
+                      sectionName: 'Tool: CBM Calculator',
+                      action: () => AppNavigator.push(
+                        context,
+                        const CbmCalculatorScreen(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+             SizedBox(height: 1.h),
+            
+            // 🎮 7. QUIZ SECTION (Premium Banner)
+            if (moduleProvider.isEnabled('quizzes'))
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.w),
+                child: _buildShowcase(
+                  key: _quizzesCardKey,
+                  title: 'tut_quizzes_title',
+                  description: 'tut_quizzes_desc',
+                  child: Container(
+                    padding: EdgeInsets.all(5.w),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF030E30),
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(
+                        color: const Color(0xFF1E5FFF).withValues(alpha: 0.2),
+                        width: 1.5,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF1E5FFF).withValues(alpha: 0.1),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(3.w),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF1E5FFF).withValues(alpha: 0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.psychology_rounded,
+                            color: const Color(0xFFFFD000),
+                            size: 28.sp,
+                          ),
+                        ),
+                        SizedBox(width: 4.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Test Your Knowledge",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w900,
+                                  fontFamily: 'Plus Jakarta Sans',
+                                ),
+                              ),
+                              SizedBox(height: 0.5.h),
+                              Text(
+                                "Take daily quizzes and boost your trade skills!",
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 2.w),
+                        IconButton.filled(
+                          onPressed: () {
+                             developer.log(
+                              '📂 Navigation -> Quiz topics',
+                              name: 'NAVIGATION',
+                            );
+                            AppNavigator.push(context, const QuizTopicsScreen());
+                          },
+                          icon: const Icon(Icons.arrow_forward_ios_rounded, size: 18),
+                          style: IconButton.styleFrom(
+                            backgroundColor: const Color(0xFF1E5FFF),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
             SizedBox(height: 2.5.h),
 
             // 🏅 5. CERTIFICATES MINI ROW
