@@ -59,7 +59,6 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/free_pdf_promo_
 import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_modern_header.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/tutorial_step_content.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/premium_bottom_bar.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/search_assistant_dialog.dart';
 import 'package:animate_do/animate_do.dart';
 import 'dart:async';
@@ -412,10 +411,22 @@ class _DashboardBodyState extends State<_DashboardBody> {
 
     // Build Navigation schema
     final navConfig = _buildNavigationConfig(context, t, moduleProvider);
-    final navActions = navConfig.actions;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF020C28), // Deep Premium Navy
+      backgroundColor: const Color(0xFF020C28),
+      bottomNavigationBar: BottomNavigationBar(
+        items: navConfig.items,
+        currentIndex: 0,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: const Color(0xFF030E30),
+        selectedItemColor: const Color(0xFFFFD000),
+        unselectedItemColor: Colors.white54,
+        onTap: (index) {
+          if (navConfig.actions[index] != null) {
+            navConfig.actions[index]!();
+          }
+        },
+      ),
       floatingActionButton: moduleProvider.isEnabled('aiChat')
           ? FloatingActionButton(
               backgroundColor: cs.primary,
@@ -1608,87 +1619,85 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     );
                   },
                 ),
-
-                // 🧠 Point 12: Random Search Assistant Prompt
-                if (_showAssistantPrompt)
-                  Positioned(
-                    bottom: 2.h,
-                    right: 5.w,
-                    left: 5.w,
-                    child: FadeInUp(
-                      duration: const Duration(milliseconds: 600),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() => _showAssistantPrompt = false);
-                          showDialog(
-                            context: context,
-                            builder: (_) => const SearchAssistantDialog(),
-                          );
-                          // Reschedule after search
-                          _startAssistantTimer();
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 5.w,
-                            vertical: 1.5.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF1E5FFF),
-                            borderRadius: BorderRadius.circular(30),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(
-                                  0xFF1E5FFF,
-                                ).withValues(alpha: 0.4),
-                                blurRadius: 15,
-                                offset: const Offset(0, 5),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.auto_awesome_rounded,
-                                color: Colors.white,
-                              ),
-                              SizedBox(width: 3.w),
-                              Expanded(
-                                child: Text(
-                                  "What are you looking for today?",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 12.sp,
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.2),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: const Text(
-                                  "SEARCH",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
               ],
             ),
           ),
+
+          // 🧠 Point 12: Random Search Assistant Prompt
+          if (_showAssistantPrompt)
+            Positioned(
+              bottom: 2.h,
+              right: 5.w,
+              left: 5.w,
+              child: FadeInUp(
+                duration: const Duration(milliseconds: 600),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() => _showAssistantPrompt = false);
+                    showDialog(
+                      context: context,
+                      builder: (_) => const SearchAssistantDialog(),
+                    );
+                    // Reschedule after search
+                    _startAssistantTimer();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 5.w,
+                      vertical: 1.5.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1E5FFF),
+                      borderRadius: BorderRadius.circular(30),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF1E5FFF).withValues(alpha: 0.4),
+                          blurRadius: 15,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.auto_awesome_rounded,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 3.w),
+                        Expanded(
+                          child: Text(
+                            "What are you looking for today?",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 12.sp,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Text(
+                            "SEARCH",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
