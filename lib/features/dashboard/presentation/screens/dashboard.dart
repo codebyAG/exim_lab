@@ -17,6 +17,10 @@ import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dar
 import 'package:exim_lab/features/courses/data/models/course_model.dart';
 import 'package:exim_lab/features/freevideos/data/models/free_videos_model.dart';
 import 'package:exim_lab/features/shorts/presentation/providers/shorts_provider.dart';
+import 'package:exim_lab/features/dashboard/presentation/providers/dashboard_provider.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
+import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
+import 'package:exim_lab/features/gallery/presentation/screens/gallery_screen.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/animated_search_bar.dart';
 import 'package:exim_lab/features/courses/presentation/screens/course_search_delegate.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_details_screen.dart';
@@ -28,10 +32,6 @@ import 'package:exim_lab/features/tools/presentation/screens/hsn_finder_screen.d
 import 'package:exim_lab/features/tools/presentation/screens/cbm_calculator.dart';
 import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart';
 import 'package:exim_lab/features/quiz/presentation/screens/quiz_topics_screen.dart';
-import 'package:exim_lab/features/dashboard/presentation/providers/dashboard_provider.dart';
-import 'package:exim_lab/core/services/analytics_service.dart';
-import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
-import 'package:exim_lab/features/gallery/presentation/screens/gallery_screen.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/inline_banner.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/tool_section.dart';
 import 'package:exim_lab/features/news/presentation/screens/news_list_screen.dart';
@@ -60,6 +60,9 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_moder
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/tutorial_step_content.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/premium_bottom_bar.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/search_assistant_dialog.dart';
+import 'package:animate_do/animate_do.dart';
+import 'dart:async';
 
 class DashboardScreen extends StatelessWidget {
   DashboardScreen({super.key});
@@ -109,10 +112,36 @@ class _DashboardBodyState extends State<_DashboardBody> {
 
   final GlobalKey _popularCoursesKey = GlobalKey();
 
+  Timer? _assistantTimer;
+  bool _showAssistantPrompt = false;
+
   final ScrollController _scrollController = ScrollController();
+
+  void _startAssistantTimer() {
+    // 🛡️ Fix for warning: ensure we don't start multiple timers
+    _assistantTimer?.cancel();
+
+    // Show randomly between 30 to 120 seconds
+    final randomSeconds = 30 + (DateTime.now().second % 60);
+    _assistantTimer = Timer(Duration(seconds: randomSeconds), () {
+      if (mounted) {
+        setState(() => _showAssistantPrompt = true);
+
+        // Auto hide after 12 seconds
+        Timer(const Duration(seconds: 12), () {
+          if (mounted) {
+            setState(() => _showAssistantPrompt = false);
+            // 🔄 Reschedule for next random interaction
+            _startAssistantTimer();
+          }
+        });
+      }
+    });
+  }
 
   @override
   void dispose() {
+    _assistantTimer?.cancel();
     _scrollController.dispose();
     super.dispose();
   }
@@ -120,6 +149,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
   @override
   void initState() {
     super.initState();
+    // 💡 Point 12: Start Proactive Assistant
+    _startAssistantTimer();
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (mounted) {
         context.read<AnalyticsService>().logEvent('home_view');
@@ -400,157 +432,164 @@ class _DashboardBodyState extends State<_DashboardBody> {
               child: Icon(Icons.support_agent, color: cs.onPrimary, size: 28),
             )
           : null,
-      body: RefreshIndicator(
-        onRefresh: () => context.read<DashboardProvider>().fetchDashboardData(),
-        child: ListView(
-          controller: _scrollController,
-          cacheExtent: 3000,
-          padding: EdgeInsets.zero,
-          children: [
-            // 💹 LIVE FOREX MARQUEE TICKER (In SafeArea to avoid status bar overlap)
-            const SafeArea(bottom: false, child: ExchangeRateTicker()),
+      body: Stack(
+        children: [
+          RefreshIndicator(
+            onRefresh: () =>
+                context.read<DashboardProvider>().fetchDashboardData(),
+            child: ListView(
+              controller: _scrollController,
+              cacheExtent: 3000,
+              padding: EdgeInsets.zero,
+              children: [
+                // 💹 LIVE FOREX MARQUEE TICKER (In SafeArea to avoid status bar overlap)
+                const SafeArea(bottom: false, child: ExchangeRateTicker()),
 
-            // 🏆 MODERN PREMIUM HEADER SECTION
-            _buildShowcase(
-              key: _headerKey,
-              title: 'tut_header_title',
-              description: 'tut_header_desc',
-              child: const DashboardModernHeader(),
-            ),
+                _buildShowcase(
+                  key: _headerKey,
+                  title: 'tut_header_title',
+                  description: 'tut_header_desc',
+                  child: const DashboardModernHeader(),
+                ),
 
-            // 🔍 PREMIUM SEARCH BAR
-            Padding(
-              padding: EdgeInsets.fromLTRB(5.w, 1.5.h, 5.w, 1.h),
-              child: AnimatedSearchBar(
-                hints: const [
-                  "Search Courses...",
-                  "How to Export?",
-                  "Find HSN Code",
-                  "Market Trends",
-                ],
-                onTap: () {
-                  showSearch(
-                    context: context,
-                    delegate: CourseSearchDelegate(),
-                  );
-                },
-              ),
-            ),
+                // 🔍 PREMIUM SEARCH BAR
+                Padding(
+                  padding: EdgeInsets.fromLTRB(5.w, 1.5.h, 5.w, 1.h),
+                  child: AnimatedSearchBar(
+                    hints: const [
+                      "Search Courses...",
+                      "How to Export?",
+                      "Find HSN Code",
+                      "Market Trends",
+                    ],
+                    onTap: () {
+                      showSearch(
+                        context: context,
+                        delegate: CourseSearchDelegate(),
+                      );
+                    },
+                  ),
+                ),
 
-            // 1.5 ABOUT US SECTION
-            const FounderCard(),
+                // 1.5 ABOUT US SECTION
+                const FounderCard(),
 
-            // 📊 YOUR PROGRESS (MOVED UP)
-            Consumer<DashboardProvider>(
-              builder: (context, dashboard, _) {
-                return Consumer<AuthProvider>(
-                  builder: (context, auth, _) {
-                    return DashboardJourneyBar(
-                      completedCourses: auth.user?.stats?.completedCourses ?? 0,
-                      totalCourses: auth.user?.stats?.totalCourses ?? 10,
-                      streakDays: auth.user?.stats?.learningStreak ?? 0,
+                // 📊 YOUR PROGRESS (MOVED UP)
+                Consumer<DashboardProvider>(
+                  builder: (context, dashboard, _) {
+                    return Consumer<AuthProvider>(
+                      builder: (context, auth, _) {
+                        return DashboardJourneyBar(
+                          completedCourses:
+                              auth.user?.stats?.completedCourses ?? 0,
+                          totalCourses: auth.user?.stats?.totalCourses ?? 10,
+                          streakDays: auth.user?.stats?.learningStreak ?? 0,
+                        );
+                      },
                     );
                   },
-                );
-              },
-            ),
+                ),
 
-            // 🛠️ PREMIUM SEPARATOR
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-              child: Container(
-                height: 2,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      const Color(0xFFC8151B), // Premium Red
-                      const Color(0xFFC8151B).withValues(alpha: 0.1),
+                // 🛠️ PREMIUM SEPARATOR
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                  child: Container(
+                    height: 2,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          const Color(0xFFC8151B), // Premium Red
+                          const Color(0xFFC8151B).withValues(alpha: 0.1),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                // 2. FEATURE TITLE
+                RichText(
+                  text: TextSpan(
+                    style: TextStyle(
+                      fontFamily: 'Plus Jakarta Sans',
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                    ),
+                    children: [
+                      const TextSpan(text: "🚀 Explore "),
+                      TextSpan(
+                        text: "Gallery",
+                        style: TextStyle(color: const Color(0xFFFFD000)),
+                      ),
                     ],
                   ),
                 ),
-              ),
-            ),
-
-            // 2. FEATURE TITLE
-            RichText(
-              text: TextSpan(
-                style: TextStyle(
-                  fontFamily: 'Plus Jakarta Sans',
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
+                SizedBox(height: 1.5.h),
+                // 3. PREMIUM FEATURE CARDS SCROLL (Square Type)
+                SizedBox(height: 0.8.h),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                  child: Row(
+                    children: [
+                      // 📸 GALLERY
+                      _buildShowcase(
+                        key: _galleryCardKey,
+                        title: 'tut_gallery_title',
+                        description: 'tut_gallery_desc',
+                        child: PremiumFeatureCard(
+                          title: t.translate('gallery'),
+                          icon: Icons.photo_library_rounded,
+                          painter: GalleryIconPainter(),
+                          buttonLabel: "Success Stories",
+                          themeColor: const Color(0xFF0D47A1),
+                          onTap: () =>
+                              AppNavigator.push(context, const GalleryScreen()),
+                        ),
+                      ),
+                      // 📊 MARKET UPDATES
+                      PremiumFeatureCard(
+                        title: t.translate('market_updates'),
+                        icon: Icons.trending_up_rounded,
+                        painter: MarketUpdatesIconPainter(),
+                        buttonLabel: "Live Trends >",
+                        themeColor: const Color(0xFFD32F2F),
+                        onTap: () =>
+                            AppNavigator.push(context, const NewsListScreen()),
+                      ),
+                      // 🚢 IMPORT JOURNEY
+                      PremiumFeatureCard(
+                        title: t.translate('start_import_journey'),
+                        icon: Icons.directions_boat_rounded,
+                        painter: ImportJourneyIconPainter(),
+                        buttonLabel: "Continue >",
+                        themeColor: const Color(0xFF001A3D),
+                        onTap: () => AppNavigator.push(
+                          context,
+                          const ImportJourneyScreen(),
+                        ),
+                      ),
+                      // ✈️ EXPORT JOURNEY
+                      PremiumFeatureCard(
+                        title: t.translate('start_export_journey'),
+                        icon: Icons.airplanemode_active_rounded,
+                        painter: ExportJourneyIconPainter(),
+                        buttonLabel: "Start Learning >",
+                        themeColor: const Color(
+                          0xFFC06014,
+                        ), // Premium Orange/Bronze
+                        onTap: () => AppNavigator.push(
+                          context,
+                          const ExportJourneyScreen(),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                children: [
-                  const TextSpan(text: "🚀 Explore "),
-                  TextSpan(
-                    text: "Gallery",
-                    style: TextStyle(color: const Color(0xFFFFD000)),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 1.5.h),
-            // 3. PREMIUM FEATURE CARDS SCROLL (Square Type)
-            SizedBox(height: 0.8.h),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-              child: Row(
-                children: [
-                  // 📸 GALLERY
-                  _buildShowcase(
-                    key: _galleryCardKey,
-                    title: 'tut_gallery_title',
-                    description: 'tut_gallery_desc',
-                    child: PremiumFeatureCard(
-                      title: t.translate('gallery'),
-                      icon: Icons.photo_library_rounded,
-                      painter: GalleryIconPainter(),
-                      buttonLabel: "Success Stories",
-                      themeColor: const Color(0xFF0D47A1),
-                      onTap: () =>
-                          AppNavigator.push(context, const GalleryScreen()),
-                    ),
-                  ),
-                  // 📊 MARKET UPDATES
-                  PremiumFeatureCard(
-                    title: t.translate('market_updates'),
-                    icon: Icons.trending_up_rounded,
-                    painter: MarketUpdatesIconPainter(),
-                    buttonLabel: "Live Trends >",
-                    themeColor: const Color(0xFFD32F2F),
-                    onTap: () =>
-                        AppNavigator.push(context, const NewsListScreen()),
-                  ),
-                  // 🚢 IMPORT JOURNEY
-                  PremiumFeatureCard(
-                    title: t.translate('start_import_journey'),
-                    icon: Icons.directions_boat_rounded,
-                    painter: ImportJourneyIconPainter(),
-                    buttonLabel: "Continue >",
-                    themeColor: const Color(0xFF001A3D),
-                    onTap: () =>
-                        AppNavigator.push(context, const ImportJourneyScreen()),
-                  ),
-                  // ✈️ EXPORT JOURNEY
-                  PremiumFeatureCard(
-                    title: t.translate('start_export_journey'),
-                    icon: Icons.airplanemode_active_rounded,
-                    painter: ExportJourneyIconPainter(),
-                    buttonLabel: "Start Learning >",
-                    themeColor: const Color(
-                      0xFFC06014,
-                    ), // Premium Orange/Bronze
-                    onTap: () =>
-                        AppNavigator.push(context, const ExportJourneyScreen()),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 2.h),
+                SizedBox(height: 2.h),
 
-            // 🛠️ 4. BUSINESS TOOLS (REPLACED SKILLS)
-            /*
+                // 🛠️ 4. BUSINESS TOOLS (REPLACED SKILLS)
+                /*
             // 🛠️ 4. SKILLS YOU'LL LEARN (Header + 2x2 Grid)
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.w),
@@ -698,456 +737,683 @@ class _DashboardBodyState extends State<_DashboardBody> {
               ),
             ),
             */
-
-             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  RichText(
-                    text: TextSpan(
-                      style: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
-                        fontSize: 20.sp, 
-                        fontWeight: FontWeight.w900,
-                        color: Colors.white,
-                      ),
-                      children: [
-                        const TextSpan(text: "Business "),
-                        TextSpan(
-                          text: "Tools",
-                          style: TextStyle(color: const Color(0xFFFFD000)),
-                        ),
-                      ],
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      developer.log(
-                        '📂 Navigation -> Tools: See All',
-                        name: 'NAVIGATION',
-                      );
-                      AppNavigator.push(context, const AllToolsScreen());
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 4.w,
-                        vertical: 0.6.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1E5FFF).withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: const Color(0xFF1E5FFF).withValues(alpha: 0.3),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          style: TextStyle(
+                            fontFamily: 'Plus Jakarta Sans',
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
+                          ),
+                          children: [
+                            const TextSpan(text: "Business "),
+                            TextSpan(
+                              text: "Tools",
+                              style: TextStyle(color: const Color(0xFFFFD000)),
+                            ),
+                          ],
                         ),
                       ),
-                      child: Text(
-                        "See All →",
-                        style: TextStyle(
-                          color: const Color(0xFF1E5FFF),
-                          fontSize: 12.5.sp, 
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 2.h),
-            
-            // 🔥 TOOLS GRID
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.w),
-              child: GridView.count(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: 2,
-                mainAxisSpacing: 3.w,
-                crossAxisSpacing: 3.w,
-                childAspectRatio: 1.15,
-                children: [
-                   SkillCard(
-                    title: "Export Price Calculator",
-                    subtitle: "Profit · Pricing",
-                    badge: "TOOL",
-                    gradientColors: const [
-                      Color(0xFF0A2066),
-                      Color(0xFF153580),
-                    ],
-                    painter: ExportPriceIconPainter(),
-                    onTap: () => _handlePremiumGatedTap(
-                      context: context,
-                      sectionName: 'Tool: Export Price Calculator',
-                      action: () => AppNavigator.push(
-                        context,
-                        const ExportPriceCalculatorScreen(),
-                      ),
-                    ),
-                  ),
-                   SkillCard(
-                    title: "Import Calculator",
-                    subtitle: "Cost · Duty",
-                    badge: "TOOL",
-                    gradientColors: const [
-                      Color(0xFF5A0006),
-                      Color(0xFF8B000C),
-                    ],
-                    painter: ImportCalcIconPainter(),
-                    onTap: () => _handlePremiumGatedTap(
-                      context: context,
-                      sectionName: 'Tool: Import Calculator',
-                      action: () => AppNavigator.push(
-                        context,
-                        const ImportCalculatorScreen(),
-                      ),
-                    ),
-                  ),
-                   SkillCard(
-                    title: "HSN Finder",
-                    subtitle: "Codes · Classification",
-                    badge: "TOOL",
-                    gradientColors: const [
-                      Color(0xFF003A70),
-                      Color(0xFF005AAA),
-                    ],
-                    painter: HsnFinderPainter(),
-                    onTap: () => _handlePremiumGatedTap(
-                      context: context,
-                      sectionName: 'Tool: HSN Finder',
-                      action: () => AppNavigator.push(
-                        context,
-                        const HsnFinderScreen(),
-                      ),
-                    ),
-                  ),
-                   SkillCard(
-                    title: "CBM Calculator",
-                    subtitle: "Volume · Weight",
-                    badge: "TOOL",
-                    gradientColors: const [
-                      Color(0xFF4A2800),
-                      Color(0xFF7A4400),
-                    ],
-                    painter: CbmCalculatorPainter(),
-                    onTap: () => _handlePremiumGatedTap(
-                      context: context,
-                      sectionName: 'Tool: CBM Calculator',
-                      action: () => AppNavigator.push(
-                        context,
-                        const CbmCalculatorScreen(),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-             SizedBox(height: 1.h),
-            
-            // 🎮 7. QUIZ SECTION (Premium Banner)
-            if (moduleProvider.isEnabled('quizzes'))
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5.w),
-                child: _buildShowcase(
-                  key: _quizzesCardKey,
-                  title: 'tut_quizzes_title',
-                  description: 'tut_quizzes_desc',
-                  child: Container(
-                    padding: EdgeInsets.all(5.w),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF030E30),
-                      borderRadius: BorderRadius.circular(24),
-                      border: Border.all(
-                        color: const Color(0xFF1E5FFF).withValues(alpha: 0.2),
-                        width: 1.5,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFF1E5FFF).withValues(alpha: 0.1),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(3.w),
+                      GestureDetector(
+                        onTap: () {
+                          developer.log(
+                            '📂 Navigation -> Tools: See All',
+                            name: 'NAVIGATION',
+                          );
+                          AppNavigator.push(context, const AllToolsScreen());
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 4.w,
+                            vertical: 0.6.h,
+                          ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF1E5FFF).withValues(alpha: 0.1),
-                            shape: BoxShape.circle,
+                            color: const Color(
+                              0xFF1E5FFF,
+                            ).withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: const Color(
+                                0xFF1E5FFF,
+                              ).withValues(alpha: 0.3),
+                            ),
                           ),
-                          child: Icon(
-                            Icons.psychology_rounded,
-                            color: const Color(0xFFFFD000),
-                            size: 28.sp,
-                          ),
-                        ),
-                        SizedBox(width: 4.w),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Test Your Knowledge",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w900,
-                                  fontFamily: 'Plus Jakarta Sans',
-                                ),
-                              ),
-                              SizedBox(height: 0.5.h),
-                              Text(
-                                "Take daily quizzes and boost your trade skills!",
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 11.sp,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(width: 2.w),
-                        IconButton.filled(
-                          onPressed: () {
-                             developer.log(
-                              '📂 Navigation -> Quiz topics',
-                              name: 'NAVIGATION',
-                            );
-                            AppNavigator.push(context, const QuizTopicsScreen());
-                          },
-                          icon: const Icon(Icons.arrow_forward_ios_rounded, size: 18),
-                          style: IconButton.styleFrom(
-                            backgroundColor: const Color(0xFF1E5FFF),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
-            SizedBox(height: 2.5.h),
-
-            // 🏅 5. CERTIFICATES MINI ROW
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.symmetric(horizontal: 5.w),
-              child: Row(
-                children: [
-                  CertificateMiniCard(
-                    title: "Export",
-                    level: "Beginner",
-                    levelColor: const Color(0xFF88AAFF),
-                    gradientColors: const [
-                      Color(0xFF0A2066),
-                      Color(0xFF1040C1),
-                    ],
-                    icon: CustomPaint(painter: CertStarIconPainter()),
-                    onTap: () => _showCertificateGuidanceDialog(context),
-                  ),
-                  CertificateMiniCard(
-                    title: "Documentation",
-                    level: "Expert",
-                    levelColor: const Color(0xFFFF9999),
-                    gradientColors: const [
-                      Color(0xFF5A0006),
-                      Color(0xFFC8151B),
-                    ],
-                    icon: Text("📋", style: TextStyle(fontSize: 16.sp)),
-                    onTap: () => _showCertificateGuidanceDialog(context),
-                  ),
-                  CertificateMiniCard(
-                    title: "Trade",
-                    level: "Analyst",
-                    levelColor: const Color(0xFF88AAFF),
-                    gradientColors: const [
-                      Color(0xFF0A2066),
-                      Color(0xFF1040C1),
-                    ],
-                    icon: Text("⚔️", style: TextStyle(fontSize: 16.sp)),
-                    onTap: () => _showCertificateGuidanceDialog(context),
-                  ),
-                  CertificateMiniCard(
-                    title: "Trade",
-                    level: "Advanced",
-                    levelColor: const Color(0xFFFFD000),
-                    gradientColors: const [
-                      Color(0xFF4A2800),
-                      Color(0xFF8B5500),
-                    ],
-                    icon: Text("🏆", style: TextStyle(fontSize: 16.sp)),
-                    onTap: () => _showCertificateGuidanceDialog(context),
-                  ),
-                ],
-              ),
-            ),
-
-            SizedBox(height: 1.h),
-
-            const AchieveLiveCard(),
-            SizedBox(height: 1.h),
-
-            // 🚀 4.6 FEATURED MASTERCLASS
-            const MasterclassCard(),
-            SizedBox(height: 1.5.h),
-
-            // 🛠️ PREMIUM DIVIDER
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-              child: Container(
-                height: 2,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      const Color(0xFFC8151B),
-                      const Color(0xFFC8151B).withValues(alpha: 0.1),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 2.h),
-
-            SizedBox(height: 1.h),
-
-            SizedBox(height: 1.h),
-            Consumer<DashboardProvider>(
-              builder: (context, dashboard, _) {
-                if (dashboard.isLoading) return const DashboardShimmer();
-                if (dashboard.error != null) {
-                  return Center(child: Text('Error: ${dashboard.error}'));
-                }
-                final data = dashboard.data;
-                if (data == null) return const SizedBox();
-
-                final freeVideoSection = dashboard.freeVideoSection;
-
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (freeVideoSection != null &&
-                        freeVideoSection.data.isNotEmpty) ...[
-                      SizedBox(height: 2.5.h),
-                      // 🎁 4.9 FREE VIDEOS SECTION
-                      _buildShowcase(
-                        key: _freeVideosKey,
-                        title: 'tut_free_videos_title',
-                        description: 'tut_free_videos_desc',
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5.w),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              RichText(
-                                text: TextSpan(
-                                  style: TextStyle(
-                                    fontFamily: 'Plus Jakarta Sans',
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.w900,
-                                    color: Colors.white,
-                                  ),
-                                  children: [
-                                    const TextSpan(text: "🎁 Free "),
-                                    TextSpan(
-                                      text: "Videos",
-                                      style: TextStyle(
-                                        color: const Color(0xFFFFD000),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  developer.log(
-                                    '📂 Navigation -> Free Videos: View All',
-                                    name: 'NAVIGATION',
-                                  );
-                                  AppNavigator.push(
-                                    context,
-                                    const CoursesListScreen(),
-                                  );
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 4.w,
-                                    vertical: 0.8.h,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100),
-                                    border: Border.all(
-                                      color: const Color(0xFF1E5FFF),
-                                      width: 1.5,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    "View All →",
-                                    style: TextStyle(
-                                      color: const Color(0xFF1E5FFF),
-                                      fontSize: 10.sp,
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                          child: Text(
+                            "See All →",
+                            style: TextStyle(
+                              color: const Color(0xFF1E5FFF),
+                              fontSize: 12.5.sp,
+                              fontWeight: FontWeight.w800,
+                            ),
                           ),
                         ),
                       ),
-                      SizedBox(height: 2.h),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        padding: EdgeInsets.only(left: 5.w, bottom: 2.h),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 2.h),
+
+                // 🔥 TOOLS GRID
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  child: GridView.count(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 3.w,
+                    crossAxisSpacing: 3.w,
+                    childAspectRatio: 1.15,
+                    children: [
+                      SkillCard(
+                        title: "Export Price Calculator",
+                        subtitle: "Profit · Pricing",
+                        badge: "TOOL",
+                        gradientColors: const [
+                          Color(0xFF0A2066),
+                          Color(0xFF153580),
+                        ],
+                        painter: ExportPriceIconPainter(),
+                        onTap: () => _handlePremiumGatedTap(
+                          context: context,
+                          sectionName: 'Tool: Export Price Calculator',
+                          action: () => AppNavigator.push(
+                            context,
+                            const ExportPriceCalculatorScreen(),
+                          ),
+                        ),
+                      ),
+                      SkillCard(
+                        title: "Import Calculator",
+                        subtitle: "Cost · Duty",
+                        badge: "TOOL",
+                        gradientColors: const [
+                          Color(0xFF5A0006),
+                          Color(0xFF8B000C),
+                        ],
+                        painter: ImportCalcIconPainter(),
+                        onTap: () => _handlePremiumGatedTap(
+                          context: context,
+                          sectionName: 'Tool: Import Calculator',
+                          action: () => AppNavigator.push(
+                            context,
+                            const ImportCalculatorScreen(),
+                          ),
+                        ),
+                      ),
+                      SkillCard(
+                        title: "HSN Finder",
+                        subtitle: "Codes · Classification",
+                        badge: "TOOL",
+                        gradientColors: const [
+                          Color(0xFF003A70),
+                          Color(0xFF005AAA),
+                        ],
+                        painter: HsnFinderPainter(),
+                        onTap: () => _handlePremiumGatedTap(
+                          context: context,
+                          sectionName: 'Tool: HSN Finder',
+                          action: () => AppNavigator.push(
+                            context,
+                            const HsnFinderScreen(),
+                          ),
+                        ),
+                      ),
+                      SkillCard(
+                        title: "CBM Calculator",
+                        subtitle: "Volume · Weight",
+                        badge: "TOOL",
+                        gradientColors: const [
+                          Color(0xFF4A2800),
+                          Color(0xFF7A4400),
+                        ],
+                        painter: CbmCalculatorPainter(),
+                        onTap: () => _handlePremiumGatedTap(
+                          context: context,
+                          sectionName: 'Tool: CBM Calculator',
+                          action: () => AppNavigator.push(
+                            context,
+                            const CbmCalculatorScreen(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 1.h),
+
+                // 🎮 7. QUIZ SECTION (Premium Banner)
+                if (moduleProvider.isEnabled('quizzes'))
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                    child: _buildShowcase(
+                      key: _quizzesCardKey,
+                      title: 'tut_quizzes_title',
+                      description: 'tut_quizzes_desc',
+                      child: Container(
+                        padding: EdgeInsets.all(5.w),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF030E30),
+                          borderRadius: BorderRadius.circular(24),
+                          border: Border.all(
+                            color: const Color(
+                              0xFF1E5FFF,
+                            ).withValues(alpha: 0.2),
+                            width: 1.5,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(
+                                0xFF1E5FFF,
+                              ).withValues(alpha: 0.1),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
+                        ),
                         child: Row(
-                          children: freeVideoSection.data.whereType<FreeVideoModel>().map((
-                            video,
-                          ) {
-                            return FreeVideoCard(
-                              title: video.title,
-                              thumbnailUrl: video.thumbnailUrl,
-                              durationSeconds: video.durationSeconds,
-                              views:
-                                  "128K views", // Mock view count as it's not in the model
-                              timeAgo:
-                                  "6 months ago", // Mock time ago as it's not in the model
-                              onTap: () {
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(3.w),
+                              decoration: BoxDecoration(
+                                color: const Color(
+                                  0xFF1E5FFF,
+                                ).withValues(alpha: 0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.psychology_rounded,
+                                color: const Color(0xFFFFD000),
+                                size: 28.sp,
+                              ),
+                            ),
+                            SizedBox(width: 4.w),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Test Your Knowledge",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w900,
+                                      fontFamily: 'Plus Jakarta Sans',
+                                    ),
+                                  ),
+                                  SizedBox(height: 0.5.h),
+                                  Text(
+                                    "Take daily quizzes and boost your trade skills!",
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 11.sp,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 2.w),
+                            IconButton.filled(
+                              onPressed: () {
                                 developer.log(
-                                  '📂 Navigation -> Free Video: ${video.title}',
+                                  '📂 Navigation -> Quiz topics',
                                   name: 'NAVIGATION',
                                 );
                                 AppNavigator.push(
                                   context,
-                                  FreeVideoDetailsScreen(video: video),
+                                  const QuizTopicsScreen(),
                                 );
                               },
-                            );
-                          }).toList(),
+                              icon: const Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 18,
+                              ),
+                              style: IconButton.styleFrom(
+                                backgroundColor: const Color(0xFF1E5FFF),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
+                    ),
+                  ),
+
+                SizedBox(height: 2.5.h),
+
+                // 🏅 5. CERTIFICATES MINI ROW
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  child: Row(
+                    children: [
+                      CertificateMiniCard(
+                        title: "Export",
+                        level: "Beginner",
+                        levelColor: const Color(0xFF88AAFF),
+                        gradientColors: const [
+                          Color(0xFF0A2066),
+                          Color(0xFF1040C1),
+                        ],
+                        icon: CustomPaint(painter: CertStarIconPainter()),
+                        onTap: () => _showCertificateGuidanceDialog(context),
+                      ),
+                      CertificateMiniCard(
+                        title: "Documentation",
+                        level: "Expert",
+                        levelColor: const Color(0xFFFF9999),
+                        gradientColors: const [
+                          Color(0xFF5A0006),
+                          Color(0xFFC8151B),
+                        ],
+                        icon: Text("📋", style: TextStyle(fontSize: 16.sp)),
+                        onTap: () => _showCertificateGuidanceDialog(context),
+                      ),
+                      CertificateMiniCard(
+                        title: "Trade",
+                        level: "Analyst",
+                        levelColor: const Color(0xFF88AAFF),
+                        gradientColors: const [
+                          Color(0xFF0A2066),
+                          Color(0xFF1040C1),
+                        ],
+                        icon: Text("⚔️", style: TextStyle(fontSize: 16.sp)),
+                        onTap: () => _showCertificateGuidanceDialog(context),
+                      ),
+                      CertificateMiniCard(
+                        title: "Trade",
+                        level: "Advanced",
+                        levelColor: const Color(0xFFFFD000),
+                        gradientColors: const [
+                          Color(0xFF4A2800),
+                          Color(0xFF8B5500),
+                        ],
+                        icon: Text("🏆", style: TextStyle(fontSize: 16.sp)),
+                        onTap: () => _showCertificateGuidanceDialog(context),
+                      ),
                     ],
+                  ),
+                ),
 
-                    // ⚡ 4.10 SHORT VIDEOS SECTION
-                    ModuleVisibility(
-                      module: 'shortVideos',
-                      child: Consumer<ShortsProvider>(
-                        builder: (context, shortsProvider, _) {
-                          if (shortsProvider.shorts.isEmpty) {
-                            return const SizedBox.shrink();
-                          }
+                SizedBox(height: 1.h),
 
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 1.5.h),
-                              _buildShowcase(
-                                key: _shortsKey,
-                                title: 'tut_shorts_title',
-                                description: 'tut_shorts_desc',
-                                child: Padding(
+                const AchieveLiveCard(),
+                SizedBox(height: 1.h),
+
+                // 🚀 4.6 FEATURED MASTERCLASS
+                const MasterclassCard(),
+                SizedBox(height: 1.5.h),
+
+                // 🛠️ PREMIUM DIVIDER
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                  child: Container(
+                    height: 2,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          const Color(0xFFC8151B),
+                          const Color(0xFFC8151B).withValues(alpha: 0.1),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 2.h),
+
+                SizedBox(height: 1.h),
+
+                SizedBox(height: 1.h),
+                Consumer<DashboardProvider>(
+                  builder: (context, dashboard, _) {
+                    if (dashboard.isLoading) return const DashboardShimmer();
+                    if (dashboard.error != null) {
+                      return Center(child: Text('Error: ${dashboard.error}'));
+                    }
+                    final data = dashboard.data;
+                    if (data == null) return const SizedBox();
+
+                    final freeVideoSection = dashboard.freeVideoSection;
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (freeVideoSection != null &&
+                            freeVideoSection.data.isNotEmpty) ...[
+                          SizedBox(height: 2.5.h),
+                          // 🎁 4.9 FREE VIDEOS SECTION
+                          _buildShowcase(
+                            key: _freeVideosKey,
+                            title: 'tut_free_videos_title',
+                            description: 'tut_free_videos_desc',
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 5.w),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                        fontFamily: 'Plus Jakarta Sans',
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.white,
+                                      ),
+                                      children: [
+                                        const TextSpan(text: "🎁 Free "),
+                                        TextSpan(
+                                          text: "Videos",
+                                          style: TextStyle(
+                                            color: const Color(0xFFFFD000),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      developer.log(
+                                        '📂 Navigation -> Free Videos: View All',
+                                        name: 'NAVIGATION',
+                                      );
+                                      AppNavigator.push(
+                                        context,
+                                        const CoursesListScreen(),
+                                      );
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 4.w,
+                                        vertical: 0.8.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                          100,
+                                        ),
+                                        border: Border.all(
+                                          color: const Color(0xFF1E5FFF),
+                                          width: 1.5,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        "View All →",
+                                        style: TextStyle(
+                                          color: const Color(0xFF1E5FFF),
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 2.h),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            padding: EdgeInsets.only(left: 5.w, bottom: 2.h),
+                            child: Row(
+                              children: freeVideoSection.data
+                                  .whereType<FreeVideoModel>()
+                                  .map((video) {
+                                    return FreeVideoCard(
+                                      title: video.title,
+                                      thumbnailUrl: video.thumbnailUrl,
+                                      durationSeconds: video.durationSeconds,
+                                      views:
+                                          "128K views", // Mock view count as it's not in the model
+                                      timeAgo:
+                                          "6 months ago", // Mock time ago as it's not in the model
+                                      onTap: () {
+                                        developer.log(
+                                          '📂 Navigation -> Free Video: ${video.title}',
+                                          name: 'NAVIGATION',
+                                        );
+                                        AppNavigator.push(
+                                          context,
+                                          FreeVideoDetailsScreen(video: video),
+                                        );
+                                      },
+                                    );
+                                  })
+                                  .toList(),
+                            ),
+                          ),
+                        ],
+
+                        // ⚡ 4.10 SHORT VIDEOS SECTION
+                        ModuleVisibility(
+                          module: 'shortVideos',
+                          child: Consumer<ShortsProvider>(
+                            builder: (context, shortsProvider, _) {
+                              if (shortsProvider.shorts.isEmpty) {
+                                return const SizedBox.shrink();
+                              }
+
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 1.5.h),
+                                  _buildShowcase(
+                                    key: _shortsKey,
+                                    title: 'tut_shorts_title',
+                                    description: 'tut_shorts_desc',
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 5.w,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          RichText(
+                                            text: TextSpan(
+                                              style: TextStyle(
+                                                fontFamily: 'Plus Jakarta Sans',
+                                                fontSize: 18.sp,
+                                                fontWeight: FontWeight.w900,
+                                                color: Colors.white,
+                                              ),
+                                              children: [
+                                                const TextSpan(
+                                                  text: "⚡ Short ",
+                                                ),
+                                                TextSpan(
+                                                  text: "Videos",
+                                                  style: TextStyle(
+                                                    color: const Color(
+                                                      0xFFFFD000,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              developer.log(
+                                                '📂 Navigation -> Shorts: View All',
+                                                name: 'NAVIGATION',
+                                              );
+                                              AppNavigator.push(
+                                                context,
+                                                const ShortsFeedScreen(),
+                                              );
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 4.w,
+                                                vertical: 0.8.h,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(100),
+                                                border: Border.all(
+                                                  color: const Color(
+                                                    0xFF1E5FFF,
+                                                  ),
+                                                  width: 1.5,
+                                                ),
+                                              ),
+                                              child: Text(
+                                                "View All →",
+                                                style: TextStyle(
+                                                  color: const Color(
+                                                    0xFF1E5FFF,
+                                                  ),
+                                                  fontSize: 10.sp,
+                                                  fontWeight: FontWeight.w800,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 2.h),
+                                  SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    padding: EdgeInsets.only(
+                                      left: 5.w,
+                                      bottom: 2.h,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        for (
+                                          int i = 0;
+                                          i < shortsProvider.shorts.length;
+                                          i++
+                                        )
+                                          Builder(
+                                            builder: (context) {
+                                              final short =
+                                                  shortsProvider.shorts[i];
+
+                                              // Extract actual thumbnail from YouTube URL
+                                              final String? videoId =
+                                                  YoutubePlayer.convertUrlToId(
+                                                    short.videoUrl,
+                                                  );
+                                              final String thumbnailUrl =
+                                                  videoId != null
+                                                  ? 'https://img.youtube.com/vi/$videoId/0.jpg'
+                                                  : short.thumbnailUrl;
+
+                                              // Array of modern premium gradients
+                                              final gradients = [
+                                                [
+                                                  const Color(0xFF0A2066),
+                                                  const Color(0xFF1E5FFF),
+                                                ], // Blue
+                                                [
+                                                  const Color(0xFF6B0000),
+                                                  const Color(0xFFC8151B),
+                                                ], // Red
+                                                [
+                                                  const Color(0xFF994400),
+                                                  const Color(0xFFFF8800),
+                                                ], // Orange
+                                                [
+                                                  const Color(0xFF004411),
+                                                  const Color(0xFF008822),
+                                                ], // Green
+                                              ];
+
+                                              return PremiumShortVideoCard(
+                                                title: short.title,
+                                                thumbnailUrl: thumbnailUrl,
+                                                viewCount: short.viewCount > 0
+                                                    ? short.viewCount
+                                                    : 45000 +
+                                                          (i *
+                                                              1200), // Fallback for aesthetic
+                                                durationSeconds:
+                                                    short.durationSeconds > 0
+                                                    ? short.durationSeconds
+                                                    : 55 + (i * 5),
+                                                gradientColors:
+                                                    gradients[i %
+                                                        gradients.length],
+                                                onTap: () {
+                                                  AppNavigator.push(
+                                                    context,
+                                                    ShortsFeedScreen(
+                                                      initialIndex: i,
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            },
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 1.h),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 0.8.h),
+
+                        // 3. CONTINUE LEARNING HERO
+                        if (dashboard.continueCourses.isNotEmpty)
+                          ModuleVisibility(
+                            module: 'continueLearning',
+                            child: _buildShowcase(
+                              key: _continueKey,
+                              title: 'tut_continue_title',
+                              description: 'tut_continue_desc',
+                              child: Consumer<AuthProvider>(
+                                builder: (context, auth, _) {
+                                  final isPremium =
+                                      auth.user?.isPremium ?? false;
+                                  final course =
+                                      dashboard.continueCourses.first;
+                                  final isFree = course.basePrice == 0;
+                                  final isAccessible = isPremium || isFree;
+
+                                  return DashboardContinueHero(
+                                    course: course,
+                                    isLocked: !isAccessible,
+                                    onTap: () => _handlePremiumGatedTap(
+                                      context: context,
+                                      sectionName:
+                                          'Continue Learning: ${course.title}',
+                                      isFree: isFree,
+                                      action: () => AppNavigator.push(
+                                        context,
+                                        CourseDetailsScreen(
+                                          courseId: course.id,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        if (dashboard.continueCourses.isNotEmpty)
+                          SizedBox(height: 0.8.h),
+
+                        // 6. TOOLS (MOVED UP)
+                        ModuleVisibility(
+                          module: 'tools',
+                          child: _buildShowcase(
+                            key: _toolsKey,
+                            title: 'tut_tools_title',
+                            description: 'tut_tools_desc',
+                            child: Column(
+                              children: [
+                                Padding(
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 5.w,
                                   ),
@@ -1164,9 +1430,11 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                             color: Colors.white,
                                           ),
                                           children: [
-                                            const TextSpan(text: "⚡ Short "),
+                                            const TextSpan(
+                                              text: "🛠️ Practical ",
+                                            ),
                                             TextSpan(
-                                              text: "Videos",
+                                              text: "Tools",
                                               style: TextStyle(
                                                 color: const Color(0xFFFFD000),
                                               ),
@@ -1174,373 +1442,254 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                           ],
                                         ),
                                       ),
-                                      GestureDetector(
-                                        onTap: () {
+                                      TextButton(
+                                        onPressed: () {
                                           developer.log(
-                                            '📂 Navigation -> Shorts: View All',
+                                            '📂 Navigation -> Tools: See All',
                                             name: 'NAVIGATION',
                                           );
                                           AppNavigator.push(
                                             context,
-                                            const ShortsFeedScreen(),
+                                            const CoursesListScreen(),
                                           );
                                         },
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 4.w,
-                                            vertical: 0.8.h,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                              100,
-                                            ),
-                                            border: Border.all(
-                                              color: const Color(0xFF1E5FFF),
-                                              width: 1.5,
-                                            ),
-                                          ),
-                                          child: Text(
-                                            "View All →",
-                                            style: TextStyle(
-                                              color: const Color(0xFF1E5FFF),
-                                              fontSize: 10.sp,
-                                              fontWeight: FontWeight.w800,
-                                            ),
+                                        child: Text(
+                                          'See All',
+                                          style: TextStyle(
+                                            color: const Color(0xFF1E5FFF),
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 12.sp,
                                           ),
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                              ),
-                              SizedBox(height: 2.h),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                padding: EdgeInsets.only(
-                                  left: 5.w,
-                                  bottom: 2.h,
-                                ),
-                                child: Row(
-                                  children: [
-                                    for (
-                                      int i = 0;
-                                      i < shortsProvider.shorts.length;
-                                      i++
-                                    )
-                                      Builder(
-                                        builder: (context) {
-                                          final short =
-                                              shortsProvider.shorts[i];
-
-                                          // Extract actual thumbnail from YouTube URL
-                                          final String? videoId =
-                                              YoutubePlayer.convertUrlToId(
-                                                short.videoUrl,
-                                              );
-                                          final String thumbnailUrl =
-                                              videoId != null
-                                              ? 'https://img.youtube.com/vi/$videoId/0.jpg'
-                                              : short.thumbnailUrl;
-
-                                          // Array of modern premium gradients
-                                          final gradients = [
-                                            [
-                                              const Color(0xFF0A2066),
-                                              const Color(0xFF1E5FFF),
-                                            ], // Blue
-                                            [
-                                              const Color(0xFF6B0000),
-                                              const Color(0xFFC8151B),
-                                            ], // Red
-                                            [
-                                              const Color(0xFF994400),
-                                              const Color(0xFFFF8800),
-                                            ], // Orange
-                                            [
-                                              const Color(0xFF004411),
-                                              const Color(0xFF008822),
-                                            ], // Green
-                                          ];
-
-                                          return PremiumShortVideoCard(
-                                            title: short.title,
-                                            thumbnailUrl: thumbnailUrl,
-                                            viewCount: short.viewCount > 0
-                                                ? short.viewCount
-                                                : 45000 +
-                                                      (i *
-                                                          1200), // Fallback for aesthetic
-                                            durationSeconds:
-                                                short.durationSeconds > 0
-                                                ? short.durationSeconds
-                                                : 55 + (i * 5),
-                                            gradientColors:
-                                                gradients[i % gradients.length],
-                                            onTap: () {
-                                              AppNavigator.push(
-                                                context,
-                                                ShortsFeedScreen(
-                                                  initialIndex: i,
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        },
-                                      ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 1.h),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 0.8.h),
-
-                    // 3. CONTINUE LEARNING HERO
-                    if (dashboard.continueCourses.isNotEmpty)
-                      ModuleVisibility(
-                        module: 'continueLearning',
-                        child: _buildShowcase(
-                          key: _continueKey,
-                          title: 'tut_continue_title',
-                          description: 'tut_continue_desc',
-                          child: Consumer<AuthProvider>(
-                            builder: (context, auth, _) {
-                              final isPremium = auth.user?.isPremium ?? false;
-                              final course = dashboard.continueCourses.first;
-                              final isFree = course.basePrice == 0;
-                              final isAccessible = isPremium || isFree;
-
-                              return DashboardContinueHero(
-                                course: course,
-                                isLocked: !isAccessible,
-                                onTap: () => _handlePremiumGatedTap(
-                                  context: context,
-                                  sectionName:
-                                      'Continue Learning: ${course.title}',
-                                  isFree: isFree,
-                                  action: () => AppNavigator.push(
-                                    context,
-                                    CourseDetailsScreen(courseId: course.id),
+                                SizedBox(height: 1.h),
+                                Consumer<AuthProvider>(
+                                  builder: (context, auth, _) => ToolsSection(
+                                    isPremium: auth.user?.isPremium ?? false,
                                   ),
                                 ),
-                              );
-                            },
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    if (dashboard.continueCourses.isNotEmpty)
-                      SizedBox(height: 0.8.h),
+                        SizedBox(height: 0.8.h),
 
-                    // 6. TOOLS (MOVED UP)
-                    ModuleVisibility(
-                      module: 'tools',
-                      child: _buildShowcase(
-                        key: _toolsKey,
-                        title: 'tut_tools_title',
-                        description: 'tut_tools_desc',
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 5.w),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  RichText(
-                                    text: TextSpan(
-                                      style: TextStyle(
-                                        fontFamily: 'Plus Jakarta Sans',
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.w900,
-                                        color: Colors.white,
-                                      ),
-                                      children: [
-                                        const TextSpan(text: "🛠️ Practical "),
-                                        TextSpan(
-                                          text: "Tools",
-                                          style: TextStyle(
-                                            color: const Color(0xFFFFD000),
+                        // 6. FREE GUIDE BANNER
+                        _buildShowcase(
+                          key: _pdfPromoKey,
+                          title: 'tut_pdf_promo_title',
+                          description: 'tut_pdf_promo_desc',
+                          child: const FreePdfPromoCard(),
+                        ),
+                        SizedBox(height: 0.8.h),
+
+                        // 4. QUICK ACTIONS ROW 2: QUIZZES & AI EXPERT (MOVED ABOVE CAROUSEL)
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(5.w, 1.h, 5.w, 1.5.h),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: _buildShowcase(
+                                  key: _quizzesCardKey,
+                                  title: 'tut_quizzes_title',
+                                  description: 'tut_quizzes_desc',
+                                  child: Consumer<AuthProvider>(
+                                    builder: (context, auth, _) {
+                                      final isPremium =
+                                          auth.user?.isPremium ?? false;
+                                      return PremiumActionCard(
+                                        painter: QuizTopicPainter(),
+                                        label: t.translate('quizzes_title'),
+                                        color: const Color(
+                                          0xFFFFD000,
+                                        ), // Premium Gold
+                                        isLocked: !isPremium,
+                                        onTap: () => _handlePremiumGatedTap(
+                                          context: context,
+                                          sectionName: 'Dashboard: Quizzes',
+                                          action: () => AppNavigator.push(
+                                            context,
+                                            const QuizTopicsScreen(),
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      developer.log(
-                                        '📂 Navigation -> Tools: See All',
-                                        name: 'NAVIGATION',
-                                      );
-                                      AppNavigator.push(
-                                        context,
-                                        const CoursesListScreen(),
                                       );
                                     },
-                                    child: Text(
-                                      'See All',
-                                      style: TextStyle(
-                                        color: const Color(0xFF1E5FFF),
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 12.sp,
-                                      ),
-                                    ),
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 1.h),
-                            Consumer<AuthProvider>(
-                              builder: (context, auth, _) => ToolsSection(
-                                isPremium: auth.user?.isPremium ?? false,
+                              SizedBox(width: 4.w),
+                              Expanded(
+                                child: _buildShowcase(
+                                  key: _aiExpertCardKey,
+                                  title: 'tut_ai_expert_title',
+                                  description: 'tut_ai_expert_desc',
+                                  child: Consumer<AuthProvider>(
+                                    builder: (context, auth, _) {
+                                      final isPremium =
+                                          auth.user?.isPremium ?? false;
+                                      return PremiumActionCard(
+                                        painter: AiExpertPainter(),
+                                        label: t.translate('ai_expert'),
+                                        color: const Color(
+                                          0xFF1E5FFF,
+                                        ), // AI Blue
+                                        isLocked: !isPremium,
+                                        onTap: () => _handlePremiumGatedTap(
+                                          context: context,
+                                          sectionName: 'Dashboard: AI Expert',
+                                          action: () => AppNavigator.push(
+                                            context,
+                                            const AiChatScreen(),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
                               ),
+                            ],
+                          ),
+                        ),
+
+                        // 10. DYNAMIC SECTIONS (Unified Approach)
+
+                        // Popular Courses
+                        if (dashboard.popularCourseSection != null)
+                          _buildDynamicCourseBlock(
+                            context,
+                            dashboard.popularCourseSection!,
+                            _popularCoursesKey,
+                            'courses',
+                            "🔥 Popular ",
+                            "Courses",
+                          ),
+
+                        // Recommended Courses
+                        if (dashboard.recommendedCourseSection != null)
+                          _buildDynamicCourseBlock(
+                            context,
+                            dashboard.recommendedCourseSection!,
+                            null,
+                            'courses',
+                            "🎯 Recommended ",
+                            "for You",
+                          ),
+
+                        // All Courses
+                        if (dashboard.allCourseSection != null)
+                          _buildDynamicCourseBlock(
+                            context,
+                            dashboard.allCourseSection!,
+                            null,
+                            'courses',
+                            "📚 All ",
+                            "Courses",
+                          ),
+
+                        // Inline Banners
+                        if (dashboard.inlineBanners.isNotEmpty)
+                          ModuleVisibility(
+                            module: 'banners',
+                            child: Column(
+                              children: [
+                                InlineBanner(banners: dashboard.inlineBanners),
+                                SizedBox(height: 0.8.h),
+                              ],
                             ),
-                          ],
+                          ),
+                        const DashboardFooter(),
+                        SizedBox(
+                          height: 8.h,
+                        ), // Padding for pinned navigation bar
+                      ],
+                    );
+                  },
+                ),
+
+                // 🧠 Point 12: Random Search Assistant Prompt
+                if (_showAssistantPrompt)
+                  Positioned(
+                    bottom: 2.h,
+                    right: 5.w,
+                    left: 5.w,
+                    child: FadeInUp(
+                      duration: const Duration(milliseconds: 600),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() => _showAssistantPrompt = false);
+                          showDialog(
+                            context: context,
+                            builder: (_) => const SearchAssistantDialog(),
+                          );
+                          // Reschedule after search
+                          _startAssistantTimer();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 5.w,
+                            vertical: 1.5.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF1E5FFF),
+                            borderRadius: BorderRadius.circular(30),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(
+                                  0xFF1E5FFF,
+                                ).withValues(alpha: 0.4),
+                                blurRadius: 15,
+                                offset: const Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.auto_awesome_rounded,
+                                color: Colors.white,
+                              ),
+                              SizedBox(width: 3.w),
+                              Expanded(
+                                child: Text(
+                                  "What are you looking for today?",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 12.sp,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.2),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: const Text(
+                                  "SEARCH",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                    SizedBox(height: 0.8.h),
-
-                    // 6. FREE GUIDE BANNER
-                    _buildShowcase(
-                      key: _pdfPromoKey,
-                      title: 'tut_pdf_promo_title',
-                      description: 'tut_pdf_promo_desc',
-                      child: const FreePdfPromoCard(),
-                    ),
-                    SizedBox(height: 0.8.h),
-
-                    // 4. QUICK ACTIONS ROW 2: QUIZZES & AI EXPERT (MOVED ABOVE CAROUSEL)
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(5.w, 1.h, 5.w, 1.5.h),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: _buildShowcase(
-                              key: _quizzesCardKey,
-                              title: 'tut_quizzes_title',
-                              description: 'tut_quizzes_desc',
-                              child: Consumer<AuthProvider>(
-                                builder: (context, auth, _) {
-                                  final isPremium =
-                                      auth.user?.isPremium ?? false;
-                                  return PremiumActionCard(
-                                    painter: QuizTopicPainter(),
-                                    label: t.translate('quizzes_title'),
-                                    color: const Color(
-                                      0xFFFFD000,
-                                    ), // Premium Gold
-                                    isLocked: !isPremium,
-                                    onTap: () => _handlePremiumGatedTap(
-                                      context: context,
-                                      sectionName: 'Dashboard: Quizzes',
-                                      action: () => AppNavigator.push(
-                                        context,
-                                        const QuizTopicsScreen(),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 4.w),
-                          Expanded(
-                            child: _buildShowcase(
-                              key: _aiExpertCardKey,
-                              title: 'tut_ai_expert_title',
-                              description: 'tut_ai_expert_desc',
-                              child: Consumer<AuthProvider>(
-                                builder: (context, auth, _) {
-                                  final isPremium =
-                                      auth.user?.isPremium ?? false;
-                                  return PremiumActionCard(
-                                    painter: AiExpertPainter(),
-                                    label: t.translate('ai_expert'),
-                                    color: const Color(0xFF1E5FFF), // AI Blue
-                                    isLocked: !isPremium,
-                                    onTap: () => _handlePremiumGatedTap(
-                                      context: context,
-                                      sectionName: 'Dashboard: AI Expert',
-                                      action: () => AppNavigator.push(
-                                        context,
-                                        const AiChatScreen(),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // 10. DYNAMIC SECTIONS (Unified Approach)
-
-                    // Popular Courses
-                    if (dashboard.popularCourseSection != null)
-                      _buildDynamicCourseBlock(
-                        context,
-                        dashboard.popularCourseSection!,
-                        _popularCoursesKey,
-                        'courses',
-                        "🔥 Popular ",
-                        "Courses",
-                      ),
-
-                    // Recommended Courses
-                    if (dashboard.recommendedCourseSection != null)
-                      _buildDynamicCourseBlock(
-                        context,
-                        dashboard.recommendedCourseSection!,
-                        null,
-                        'courses',
-                        "🎯 Recommended ",
-                        "for You",
-                      ),
-
-                    // All Courses
-                    if (dashboard.allCourseSection != null)
-                      _buildDynamicCourseBlock(
-                        context,
-                        dashboard.allCourseSection!,
-                        null,
-                        'courses',
-                        "📚 All ",
-                        "Courses",
-                      ),
-
-                    // Inline Banners
-                    if (dashboard.inlineBanners.isNotEmpty)
-                      ModuleVisibility(
-                        module: 'banners',
-                        child: Column(
-                          children: [
-                            InlineBanner(banners: dashboard.inlineBanners),
-                            SizedBox(height: 0.8.h),
-                          ],
-                        ),
-                      ),
-                  ],
-                );
-              },
+                  ),
+              ],
             ),
-            const DashboardFooter(),
-            SizedBox(height: 8.h), // Padding for pinned navigation bar
-          ],
-        ),
-      ),
-      bottomNavigationBar: PremiumBottomBar(
-        items: navConfig.schema,
-        selectedIndex: 0,
-        onItemSelected: (index) {
-          if (index < navActions.length && navActions[index] != null) {
-            navActions[index]!();
-          }
-        },
+          ),
+        ],
       ),
     );
   }

@@ -45,6 +45,11 @@ class FirebaseMessagingService {
     await _firebaseMessaging.getInitialMessage();
 
     FirebaseMessaging.onBackgroundMessage(firebaseBackgroundMessage);
+    
+    // 🔔 FOREGROUND HANDLING (ADD THIS)
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      firebaseBackgroundMessage(message);
+    });
   }
 
   static Future<void> firebaseBackgroundMessage(RemoteMessage message) async {

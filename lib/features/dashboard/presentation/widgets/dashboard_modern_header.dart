@@ -6,6 +6,7 @@ import 'package:exim_lab/features/notifications/presentation/providers/notificat
 import 'package:exim_lab/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/profile/presentation/screens/profile_screen.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/search_assistant_dialog.dart';
 
 class DashboardModernHeader extends StatelessWidget {
   const DashboardModernHeader({super.key});
@@ -232,6 +233,12 @@ class HeaderActionButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
+        _buildActionBtn(Icons.search_rounded, () {
+          showDialog(
+            context: context,
+            builder: (_) => const SearchAssistantDialog(),
+          );
+        }),
         const SizedBox(width: 8),
         Consumer<NotificationsProvider>(
           builder: (context, notif, _) => Stack(
