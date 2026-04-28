@@ -20,6 +20,7 @@ class ModuleConfig {
         'banners': false,
         'shortVideos': false,
         'aiChat': false,
+        'community': true,
       },
     );
   }
