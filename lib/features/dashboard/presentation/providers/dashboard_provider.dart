@@ -202,6 +202,17 @@ class DashboardProvider extends ChangeNotifier {
       );
     }
 
+    if (moduleProvider.isEnabled('community')) {
+      items.add(
+        DashboardNavItem(
+          labelKey: 'community',
+          icon: Icons.chat_bubble_outline_rounded,
+          activeIcon: Icons.chat_bubble_rounded,
+          identifier: 'community',
+        ),
+      );
+    }
+
     items.add(
       DashboardNavItem(
         labelKey: 'profile',

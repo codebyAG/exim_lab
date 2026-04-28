@@ -1770,6 +1770,11 @@ class _DashboardBodyState extends State<_DashboardBody> {
             () => AppNavigator.push(context, const NewsListScreen()),
           );
           break;
+        case 'community':
+          navActions.add(
+            () => AppNavigator.push(context, const CommunityChatScreen()),
+          );
+          break;
         case 'profile':
           navActions.add(
             () => AppNavigator.push(context, const ProfileScreen()),
