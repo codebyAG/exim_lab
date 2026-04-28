@@ -47,7 +47,8 @@ class ChatProvider extends ChangeNotifier {
 
   Future<void> fetchMessages(dynamic roomId) async {
     _activeRoomId = roomId;
-    _isLoading = _messages.isEmpty; // Only show full loader if empty
+    _messages = []; // 🛡️ Clear old messages immediately
+    _isLoading = true; // Always show loader for new room
     _error = null;
     _nextCursor = null;
     _hasMore = true;
