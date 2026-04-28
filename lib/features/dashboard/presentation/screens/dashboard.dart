@@ -64,10 +64,21 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/search_assistan
 import 'package:animate_do/animate_do.dart';
 import 'dart:async';
 
-class DashboardScreen extends StatelessWidget {
-  DashboardScreen({super.key});
+class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({super.key});
 
-  final GlobalKey<_DashboardBodyState> _bodyKey = GlobalKey();
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  late final GlobalKey<_DashboardBodyState> _bodyKey;
+
+  @override
+  void initState() {
+    super.initState();
+    _bodyKey = GlobalKey<_DashboardBodyState>();
+  }
 
   @override
   Widget build(BuildContext context) {
