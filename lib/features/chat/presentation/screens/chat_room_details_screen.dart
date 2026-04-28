@@ -26,7 +26,6 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final provider = context.read<ChatProvider>();
       provider.fetchMessages(widget.room.id);
-      provider.startPollingMessages(widget.room.id);
     });
   }
 
@@ -38,7 +37,6 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
 
   @override
   void dispose() {
-    context.read<ChatProvider>().stopPollingMessages();
     _messageController.dispose();
     _scrollController.dispose();
     super.dispose();

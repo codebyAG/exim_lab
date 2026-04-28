@@ -9,7 +9,6 @@ import 'dart:async';
 class ChatProvider extends ChangeNotifier {
   final ChatRepository _repository = ChatRepository();
   final SharedPrefService _prefs = SharedPrefService();
-  Timer? _pollingTimer;
   dynamic _activeRoomId;
 
   String? _nextCursor;
@@ -98,54 +97,6 @@ class ChatProvider extends ChangeNotifier {
     }
   }
 
-  void startPollingMessages(dynamic roomId) {
-    stopPollingMessages(); // Clear existing
-    _activeRoomId = roomId;
-    _pollingTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      if (_activeRoomId != null) {
-        _quietFetchMessages(_activeRoomId!);
-      }
-    });
-  }
-
-  void stopPollingMessages() {
-    _pollingTimer?.cancel();
-    _pollingTimer = null;
-    _activeRoomId = null;
-  }
-
-  Future<void> _quietFetchMessages(dynamic roomId) async {
-    try {
-      final user = await _prefs.getUser();
-      final currentUserId = user?.id ?? '';
-      // We only fetch the latest page for polling
-      final result = await _repository.getChatMessages(roomId, currentUserId);
-      final List<ChatMessage> latestMessages = result['messages'];
-      
-      // Update only if count changed to minimize UI rebuilds
-      if (latestMessages.length != _messages.length) {
-        // This logic might need refinement for pagination, 
-        // but for now, we just update the footer if new messages arrive.
-        // Actually, polling should probably only check for NEWER messages.
-        // For simplicity, we merge based on ID.
-        final existingIds = _messages.map((m) => m.id).toSet();
-        final newOnly = latestMessages.where((m) => !existingIds.contains(m.id)).toList();
-        
-        if (newOnly.isNotEmpty) {
-          _messages.addAll(newOnly);
-          notifyListeners();
-        }
-      }
-    } catch (e) {
-      // Quiet fail for polling
-    }
-  }
-
-  @override
-  void dispose() {
-    stopPollingMessages();
-    super.dispose();
-  }
 
   Future<bool> sendMessage(dynamic roomId, String text) async {
     if (text.trim().isEmpty) return false;
@@ -157,8 +108,9 @@ class ChatProvider extends ChangeNotifier {
       final currentUserId = user?.id ?? '';
       final newMessage = await _repository.sendMessage(roomId, text, currentUserId);
       if (newMessage != null) {
-        _messages.add(newMessage);
-        notifyListeners();
+        // Option 1: Just add the message (fast)
+        // Option 2: Re-fetch (Safe & Syncs with server timestamps/IDs)
+        await fetchMessages(roomId);
         return true;
       }
       return false;
