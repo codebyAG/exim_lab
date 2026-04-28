@@ -115,6 +115,13 @@ class ChatProvider extends ChangeNotifier {
   Future<bool> sendMessage(dynamic roomId, String text) async {
     if (text.trim().isEmpty) return false;
     
+    // 🛡️ Block messages containing numbers
+    if (RegExp(r'[0-9]').hasMatch(text)) {
+      _error = "Numbers are not allowed in chat messages";
+      notifyListeners();
+      return false;
+    }
+
     try {
       final user = await _prefs.getUser();
       final currentUserId = user?.id ?? '';

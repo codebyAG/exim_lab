@@ -305,6 +305,17 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                             if (success) {
                               _messageController.clear();
                               _scrollToBottom();
+                            } else if (provider.error != null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(provider.error!),
+                                  backgroundColor: const Color(0xFFC8151B),
+                                  behavior: SnackBarBehavior.floating,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                              );
                             }
                           }
                         },
