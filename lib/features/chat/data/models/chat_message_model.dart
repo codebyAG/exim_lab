@@ -30,7 +30,8 @@ class ChatMessage {
       senderName: json['senderName'] ?? (json['isAdmin'] == true ? 'Admin' : 'User'),
       senderImageUrl: json['senderImageUrl'] ?? '',
       message: json['message'] ?? '',
-      createdAt: DateTime.parse(json['timestamp'] ?? json['createdAt'] ?? DateTime.now().toIso8601String()),
+      createdAt: DateTime.parse(
+          json['timestampIST'] ?? DateTime.now().toIso8601String()),
       isMe: (json['senderId']?.toString() ?? '') == currentUserId,
       isAdmin: json['isAdmin'] ?? false,
     );
