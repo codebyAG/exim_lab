@@ -65,6 +65,7 @@ class ChatProvider extends ChangeNotifier {
       final currentUserId = user?.id ?? '';
       final result = await _repository.getChatMessages(roomId, currentUserId);
       _messages = result['messages'];
+      _sortMessages();
       _nextCursor = result['nextCursor'];
       _hasMore = _nextCursor != null;
     } catch (e) {
@@ -92,8 +93,9 @@ class ChatProvider extends ChangeNotifier {
       );
 
       final List<ChatMessage> olderMessages = result['messages'];
-      // Append older history at the end of the list
+      // Append older history at the end of the list and re-sort
       _messages.addAll(olderMessages);
+      _sortMessages();
       
       _nextCursor = result['nextCursor'];
       _hasMore = _nextCursor != null;
@@ -106,6 +108,10 @@ class ChatProvider extends ChangeNotifier {
   }
 
 
+  void _sortMessages() {
+    _messages.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  }
+
   Future<bool> sendMessage(dynamic roomId, String text) async {
     if (text.trim().isEmpty) return false;
     _isSending = true;
@@ -116,8 +122,9 @@ class ChatProvider extends ChangeNotifier {
       final currentUserId = user?.id ?? '';
       final newMessage = await _repository.sendMessage(roomId, text, currentUserId);
       if (newMessage != null) {
-        // Add new message at index 0 (bottom of the reversed list)
+        // Add new message and re-sort
         _messages.insert(0, newMessage);
+        _sortMessages();
         notifyListeners();
         return true;
       }
