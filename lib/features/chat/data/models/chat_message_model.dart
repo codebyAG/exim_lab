@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class ChatMessage {
   final dynamic id;
   final dynamic roomId;
@@ -22,16 +24,26 @@ class ChatMessage {
     this.isAdmin = false,
   });
 
+  static DateTime _parseISTDate(String? dateStr) {
+    if (dateStr == null) return DateTime.now();
+    try {
+      // Handles format like: "28-04-2026, 03:06:49 pm"
+      return DateFormat("dd-MM-yyyy, hh:mm:ss a").parse(dateStr.toUpperCase());
+    } catch (e) {
+      return DateTime.now();
+    }
+  }
+
   factory ChatMessage.fromJson(Map<String, dynamic> json, String currentUserId) {
     return ChatMessage(
       id: json['messageId'] ?? json['id'] ?? 0,
       roomId: json['roomId'] ?? 0,
       senderId: json['senderId']?.toString() ?? '',
-      senderName: json['senderName'] ?? (json['isAdmin'] == true ? 'Admin' : 'User'),
+      senderName:
+          json['senderName'] ?? (json['isAdmin'] == true ? 'Admin' : 'User'),
       senderImageUrl: json['senderImageUrl'] ?? '',
       message: json['message'] ?? '',
-      createdAt: DateTime.parse(
-          json['timestampIST'] ?? DateTime.now().toIso8601String()),
+      createdAt: _parseISTDate(json['timestampIST']),
       isMe: (json['senderId']?.toString() ?? '') == currentUserId,
       isAdmin: json['isAdmin'] ?? false,
     );
