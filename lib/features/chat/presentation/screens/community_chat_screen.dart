@@ -4,6 +4,8 @@ import 'package:animate_do/animate_do.dart';
 import 'package:provider/provider.dart';
 import '../providers/chat_provider.dart';
 import '../../data/models/chat_room_model.dart';
+import 'chat_room_details_screen.dart';
+import 'package:exim_lab/core/navigation/app_navigator.dart';
 
 class CommunityChatScreen extends StatefulWidget {
   const CommunityChatScreen({super.key});
@@ -186,9 +188,9 @@ class _CommunityChatScreenState extends State<CommunityChatScreen> {
         ),
         trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
         onTap: () {
-          // Future: Navigate to specific room chat screen
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Room joining coming soon!')),
+          AppNavigator.push(
+            context,
+            ChatRoomDetailsScreen(room: room),
           );
         },
       ),

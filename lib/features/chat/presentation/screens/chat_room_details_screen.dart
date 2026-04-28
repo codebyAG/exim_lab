@@ -1,0 +1,270 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
+import 'package:intl/intl.dart';
+import '../providers/chat_provider.dart';
+import '../../data/models/chat_room_model.dart';
+import '../../data/models/chat_message_model.dart';
+
+class ChatRoomDetailsScreen extends StatefulWidget {
+  final ChatRoom room;
+
+  const ChatRoomDetailsScreen({super.key, required this.room});
+
+  @override
+  State<ChatRoomDetailsScreen> createState() => _ChatRoomDetailsScreenState();
+}
+
+class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
+  final TextEditingController _messageController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = context.read<ChatProvider>();
+      provider.fetchMessages(widget.room.id);
+      provider.startPollingMessages(widget.room.id);
+    });
+  }
+
+  @override
+  void dispose() {
+    context.read<ChatProvider>().stopPollingMessages();
+    _messageController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF1F5F9),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 1,
+        title: Row(
+          children: [
+            CircleAvatar(
+              backgroundColor: widget.room.color.withValues(alpha: 0.1),
+              child: Icon(widget.room.icon, color: widget.room.color, size: 20),
+            ),
+            SizedBox(width: 3.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.room.name,
+                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    '${widget.room.memberCount} Members',
+                    style: TextStyle(fontSize: 10.sp, color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Consumer<ChatProvider>(
+              builder: (context, provider, child) {
+                if (provider.isLoading && provider.messages.isEmpty) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (provider.messages.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.chat_bubble_outline, size: 50.sp, color: Colors.grey[400]),
+                        SizedBox(height: 2.h),
+                        const Text('No messages yet. Start the conversation!'),
+                      ],
+                    ),
+                  );
+                }
+
+                // Auto scroll to bottom when messages change
+                WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+
+                return ListView.builder(
+                  controller: _scrollController,
+                  padding: EdgeInsets.all(4.w),
+                  itemCount: provider.messages.length,
+                  itemBuilder: (context, index) {
+                    final message = provider.messages[index];
+                    return _buildMessageBubble(message);
+                  },
+                );
+              },
+            ),
+          ),
+          _buildMessageInput(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMessageBubble(ChatMessage message) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 2.h),
+      child: Column(
+        crossAxisAlignment: message.isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        children: [
+          if (!message.isMe)
+            Padding(
+              padding: EdgeInsets.only(left: 2.w, bottom: 0.5.h),
+              child: Text(
+                message.senderName,
+                style: TextStyle(fontSize: 9.sp, fontWeight: FontWeight.bold, color: Colors.grey[600]),
+              ),
+            ),
+          Row(
+            mainAxisAlignment: message.isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              if (!message.isMe)
+                CircleAvatar(
+                  radius: 12,
+                  backgroundImage: message.senderImageUrl.isNotEmpty ? NetworkImage(message.senderImageUrl) : null,
+                  child: message.senderImageUrl.isEmpty ? Icon(Icons.person, size: 12) : null,
+                ),
+              SizedBox(width: 2.w),
+              Flexible(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
+                  decoration: BoxDecoration(
+                    color: message.isMe ? const Color(0xFF1E5FFF) : Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(20),
+                      topRight: const Radius.circular(20),
+                      bottomLeft: Radius.circular(message.isMe ? 20 : 0),
+                      bottomRight: Radius.circular(message.isMe ? 0 : 20),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 5,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        message.message,
+                        style: TextStyle(
+                          color: message.isMe ? Colors.white : Colors.black87,
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                      SizedBox(height: 0.5.h),
+                      Text(
+                        DateFormat('hh:mm a').format(message.createdAt),
+                        style: TextStyle(
+                          color: message.isMe ? Colors.white70 : Colors.black38,
+                          fontSize: 8.sp,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(width: 2.w),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMessageInput() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        child: Row(
+          children: [
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 4.w),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: TextField(
+                  controller: _messageController,
+                  decoration: const InputDecoration(
+                    hintText: 'Type your message...',
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: 3.w),
+            Consumer<ChatProvider>(
+              builder: (context, provider, child) {
+                return GestureDetector(
+                  onTap: provider.isSending
+                      ? null
+                      : () async {
+                          final text = _messageController.text;
+                          if (text.isNotEmpty) {
+                            final success = await provider.sendMessage(widget.room.id, text);
+                            if (success) {
+                              _messageController.clear();
+                              _scrollToBottom();
+                            }
+                          }
+                        },
+                  child: Container(
+                    padding: EdgeInsets.all(3.w),
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF1E5FFF),
+                      shape: BoxShape.circle,
+                    ),
+                    child: provider.isSending
+                        ? SizedBox(
+                            width: 15,
+                            height: 15,
+                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                          )
+                        : const Icon(Icons.send_rounded, color: Colors.white),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

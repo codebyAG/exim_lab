@@ -49,7 +49,8 @@ class ApiConstants {
 
   // 💬 COMMUNITY CHAT API
   static const String chatRooms = '$baseUrl/api/chat/rooms';
-  static String chatMessages(String roomId) => '$baseUrl/api/chat/rooms/$roomId/messages';
+  static String chatMessages(int roomId) => '$baseUrl/api/chat/rooms/$roomId/messages';
+  static const String chatSendMessage = '$baseUrl/api/chat/messages';
 
   // ⏱ TIMEOUTS
   static const int connectTimeout = 15000;
