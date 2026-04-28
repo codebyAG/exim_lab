@@ -29,7 +29,8 @@ class ApiConstants {
   static const String dashboardRecommended =
       '$baseUrl/api/dashboard/courses/recommended';
   static const String dashboardContinue = '$baseUrl/api/dashboard/continue';
-  static const String dashboardFreeVideos = '$baseUrl/api/dashboard/free-videos';
+  static const String dashboardFreeVideos =
+      '$baseUrl/api/dashboard/free-videos';
   static const String dashboardShorts = '$baseUrl/api/dashboard/shorts';
   static const String exchangeRates = '$baseUrl/api/dashboard/exchange-rates';
   static const String news = '$baseUrl/api/news';
@@ -54,7 +55,9 @@ class ApiConstants {
     if (cursor != null) url += '&cursor=$cursor';
     return url;
   }
-  static String chatSendMessage(dynamic roomId) => '$baseUrl/api/chat/rooms/$roomId/messages';
+
+  static String chatSendMessage(dynamic roomId) =>
+      '$baseUrl/api/chat/rooms/$roomId/messages';
 
   // ⏱ TIMEOUTS
   static const int connectTimeout = 15000;
