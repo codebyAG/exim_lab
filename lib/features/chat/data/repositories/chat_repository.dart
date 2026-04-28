@@ -14,22 +14,26 @@ class ChatRemoteDataSource {
     );
   }
 
-  Future<List<ChatMessage>> getChatMessages(int roomId, String currentUserId) async {
+  Future<Map<String, dynamic>> getChatMessages(dynamic roomId, String currentUserId, {String? cursor}) async {
     return await callApi(
-      ApiConstants.chatMessages(roomId),
+      ApiConstants.chatMessages(roomId, cursor: cursor),
       parser: (json) {
         final List messagesData = json['data'] ?? [];
-        return messagesData.map((m) => ChatMessage.fromJson(m, currentUserId)).toList();
+        final messages = messagesData.map((m) => ChatMessage.fromJson(m, currentUserId)).toList();
+        final nextCursor = json['meta']?['nextCursor'];
+        return {
+          'messages': messages,
+          'nextCursor': nextCursor,
+        };
       },
     );
   }
 
-  Future<ChatMessage?> sendMessage(int roomId, String message, String currentUserId) async {
+  Future<ChatMessage?> sendMessage(dynamic roomId, String message, String currentUserId) async {
     return await callApi(
-      ApiConstants.chatSendMessage,
+      ApiConstants.chatSendMessage(roomId),
       methodType: MethodType.post,
       requestData: {
-        'roomId': roomId,
         'message': message,
       },
       parser: (json) {
@@ -46,8 +50,8 @@ class ChatRepository {
   final ChatRemoteDataSource _dataSource = ChatRemoteDataSource();
 
   Future<List<ChatRoom>> getChatRooms() => _dataSource.getChatRooms();
-  Future<List<ChatMessage>> getChatMessages(int roomId, String currentUserId) => 
-      _dataSource.getChatMessages(roomId, currentUserId);
-  Future<ChatMessage?> sendMessage(int roomId, String message, String currentUserId) => 
+  Future<Map<String, dynamic>> getChatMessages(dynamic roomId, String currentUserId, {String? cursor}) => 
+      _dataSource.getChatMessages(roomId, currentUserId, cursor: cursor);
+  Future<ChatMessage?> sendMessage(dynamic roomId, String message, String currentUserId) => 
       _dataSource.sendMessage(roomId, message, currentUserId);
 }

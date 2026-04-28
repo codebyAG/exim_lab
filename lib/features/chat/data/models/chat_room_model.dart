@@ -10,7 +10,7 @@ enum ChatCategory {
 }
 
 class ChatRoom {
-  final int id;
+  final dynamic id;
   final String name;
   final String description;
   final ChatCategory category;
@@ -28,10 +28,10 @@ class ChatRoom {
 
   factory ChatRoom.fromJson(Map<String, dynamic> json) {
     return ChatRoom(
-      id: json['id'] ?? 0,
+      id: json['roomId'] ?? json['id'] ?? json['_id'],
       name: json['name'] ?? '',
       description: json['description'] ?? '',
-      category: _parseCategory(json['category']),
+      category: _parseCategory(json['category'] ?? json['slug']),
       isActive: json['isActive'] ?? true,
       memberCount: json['memberCount'] ?? 0,
     );

@@ -22,11 +22,18 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_onScroll);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final provider = context.read<ChatProvider>();
       provider.fetchMessages(widget.room.id);
       provider.startPollingMessages(widget.room.id);
     });
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels <= 100) {
+      context.read<ChatProvider>().loadMoreMessages();
+    }
   }
 
   @override
@@ -108,9 +115,17 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                 return ListView.builder(
                   controller: _scrollController,
                   padding: EdgeInsets.all(4.w),
-                  itemCount: provider.messages.length,
+                  itemCount: provider.messages.length + (provider.hasMore ? 1 : 0),
                   itemBuilder: (context, index) {
-                    final message = provider.messages[index];
+                    if (provider.hasMore && index == 0) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: 2.h),
+                        child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                      );
+                    }
+                    
+                    final messageIndex = provider.hasMore ? index - 1 : index;
+                    final message = provider.messages[messageIndex];
                     return _buildMessageBubble(message);
                   },
                 );

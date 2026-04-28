@@ -10,7 +10,11 @@ class ChatProvider extends ChangeNotifier {
   final ChatRepository _repository = ChatRepository();
   final SharedPrefService _prefs = SharedPrefService();
   Timer? _pollingTimer;
-  int? _activeRoomId;
+  dynamic _activeRoomId;
+
+  String? _nextCursor;
+  bool _hasMore = true;
+  bool _isLoadingMore = false;
 
   List<ChatRoom> _rooms = [];
   List<ChatMessage> _messages = [];
@@ -22,6 +26,8 @@ class ChatProvider extends ChangeNotifier {
   List<ChatMessage> get messages => _messages;
   bool get isLoading => _isLoading;
   bool get isSending => _isSending;
+  bool get isLoadingMore => _isLoadingMore;
+  bool get hasMore => _hasMore;
   String? get error => _error;
 
   Future<void> fetchRooms() async {
@@ -40,16 +46,21 @@ class ChatProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchMessages(int roomId) async {
+  Future<void> fetchMessages(dynamic roomId) async {
     _activeRoomId = roomId;
     _isLoading = _messages.isEmpty; // Only show full loader if empty
     _error = null;
+    _nextCursor = null;
+    _hasMore = true;
     notifyListeners();
 
     try {
       final user = await _prefs.getUser();
       final currentUserId = user?.id ?? '';
-      _messages = await _repository.getChatMessages(roomId, currentUserId);
+      final result = await _repository.getChatMessages(roomId, currentUserId);
+      _messages = result['messages'];
+      _nextCursor = result['nextCursor'];
+      _hasMore = _nextCursor != null;
     } catch (e) {
       _error = e.toString();
       developer.log("⚠️ Chat Messages Fetch Error: $e", name: "CHAT");
@@ -59,7 +70,35 @@ class ChatProvider extends ChangeNotifier {
     }
   }
 
-  void startPollingMessages(int roomId) {
+  Future<void> loadMoreMessages() async {
+    if (_isLoadingMore || !_hasMore || _activeRoomId == null) return;
+
+    _isLoadingMore = true;
+    notifyListeners();
+
+    try {
+      final user = await _prefs.getUser();
+      final currentUserId = user?.id ?? '';
+      final result = await _repository.getChatMessages(
+        _activeRoomId, 
+        currentUserId, 
+        cursor: _nextCursor
+      );
+      
+      final List<ChatMessage> newMessages = result['messages'];
+      // Prepend old messages (pagination usually goes backwards in time for chat)
+      _messages.insertAll(0, newMessages);
+      _nextCursor = result['nextCursor'];
+      _hasMore = _nextCursor != null;
+    } catch (e) {
+      developer.log("⚠️ Chat Load More Error: $e", name: "CHAT");
+    } finally {
+      _isLoadingMore = false;
+      notifyListeners();
+    }
+  }
+
+  void startPollingMessages(dynamic roomId) {
     stopPollingMessages(); // Clear existing
     _activeRoomId = roomId;
     _pollingTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
@@ -75,16 +114,27 @@ class ChatProvider extends ChangeNotifier {
     _activeRoomId = null;
   }
 
-  Future<void> _quietFetchMessages(int roomId) async {
+  Future<void> _quietFetchMessages(dynamic roomId) async {
     try {
       final user = await _prefs.getUser();
       final currentUserId = user?.id ?? '';
-      final newMessages = await _repository.getChatMessages(roomId, currentUserId);
+      // We only fetch the latest page for polling
+      final result = await _repository.getChatMessages(roomId, currentUserId);
+      final List<ChatMessage> latestMessages = result['messages'];
       
       // Update only if count changed to minimize UI rebuilds
-      if (newMessages.length != _messages.length) {
-        _messages = newMessages;
-        notifyListeners();
+      if (latestMessages.length != _messages.length) {
+        // This logic might need refinement for pagination, 
+        // but for now, we just update the footer if new messages arrive.
+        // Actually, polling should probably only check for NEWER messages.
+        // For simplicity, we merge based on ID.
+        final existingIds = _messages.map((m) => m.id).toSet();
+        final newOnly = latestMessages.where((m) => !existingIds.contains(m.id)).toList();
+        
+        if (newOnly.isNotEmpty) {
+          _messages.addAll(newOnly);
+          notifyListeners();
+        }
       }
     } catch (e) {
       // Quiet fail for polling
@@ -97,7 +147,7 @@ class ChatProvider extends ChangeNotifier {
     super.dispose();
   }
 
-  Future<bool> sendMessage(int roomId, String text) async {
+  Future<bool> sendMessage(dynamic roomId, String text) async {
     if (text.trim().isEmpty) return false;
     _isSending = true;
     notifyListeners();
