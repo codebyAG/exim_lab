@@ -30,7 +30,9 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels <= 100) {
+    // Trigger load more only when user reaches 95% of the scrollable area
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.95) {
       context.read<ChatProvider>().loadMoreMessages();
     }
   }
@@ -110,25 +112,57 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                   itemCount: provider.messages.length + (provider.hasMore ? 1 : 0),
                   itemBuilder: (context, index) {
                     if (index == provider.messages.length) {
-                      if (provider.hasMore) {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(vertical: 2.h),
-                          child: const Center(
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          ),
-                        );
-                      } else if (provider.messages.isNotEmpty) {
+                      if (provider.isFetchingMore) {
                         return Padding(
                           padding: EdgeInsets.symmetric(vertical: 3.h),
-                          child: Center(
-                            child: Text(
-                              "🛡️ You've reached the beginning of the chat",
-                              style: TextStyle(
-                                color: Colors.grey.withValues(alpha: 0.6),
-                                fontSize: 9.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.5,
+                              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF1E5FFF)),
                             ),
+                          ),
+                        );
+                      } else if (provider.hasMore) {
+                        // Empty space to trigger scroll listener
+                        return SizedBox(height: 5.h);
+                      } else if (provider.messages.isNotEmpty) {
+                        return Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 10.w),
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.auto_awesome_rounded,
+                                color: const Color(0xFF1E5FFF).withValues(alpha: 0.3),
+                                size: 35.sp,
+                              ),
+                              SizedBox(height: 1.5.h),
+                              Text(
+                                "Community Chat Started Here",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.black.withValues(alpha: 0.5),
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                              SizedBox(height: 0.5.h),
+                              Text(
+                                "This is the very beginning of this hub.",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.grey.withValues(alpha: 0.5),
+                                  fontSize: 9.sp,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(height: 2.h),
+                              Container(
+                                width: 40.w,
+                                height: 1,
+                                color: Colors.grey.withValues(alpha: 0.1),
+                              ),
+                            ],
                           ),
                         );
                       }
