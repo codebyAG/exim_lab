@@ -75,7 +75,10 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                 children: [
                   Text(
                     widget.room.name,
-                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -97,7 +100,11 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.chat_bubble_outline, size: 50.sp, color: Colors.grey[400]),
+                        Icon(
+                          Icons.chat_bubble_outline,
+                          size: 50.sp,
+                          color: Colors.grey[400],
+                        ),
                         SizedBox(height: 2.h),
                         const Text('No messages yet. Start the conversation!'),
                       ],
@@ -109,7 +116,8 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                   controller: _scrollController,
                   reverse: true,
                   padding: EdgeInsets.all(4.w),
-                  itemCount: provider.messages.length + (provider.hasMore ? 1 : 0),
+                  itemCount:
+                      provider.messages.length + (provider.hasMore ? 1 : 0),
                   itemBuilder: (context, index) {
                     if (index == provider.messages.length) {
                       if (provider.isFetchingMore) {
@@ -118,7 +126,9 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                           child: const Center(
                             child: CircularProgressIndicator(
                               strokeWidth: 2.5,
-                              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF1E5FFF)),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Color(0xFF1E5FFF),
+                              ),
                             ),
                           ),
                         );
@@ -128,12 +138,17 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                       } else if (provider.messages.isNotEmpty) {
                         return Container(
                           width: double.infinity,
-                          padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 10.w),
+                          padding: EdgeInsets.symmetric(
+                            vertical: 4.h,
+                            horizontal: 10.w,
+                          ),
                           child: Column(
                             children: [
                               Icon(
                                 Icons.auto_awesome_rounded,
-                                color: const Color(0xFF1E5FFF).withValues(alpha: 0.3),
+                                color: const Color(
+                                  0xFF1E5FFF,
+                                ).withValues(alpha: 0.3),
                                 size: 35.sp,
                               ),
                               SizedBox(height: 1.5.h),
@@ -168,11 +183,13 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                       }
                       return const SizedBox.shrink();
                     }
-                    
+
                     final message = provider.messages[index];
                     return _buildMessageBubble(
                       message,
-                      key: ValueKey("msg_${message.id}_${message.createdAt.millisecondsSinceEpoch}"),
+                      key: ValueKey(
+                        "msg_${message.id}_${message.createdAt.millisecondsSinceEpoch}",
+                      ),
                     );
                   },
                 );
@@ -190,32 +207,49 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
       key: key,
       padding: EdgeInsets.only(bottom: 2.h),
       child: Column(
-        crossAxisAlignment: message.isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment: message.isMe
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
         children: [
           if (!message.isMe)
             Padding(
               padding: EdgeInsets.only(left: 2.w, bottom: 0.5.h),
               child: Text(
                 message.senderName,
-                style: TextStyle(fontSize: 9.sp, fontWeight: FontWeight.bold, color: Colors.grey[600]),
+                style: TextStyle(
+                  fontSize: 9.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[600],
+                ),
               ),
             ),
           Row(
-            mainAxisAlignment: message.isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+            mainAxisAlignment: message.isMe
+                ? MainAxisAlignment.end
+                : MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               if (!message.isMe)
                 CircleAvatar(
                   radius: 12,
-                  backgroundImage: message.senderImageUrl.isNotEmpty ? NetworkImage(message.senderImageUrl) : null,
-                  child: message.senderImageUrl.isEmpty ? Icon(Icons.person, size: 12) : null,
+                  backgroundImage: message.senderImageUrl.isNotEmpty
+                      ? NetworkImage(message.senderImageUrl)
+                      : null,
+                  child: message.senderImageUrl.isEmpty
+                      ? Icon(Icons.person, size: 12)
+                      : null,
                 ),
               SizedBox(width: 2.w),
               Flexible(
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 4.w,
+                    vertical: 1.5.h,
+                  ),
                   decoration: BoxDecoration(
-                    color: message.isMe ? const Color(0xFF1E5FFF) : Colors.white,
+                    color: message.isMe
+                        ? const Color(0xFF1E5FFF)
+                        : Colors.white,
                     borderRadius: BorderRadius.only(
                       topLeft: const Radius.circular(20),
                       topRight: const Radius.circular(20),
@@ -301,11 +335,15 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                       : () async {
                           final text = _messageController.text;
                           if (text.isNotEmpty) {
-                            final success = await provider.sendMessage(widget.room.id, text);
+                            final success = await provider.sendMessage(
+                              widget.room.id,
+                              text,
+                            );
                             if (success) {
                               _messageController.clear();
                               _scrollToBottom();
                             } else if (provider.error != null) {
+                              if (!context.mounted) return;
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(provider.error!),
@@ -327,10 +365,8 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                     ),
                     child: AnimatedSwitcher(
                       duration: const Duration(milliseconds: 300),
-                      transitionBuilder: (child, animation) => ScaleTransition(
-                        scale: animation,
-                        child: child,
-                      ),
+                      transitionBuilder: (child, animation) =>
+                          ScaleTransition(scale: animation, child: child),
                       child: provider.isSending
                           ? SizedBox(
                               key: const ValueKey('loader'),
