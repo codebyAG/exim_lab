@@ -5,10 +5,12 @@ import '../../data/repositories/chat_repository.dart';
 import 'package:exim_lab/core/services/shared_pref_service.dart';
 import 'dart:developer' as developer;
 import 'dart:async';
+import 'package:exim_lab/core/services/audio_service.dart';
 
 class ChatProvider extends ChangeNotifier {
   final ChatRepository _repository = ChatRepository();
   final SharedPrefService _prefs = SharedPrefService();
+  final AudioService _audioService = AudioService();
   dynamic _activeRoomId;
 
   String? _nextCursor;
@@ -139,6 +141,7 @@ class ChatProvider extends ChangeNotifier {
       );
       
       _messages.insert(0, tempMessage);
+      _audioService.playSendMessageSound(); // 🔊 Play sound immediately
       notifyListeners();
 
       final newMessage = await _repository.sendMessage(roomId, text, currentUserId);
