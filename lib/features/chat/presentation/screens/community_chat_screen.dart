@@ -128,87 +128,164 @@ class _CommunityChatScreenState extends State<CommunityChatScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
-      child: ListTile(
-        contentPadding: EdgeInsets.all(4.w),
-        leading: Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            color: room.color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(18),
-          ),
-          child: Icon(room.icon, color: room.color, size: 30),
-        ),
-        title: Text(
-          room.name,
-          style: const TextStyle(
-            fontWeight: FontWeight.w900,
-            fontSize: 18,
-            letterSpacing: -0.5,
-          ),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 4),
-            Text(
-              room.description,
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 13,
-                height: 1.2,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 8),
-            Row(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(24),
+          onTap: () {
+            AppNavigator.push(
+              context,
+              ChatRoomDetailsScreen(room: room),
+            );
+          },
+          child: Padding(
+            padding: EdgeInsets.all(4.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildTag(room.category.name, room.color),
-                const SizedBox(width: 8),
-                Text(
-                  '${room.memberCount} Members',
-                  style: TextStyle(
-                    color: Colors.grey[500],
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
+                Row(
+                  children: [
+                    Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: room.color.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Icon(room.icon, color: room.color, size: 24),
+                    ),
+                    SizedBox(width: 4.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                room.name,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 17,
+                                  letterSpacing: -0.5,
+                                ),
+                              ),
+                              const Spacer(),
+                              if (room.isActive) _buildStatusBadge(),
+                            ],
+                          ),
+                          const SizedBox(height: 2),
+                          _buildTag(room.category.name.toUpperCase(), room.color),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                if (room.description.isNotEmpty) ...[
+                  SizedBox(height: 1.5.h),
+                  Text(
+                    room.description,
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 13,
+                      height: 1.3,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
+                ],
+                SizedBox(height: 2.h),
+                Divider(color: Colors.black.withValues(alpha: 0.05), height: 1),
+                SizedBox(height: 1.5.h),
+                Row(
+                  children: [
+                    Text(
+                      'ACTIVE DISCUSSION',
+                      style: TextStyle(
+                        color: Colors.grey[400],
+                        fontWeight: FontWeight.w900,
+                        fontSize: 9,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      'JOIN HUB',
+                      style: TextStyle(
+                        color: const Color(0xFF1E5FFF),
+                        fontWeight: FontWeight.w900,
+                        fontSize: 10.sp,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    SizedBox(width: 2.w),
+                    const Icon(
+                      Icons.arrow_forward_rounded,
+                      color: Color(0xFF1E5FFF),
+                      size: 16,
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
-        trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
-        onTap: () {
-          AppNavigator.push(
-            context,
-            ChatRoomDetailsScreen(room: room),
-          );
-        },
+      ),
+    );
+  }
+
+  Widget _buildStatusBadge() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: const Color(0xFF00C853).withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            decoration: const BoxDecoration(
+              color: Color(0xFF00C853),
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 6),
+          const Text(
+            'LIVE',
+            style: TextStyle(
+              color: Color(0xFF00C853),
+              fontSize: 8,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildTag(String text, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(6),
       ),
       child: Text(
         text,
         style: TextStyle(
           color: color,
-          fontSize: 10,
+          fontSize: 9,
           fontWeight: FontWeight.w900,
         ),
       ),

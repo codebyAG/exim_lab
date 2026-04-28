@@ -45,10 +45,15 @@ class ChatProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchMessages(dynamic roomId) async {
+  Future<void> fetchMessages(dynamic roomId, {bool isRefresh = false}) async {
     _activeRoomId = roomId;
-    _messages = []; // 🛡️ Clear old messages immediately
-    _isLoading = true; // Always show loader for new room
+    
+    // Only clear and show full loader if not a quiet refresh or if we have no messages
+    if (!isRefresh || _messages.isEmpty) {
+      _messages = []; 
+      _isLoading = true;
+    }
+    
     _error = null;
     _nextCursor = null;
     _hasMore = true;
@@ -109,9 +114,8 @@ class ChatProvider extends ChangeNotifier {
       final currentUserId = user?.id ?? '';
       final newMessage = await _repository.sendMessage(roomId, text, currentUserId);
       if (newMessage != null) {
-        // Option 1: Just add the message (fast)
-        // Option 2: Re-fetch (Safe & Syncs with server timestamps/IDs)
-        await fetchMessages(roomId);
+        // Safe & Syncs with server timestamps/IDs without clearing screen
+        await fetchMessages(roomId, isRefresh: true);
         return true;
       }
       return false;

@@ -75,10 +75,6 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                     widget.room.name,
                     style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    '${widget.room.memberCount} Members',
-                    style: TextStyle(fontSize: 10.sp, color: Colors.grey),
-                  ),
                 ],
               ),
             ),
@@ -268,13 +264,28 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                       color: Color(0xFF1E5FFF),
                       shape: BoxShape.circle,
                     ),
-                    child: provider.isSending
-                        ? SizedBox(
-                            width: 15,
-                            height: 15,
-                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                          )
-                        : const Icon(Icons.send_rounded, color: Colors.white),
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      transitionBuilder: (child, animation) => ScaleTransition(
+                        scale: animation,
+                        child: child,
+                      ),
+                      child: provider.isSending
+                          ? SizedBox(
+                              key: const ValueKey('loader'),
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : const Icon(
+                              Icons.send_rounded,
+                              color: Colors.white,
+                              key: ValueKey('icon'),
+                            ),
+                    ),
                   ),
                 );
               },
