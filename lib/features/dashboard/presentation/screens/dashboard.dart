@@ -564,7 +564,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
                         title: t.translate('exclusive_community'),
                         icon: Icons.forum_rounded,
                         buttonLabel: t.translate('join_community_subtitle'),
-                        themeColor: const Color(0xFF00C853), // Green for Community
+                        themeColor: const Color(
+                          0xFF00C853,
+                        ), // Green for Community
                         onTap: () => AppNavigator.push(
                           context,
                           const CommunityChatScreen(),
