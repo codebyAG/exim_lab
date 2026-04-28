@@ -927,88 +927,98 @@ class _DashboardBodyState extends State<_DashboardBody> {
                 if (moduleProvider.isEnabled('quizzes'))
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5.w),
-                    child: Container(
-                      padding: EdgeInsets.all(5.w),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF030E30),
-                        borderRadius: BorderRadius.circular(24),
-                        border: Border.all(
-                          color: const Color(0xFF1E5FFF).withValues(alpha: 0.2),
-                          width: 1.5,
+                    child: GestureDetector(
+                      onTap: () => _handlePremiumGatedTap(
+                        context: context,
+                        sectionName: 'Dashboard: Quiz Banner',
+                        action: () => AppNavigator.push(
+                          context,
+                          const QuizTopicsScreen(),
                         ),
-                        boxShadow: [
-                          BoxShadow(
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.all(5.w),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF030E30),
+                          borderRadius: BorderRadius.circular(24),
+                          border: Border.all(
                             color: const Color(
                               0xFF1E5FFF,
-                            ).withValues(alpha: 0.1),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10),
+                            ).withValues(alpha: 0.2),
+                            width: 1.5,
                           ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(3.w),
-                            decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
                               color: const Color(
                                 0xFF1E5FFF,
                               ).withValues(alpha: 0.1),
-                              shape: BoxShape.circle,
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
                             ),
-                            child: Icon(
-                              Icons.psychology_rounded,
-                              color: const Color(0xFFFFD000),
-                              size: 28.sp,
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(3.w),
+                              decoration: BoxDecoration(
+                                color: const Color(
+                                  0xFF1E5FFF,
+                                ).withValues(alpha: 0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.psychology_rounded,
+                                color: const Color(0xFFFFD000),
+                                size: 28.sp,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 4.w),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Test Your Knowledge",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.w900,
-                                    fontFamily: 'Plus Jakarta Sans',
+                            SizedBox(width: 4.w),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Test Your Knowledge",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w900,
+                                      fontFamily: 'Plus Jakarta Sans',
+                                    ),
                                   ),
-                                ),
-                                SizedBox(height: 0.5.h),
-                                Text(
-                                  "Take daily quizzes and boost your trade skills!",
-                                  style: TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 11.sp,
-                                    fontWeight: FontWeight.w500,
+                                  SizedBox(height: 0.5.h),
+                                  Text(
+                                    "Take daily quizzes and boost your trade skills!",
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 11.sp,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 2.w),
+                            IconButton.filled(
+                              onPressed: () => _handlePremiumGatedTap(
+                                context: context,
+                                sectionName: 'Dashboard: Quiz Banner Btn',
+                                action: () => AppNavigator.push(
+                                  context,
+                                  const QuizTopicsScreen(),
                                 ),
-                              ],
+                              ),
+                              icon: const Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 18,
+                              ),
+                              style: IconButton.styleFrom(
+                                backgroundColor: const Color(0xFF1E5FFF),
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 2.w),
-                          IconButton.filled(
-                            onPressed: () {
-                              developer.log(
-                                '📂 Navigation -> Quiz topics',
-                                name: 'NAVIGATION',
-                              );
-                              AppNavigator.push(
-                                context,
-                                const QuizTopicsScreen(),
-                              );
-                            },
-                            icon: const Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              size: 18,
-                            ),
-                            style: IconButton.styleFrom(
-                              backgroundColor: const Color(0xFF1E5FFF),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),

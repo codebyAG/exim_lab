@@ -36,92 +36,97 @@ class PremiumFeatureCard extends StatelessWidget {
           ),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: Column(
-          children: [
-            // 📦 MAIN ICON AREA
-            Expanded(
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  // Subtitle Outline Icon/Pattern if needed
-                  painter != null
-                      ? SizedBox(
-                          width: double.infinity,
-                          height: double.infinity,
-                          child: CustomPaint(painter: painter),
-                        )
-                      : Icon(
-                          icon,
-                          size: 80.sp,
-                          color: Colors.white.withValues(alpha: 0.08),
-                        ),
-                  // Primary Icon (Only show if no painter)
-                  if (painter == null)
-                    Icon(
-                      icon,
-                      size: 32.sp,
-                      color: Colors.white,
-                    ),
-                ],
-              ),
-            ),
-
-            // 📝 TITLE
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 2.w),
-              child: Text(
-                title,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 14.5.sp,
-                  fontFamily: 'Plus Jakarta Sans',
-                  height: 1.1,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            SizedBox(height: 1.2.h),
-
-            // 🔘 FOOTER STRIP
-            Material(
-              color: Colors.black.withValues(alpha: 0.15),
-              child: InkWell(
-                onTap: onTap,
-                child: Container(
-                  height: 3.8.h,
-                  padding: EdgeInsets.symmetric(horizontal: 4.w),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                        child: Text(
-                          buttonLabel.replaceAll(" >", ""),
-                          style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.8),
-                            fontWeight: FontWeight.w700,
-                            fontSize: 11.sp,
-                            fontFamily: 'Plus Jakarta Sans',
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(24),
+          child: Column(
+            children: [
+              // 📦 MAIN ICON AREA
+              Expanded(
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Subtitle Outline Icon/Pattern if needed
+                    painter != null
+                        ? SizedBox(
+                            width: double.infinity,
+                            height: double.infinity,
+                            child: CustomPaint(painter: painter),
+                          )
+                        : Icon(
+                            icon,
+                            size: 80.sp,
+                            color: Colors.white.withValues(alpha: 0.08),
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                    // Primary Icon (Only show if no painter)
+                    if (painter == null)
+                      Icon(
+                        icon,
+                        size: 32.sp,
+                        color: Colors.white,
                       ),
-                      const Icon(
-                        Icons.chevron_right_rounded,
-                        size: 14,
-                        color: Colors.white70,
-                      ),
-                    ],
+                  ],
+                ),
+              ),
+
+              // 📝 TITLE
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 2.w),
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 14.5.sp,
+                    fontFamily: 'Plus Jakarta Sans',
+                    height: 1.1,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              SizedBox(height: 1.2.h),
+
+              // 🔘 FOOTER STRIP
+              Container(
+                height: 3.8.h,
+                padding: EdgeInsets.symmetric(horizontal: 4.w),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.15),
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(24),
+                    bottomRight: Radius.circular(24),
                   ),
                 ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        buttonLabel.replaceAll(" >", ""),
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.8),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 11.sp,
+                          fontFamily: 'Plus Jakarta Sans',
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const Icon(
+                      Icons.chevron_right_rounded,
+                      size: 14,
+                      color: Colors.white70,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
