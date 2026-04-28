@@ -116,10 +116,14 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                   itemCount: provider.messages.length + (provider.hasMore ? 1 : 0),
                   itemBuilder: (context, index) {
                     if (provider.hasMore && index == 0) {
-                      return Padding(
-                        padding: EdgeInsets.symmetric(vertical: 2.h),
-                        child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
-                      );
+                      return provider.isLoadingMore
+                          ? Padding(
+                              padding: EdgeInsets.symmetric(vertical: 2.h),
+                              child: const Center(
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              ),
+                            )
+                          : const SizedBox.shrink();
                     }
                     
                     final messageIndex = provider.hasMore ? index - 1 : index;
@@ -187,7 +191,7 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                         message.message,
                         style: TextStyle(
                           color: message.isMe ? Colors.white : Colors.black87,
-                          fontSize: 12.sp,
+                          fontSize: 13.5.sp,
                         ),
                       ),
                       SizedBox(height: 0.5.h),
@@ -195,7 +199,7 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                         DateFormat('hh:mm a').format(message.createdAt),
                         style: TextStyle(
                           color: message.isMe ? Colors.white70 : Colors.black38,
-                          fontSize: 8.sp,
+                          fontSize: 9.5.sp,
                         ),
                       ),
                     ],

@@ -1654,7 +1654,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
           // 🧠 Point 12: Random Search Assistant Prompt
           if (_showAssistantPrompt)
             Positioned(
-              bottom: 2.h,
+              bottom: 12.h,
               right: 5.w,
               left: 5.w,
               child: FadeInUp(
