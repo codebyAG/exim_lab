@@ -103,16 +103,14 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                   );
                 }
 
-                // Auto scroll to bottom when messages change
-                WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
-
                 return ListView.builder(
                   controller: _scrollController,
+                  reverse: true,
                   padding: EdgeInsets.all(4.w),
                   itemCount: provider.messages.length + (provider.hasMore ? 1 : 0),
                   itemBuilder: (context, index) {
-                    if (provider.hasMore && index == 0) {
-                      return provider.isLoadingMore
+                    if (index == provider.messages.length) {
+                      return provider.hasMore
                           ? Padding(
                               padding: EdgeInsets.symmetric(vertical: 2.h),
                               child: const Center(
@@ -122,8 +120,7 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                           : const SizedBox.shrink();
                     }
                     
-                    final messageIndex = provider.hasMore ? index - 1 : index;
-                    final message = provider.messages[messageIndex];
+                    final message = provider.messages[index];
                     return _buildMessageBubble(message);
                   },
                 );

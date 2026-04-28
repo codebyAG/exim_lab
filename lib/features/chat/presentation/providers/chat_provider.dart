@@ -45,18 +45,22 @@ class ChatProvider extends ChangeNotifier {
     }
   }
 
+  bool _isFetchingMore = false;
+  bool get isFetchingMore => _isFetchingMore;
+
   Future<void> fetchMessages(dynamic roomId, {bool isRefresh = false}) async {
     _activeRoomId = roomId;
-    
+
     // Only clear and show full loader if not a quiet refresh or if we have no messages
     if (!isRefresh || _messages.isEmpty) {
-      _messages = []; 
+      _messages = [];
       _isLoading = true;
     }
-    
+
     _error = null;
     _nextCursor = null;
     _hasMore = true;
+    _isFetchingMore = false;
     notifyListeners();
 
     try {
@@ -76,29 +80,30 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<void> loadMoreMessages() async {
-    if (_isLoadingMore || !_hasMore || _activeRoomId == null) return;
+    if (_isFetchingMore || !_hasMore || _nextCursor == null || _activeRoomId == null) return;
 
-    _isLoadingMore = true;
+    _isFetchingMore = true;
     notifyListeners();
 
     try {
       final user = await _prefs.getUser();
       final currentUserId = user?.id ?? '';
       final result = await _repository.getChatMessages(
-        _activeRoomId, 
-        currentUserId, 
-        cursor: _nextCursor
+        _activeRoomId,
+        currentUserId,
+        cursor: _nextCursor,
       );
+
+      final List<ChatMessage> olderMessages = result['messages'];
+      // Append older history at the end of the list
+      _messages.addAll(olderMessages);
       
-      final List<ChatMessage> newMessages = result['messages'];
-      // Prepend old messages (pagination usually goes backwards in time for chat)
-      _messages.insertAll(0, newMessages);
       _nextCursor = result['nextCursor'];
       _hasMore = _nextCursor != null;
     } catch (e) {
-      developer.log("⚠️ Chat Load More Error: $e", name: "CHAT");
+      developer.log("⚠️ Pagination Error: $e", name: "CHAT");
     } finally {
-      _isLoadingMore = false;
+      _isFetchingMore = false;
       notifyListeners();
     }
   }
@@ -114,8 +119,9 @@ class ChatProvider extends ChangeNotifier {
       final currentUserId = user?.id ?? '';
       final newMessage = await _repository.sendMessage(roomId, text, currentUserId);
       if (newMessage != null) {
-        // Safe & Syncs with server timestamps/IDs without clearing screen
-        await fetchMessages(roomId, isRefresh: true);
+        // Add new message at index 0 (bottom of the reversed list)
+        _messages.insert(0, newMessage);
+        notifyListeners();
         return true;
       }
       return false;
