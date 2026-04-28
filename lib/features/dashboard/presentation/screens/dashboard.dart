@@ -1737,7 +1737,11 @@ class _DashboardBodyState extends State<_DashboardBody> {
     ModuleProvider moduleProvider,
   ) {
     final dashboardProvider = context.read<DashboardProvider>();
-    final schema = dashboardProvider.getNavigationSchema(moduleProvider);
+    final authProvider = context.read<AuthProvider>();
+    final schema = dashboardProvider.getNavigationSchema(
+      moduleProvider,
+      user: authProvider.user,
+    );
 
     List<BottomNavigationBarItem> navItems = [];
     List<VoidCallback?> navActions = [];

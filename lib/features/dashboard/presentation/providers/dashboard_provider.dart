@@ -2,6 +2,7 @@ import 'dart:developer' as developer;
 import 'package:exim_lab/features/courses/data/models/course_model.dart';
 import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart';
 import 'package:exim_lab/features/dashboard/data/models/founder_model.dart';
+import 'package:exim_lab/features/login/data/models/user_model.dart';
 import 'package:exim_lab/features/dashboard/data/repositories/dashboard_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -159,7 +160,10 @@ class DashboardProvider extends ChangeNotifier {
 
   // --- Navigation Schema ---
 
-  List<DashboardNavItem> getNavigationSchema(dynamic moduleProvider) {
+  List<DashboardNavItem> getNavigationSchema(
+    dynamic moduleProvider, {
+    UserModel? user,
+  }) {
     List<DashboardNavItem> items = [
       DashboardNavItem(
         labelKey: 'home',
@@ -202,15 +206,17 @@ class DashboardProvider extends ChangeNotifier {
       );
     }
 
-    // 🛡️ Force show Community Chats in bottom bar
-    items.add(
-      DashboardNavItem(
-        labelKey: 'community',
-        icon: Icons.chat_bubble_outline_rounded,
-        activeIcon: Icons.chat_bubble_rounded,
-        identifier: 'community',
-      ),
-    );
+    // 🛡️ Premium-Only Feature: Community Chats
+    if (user?.isPremium == true) {
+      items.add(
+        DashboardNavItem(
+          labelKey: 'community',
+          icon: Icons.chat_bubble_outline_rounded,
+          activeIcon: Icons.chat_bubble_rounded,
+          identifier: 'community',
+        ),
+      );
+    }
 
     items.add(
       DashboardNavItem(
