@@ -113,8 +113,8 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                   itemBuilder: (context, index) {
                     if (index == provider.messages.length) {
                       if (provider.isFetchingMore) {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(vertical: 3.h),
+                        return SizedBox(
+                          height: 8.h, // Constant height to keep scroll intact
                           child: const Center(
                             child: CircularProgressIndicator(
                               strokeWidth: 2.5,
@@ -123,8 +123,8 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                           ),
                         );
                       } else if (provider.hasMore) {
-                        // Empty space to trigger scroll listener
-                        return SizedBox(height: 5.h);
+                        // Match exactly the loader height
+                        return SizedBox(height: 8.h);
                       } else if (provider.messages.isNotEmpty) {
                         return Container(
                           width: double.infinity,
@@ -170,7 +170,10 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                     }
                     
                     final message = provider.messages[index];
-                    return _buildMessageBubble(message);
+                    return _buildMessageBubble(
+                      message,
+                      key: ValueKey("msg_${message.id}_${message.createdAt.millisecondsSinceEpoch}"),
+                    );
                   },
                 );
               },
@@ -182,8 +185,9 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
     );
   }
 
-  Widget _buildMessageBubble(ChatMessage message) {
+  Widget _buildMessageBubble(ChatMessage message, {Key? key}) {
     return Padding(
+      key: key,
       padding: EdgeInsets.only(bottom: 2.h),
       child: Column(
         crossAxisAlignment: message.isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,

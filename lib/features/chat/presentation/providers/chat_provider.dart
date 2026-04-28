@@ -114,21 +114,43 @@ class ChatProvider extends ChangeNotifier {
 
   Future<bool> sendMessage(dynamic roomId, String text) async {
     if (text.trim().isEmpty) return false;
-    _isSending = true;
-    notifyListeners();
-
+    
     try {
       final user = await _prefs.getUser();
       final currentUserId = user?.id ?? '';
+
+      // 🚀 OPTIMISTIC UI: Show message immediately
+      final tempMessage = ChatMessage(
+        id: "temp_${DateTime.now().millisecondsSinceEpoch}",
+        roomId: roomId,
+        senderId: currentUserId,
+        senderName: user?.name ?? "Me",
+        senderImageUrl: user?.avatarUrl ?? "",
+        message: text,
+        createdAt: DateTime.now(),
+        isMe: true,
+      );
+      
+      _messages.insert(0, tempMessage);
+      notifyListeners();
+
       final newMessage = await _repository.sendMessage(roomId, text, currentUserId);
+      
       if (newMessage != null) {
-        // Add new message and re-sort
-        _messages.insert(0, newMessage);
-        _sortMessages();
-        notifyListeners();
+        // Replace temporary message with real server data
+        final index = _messages.indexWhere((m) => m.id == tempMessage.id);
+        if (index != -1) {
+          _messages[index] = newMessage;
+          _sortMessages();
+          notifyListeners();
+        }
         return true;
+      } else {
+        // If failed, remove the temp message
+        _messages.removeWhere((m) => m.id == tempMessage.id);
+        notifyListeners();
+        return false;
       }
-      return false;
     } catch (e) {
       developer.log("⚠️ Send Message Error: $e", name: "CHAT");
       return false;
