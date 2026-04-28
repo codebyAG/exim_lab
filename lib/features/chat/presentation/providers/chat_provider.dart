@@ -13,7 +13,7 @@ class ChatProvider extends ChangeNotifier {
 
   String? _nextCursor;
   bool _hasMore = true;
-  bool _isLoadingMore = false;
+  bool _isFetchingMore = false;
 
   List<ChatRoom> _rooms = [];
   List<ChatMessage> _messages = [];
@@ -25,7 +25,7 @@ class ChatProvider extends ChangeNotifier {
   List<ChatMessage> get messages => _messages;
   bool get isLoading => _isLoading;
   bool get isSending => _isSending;
-  bool get isLoadingMore => _isLoadingMore;
+  bool get isFetchingMore => _isFetchingMore;
   bool get hasMore => _hasMore;
   String? get error => _error;
 
@@ -44,9 +44,6 @@ class ChatProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-
-  bool _isFetchingMore = false;
-  bool get isFetchingMore => _isFetchingMore;
 
   Future<void> fetchMessages(dynamic roomId, {bool isRefresh = false}) async {
     _activeRoomId = roomId;

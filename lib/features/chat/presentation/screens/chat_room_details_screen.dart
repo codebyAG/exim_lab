@@ -110,14 +110,29 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                   itemCount: provider.messages.length + (provider.hasMore ? 1 : 0),
                   itemBuilder: (context, index) {
                     if (index == provider.messages.length) {
-                      return provider.hasMore
-                          ? Padding(
-                              padding: EdgeInsets.symmetric(vertical: 2.h),
-                              child: const Center(
-                                child: CircularProgressIndicator(strokeWidth: 2),
+                      if (provider.hasMore) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: 2.h),
+                          child: const Center(
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                        );
+                      } else if (provider.messages.isNotEmpty) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: 3.h),
+                          child: Center(
+                            child: Text(
+                              "🛡️ You've reached the beginning of the chat",
+                              style: TextStyle(
+                                color: Colors.grey.withValues(alpha: 0.6),
+                                fontSize: 9.sp,
+                                fontWeight: FontWeight.bold,
                               ),
-                            )
-                          : const SizedBox.shrink();
+                            ),
+                          ),
+                        );
+                      }
+                      return const SizedBox.shrink();
                     }
                     
                     final message = provider.messages[index];
