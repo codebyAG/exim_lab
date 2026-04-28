@@ -547,80 +547,95 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     ],
                   ),
                 ),
-                SizedBox(height: 1.5.h),
                 // 3. PREMIUM FEATURE CARDS SCROLL (Square Type)
                 SizedBox(height: 0.8.h),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-                  child: Row(
-                    children: [
-                      // 📸 GALLERY
-                      _buildShowcase(
-                        key: _galleryCardKey,
-                        title: 'tut_gallery_title',
-                        description: 'tut_gallery_desc',
-                        child: PremiumFeatureCard(
-                          title: t.translate('gallery'),
-                          icon: Icons.photo_library_rounded,
-                          painter: GalleryIconPainter(),
-                          buttonLabel: "Success Stories",
-                          themeColor: const Color(0xFF0D47A1),
-                          onTap: () =>
-                              AppNavigator.push(context, const GalleryScreen()),
-                        ),
+                Consumer<AuthProvider>(
+                  builder: (context, auth, _) {
+                    final isPremium = auth.user?.isPremium ?? false;
+
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 5.w,
+                        vertical: 1.h,
                       ),
-                      // 💬 COMMUNITY
-                      PremiumFeatureCard(
-                        title: t.translate('exclusive_community'),
-                        icon: Icons.forum_rounded,
-                        buttonLabel: t.translate('join_community_subtitle'),
-                        themeColor: const Color(
-                          0xFF00C853,
-                        ), // Green for Community
-                        onTap: () => AppNavigator.push(
-                          context,
-                          const CommunityChatScreen(),
-                        ),
+                      child: Row(
+                        children: [
+                          // 📸 GALLERY
+                          _buildShowcase(
+                            key: _galleryCardKey,
+                            title: 'tut_gallery_title',
+                            description: 'tut_gallery_desc',
+                            child: PremiumFeatureCard(
+                              title: t.translate('gallery'),
+                              icon: Icons.photo_library_rounded,
+                              painter: GalleryIconPainter(),
+                              buttonLabel: "Success Stories",
+                              themeColor: const Color(0xFF0D47A1),
+                              onTap: () => AppNavigator.push(
+                                context,
+                                const GalleryScreen(),
+                              ),
+                            ),
+                          ),
+                          // 💬 COMMUNITY
+                          PremiumFeatureCard(
+                            title: t.translate('exclusive_community'),
+                            icon: Icons.forum_rounded,
+                            isLocked: !isPremium,
+                            buttonLabel: t.translate('join_community_subtitle'),
+                            themeColor: const Color(
+                              0xFF00C853,
+                            ), // Green for Community
+                            onTap: () => _handlePremiumGatedTap(
+                              context: context,
+                              sectionName: 'Community Hub',
+                              action: () => AppNavigator.push(
+                                context,
+                                const CommunityChatScreen(),
+                              ),
+                            ),
+                          ),
+                          // 📊 MARKET UPDATES
+                          PremiumFeatureCard(
+                            title: t.translate('market_updates'),
+                            icon: Icons.trending_up_rounded,
+                            painter: MarketUpdatesIconPainter(),
+                            buttonLabel: "Live Trends >",
+                            themeColor: const Color(0xFFD32F2F),
+                            onTap: () => AppNavigator.push(
+                              context,
+                              const NewsListScreen(),
+                            ),
+                          ),
+                          // 🚢 IMPORT JOURNEY
+                          PremiumFeatureCard(
+                            title: t.translate('start_import_journey'),
+                            icon: Icons.directions_boat_rounded,
+                            painter: ImportJourneyIconPainter(),
+                            buttonLabel: "Continue >",
+                            themeColor: const Color(0xFF001A3D),
+                            onTap: () => AppNavigator.push(
+                              context,
+                              const ImportJourneyScreen(),
+                            ),
+                          ),
+                          // ✈️ EXPORT JOURNEY
+                          PremiumFeatureCard(
+                            title: t.translate('start_export_journey'),
+                            icon: Icons.airplanemode_active_rounded,
+                            painter: ExportJourneyIconPainter(),
+                            buttonLabel: "Start Learning >",
+                            themeColor: const Color(0xFFC06014),
+                            onTap: () => AppNavigator.push(
+                              context,
+                              const ExportJourneyScreen(),
+                            ),
+                          ),
+                        ],
                       ),
-                      // 📊 MARKET UPDATES
-                      PremiumFeatureCard(
-                        title: t.translate('market_updates'),
-                        icon: Icons.trending_up_rounded,
-                        painter: MarketUpdatesIconPainter(),
-                        buttonLabel: "Live Trends >",
-                        themeColor: const Color(0xFFD32F2F),
-                        onTap: () =>
-                            AppNavigator.push(context, const NewsListScreen()),
-                      ),
-                      // 🚢 IMPORT JOURNEY
-                      PremiumFeatureCard(
-                        title: t.translate('start_import_journey'),
-                        icon: Icons.directions_boat_rounded,
-                        painter: ImportJourneyIconPainter(),
-                        buttonLabel: "Continue >",
-                        themeColor: const Color(0xFF001A3D),
-                        onTap: () => AppNavigator.push(
-                          context,
-                          const ImportJourneyScreen(),
-                        ),
-                      ),
-                      // ✈️ EXPORT JOURNEY
-                      PremiumFeatureCard(
-                        title: t.translate('start_export_journey'),
-                        icon: Icons.airplanemode_active_rounded,
-                        painter: ExportJourneyIconPainter(),
-                        buttonLabel: "Start Learning >",
-                        themeColor: const Color(
-                          0xFFC06014,
-                        ), // Premium Orange/Bronze
-                        onTap: () => AppNavigator.push(
-                          context,
-                          const ExportJourneyScreen(),
-                        ),
-                      ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
                 SizedBox(height: 2.h),
 

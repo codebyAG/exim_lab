@@ -8,6 +8,7 @@ class PremiumFeatureCard extends StatelessWidget {
   final String buttonLabel;
   final Color themeColor;
   final VoidCallback onTap;
+  final bool isLocked;
 
   const PremiumFeatureCard({
     super.key,
@@ -17,6 +18,7 @@ class PremiumFeatureCard extends StatelessWidget {
     required this.buttonLabel,
     required this.themeColor,
     required this.onTap,
+    this.isLocked = false,
   });
 
   @override
@@ -66,6 +68,16 @@ class PremiumFeatureCard extends StatelessWidget {
                         icon,
                         size: 32.sp,
                         color: Colors.white,
+                      ),
+                    if (isLocked)
+                      Positioned(
+                        top: 2.h,
+                        right: 2.h,
+                        child: Icon(
+                          Icons.lock_rounded,
+                          color: Colors.white.withValues(alpha: 0.5),
+                          size: 16,
+                        ),
                       ),
                   ],
                 ),
