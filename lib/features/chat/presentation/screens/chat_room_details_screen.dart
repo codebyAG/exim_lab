@@ -333,16 +333,17 @@ class _ChatRoomDetailsScreenState extends State<ChatRoomDetailsScreen> {
                   onTap: provider.isSending
                       ? null
                       : () async {
-                          final text = _messageController.text;
+                          final text = _messageController.text.trim();
                           if (text.isNotEmpty) {
+                            // 🚀 Instant UI feedback
+                            _messageController.clear();
+                            _scrollToBottom();
+
                             final success = await provider.sendMessage(
                               widget.room.id,
                               text,
                             );
-                            if (success) {
-                              _messageController.clear();
-                              _scrollToBottom();
-                            } else if (provider.error != null) {
+                            if (!success && provider.error != null) {
                               if (!context.mounted) return;
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
