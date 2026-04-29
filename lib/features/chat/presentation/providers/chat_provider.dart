@@ -54,22 +54,28 @@ class ChatProvider extends ChangeNotifier {
     if (!isRefresh || _messages.isEmpty) {
       _messages = [];
       _isLoading = true;
+      _nextCursor = null;
+      _hasMore = true;
+      _isFetchingMore = false;
     }
 
     _error = null;
-    _nextCursor = null;
-    _hasMore = true;
-    _isFetchingMore = false;
     notifyListeners();
 
     try {
       final user = await _prefs.getUser();
       final currentUserId = user?.id ?? '';
       final result = await _repository.getChatMessages(roomId, currentUserId);
+
+      // Update messages silently
       _messages = result['messages'];
       _sortMessages();
-      _nextCursor = result['nextCursor'];
-      _hasMore = _nextCursor != null;
+
+      // Update cursor only if we were at the top (refreshing)
+      if (!isRefresh) {
+        _nextCursor = result['nextCursor'];
+        _hasMore = _nextCursor != null;
+      }
     } catch (e) {
       _error = e.toString();
       developer.log("⚠️ Chat Messages Fetch Error: $e", name: "CHAT");
@@ -80,7 +86,11 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<void> loadMoreMessages() async {
-    if (_isFetchingMore || !_hasMore || _nextCursor == null || _activeRoomId == null) return;
+    if (_isFetchingMore ||
+        !_hasMore ||
+        _nextCursor == null ||
+        _activeRoomId == null)
+      return;
 
     _isFetchingMore = true;
     notifyListeners();
@@ -98,7 +108,7 @@ class ChatProvider extends ChangeNotifier {
       // Append older history at the end of the list and re-sort
       _messages.addAll(olderMessages);
       _sortMessages();
-      
+
       _nextCursor = result['nextCursor'];
       _hasMore = _nextCursor != null;
     } catch (e) {
@@ -109,14 +119,13 @@ class ChatProvider extends ChangeNotifier {
     }
   }
 
-
   void _sortMessages() {
     _messages.sort((a, b) => b.createdAt.compareTo(a.createdAt));
   }
 
   Future<bool> sendMessage(dynamic roomId, String text) async {
     if (text.trim().isEmpty) return false;
-    
+
     // 🛡️ Block messages containing numbers
     if (RegExp(r'[0-9]').hasMatch(text)) {
       _error = "Numbers are not allowed in chat messages";
@@ -139,21 +148,21 @@ class ChatProvider extends ChangeNotifier {
         createdAt: DateTime.now(),
         isMe: true,
       );
-      
+
       _messages.insert(0, tempMessage);
       _audioService.playSendMessageSound(); // 🔊 Play sound immediately
       notifyListeners();
 
-      final newMessage = await _repository.sendMessage(roomId, text, currentUserId);
-      
+      final newMessage = await _repository.sendMessage(
+        roomId,
+        text,
+        currentUserId,
+      );
+
       if (newMessage != null) {
-        // Replace temporary message with real server data
-        final index = _messages.indexWhere((m) => m.id == tempMessage.id);
-        if (index != -1) {
-          _messages[index] = newMessage;
-          _sortMessages();
-          notifyListeners();
-        }
+        // 🚀 Silent Refresh: Fetch the latest thread to catch other people's messages too
+        // We do this immediately to ensure UI is perfectly up-to-date without flicker
+        unawaited(fetchMessages(roomId, isRefresh: true));
         return true;
       } else {
         // If failed, remove the temp message
