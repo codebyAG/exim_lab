@@ -188,6 +188,13 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                           endIndent: 16,
                         ),
                         _buildInterestItem(context, "Export"),
+                        Divider(
+                          height: 1,
+                          color: Colors.white.withValues(alpha: 0.05),
+                          indent: 16,
+                          endIndent: 16,
+                        ),
+                        _buildInterestItem(context, "Both"),
                       ],
                     ),
                   ),
