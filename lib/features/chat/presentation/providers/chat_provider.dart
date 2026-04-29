@@ -89,8 +89,9 @@ class ChatProvider extends ChangeNotifier {
     if (_isFetchingMore ||
         !_hasMore ||
         _nextCursor == null ||
-        _activeRoomId == null)
+        _activeRoomId == null) {
       return;
+    }
 
     _isFetchingMore = true;
     notifyListeners();
