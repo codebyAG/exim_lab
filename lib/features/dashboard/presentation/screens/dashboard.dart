@@ -8,6 +8,7 @@ import 'package:exim_lab/features/dashboard/presentation/providers/exchange_rate
 import 'package:exim_lab/features/dashboard/presentation/widgets/exchange_rate_ticker.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/achieve_live_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/masterclass_card.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/masterclass_carousel.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/popular_course_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/free_video_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_footer.dart';
@@ -1167,8 +1168,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
               const AchieveLiveCard(),
               SizedBox(height: 1.h),
 
-              // 🚀 4.6 FEATURED MASTERCLASS
-              const MasterclassCard(),
+              // 🚀 4.6 FEATURED MASTERCLASS CAROUSEL
+              const MasterclassCarousel(),
               SizedBox(height: 1.5.h),
 
               // 🛠️ PREMIUM DIVIDER
