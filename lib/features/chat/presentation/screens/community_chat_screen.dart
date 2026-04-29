@@ -160,6 +160,17 @@ class _CommunityChatScreenState extends State<CommunityChatScreen> {
                         context,
                         ChatRoomDetailsScreen(room: room),
                       );
+                    } else if (mounted) {
+                      final error = context.read<ChatProvider>().error;
+                      if (error != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(error),
+                            backgroundColor: Colors.red,
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      }
                     }
                   }
                 },

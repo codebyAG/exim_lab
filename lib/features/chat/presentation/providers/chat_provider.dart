@@ -185,6 +185,12 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<bool> joinRoom(dynamic roomId) async {
+    if (roomId == null) {
+      _error = "Invalid Room ID";
+      notifyListeners();
+      return false;
+    }
+
     _isJoining = true;
     _joiningRoomId = roomId; // 🛡️ Set target ID
     _error = null;

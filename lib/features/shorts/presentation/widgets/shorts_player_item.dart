@@ -55,7 +55,7 @@ class _ShortsPlayerItemState extends State<ShortsPlayerItem> {
   @override
   void didUpdateWidget(covariant ShortsPlayerItem oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (!_initialized || !mounted) return; // Safety check
+    if (!_initialized || !mounted || _isDisposed) return; // Safety check
 
     if (widget.isVisible && !oldWidget.isVisible) {
       _controller.play();
@@ -64,15 +64,18 @@ class _ShortsPlayerItemState extends State<ShortsPlayerItem> {
     }
   }
 
+  bool _isDisposed = false;
+
   @override
   void dispose() {
+    _isDisposed = true;
     _controller.removeListener(_listener);
     _controller.dispose();
     super.dispose();
   }
 
   void _togglePlay() {
-    if (!_initialized || !mounted) return;
+    if (!_initialized || !mounted || _isDisposed) return;
 
     if (_controller.value.isPlaying) {
       _controller.pause();
@@ -86,7 +89,7 @@ class _ShortsPlayerItemState extends State<ShortsPlayerItem> {
     return VisibilityDetector(
       key: Key(widget.short.id),
       onVisibilityChanged: (info) {
-        if (!_initialized || !mounted) return;
+        if (!_initialized || !mounted || _isDisposed) return;
 
         if (info.visibleFraction > 0.65) {
           _controller.play();
