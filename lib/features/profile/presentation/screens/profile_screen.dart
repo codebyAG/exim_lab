@@ -10,6 +10,7 @@ import 'package:sizer/sizer.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:exim_lab/core/providers/config_provider.dart';
 import 'package:animate_do/animate_do.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -388,26 +389,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final t = AppLocalizations.of(context);
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(t.translate('contact_us')),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildContactRow(context, Icons.phone, t.translate('phone'),
-                '+91 98717 69042'),
-            SizedBox(height: 1.5.h),
-            _buildContactRow(
-                context, Icons.email, t.translate('email'), 'info@siiea.in'),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(t.translate('cancel')),
+      builder: (ctx) {
+        final config = ctx.watch<ConfigProvider>();
+        final social = config.effectiveLinks;
+        return AlertDialog(
+          title: Text(t.translate('contact_us')),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildContactRow(
+                context,
+                Icons.phone,
+                t.translate('phone'),
+                social.whatsappNumber,
+              ),
+              SizedBox(height: 1.5.h),
+              _buildContactRow(
+                context,
+                Icons.email,
+                t.translate('email'),
+                social.supportEmail,
+              ),
+            ],
           ),
-        ],
-      ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(t.translate('cancel')),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -434,7 +447,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _launchPrivacyPolicy() async {
-    final Uri url = Uri.parse('https://www.siiea.in/privacy-policy/');
+    final social = context.read<ConfigProvider>().effectiveLinks;
+    final Uri url = Uri.parse('${social.websiteUrl}/privacy-policy/');
     if (!await launchUrl(url)) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

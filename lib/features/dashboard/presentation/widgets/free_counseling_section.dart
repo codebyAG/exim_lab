@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:exim_lab/core/providers/config_provider.dart';
+import 'package:exim_lab/core/functions/whatsapp_utils.dart';
+import 'package:provider/provider.dart';
 
 class FreeCounselingSection extends StatelessWidget {
   const FreeCounselingSection({super.key});
@@ -75,13 +77,12 @@ class FreeCounselingSection extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () async {
-                  final url = Uri.parse(
-                    "https://wa.me/919871769042?text=I%20need%20free%20counseling%20for%20Import%20Export%20business",
+                onPressed: () {
+                  final config = context.read<ConfigProvider>();
+                  WhatsAppUtils.launch(
+                    number: config.effectiveLinks.whatsappNumber,
+                    message: "I need free counseling for Import Export business",
                   );
-                  if (await canLaunchUrl(url)) {
-                    await launchUrl(url, mode: LaunchMode.externalApplication);
-                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,

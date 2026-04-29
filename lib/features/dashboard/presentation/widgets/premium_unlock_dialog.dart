@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:exim_lab/core/providers/config_provider.dart';
+import 'package:exim_lab/core/functions/whatsapp_utils.dart';
+import 'package:provider/provider.dart';
 
 class PremiumUnlockDialog extends StatelessWidget {
   const PremiumUnlockDialog({super.key});
 
   void _launchWhatsApp(BuildContext context) async {
-    const url =
-        "https://wa.me/919871769042?text=Hi%2C%20I%20want%20to%20unlock%20Import%20Export%20Premium%20membership.";
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-    }
+    final config = context.read<ConfigProvider>();
+    WhatsAppUtils.launch(
+      number: config.effectiveLinks.whatsappNumber,
+      message: "Hi, I want to unlock Import Export Premium membership.",
+    );
   }
 
   @override

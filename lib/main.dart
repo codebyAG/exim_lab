@@ -41,6 +41,8 @@ import 'package:exim_lab/features/chat/presentation/providers/chat_provider.dart
 import 'package:exim_lab/features/dashboard/data/services/referrer_service.dart';
 
 import 'package:exim_lab/features/journey/presentation/providers/journey_provider.dart';
+import 'package:exim_lab/core/providers/config_provider.dart';
+import 'dart:async';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -111,6 +113,9 @@ void main() async {
   // 📊 Check Install Referrer (Public API - No Token)
   ReferrerService().trackInstallSource();
 
+  final configProvider = ConfigProvider();
+  unawaited(configProvider.loadConfig());
+
   runApp(
     MultiProvider(
       providers: [
@@ -128,6 +133,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ChatProvider()),
         ChangeNotifierProvider(create: (_) => NewsProvider(newsService)),
         ChangeNotifierProvider(create: (_) => NotificationsProvider()),
+        ChangeNotifierProvider.value(value: configProvider),
         ChangeNotifierProvider.value(value: moduleProvider),
         Provider.value(value: analyticsService),
       ],

@@ -4,9 +4,10 @@ import 'dart:developer' as developer;
 class WhatsAppUtils {
   static const String _phoneNumber = "919871769042";
 
-  static Future<void> launch({required String message}) async {
+  static Future<void> launch({String? number, required String message}) async {
+    final phone = number ?? _phoneNumber;
     final encodedMessage = Uri.encodeComponent(message);
-    final url = "https://wa.me/$_phoneNumber?text=$encodedMessage";
+    final url = "https://wa.me/$phone?text=$encodedMessage";
     
     try {
       final uri = Uri.parse(url);

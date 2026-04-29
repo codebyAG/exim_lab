@@ -1,3 +1,5 @@
+import 'package:exim_lab/core/providers/config_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:exim_lab/core/functions/whatsapp_utils.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/courses/presentation/screens/courses_list_screen.dart';
@@ -12,6 +14,9 @@ class DashboardFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final config = context.watch<ConfigProvider>();
+    final social = config.effectiveLinks;
+
     return Container(
       margin: EdgeInsets.all(5.w),
       padding: EdgeInsets.all(6.w),
@@ -118,20 +123,21 @@ class DashboardFooter extends StatelessWidget {
                 "Instagram",
                 FontAwesomeIcons.instagram,
                 const [Color(0xFF833AB4), Color(0xFFFD1D1D), Color(0xFFFCB045)],
-                url: "https://www.instagram.com/siieadigital",
+                url: social.instagramUrl,
               ),
               _buildSocialBtn(
                 context,
                 "Facebook",
                 FontAwesomeIcons.facebookF,
                 const [Color(0xFF1877F2), Color(0xFF1877F2)],
+                url: social.facebookUrl.isEmpty ? null : social.facebookUrl,
               ),
               _buildSocialBtn(
                 context,
                 "YouTube",
                 FontAwesomeIcons.youtube,
                 const [Color(0xFFFF0000), Color(0xFFCC0000)],
-                url: "https://youtu.be/f7eSa2jkUZM?si=Krq_Ke-2fPaj6obO",
+                url: social.youtubeUrl,
               ),
               _buildSocialBtn(
                 context,
@@ -145,6 +151,7 @@ class DashboardFooter extends StatelessWidget {
                 "X (Twitter)",
                 FontAwesomeIcons.xTwitter,
                 const [Color(0xFF000000), Color(0xFF000000)],
+                url: social.twitterUrl.isEmpty ? null : social.twitterUrl,
                 isOutline: true,
               ),
               _buildSocialBtn(
@@ -152,12 +159,14 @@ class DashboardFooter extends StatelessWidget {
                 "LinkedIn",
                 FontAwesomeIcons.linkedinIn,
                 const [Color(0xFF0A66C2), Color(0xFF0A66C2)],
+                url: social.linkedinUrl.isEmpty ? null : social.linkedinUrl,
               ),
               _buildSocialBtn(
                 context,
                 "Telegram",
                 FontAwesomeIcons.telegram,
                 const [Color(0xFF229ED9), Color(0xFF229ED9)],
+                url: social.telegramUrl.isEmpty ? null : social.telegramUrl,
               ),
               _buildSocialBtn(
                 context,
@@ -184,7 +193,7 @@ class DashboardFooter extends StatelessWidget {
               _buildFooterLink(
                 context,
                 "About Us",
-                url: "https://www.siiea.in",
+                url: social.websiteUrl,
               ),
               _buildDot(),
               _buildFooterLink(context, "Courses", isCourseLink: true),
@@ -230,7 +239,9 @@ class DashboardFooter extends StatelessWidget {
     return InkWell(
       onTap: () {
         if (url == "WHATSAPP") {
+          final config = context.read<ConfigProvider>();
           WhatsAppUtils.launch(
+            number: config.effectiveLinks.whatsappNumber,
             message: "Hi SIIEA team, I want to know more about your courses.",
           );
         } else if (url != null) {

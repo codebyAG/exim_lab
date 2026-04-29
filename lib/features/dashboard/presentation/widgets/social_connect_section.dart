@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:provider/provider.dart';
+import 'package:exim_lab/core/providers/config_provider.dart';
 import 'package:exim_lab/localization/app_localization.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/section_header.dart';
 
@@ -10,6 +12,8 @@ class SocialConnectSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
+    final config = context.watch<ConfigProvider>();
+    final social = config.effectiveLinks;
 
     return Column(
       children: [
@@ -47,23 +51,10 @@ class SocialConnectSection extends StatelessWidget {
               children: [
                 _socialIcon(
                   assetPath: 'assets/icons/youtube.png',
-                  label: "Youtube 1",
+                  label: "YouTube",
                   color: const Color(0xFFFF0000),
                   onTap: () => launchUrl(
-                    Uri.parse(
-                      "https://youtu.be/f7eSa2jkUZM?si=Krq_Ke-2fPaj6obO",
-                    ),
-                    mode: LaunchMode.externalApplication,
-                  ),
-                ),
-                _socialIcon(
-                  assetPath: 'assets/icons/youtube.png',
-                  label: "Youtube 2",
-                  color: const Color(0xFFFF0000),
-                  onTap: () => launchUrl(
-                    Uri.parse(
-                      "https://youtu.be/HiyHpVwbGgw?si=XcdW0LDkUDaRZoB8",
-                    ),
+                    Uri.parse(social.youtubeUrl),
                     mode: LaunchMode.externalApplication,
                   ),
                 ),
@@ -72,16 +63,29 @@ class SocialConnectSection extends StatelessWidget {
                   label: "Instagram",
                   color: const Color(0xFFE4405F),
                   onTap: () => launchUrl(
-                    Uri.parse("https://www.instagram.com/siieadigital"),
+                    Uri.parse(social.instagramUrl),
                     mode: LaunchMode.externalApplication,
                   ),
                 ),
                 _socialIcon(
+                  assetPath: 'assets/icons/facebook.png',
+                  label: "Facebook",
+                  color: const Color(0xFF1877F2),
+                  onTap: () {
+                    if (social.facebookUrl.isNotEmpty) {
+                      launchUrl(
+                        Uri.parse(social.facebookUrl),
+                        mode: LaunchMode.externalApplication,
+                      );
+                    }
+                  },
+                ),
+                _socialIcon(
                   icon: Icons.language_rounded,
                   label: t.translate('website'),
-                  color: const Color(0xFF00B0FF), // More vibrant blue for dark
+                  color: const Color(0xFF00B0FF),
                   onTap: () => launchUrl(
-                    Uri.parse("https://www.siiea.in"),
+                    Uri.parse(social.websiteUrl),
                     mode: LaunchMode.externalApplication,
                   ),
                 ),
