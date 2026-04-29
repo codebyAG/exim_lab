@@ -12,7 +12,8 @@ import 'package:exim_lab/localization/app_localization.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
 
 class NewsListScreen extends StatefulWidget {
-  const NewsListScreen({super.key});
+  final bool showBackButton;
+  const NewsListScreen({super.key, this.showBackButton = true});
 
   @override
   State<NewsListScreen> createState() => _NewsListScreenState();
@@ -39,7 +40,7 @@ class _NewsListScreenState extends State<NewsListScreen> {
         backgroundColor: cs.surface,
         scrolledUnderElevation: 0,
         elevation: 0,
-        centerTitle: false,
+        automaticallyImplyLeading: widget.showBackButton,
         title: Text(
           t.translate('news'),
           style: theme.textTheme.titleLarge?.copyWith(

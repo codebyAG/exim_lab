@@ -13,7 +13,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:animate_do/animate_do.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  final bool showBackButton;
+  const ProfileScreen({super.key, this.showBackButton = true});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -71,10 +72,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         // BACK + SETTINGS ROW
                         Row(
                           children: [
-                            _HeaderIconBtn(
-                              icon: Icons.arrow_back_rounded,
-                              onTap: () => Navigator.pop(context),
-                            ),
+                            if (widget.showBackButton)
+                              _HeaderIconBtn(
+                                icon: Icons.arrow_back_rounded,
+                                onTap: () => Navigator.pop(context),
+                              ),
                             const Spacer(),
                             Text(
                               t.translate('profile_title'),

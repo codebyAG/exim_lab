@@ -25,12 +25,7 @@ class DashboardModernHeader extends StatelessWidget {
 
           // 2. MAIN CONTENT
           Padding(
-            padding: const EdgeInsets.fromLTRB(
-              18,
-              14,
-              18,
-              14,
-            ),
+            padding: const EdgeInsets.fromLTRB(18, 14, 18, 14),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -104,10 +99,10 @@ class DashboardModernHeader extends StatelessWidget {
                                 ],
                               ),
                               child: Text(
-                                "45 YEARS OF EXPERIENCE",
+                                "50+ YEARS OF EXPERIENCE",
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 6.sp,
+                                  fontSize: 8.sp,
                                   fontWeight: FontWeight.w900,
                                   letterSpacing: 0.8,
                                 ),

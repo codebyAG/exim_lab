@@ -8,7 +8,8 @@ import 'chat_room_details_screen.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 
 class CommunityChatScreen extends StatefulWidget {
-  const CommunityChatScreen({super.key});
+  final bool showBackButton;
+  const CommunityChatScreen({super.key, this.showBackButton = true});
 
   @override
   State<CommunityChatScreen> createState() => _CommunityChatScreenState();
@@ -31,6 +32,7 @@ class _CommunityChatScreenState extends State<CommunityChatScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
+        automaticallyImplyLeading: widget.showBackButton,
         title: const Text(
           'Community Hub',
           style: TextStyle(fontWeight: FontWeight.w900),

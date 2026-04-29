@@ -7,7 +7,12 @@ import 'package:exim_lab/core/services/analytics_service.dart';
 
 class ShortsFeedScreen extends StatefulWidget {
   final int initialIndex;
-  const ShortsFeedScreen({super.key, this.initialIndex = 0});
+  final bool showBackButton;
+  const ShortsFeedScreen({
+    super.key,
+    this.initialIndex = 0,
+    this.showBackButton = true,
+  });
 
   @override
   State<ShortsFeedScreen> createState() => _ShortsFeedScreenState();
@@ -48,10 +53,13 @@ class _ShortsFeedScreenState extends State<ShortsFeedScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: BackButton(color: Colors.white),
+        automaticallyImplyLeading: widget.showBackButton,
+        leading: widget.showBackButton
+            ? const BackButton(color: Colors.white)
+            : null,
         title: Text(
           AppLocalizations.of(context).translate('shorts'),
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
       ),
       body: Consumer<ShortsProvider>(

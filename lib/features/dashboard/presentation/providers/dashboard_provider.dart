@@ -206,17 +206,15 @@ class DashboardProvider extends ChangeNotifier {
       );
     }
 
-    // 🛡️ Premium-Only Feature: Community Chats
-    if (user?.isPremium == true) {
-      items.add(
-        DashboardNavItem(
-          labelKey: 'community',
-          icon: Icons.chat_bubble_outline_rounded,
-          activeIcon: Icons.chat_bubble_rounded,
-          identifier: 'community',
-        ),
-      );
-    }
+    // 🛡️ Permanent Chat Feature (Gated in UI)
+    items.add(
+      DashboardNavItem(
+        labelKey: 'chat',
+        icon: Icons.chat_bubble_outline_rounded,
+        activeIcon: Icons.chat_bubble_rounded,
+        identifier: 'community',
+      ),
+    );
 
     items.add(
       DashboardNavItem(
