@@ -908,85 +908,100 @@ class _DashboardBodyState extends State<_DashboardBody> {
               ),
               SizedBox(height: 2.h),
 
-              // 🔥 TOOLS GRID
-              Padding(
+              // 🔥 TOOLS HORIZONTAL SCROLL
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.symmetric(horizontal: 5.w),
-                child: GridView.count(
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 3.w,
-                  crossAxisSpacing: 3.w,
-                  childAspectRatio: 1.15,
+                child: Row(
                   children: [
-                    SkillCard(
-                      title: "Export Price Calculator",
-                      subtitle: "Profit · Pricing",
-                      badge: "TOOL",
-                      gradientColors: const [
-                        Color(0xFF0A2066),
-                        Color(0xFF153580),
-                      ],
-                      painter: ExportPriceIconPainter(),
-                      onTap: () => _handlePremiumGatedTap(
-                        context: context,
-                        sectionName: 'Tool: Export Price Calculator',
-                        action: () => AppNavigator.push(
-                          context,
-                          const ExportPriceCalculatorScreen(),
+                    SizedBox(
+                      width: 48.w,
+                      height: 18.h,
+                      child: SkillCard(
+                        title: "Export Price Calculator",
+                        subtitle: "Profit · Pricing",
+                        badge: "TOOL",
+                        gradientColors: const [
+                          Color(0xFF0A2066),
+                          Color(0xFF153580),
+                        ],
+                        painter: ExportPriceIconPainter(),
+                        onTap: () => _handlePremiumGatedTap(
+                          context: context,
+                          sectionName: 'Tool: Export Price Calculator',
+                          action: () => AppNavigator.push(
+                            context,
+                            const ExportPriceCalculatorScreen(),
+                          ),
                         ),
                       ),
                     ),
-                    SkillCard(
-                      title: "Import Calculator",
-                      subtitle: "Cost · Duty",
-                      badge: "TOOL",
-                      gradientColors: const [
-                        Color(0xFF5A0006),
-                        Color(0xFF8B000C),
-                      ],
-                      painter: ImportCalcIconPainter(),
-                      onTap: () => _handlePremiumGatedTap(
-                        context: context,
-                        sectionName: 'Tool: Import Calculator',
-                        action: () => AppNavigator.push(
-                          context,
-                          const ImportCalculatorScreen(),
+                    SizedBox(width: 3.w),
+                    SizedBox(
+                      width: 48.w,
+                      height: 18.h,
+                      child: SkillCard(
+                        title: "Import Calculator",
+                        subtitle: "Cost · Duty",
+                        badge: "TOOL",
+                        gradientColors: const [
+                          Color(0xFF5A0006),
+                          Color(0xFF8B000C),
+                        ],
+                        painter: ImportCalcIconPainter(),
+                        onTap: () => _handlePremiumGatedTap(
+                          context: context,
+                          sectionName: 'Tool: Import Calculator',
+                          action: () => AppNavigator.push(
+                            context,
+                            const ImportCalculatorScreen(),
+                          ),
                         ),
                       ),
                     ),
-                    SkillCard(
-                      title: "HSN Finder",
-                      subtitle: "Codes · Classification",
-                      badge: "TOOL",
-                      gradientColors: const [
-                        Color(0xFF003A70),
-                        Color(0xFF005AAA),
-                      ],
-                      painter: HsnFinderPainter(),
-                      onTap: () => _handlePremiumGatedTap(
-                        context: context,
-                        sectionName: 'Tool: HSN Finder',
-                        action: () =>
-                            AppNavigator.push(context, const HsnFinderScreen()),
+                    SizedBox(width: 3.w),
+                    SizedBox(
+                      width: 48.w,
+                      height: 18.h,
+                      child: SkillCard(
+                        title: "HSN Finder",
+                        subtitle: "Codes · Classification",
+                        badge: "TOOL",
+                        gradientColors: const [
+                          Color(0xFF003A70),
+                          Color(0xFF005AAA),
+                        ],
+                        painter: HsnFinderPainter(),
+                        onTap: () => _handlePremiumGatedTap(
+                          context: context,
+                          sectionName: 'Tool: HSN Finder',
+                          action: () => AppNavigator.push(
+                            context,
+                            const HsnFinderScreen(),
+                          ),
+                        ),
                       ),
                     ),
-                    SkillCard(
-                      title: "CBM Calculator",
-                      subtitle: "Volume · Weight",
-                      badge: "TOOL",
-                      gradientColors: const [
-                        Color(0xFF4A2800),
-                        Color(0xFF7A4400),
-                      ],
-                      painter: CbmCalculatorPainter(),
-                      onTap: () => _handlePremiumGatedTap(
-                        context: context,
-                        sectionName: 'Tool: CBM Calculator',
-                        action: () => AppNavigator.push(
-                          context,
-                          const CbmCalculatorScreen(),
+                    SizedBox(width: 3.w),
+                    SizedBox(
+                      width: 48.w,
+                      height: 18.h,
+                      child: SkillCard(
+                        title: "CBM Calculator",
+                        subtitle: "Volume · Weight",
+                        badge: "TOOL",
+                        gradientColors: const [
+                          Color(0xFF4A2800),
+                          Color(0xFF7A4400),
+                        ],
+                        painter: CbmCalculatorPainter(),
+                        onTap: () => _handlePremiumGatedTap(
+                          context: context,
+                          sectionName: 'Tool: CBM Calculator',
+                          action: () => AppNavigator.push(
+                            context,
+                            const CbmCalculatorScreen(),
+                          ),
                         ),
                       ),
                     ),
