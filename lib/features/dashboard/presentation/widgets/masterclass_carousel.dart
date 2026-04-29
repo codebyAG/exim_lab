@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-import 'package:exim_lab/features/dashboard/presentation/painters/dashboard_icons_painter.dart';
 import 'package:exim_lab/core/functions/whatsapp_utils.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/dots_iniidcator.dart';
 import 'masterclass_card.dart';
@@ -140,7 +139,7 @@ class HandholdingMasterclassCard extends StatelessWidget {
                       "🤝 24/7 SUPPORT",
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 9.sp,
+                        fontSize: 10.sp,
                         fontWeight: FontWeight.w900,
                         letterSpacing: 0.5,
                       ),
@@ -152,7 +151,7 @@ class HandholdingMasterclassCard extends StatelessWidget {
                     style: TextStyle(
                       color: Colors.white,
                       fontFamily: 'Plus Jakarta Sans',
-                      fontSize: 18.sp,
+                      fontSize: 20.sp,
                       fontWeight: FontWeight.w900,
                       height: 1.1,
                     ),
@@ -206,7 +205,7 @@ class HandholdingMasterclassCard extends StatelessWidget {
                           "Get Expert Support →",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 13.sp,
+                            fontSize: 15.sp,
                             fontWeight: FontWeight.w900,
                           ),
                         ),
@@ -224,7 +223,7 @@ class HandholdingMasterclassCard extends StatelessWidget {
 
   Widget _buildFeatureRow(String text) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 0.5.h),
+      padding: EdgeInsets.only(bottom: 0.8.h),
       child: Row(
         children: [
           Icon(
@@ -238,7 +237,7 @@ class HandholdingMasterclassCard extends StatelessWidget {
               text,
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.8),
-                fontSize: 10.5.sp,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
               ),
               maxLines: 1,

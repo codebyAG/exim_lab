@@ -7,7 +7,6 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/certificate_min
 import 'package:exim_lab/features/dashboard/presentation/providers/exchange_rate_provider.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/exchange_rate_ticker.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/achieve_live_card.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/masterclass_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/masterclass_carousel.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/popular_course_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/free_video_card.dart';
