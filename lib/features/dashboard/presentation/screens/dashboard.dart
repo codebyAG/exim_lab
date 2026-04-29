@@ -86,7 +86,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       enableAutoScroll: true,
       onFinish: () async {
         developer.log('🏁 ShowCase Tour Finished.', name: 'ONBOARDING');
-        // Notify provider that tour is complete
+        // 🛡️ Mark as seen only when they finish OR skip
         context.read<DashboardProvider>().markTourAsSeen();
         // Trigger next logical action (e.g. Interest Dialog or Promo)
         _bodyKey.currentState?._handlePostLoadActions();
@@ -393,7 +393,11 @@ class _DashboardBodyState extends State<_DashboardBody> {
             title: title,
             description: description,
             onNext: () => ShowCaseWidget.of(context).next(),
-            onSkip: () => ShowCaseWidget.of(context).dismiss(),
+            onSkip: () {
+              // 🛡️ Mark as seen when skip is clicked
+              context.read<DashboardProvider>().markTourAsSeen();
+              ShowCaseWidget.of(context).dismiss();
+            },
           );
         },
       ),
