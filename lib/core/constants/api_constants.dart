@@ -41,7 +41,7 @@ class ApiConstants {
   static const String logInstall = '$baseUrl/api/analytics/log-install';
   static const String checkMembership = '$baseUrl/api/subscriptions/me/status';
   static const String socialLinks = '$baseUrl/api/config/social-links';
-  static const String liveEvents = '$baseUrl/api/config/live-events';
+  static const String seminarHome = '$baseUrl/api/seminars/home';
 
   // 👤 FOUNDER API
   static const String founder = '$baseUrl/api/founder';

@@ -89,7 +89,7 @@ class AchieveLiveCard extends StatelessWidget {
                           // LIVE TAG
                           Row(
                             children: [
-                              _buildLiveDot(),
+                              if (webinar.isLive) _buildLiveDot(),
                               SizedBox(width: 2.w),
                               RichText(
                                 text: TextSpan(
@@ -100,9 +100,13 @@ class AchieveLiveCard extends StatelessWidget {
                                     letterSpacing: 0.5,
                                   ),
                                   children: [
-                                    const TextSpan(text: "Upcoming "),
                                     TextSpan(
-                                      text: "LIVE",
+                                      text: webinar.isLive
+                                          ? "LIVE "
+                                          : "Upcoming ",
+                                    ),
+                                    TextSpan(
+                                      text: webinar.isLive ? "NOW" : "LIVE",
                                       style: TextStyle(
                                         color: const Color(0xFFFF4444),
                                       ),
@@ -112,7 +116,19 @@ class AchieveLiveCard extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(height: 2.h),
+                          SizedBox(height: 1.h),
+                          if (webinar.title != null)
+                            Text(
+                              webinar.title!,
+                              style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.6),
+                                fontSize: 11.sp,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          SizedBox(height: 1.5.h),
 
                           // DATE
                           Text(
@@ -156,28 +172,45 @@ class AchieveLiveCard extends StatelessWidget {
                           ),
                           const Spacer(),
 
-                          // 🔘 REGISTER BUTTON
+                          // 🔘 REGISTER / JOIN BUTTON
                           InkWell(
-                            onTap: () => WhatsAppUtils.launch(
-                              message: webinar.whatsappMessage,
-                            ),
+                            onTap: () {
+                              if (webinar.isLive &&
+                                  webinar.meetingUrl != null) {
+                                // Launch Meeting URL via WhatsApp message for now
+                                WhatsAppUtils.launch(
+                                  message:
+                                      "Hi, I want to join the LIVE session: ${webinar.meetingUrl}",
+                                );
+                              } else {
+                                WhatsAppUtils.launch(
+                                  message: webinar.whatsappMessage,
+                                );
+                              }
+                            },
                             borderRadius: BorderRadius.circular(16),
                             child: Container(
                               width: double.infinity,
                               padding: EdgeInsets.symmetric(vertical: 1.4.h),
                               decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color(0xFF0F47D1),
-                                    Color(0xFF1E5FFF),
-                                  ],
+                                gradient: LinearGradient(
+                                  colors: webinar.isLive
+                                      ? [
+                                          const Color(0xFFFF4444),
+                                          const Color(0xFFC8151B),
+                                        ]
+                                      : [
+                                          const Color(0xFF0F47D1),
+                                          const Color(0xFF1E5FFF),
+                                        ],
                                 ),
                                 borderRadius: BorderRadius.circular(16),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(
-                                      0xFF1E5FFF,
-                                    ).withValues(alpha: 0.4),
+                                    color: (webinar.isLive
+                                            ? const Color(0xFFFF4444)
+                                            : const Color(0xFF1E5FFF))
+                                        .withValues(alpha: 0.4),
                                     blurRadius: 12,
                                     offset: const Offset(0, 4),
                                   ),
@@ -185,7 +218,9 @@ class AchieveLiveCard extends StatelessWidget {
                               ),
                               child: Center(
                                 child: Text(
-                                  "Register Now →",
+                                  webinar.isLive
+                                      ? "Join Now →"
+                                      : "Register Now →",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 13.sp,

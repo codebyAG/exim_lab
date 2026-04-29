@@ -8,8 +8,16 @@ class LiveEventConfig {
   });
 
   factory LiveEventConfig.fromJson(Map<String, dynamic> json) {
+    final achievements = List<String>.from(json['achievements'] ?? []);
     return LiveEventConfig(
-      achievements: List<String>.from(json['achievements'] ?? []),
+      achievements: achievements.isNotEmpty
+          ? achievements
+          : [
+              "Start your export business",
+              "Find international buyers",
+              "Calculate profit margins",
+              "Handle global shipping"
+            ],
       webinar: WebinarConfig.fromJson(json['webinar'] ?? {}),
     );
   }
@@ -33,6 +41,9 @@ class WebinarConfig {
   final String month;
   final String time;
   final String whatsappMessage;
+  final String? title;
+  final String? meetingUrl;
+  final String? seminarId;
 
   WebinarConfig({
     required this.isLive,
@@ -40,6 +51,9 @@ class WebinarConfig {
     required this.month,
     required this.time,
     required this.whatsappMessage,
+    this.title,
+    this.meetingUrl,
+    this.seminarId,
   });
 
   factory WebinarConfig.fromJson(Map<String, dynamic> json) {
@@ -50,6 +64,9 @@ class WebinarConfig {
       time: json['time'] ?? "7:00 PM",
       whatsappMessage: json['whatsapp_message'] ??
           "Hi, I want to register for the upcoming LIVE Import-Export Webinar.",
+      title: json['title'],
+      meetingUrl: json['meetingUrl'],
+      seminarId: json['seminarId'],
     );
   }
 
@@ -61,6 +78,7 @@ class WebinarConfig {
       time: "7:00 PM",
       whatsappMessage:
           "Hi, I want to register for the upcoming LIVE Import-Export Webinar.",
+      title: "Weekly Import/Export Seminar",
     );
   }
 }

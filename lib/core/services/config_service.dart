@@ -18,7 +18,7 @@ class ConfigService {
 
   Future<LiveEventConfig?> fetchLiveEventConfig() async {
     return await callApi(
-      ApiConstants.liveEvents,
+      ApiConstants.seminarHome,
       parser: (json) {
         if (json['success'] == true && json['data'] != null) {
           return LiveEventConfig.fromJson(json['data']);
