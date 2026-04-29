@@ -16,6 +16,8 @@ class ChatRoom {
   final ChatCategory category;
   final bool isActive;
   final int memberCount;
+  final bool isJoined;
+  final DateTime? joinedAt;
 
   ChatRoom({
     required this.id,
@@ -24,6 +26,8 @@ class ChatRoom {
     required this.category,
     this.isActive = true,
     this.memberCount = 0,
+    this.isJoined = false,
+    this.joinedAt,
   });
 
   factory ChatRoom.fromJson(Map<String, dynamic> json) {
@@ -34,6 +38,10 @@ class ChatRoom {
       category: _parseCategory(json['category'] ?? json['slug']),
       isActive: json['isActive'] ?? true,
       memberCount: json['memberCount'] ?? 0,
+      isJoined: json['joined'] ?? false,
+      joinedAt: json['joinedAt'] != null
+          ? DateTime.tryParse(json['joinedAt'].toString())
+          : null,
     );
   }
 

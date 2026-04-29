@@ -21,12 +21,16 @@ class ChatProvider extends ChangeNotifier {
   List<ChatMessage> _messages = [];
   bool _isLoading = false;
   bool _isSending = false;
+  bool _isJoining = false;
+  dynamic _joiningRoomId; // 🛡️ Track which specific room is being joined
   String? _error;
 
   List<ChatRoom> get rooms => _rooms;
   List<ChatMessage> get messages => _messages;
   bool get isLoading => _isLoading;
   bool get isSending => _isSending;
+  bool get isJoining => _isJoining;
+  dynamic get joiningRoomId => _joiningRoomId;
   bool get isFetchingMore => _isFetchingMore;
   bool get hasMore => _hasMore;
   String? get error => _error;
@@ -176,6 +180,44 @@ class ChatProvider extends ChangeNotifier {
       return false;
     } finally {
       _isSending = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> joinRoom(dynamic roomId) async {
+    _isJoining = true;
+    _joiningRoomId = roomId; // 🛡️ Set target ID
+    _error = null;
+    notifyListeners();
+
+    try {
+      final success = await _repository.joinRoom(roomId);
+      if (success) {
+        // Silent update of local room status
+        final index = _rooms.indexWhere((r) => r.id == roomId);
+        if (index != -1) {
+          _rooms[index] = ChatRoom(
+            id: _rooms[index].id,
+            name: _rooms[index].name,
+            description: _rooms[index].description,
+            category: _rooms[index].category,
+            isActive: _rooms[index].isActive,
+            memberCount: _rooms[index].memberCount + 1,
+            isJoined: true,
+            joinedAt: DateTime.now(),
+          );
+          notifyListeners();
+        }
+        return true;
+      }
+      return false;
+    } catch (e) {
+      _error = e.toString();
+      developer.log("⚠️ Join Room Error: $e", name: "CHAT");
+      return false;
+    } finally {
+      _isJoining = false;
+      _joiningRoomId = null; // 🛡️ Clear target ID
       notifyListeners();
     }
   }

@@ -50,7 +50,7 @@ class _CommunityChatScreenState extends State<CommunityChatScreen> {
                 ? const Center(child: CircularProgressIndicator())
                 : chatProvider.error != null
                     ? _buildErrorState(chatProvider.error!)
-                    : _buildRoomsList(rooms),
+                    : _buildRoomsList(rooms, chatProvider),
           ),
         ],
       ),
@@ -105,7 +105,7 @@ class _CommunityChatScreenState extends State<CommunityChatScreen> {
     );
   }
 
-  Widget _buildRoomsList(List<ChatRoom> rooms) {
+  Widget _buildRoomsList(List<ChatRoom> rooms, ChatProvider chatProvider) {
     if (rooms.isEmpty) {
       return const Center(child: Text('No active communities found.'));
     }
@@ -118,13 +118,13 @@ class _CommunityChatScreenState extends State<CommunityChatScreen> {
         return FadeInUp(
           duration: const Duration(milliseconds: 500),
           delay: Duration(milliseconds: 100 * index),
-          child: _buildRoomCard(room),
+          child: _buildRoomCard(room, chatProvider),
         );
       },
     );
   }
 
-  Widget _buildRoomCard(ChatRoom room) {
+  Widget _buildRoomCard(ChatRoom room, ChatProvider chatProvider) {
     return Container(
       margin: EdgeInsets.only(bottom: 2.h),
       decoration: BoxDecoration(
@@ -143,12 +143,26 @@ class _CommunityChatScreenState extends State<CommunityChatScreen> {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(24),
-          onTap: () {
-            AppNavigator.push(
-              context,
-              ChatRoomDetailsScreen(room: room),
-            );
-          },
+          onTap: chatProvider.isJoining
+              ? null
+              : () async {
+                  if (room.isJoined) {
+                    AppNavigator.push(
+                      context,
+                      ChatRoomDetailsScreen(room: room),
+                    );
+                  } else {
+                    // 🛡️ Trigger join flow
+                    final success =
+                        await context.read<ChatProvider>().joinRoom(room.id);
+                    if (success && mounted) {
+                      AppNavigator.push(
+                        context,
+                        ChatRoomDetailsScreen(room: room),
+                      );
+                    }
+                  }
+                },
           child: Padding(
             padding: EdgeInsets.all(4.w),
             child: Column(
@@ -181,11 +195,15 @@ class _CommunityChatScreenState extends State<CommunityChatScreen> {
                                 ),
                               ),
                               const Spacer(),
-                              if (room.isActive) _buildStatusBadge(),
+                              if (room.isJoined)
+                                _buildJoinedBadge()
+                              else if (room.isActive)
+                                _buildStatusBadge(),
                             ],
                           ),
                           const SizedBox(height: 2),
-                          _buildTag(room.category.name.toUpperCase(), room.color),
+                          _buildTag(
+                              room.category.name.toUpperCase(), room.color),
                         ],
                       ),
                     ),
@@ -219,21 +237,39 @@ class _CommunityChatScreenState extends State<CommunityChatScreen> {
                       ),
                     ),
                     const Spacer(),
-                    Text(
-                      'JOIN HUB',
-                      style: TextStyle(
-                        color: const Color(0xFF1E5FFF),
-                        fontWeight: FontWeight.w900,
-                        fontSize: 10.sp,
-                        letterSpacing: 0.5,
+                    if (chatProvider.joiningRoomId == room.id)
+                      const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Color(0xFF1E5FFF)),
+                        ),
+                      )
+                    else ...[
+                      Text(
+                        room.isJoined ? 'ENTER HUB' : 'JOIN HUB',
+                        style: TextStyle(
+                          color: room.isJoined
+                              ? const Color(0xFF00C853)
+                              : const Color(0xFF1E5FFF),
+                          fontWeight: FontWeight.w900,
+                          fontSize: 10.sp,
+                          letterSpacing: 0.5,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 2.w),
-                    const Icon(
-                      Icons.arrow_forward_rounded,
-                      color: Color(0xFF1E5FFF),
-                      size: 16,
-                    ),
+                      SizedBox(width: 2.w),
+                      Icon(
+                        room.isJoined
+                            ? Icons.login_rounded
+                            : Icons.arrow_forward_rounded,
+                        color: room.isJoined
+                            ? const Color(0xFF00C853)
+                            : const Color(0xFF1E5FFF),
+                        size: 16,
+                      ),
+                    ],
                   ],
                 ),
               ],
@@ -267,6 +303,31 @@ class _CommunityChatScreenState extends State<CommunityChatScreen> {
             'LIVE',
             style: TextStyle(
               color: Color(0xFF00C853),
+              fontSize: 8,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildJoinedBadge() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1E5FFF).withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: const [
+          Icon(Icons.verified_user_rounded, color: Color(0xFF1E5FFF), size: 10),
+          SizedBox(width: 4),
+          Text(
+            'MEMBER',
+            style: TextStyle(
+              color: Color(0xFF1E5FFF),
               fontSize: 8,
               fontWeight: FontWeight.w900,
             ),

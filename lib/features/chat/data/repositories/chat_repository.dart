@@ -44,14 +44,23 @@ class ChatRemoteDataSource {
       },
     );
   }
+
+  Future<bool> joinRoom(dynamic roomId) async {
+    return await callApi(
+      "${ApiConstants.chatRooms}/$roomId/join",
+      methodType: MethodType.post,
+      parser: (json) => json['success'] == true,
+    );
+  }
 }
 
 class ChatRepository {
   final ChatRemoteDataSource _dataSource = ChatRemoteDataSource();
 
   Future<List<ChatRoom>> getChatRooms() => _dataSource.getChatRooms();
-  Future<Map<String, dynamic>> getChatMessages(dynamic roomId, String currentUserId, {String? cursor}) => 
+  Future<Map<String, dynamic>> getChatMessages(dynamic roomId, String currentUserId, {String? cursor}) =>
       _dataSource.getChatMessages(roomId, currentUserId, cursor: cursor);
-  Future<ChatMessage?> sendMessage(dynamic roomId, String message, String currentUserId) => 
+  Future<ChatMessage?> sendMessage(dynamic roomId, String message, String currentUserId) =>
       _dataSource.sendMessage(roomId, message, currentUserId);
+  Future<bool> joinRoom(dynamic roomId) => _dataSource.joinRoom(roomId);
 }
