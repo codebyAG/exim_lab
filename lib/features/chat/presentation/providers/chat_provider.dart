@@ -3,6 +3,7 @@ import '../../data/models/chat_room_model.dart';
 import '../../data/models/chat_message_model.dart';
 import 'package:exim_lab/core/services/shared_pref_service.dart';
 import 'package:exim_lab/core/services/socket_service.dart';
+import 'dart:developer' as developer;
 import 'dart:async';
 import 'package:exim_lab/core/services/audio_service.dart';
 
@@ -10,7 +11,7 @@ class ChatProvider extends ChangeNotifier {
   final SocketService _socketService = SocketService();
   final SharedPrefService _prefs = SharedPrefService();
   final AudioService _audioService = AudioService();
-  
+
   dynamic _activeRoomId;
   String? _nextCursor;
   bool _hasMore = true;
@@ -42,18 +43,30 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<void> _initSocket() async {
+    // 1. Initialize the socket (sets up listeners internally)
     await _socketService.init();
-    
-    // Listen for new messages
+
+    // 2. Listen for real-time messages
     _socketService.on('message:new', (payload) {
       final roomId = payload['roomId'];
       final messageData = payload['data'];
-      
       _handleIncomingMessage(roomId, messageData);
     });
 
-    // Initial fetch of rooms
-    fetchRooms();
+    // 3. 🚀 REACTIVE FETCH: Listen for connection success
+    // This ensures that if the app starts or resumes, we fetch rooms
+    // as soon as the pipe is open.
+    _socketService.connectionStream.listen((isConnected) {
+      if (isConnected) {
+        developer.log("📡 Socket Live: Auto-fetching rooms...", name: "CHAT");
+        fetchRooms();
+      }
+    });
+
+    // 4. Initial attempt (might fail if connection is still pending, but the listener above will catch it)
+    if (_socketService.isConnected) {
+      fetchRooms();
+    }
   }
 
   void _handleIncomingMessage(dynamic roomId, Map<String, dynamic> data) async {
@@ -66,7 +79,7 @@ class ChatProvider extends ChangeNotifier {
       final exists = _messagesByRoom[roomId]!.any((m) => m.id == newMessage.id);
       if (!exists) {
         _messagesByRoom[roomId]!.insert(0, newMessage);
-        
+
         // Play sound if it's not my own message
         if (!newMessage.isMe) {
           _audioService.playNotificationSound();
@@ -82,6 +95,14 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<void> fetchRooms() async {
+    // 🛡️ Guard: Don't emit if not connected yet
+    if (!_socketService.isConnected) {
+      _isLoading = true;
+      _error = "Connecting to chat server...";
+      notifyListeners();
+      return;
+    }
+
     _isLoading = true;
     _error = null;
     notifyListeners();
@@ -91,6 +112,7 @@ class ChatProvider extends ChangeNotifier {
         final List data = response['data'];
         _rooms.clear();
         _rooms.addAll(data.map((json) => ChatRoom.fromJson(json)).toList());
+        _error = null; // Clear any previous "Connecting..." error
       } else {
         _error = response['message'] ?? "Failed to fetch rooms";
       }
@@ -112,22 +134,20 @@ class ChatProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
 
-    final payload = {
-      'roomId': roomId,
-      'limit': 50,
-      'cursor': null,
-    };
+    final payload = {'roomId': roomId, 'limit': 50, 'cursor': null};
 
     _socketService.emit('messages:fetch', payload, (response) async {
       if (response['success'] == true) {
         final user = await _prefs.getUser();
         final currentUserId = user?.id ?? '';
         final List data = response['data'];
-        final List<ChatMessage> fetchedMessages = data.map((json) => ChatMessage.fromJson(json, currentUserId)).toList();
-        
+        final List<ChatMessage> fetchedMessages = data
+            .map((json) => ChatMessage.fromJson(json, currentUserId))
+            .toList();
+
         // Backend returns OLD -> NEW, but UI expects NEW -> OLD (index 0 is newest)
         _messagesByRoom[roomId] = fetchedMessages.reversed.toList();
-        
+
         _nextCursor = response['meta']['nextCursor'];
         _hasMore = _nextCursor != null;
       } else {
@@ -139,7 +159,12 @@ class ChatProvider extends ChangeNotifier {
   }
 
   Future<void> loadMoreMessages() async {
-    if (_isFetchingMore || !_hasMore || _nextCursor == null || _activeRoomId == null) return;
+    if (_isFetchingMore ||
+        !_hasMore ||
+        _nextCursor == null ||
+        _activeRoomId == null) {
+      return;
+    }
 
     _isFetchingMore = true;
     notifyListeners();
@@ -155,12 +180,14 @@ class ChatProvider extends ChangeNotifier {
         final user = await _prefs.getUser();
         final currentUserId = user?.id ?? '';
         final List data = response['data'];
-        final List<ChatMessage> olderMessages = data.map((json) => ChatMessage.fromJson(json, currentUserId)).toList();
-        
+        final List<ChatMessage> olderMessages = data
+            .map((json) => ChatMessage.fromJson(json, currentUserId))
+            .toList();
+
         // Prepend to the items (which means append to our list since index 0 is newest)
         // Wait, if index 0 is newest, older messages should go at the end.
         _messagesByRoom[_activeRoomId]!.addAll(olderMessages.reversed);
-        
+
         _nextCursor = response['meta']['nextCursor'];
         _hasMore = _nextCursor != null;
       }
@@ -181,10 +208,7 @@ class ChatProvider extends ChangeNotifier {
     _isSending = true;
     notifyListeners();
 
-    final payload = {
-      'roomId': roomId,
-      'message': text,
-    };
+    final payload = {'roomId': roomId, 'message': text};
 
     final completer = Completer<bool>();
 
@@ -194,15 +218,17 @@ class ChatProvider extends ChangeNotifier {
         final currentUserId = user?.id ?? '';
         final messageData = response['data'];
         final sentMessage = ChatMessage.fromJson(messageData, currentUserId);
-        
+
         // Optimistic check: if not already added by 'message:new'
         if (_messagesByRoom.containsKey(roomId)) {
-          final exists = _messagesByRoom[roomId]!.any((m) => m.id == sentMessage.id);
+          final exists = _messagesByRoom[roomId]!.any(
+            (m) => m.id == sentMessage.id,
+          );
           if (!exists) {
             _messagesByRoom[roomId]!.insert(0, sentMessage);
           }
         }
-        
+
         _audioService.playSendMessageSound();
         completer.complete(true);
       } else {
