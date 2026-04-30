@@ -1,3 +1,4 @@
+import 'package:exim_lab/core/functions/whatsapp_utils.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,56 +12,88 @@ class InterestCaptureDialog extends StatefulWidget {
 
 class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
   final TextEditingController _nameController = TextEditingController();
-  String? _selectedInterest = "Import";
+  final TextEditingController _productController = TextEditingController();
+  final TextEditingController _targetMarketController = TextEditingController();
+
+  String? _selectedCategory = "Startup / Individual";
+  String? _selectedRegStatus = "Not Registered";
+  String? _selectedRequirement = "Training & Knowledge";
 
   bool _isSubmitting = false;
+
+  final List<String> _categories = [
+    "Manufacturer",
+    "Merchant Trader",
+    "Startup / Individual",
+    "Service Provider"
+  ];
+
+  final List<String> _regStatuses = [
+    "Not Registered",
+    "IEC Registered",
+    "IEC & GST Registered",
+    "Company Registered"
+  ];
+
+  final List<String> _requirements = [
+    "Training & Knowledge",
+    "Buyer / Seller Data",
+    "Logistics & Shipping",
+    "Funding & Finance",
+    "Full Consultancy"
+  ];
 
   @override
   void initState() {
     super.initState();
-    // Pre-fill name if available
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final user = context.read<AuthProvider>().user;
       if (user?.name != null && !user!.name!.contains("User")) {
         _nameController.text = user.name!;
       }
-      if (user?.interestedIn != null) {
-        setState(() => _selectedInterest = user?.interestedIn);
-      }
     });
   }
 
-  Future<void> _submitInterest() async {
-    final name = _nameController.text.trim();
-    final interest = _selectedInterest?.toLowerCase() ?? "import";
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _productController.dispose();
+    _targetMarketController.dispose();
+    super.dispose();
+  }
 
-    if (name.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Please enter your name")));
+  Future<void> _submitAndRedirect() async {
+    final name = _nameController.text.trim();
+    final product = _productController.text.trim();
+    final market = _targetMarketController.text.trim();
+
+    if (name.isEmpty || product.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please fill in Name and Product Niche")),
+      );
       return;
     }
 
     setState(() => _isSubmitting = true);
 
-    final success = await context.read<AuthProvider>().updateProfile({
-      "name": name,
-      "interestedIn": interest,
-    });
+    // 1. Update Profile (Name only as interest is now more complex)
+    await context.read<AuthProvider>().updateProfile({"name": name});
+
+    // 2. Prepare WhatsApp Message
+    final message = "🚢 *Exim Lab - New Business Inquiry*\n\n"
+        "👤 *Name:* $name\n"
+        "🏢 *Category:* $_selectedCategory\n"
+        "📦 *Product Niche:* $product\n"
+        "📜 *Reg Status:* $_selectedRegStatus\n"
+        "🌍 *Target Market:* ${market.isEmpty ? 'Not specified' : market}\n"
+        "💡 *Main Need:* $_selectedRequirement";
 
     if (mounted) {
       setState(() => _isSubmitting = false);
-      if (success) {
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Profile updated successfully")),
-        );
-      } else {
-        final error = context.read<AuthProvider>().error;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error ?? "Failed to update profile")),
-        );
-      }
+      Navigator.pop(context);
+      
+      // 3. Redirect to WhatsApp
+      WhatsAppUtils.launch(message: message);
     }
   }
 
@@ -68,6 +101,7 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       backgroundColor: Colors.transparent,
@@ -76,7 +110,7 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
           Container(
             padding: const EdgeInsets.fromLTRB(24, 32, 24, 32),
             decoration: BoxDecoration(
-              color: const Color(0xFF030E30), // Matching Deep Navy
+              color: const Color(0xFF030E30),
               borderRadius: BorderRadius.circular(32),
               border: Border.all(
                 color: Colors.white.withValues(alpha: 0.1),
@@ -94,156 +128,77 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Avatar Section
-                  Container(
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      color: cs.primary.withValues(alpha: 0.1),
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: cs.primary.withValues(alpha: 0.2),
-                        width: 2,
-                      ),
-                    ),
-                    child: const Center(
-                      child: Text("👦", style: TextStyle(fontSize: 54)),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
+                  const Text("🚀", style: TextStyle(fontSize: 48)),
+                  const SizedBox(height: 16),
                   const Text(
-                    "Hello there! 👋",
+                    "Exim Business Profile",
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 22,
                       fontWeight: FontWeight.w900,
                       color: Colors.white,
-                      fontFamily: 'Plus Jakarta Sans',
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    "Can you share a bit about you?",
+                    "Tailor your learning journey with 5 questions",
+                    textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
                       color: Colors.white.withValues(alpha: 0.6),
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-
-                  // Name Input
-                  _buildLabel("Your Name"),
-                  const SizedBox(height: 10),
-                  TextField(
-                    controller: _nameController,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      hintText: "Enter your name",
-                      hintStyle: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.3),
-                      ),
-                      prefixIcon: Icon(
-                        Icons.person_rounded,
-                        color: cs.primary,
-                        size: 22,
-                      ),
-                      filled: true,
-                      fillColor: Colors.white.withValues(alpha: 0.05),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide.none,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide(
-                          color: Colors.white.withValues(alpha: 0.05),
-                        ),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 18,
-                      ),
                     ),
                   ),
                   const SizedBox(height: 24),
 
-                  // Interest Selection
-                  _buildLabel("Your Interest"),
-                  const SizedBox(height: 10),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.05),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.05),
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        _buildInterestItem(context, "Import"),
-                        Divider(
-                          height: 1,
-                          color: Colors.white.withValues(alpha: 0.05),
-                          indent: 16,
-                          endIndent: 16,
-                        ),
-                        _buildInterestItem(context, "Export"),
-                        Divider(
-                          height: 1,
-                          color: Colors.white.withValues(alpha: 0.05),
-                          indent: 16,
-                          endIndent: 16,
-                        ),
-                        _buildInterestItem(context, "Both"),
-                      ],
-                    ),
-                  ),
+                  // 1. Name
+                  _buildTextField("Your Full Name*", _nameController, Icons.person_outline, "Enter your name"),
+                  const SizedBox(height: 16),
+                  
+                  // 2. Category
+                  _buildLabel("1. Business Category"),
+                  const SizedBox(height: 8),
+                  _buildDropdown(_selectedCategory, _categories, (v) => setState(() => _selectedCategory = v)),
+                  const SizedBox(height: 16),
 
-                  const SizedBox(height: 40),
+                  // 3. Product
+                  _buildTextField("2. Product Niche*", _productController, Icons.inventory_2_outlined, "e.g. Spices, Textiles, Tech"),
+                  const SizedBox(height: 16),
 
-                  // Actions
+                  // 4. Registration
+                  _buildLabel("3. Registration Status"),
+                  const SizedBox(height: 8),
+                  _buildDropdown(_selectedRegStatus, _regStatuses, (v) => setState(() => _selectedRegStatus = v)),
+                  const SizedBox(height: 16),
+
+                  // 5. Target Market
+                  _buildTextField("4. Target Market", _targetMarketController, Icons.public_outlined, "e.g. USA, Dubai, Europe"),
+                  const SizedBox(height: 16),
+
+                  // 6. Main Requirement
+                  _buildLabel("5. What do you need most?"),
+                  const SizedBox(height: 8),
+                  _buildDropdown(_selectedRequirement, _requirements, (v) => setState(() => _selectedRequirement = v)),
+                  
+                  const SizedBox(height: 32),
+
+                  // Submit Button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: _isSubmitting ? null : _submitInterest,
+                      onPressed: _isSubmitting ? null : _submitAndRedirect,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: cs.primary,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 18),
+                        backgroundColor: const Color(0xFFFFD000),
+                        foregroundColor: Colors.black,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(16),
                         ),
-                        elevation: 10,
-                        shadowColor: cs.primary.withValues(alpha: 0.4),
                       ),
                       child: _isSubmitting
-                          ? const SizedBox(
-                              height: 24,
-                              width: 24,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
+                          ? const CircularProgressIndicator(color: Colors.black)
                           : const Text(
-                              "Continue",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w900,
-                              ),
+                              "Get Export Plan on WhatsApp",
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900),
                             ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  InkWell(
-                    onTap: _isSubmitting ? null : () => Navigator.pop(context),
-                    child: Text(
-                      "Skip",
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.4),
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                      ),
                     ),
                   ),
                 ],
@@ -251,15 +206,11 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
             ),
           ),
           Positioned(
-            right: 16,
-            top: 16,
+            right: 12,
+            top: 12,
             child: IconButton(
               onPressed: () => Navigator.pop(context),
-              icon: const Icon(
-                Icons.close_rounded,
-                color: Colors.white54,
-                size: 26,
-              ),
+              icon: const Icon(Icons.close, color: Colors.white54),
             ),
           ),
         ],
@@ -272,63 +223,52 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
       alignment: Alignment.centerLeft,
       child: Text(
         text,
-        style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w800,
-          color: Colors.white,
-          letterSpacing: 0.5,
-        ),
+        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
       ),
     );
   }
 
-  Widget _buildInterestItem(BuildContext context, String value) {
-    final cs = Theme.of(context).colorScheme;
-    final isSelected = _selectedInterest == value;
-    return InkWell(
-      onTap: () => setState(() => _selectedInterest = value),
-      borderRadius: BorderRadius.circular(20),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: Row(
-          children: [
-            Container(
-              height: 24,
-              width: 24,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: isSelected
-                      ? cs.primary
-                      : Colors.white.withValues(alpha: 0.2),
-                  width: 2,
-                ),
-              ),
-              child: isSelected
-                  ? Center(
-                      child: Container(
-                        width: 12,
-                        height: 12,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: cs.primary,
-                        ),
-                      ),
-                    )
-                  : null,
-            ),
-            const SizedBox(width: 16),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                color: isSelected
-                    ? Colors.white
-                    : Colors.white.withValues(alpha: 0.6),
-              ),
-            ),
-          ],
+  Widget _buildTextField(String label, TextEditingController controller, IconData icon, String hint) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildLabel(label),
+        const SizedBox(height: 8),
+        TextField(
+          controller: controller,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: const TextStyle(color: Colors.white24, fontSize: 14),
+            prefixIcon: Icon(icon, color: const Color(0xFFFFD000), size: 18),
+            filled: true,
+            fillColor: Colors.white.withValues(alpha: 0.05),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDropdown(String? value, List<String> items, Function(String?) onChanged) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: value,
+          dropdownColor: const Color(0xFF030E30),
+          isExpanded: true,
+          icon: const Icon(Icons.arrow_drop_down, color: Color(0xFFFFD000)),
+          style: const TextStyle(color: Colors.white, fontSize: 14),
+          items: items.map((t) {
+            return DropdownMenuItem(value: t, child: Text(t));
+          }).toList(),
+          onChanged: onChanged,
         ),
       ),
     );
