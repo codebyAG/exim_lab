@@ -61,6 +61,7 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_moder
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/tutorial_step_content.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/search_assistant_dialog.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/gallery_marquee.dart';
 import 'package:animate_do/animate_do.dart';
 import 'dart:async';
 
@@ -696,6 +697,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
                   );
                 },
               ),
+
+              // 🌟 SUCCESS STORIES MARQUEE
+              const GalleryMarquee(),
+
               SizedBox(height: 2.h),
 
               // 🛠️ 4. BUSINESS TOOLS (REPLACED SKILLS)

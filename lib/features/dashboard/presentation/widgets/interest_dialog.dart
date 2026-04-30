@@ -25,14 +25,14 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
     "Manufacturer",
     "Merchant Trader",
     "Startup / Individual",
-    "Service Provider"
+    "Service Provider",
   ];
 
   final List<String> _regStatuses = [
     "Not Registered",
     "IEC Registered",
     "IEC & GST Registered",
-    "Company Registered"
+    "Company Registered",
   ];
 
   final List<String> _requirements = [
@@ -40,7 +40,7 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
     "Buyer / Seller Data",
     "Logistics & Shipping",
     "Funding & Finance",
-    "Full Consultancy"
+    "Full Consultancy",
   ];
 
   @override
@@ -80,7 +80,8 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
     await context.read<AuthProvider>().updateProfile({"name": name});
 
     // 2. Prepare WhatsApp Message
-    final message = "🚢 *Exim Lab - New Business Inquiry*\n\n"
+    final message =
+        "🚢 *Exim Lab - New Business Inquiry*\n\n"
         "👤 *Name:* $name\n"
         "🏢 *Category:* $_selectedCategory\n"
         "📦 *Product Niche:* $product\n"
@@ -91,7 +92,7 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
     if (mounted) {
       setState(() => _isSubmitting = false);
       Navigator.pop(context);
-      
+
       // 3. Redirect to WhatsApp
       WhatsAppUtils.launch(message: message);
     }
@@ -99,9 +100,6 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
-    
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       backgroundColor: Colors.transparent,
@@ -150,34 +148,61 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                   const SizedBox(height: 24),
 
                   // 1. Name
-                  _buildTextField("Your Full Name*", _nameController, Icons.person_outline, "Enter your name"),
+                  _buildTextField(
+                    "Your Full Name*",
+                    _nameController,
+                    Icons.person_outline,
+                    "Enter your name",
+                  ),
                   const SizedBox(height: 16),
-                  
+
                   // 2. Category
                   _buildLabel("1. Business Category"),
                   const SizedBox(height: 8),
-                  _buildDropdown(_selectedCategory, _categories, (v) => setState(() => _selectedCategory = v)),
+                  _buildDropdown(
+                    _selectedCategory,
+                    _categories,
+                    (v) => setState(() => _selectedCategory = v),
+                  ),
                   const SizedBox(height: 16),
 
                   // 3. Product
-                  _buildTextField("2. Product Niche*", _productController, Icons.inventory_2_outlined, "e.g. Spices, Textiles, Tech"),
+                  _buildTextField(
+                    "2. Product Niche*",
+                    _productController,
+                    Icons.inventory_2_outlined,
+                    "e.g. Spices, Textiles, Tech",
+                  ),
                   const SizedBox(height: 16),
 
                   // 4. Registration
                   _buildLabel("3. Registration Status"),
                   const SizedBox(height: 8),
-                  _buildDropdown(_selectedRegStatus, _regStatuses, (v) => setState(() => _selectedRegStatus = v)),
+                  _buildDropdown(
+                    _selectedRegStatus,
+                    _regStatuses,
+                    (v) => setState(() => _selectedRegStatus = v),
+                  ),
                   const SizedBox(height: 16),
 
                   // 5. Target Market
-                  _buildTextField("4. Target Market", _targetMarketController, Icons.public_outlined, "e.g. USA, Dubai, Europe"),
+                  _buildTextField(
+                    "4. Target Market",
+                    _targetMarketController,
+                    Icons.public_outlined,
+                    "e.g. USA, Dubai, Europe",
+                  ),
                   const SizedBox(height: 16),
 
                   // 6. Main Requirement
                   _buildLabel("5. What do you need most?"),
                   const SizedBox(height: 8),
-                  _buildDropdown(_selectedRequirement, _requirements, (v) => setState(() => _selectedRequirement = v)),
-                  
+                  _buildDropdown(
+                    _selectedRequirement,
+                    _requirements,
+                    (v) => setState(() => _selectedRequirement = v),
+                  ),
+
                   const SizedBox(height: 32),
 
                   // Submit Button
@@ -197,7 +222,10 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
                           ? const CircularProgressIndicator(color: Colors.black)
                           : const Text(
                               "Get Export Plan on WhatsApp",
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w900,
+                              ),
                             ),
                     ),
                   ),
@@ -223,12 +251,21 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
       alignment: Alignment.centerLeft,
       child: Text(
         text,
-        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 13,
+        ),
       ),
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, IconData icon, String hint) {
+  Widget _buildTextField(
+    String label,
+    TextEditingController controller,
+    IconData icon,
+    String hint,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -243,15 +280,25 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
             prefixIcon: Icon(icon, color: const Color(0xFFFFD000), size: 18),
             filled: true,
             fillColor: Colors.white.withValues(alpha: 0.05),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildDropdown(String? value, List<String> items, Function(String?) onChanged) {
+  Widget _buildDropdown(
+    String? value,
+    List<String> items,
+    Function(String?) onChanged,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
