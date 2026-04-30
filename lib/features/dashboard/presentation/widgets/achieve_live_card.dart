@@ -40,7 +40,7 @@ class AchieveLiveCard extends StatelessWidget {
                 children: [
                   // 👈 LEFT SECTION: ACHIEVE
                   Expanded(
-                    flex: 12,
+                    flex: 14,
                     child: Padding(
                       padding: EdgeInsets.all(5.w),
                       child: Column(
@@ -66,7 +66,9 @@ class AchieveLiveCard extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 2.5.h),
-                          ...config.achievements.map((item) => _buildAchieveItem(item)),
+                          ...config.achievements.map(
+                            (item) => _buildAchieveItem(item),
+                          ),
                         ],
                       ),
                     ),
@@ -80,9 +82,12 @@ class AchieveLiveCard extends StatelessWidget {
 
                   // 👉 RIGHT SECTION: LIVE WEBINAR
                   Expanded(
-                    flex: 10,
+                    flex: 9,
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 4.w),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 5.w,
+                        vertical: 4.w,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -135,7 +140,7 @@ class AchieveLiveCard extends StatelessWidget {
                             webinar.day,
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 28.sp,
+                              fontSize: 24.sp,
                               fontWeight: FontWeight.w900,
                               height: 1,
                             ),
@@ -144,7 +149,7 @@ class AchieveLiveCard extends StatelessWidget {
                             webinar.month,
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 22.sp,
+                              fontSize: 18.sp,
                               fontWeight: FontWeight.w800,
                               height: 1,
                             ),
@@ -207,10 +212,11 @@ class AchieveLiveCard extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(16),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: (webinar.isLive
-                                            ? const Color(0xFFFF4444)
-                                            : const Color(0xFF1E5FFF))
-                                        .withValues(alpha: 0.4),
+                                    color:
+                                        (webinar.isLive
+                                                ? const Color(0xFFFF4444)
+                                                : const Color(0xFF1E5FFF))
+                                            .withValues(alpha: 0.4),
                                     blurRadius: 12,
                                     offset: const Offset(0, 4),
                                   ),
@@ -263,7 +269,7 @@ class AchieveLiveCard extends StatelessWidget {
               text,
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.9),
-                fontSize: 13.5.sp,
+                fontSize: 12.5.sp,
                 fontWeight: FontWeight.w700,
                 letterSpacing: -0.2,
               ),
@@ -282,11 +288,7 @@ class AchieveLiveCard extends StatelessWidget {
         color: Color(0xFFFF4444),
         shape: BoxShape.circle,
         boxShadow: [
-          BoxShadow(
-            color: Color(0xFFFF4444),
-            blurRadius: 8,
-            spreadRadius: 2,
-          ),
+          BoxShadow(color: Color(0xFFFF4444), blurRadius: 8, spreadRadius: 2),
         ],
       ),
     );
