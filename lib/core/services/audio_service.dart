@@ -10,8 +10,17 @@ class AudioService {
 
   Future<void> playSendMessageSound() async {
     try {
-      // Play from assets
-      await _player.stop(); // Stop any currently playing sound
+      await _player.stop();
+      await _player.play(AssetSource('send_message.mp3'), mode: PlayerMode.lowLatency);
+    } catch (e) {
+      developer.log("⚠️ Audio Playback Error: $e", name: "AUDIO");
+    }
+  }
+
+  Future<void> playNotificationSound() async {
+    try {
+      await _player.stop();
+      // Reuse send_message.mp3 as it's the only one available
       await _player.play(AssetSource('send_message.mp3'), mode: PlayerMode.lowLatency);
     } catch (e) {
       developer.log("⚠️ Audio Playback Error: $e", name: "AUDIO");
