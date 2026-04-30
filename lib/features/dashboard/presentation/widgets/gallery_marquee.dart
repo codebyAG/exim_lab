@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:exim_lab/core/constants/gallery_constants.dart';
 import 'package:exim_lab/features/gallery/presentation/screens/gallery_screen.dart';
