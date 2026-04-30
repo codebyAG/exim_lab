@@ -357,8 +357,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
   }
 
   Future<void> _triggerPromoBanner() async {
-    // Safety delay to ensure dashboard build and tour logic have settled
-    await Future.delayed(const Duration(milliseconds: 500));
+    // 🛡️ Show after 15 seconds of dashboard activity
+    await Future.delayed(const Duration(seconds: 15));
     if (!mounted) return;
 
     final data = context.read<DashboardProvider>().data;
