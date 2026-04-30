@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:exim_lab/core/constants/gallery_constants.dart';
@@ -5,13 +6,46 @@ import 'package:exim_lab/features/gallery/presentation/screens/gallery_screen.da
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-class GalleryMarquee extends StatelessWidget {
+class GalleryMarquee extends StatefulWidget {
   const GalleryMarquee({super.key});
 
   @override
+  State<GalleryMarquee> createState() => _GalleryMarqueeState();
+}
+
+class _GalleryMarqueeState extends State<GalleryMarquee> {
+  late ScrollController _scrollController;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startAutoScroll();
+    });
+  }
+
+  void _startAutoScroll() {
+    _timer = Timer.periodic(const Duration(milliseconds: 30), (timer) {
+      if (_scrollController.hasClients) {
+        double currentScroll = _scrollController.offset;
+        _scrollController.jumpTo(currentScroll + 1.0);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // Success Stories URLs
-    final urls = GalleryConstants.galleryUrls.take(10).toList();
+    final urls = GalleryConstants.galleryUrls;
+    if (urls.isEmpty) return const SizedBox.shrink();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,15 +86,13 @@ class GalleryMarquee extends StatelessWidget {
         SizedBox(
           height: 18.h,
           child: ListView.builder(
-            padding: EdgeInsets.symmetric(horizontal: 4.w),
+            controller: _scrollController,
             scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            itemCount: urls.length + 1,
+            physics: const NeverScrollableScrollPhysics(),
+            // Infinite loop using modulo
             itemBuilder: (context, index) {
-              if (index == urls.length) {
-                return _buildSeeMoreCard(context);
-              }
-              return _buildGalleryCard(context, urls[index], index);
+              final url = urls[index % urls.length];
+              return _buildGalleryCard(context, url);
             },
           ),
         ),
@@ -68,81 +100,32 @@ class GalleryMarquee extends StatelessWidget {
     );
   }
 
-  Widget _buildGalleryCard(BuildContext context, String url, int index) {
-    return FadeInRight(
-      delay: Duration(milliseconds: 100 * index),
-      duration: const Duration(milliseconds: 500),
-      child: Container(
-        width: 40.w,
-        margin: EdgeInsets.only(right: 3.w, bottom: 1.h),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: CachedNetworkImage(
-            imageUrl: url,
-            fit: BoxFit.cover,
-            placeholder: (context, url) => Container(
-              color: Colors.white.withValues(alpha: 0.05),
-              child: const Center(
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-            ),
-            errorWidget: (context, url, error) => const Icon(Icons.error),
+  Widget _buildGalleryCard(BuildContext context, String url) {
+    return Container(
+      width: 40.w,
+      margin: EdgeInsets.only(right: 3.w, bottom: 1.h),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
           ),
-        ),
+        ],
       ),
-    );
-  }
-
-  Widget _buildSeeMoreCard(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const GalleryScreen()),
-        );
-      },
-      child: Container(
-        width: 30.w,
-        margin: EdgeInsets.only(right: 4.w, bottom: 1.h),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.05),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.1),
-            width: 1.5,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: CachedNetworkImage(
+          imageUrl: url,
+          fit: BoxFit.cover,
+          placeholder: (context, url) => Container(
+            color: Colors.white.withValues(alpha: 0.05),
+            child: const Center(
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
           ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: const BoxDecoration(
-                color: Color(0xFFFFD000),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.arrow_forward_rounded, color: Colors.black),
-            ),
-            SizedBox(height: 1.h),
-            Text(
-              "View All",
-              style: TextStyle(
-                color: Colors.white70,
-                fontWeight: FontWeight.bold,
-                fontSize: 11.sp,
-              ),
-            ),
-          ],
+          errorWidget: (context, url, error) => const Icon(Icons.error),
         ),
       ),
     );
