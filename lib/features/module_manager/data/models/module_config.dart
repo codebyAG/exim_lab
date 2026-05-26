@@ -5,7 +5,10 @@ class ModuleConfig {
 
   Map<String, bool> get modules => Map.unmodifiable(_modules);
 
-  bool isEnabled(String key) => _modules[key] ?? false;
+  bool isEnabled(String key) {
+    if (key == 'isAppOnline') return _modules[key] ?? true;
+    return _modules[key] ?? false;
+  }
 
   factory ModuleConfig.defaults() {
     return ModuleConfig(
@@ -21,6 +24,7 @@ class ModuleConfig {
         'shortVideos': false,
         'aiChat': false,
         'community': true,
+        'isAppOnline': true,
       },
     );
   }

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
-import 'package:exim_lab/core/providers/config_provider.dart';
 import 'package:exim_lab/features/dashboard/presentation/screens/dashboard.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:exim_lab/features/welcome/presentation/screens/welcome_screen.dart';
@@ -68,8 +67,8 @@ class _SplashScreenState extends State<SplashScreen> {
     // 1. 🚀 FETCH MODULES FIRST (No Auth Required)
     // This ensures we have the latest config (maintenance mode, feature flags)
     // before we even decide where to navigate.
+    final moduleProvider = context.read<ModuleProvider>();
     try {
-      final moduleProvider = context.read<ModuleProvider>();
       await moduleProvider.fetchModules();
     } catch (e) {
       // Log error but allow navigation to proceed (will use defaults/cache)
@@ -79,18 +78,13 @@ class _SplashScreenState extends State<SplashScreen> {
     if (!mounted) return;
 
     // 2. CHECK MAINTENANCE STATUS
-    try {
-      final configProvider = context.read<ConfigProvider>();
-      final isMaintenance = await configProvider.checkMaintenanceStatus();
-      if (isMaintenance && mounted) {
-        await minDelayFuture;
-        if (mounted) {
-          AppNavigator.replace(context, const MaintenanceScreen());
-          return;
-        }
+    final isMaintenance = !moduleProvider.isEnabled('isAppOnline');
+    if (isMaintenance) {
+      await minDelayFuture;
+      if (mounted) {
+        AppNavigator.replace(context, const MaintenanceScreen());
+        return;
       }
-    } catch (_) {
-      // Allow navigation to proceed on error checking maintenance
     }
 
     // Wait for the minimum splash delay to finish

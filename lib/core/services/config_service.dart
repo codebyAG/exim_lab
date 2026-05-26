@@ -27,37 +27,4 @@ class ConfigService {
       },
     );
   }
-
-  Future<bool> fetchMaintenanceStatus() async {
-    return true; // Mocked: Force maintenance mode for visual verification
-    try {
-      return await callApi(
-        ApiConstants.maintenance,
-        parser: (json) {
-          if (json is Map<String, dynamic>) {
-            // Check 'maintenance' key at top-level
-            if (json.containsKey('maintenance')) {
-              final val = json['maintenance'];
-              if (val is bool) return val;
-              if (val is String) return val.toLowerCase() == 'true';
-              if (val is int) return val == 1;
-            }
-            // Check inside 'data' if present
-            final data = json['data'];
-            if (data is Map<String, dynamic> &&
-                data.containsKey('maintenance')) {
-              final val = data['maintenance'];
-              if (val is bool) return val;
-              if (val is String) return val.toLowerCase() == 'true';
-              if (val is int) return val == 1;
-            }
-          }
-          return false;
-        },
-        logErrorEvent: false,
-      );
-    } catch (_) {
-      return false;
-    }
-  }
 }

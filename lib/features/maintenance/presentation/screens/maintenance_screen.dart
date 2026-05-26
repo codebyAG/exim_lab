@@ -1,7 +1,6 @@
-import 'dart:ui';
 import 'package:animate_do/animate_do.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
-import 'package:exim_lab/core/providers/config_provider.dart';
+import 'package:exim_lab/features/module_manager/presentation/providers/module_provider.dart';
 import 'package:exim_lab/features/dashboard/presentation/screens/dashboard.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:exim_lab/features/welcome/presentation/screens/welcome_screen.dart';
@@ -36,9 +35,9 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
     if (!mounted) return;
 
     try {
-      final configProvider = context.read<ConfigProvider>();
-      final isStillUnderMaintenance = await configProvider
-          .checkMaintenanceStatus();
+      final moduleProvider = context.read<ModuleProvider>();
+      await moduleProvider.fetchModules();
+      final isStillUnderMaintenance = !moduleProvider.isEnabled('isAppOnline');
 
       if (!mounted) return;
 
