@@ -101,26 +101,8 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
       child: Scaffold(
         body: Stack(
           children: [
-            // 🌌 1. DEEP GRADIENT BASE
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: isDark
-                        ? const [
-                            Color(0xFF010618), // Ultra Dark Space Navy
-                            Color(0xFF081335), // Deep Space Navy
-                          ]
-                        : const [
-                            Color(0xFFF1F5F9), // Slate 100
-                            Color(0xFFE2E8F0), // Slate 200
-                          ],
-                  ),
-                ),
-              ),
-            ),
+            // 🌌 1. DEEP SOLID BACKGROUND MATCHING APP
+            Positioned.fill(child: Container(color: theme.colorScheme.surface)),
 
             // 🔮 2. GLOWING AMBIENT LIGHTS (Glassmorphic Backdrop Circles)
             Positioned(
@@ -177,162 +159,163 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                         // 🌟 GLASSMORPHIC CONTENT CARD
                         ZoomIn(
                           duration: const Duration(milliseconds: 600),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(28),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(
-                                sigmaX: 16.0,
-                                sigmaY: 16.0,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24.0,
+                              vertical: 36.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? theme.colorScheme.primaryContainer
+                                        .withValues(alpha: 0.5)
+                                  : Colors.white,
+                              borderRadius: BorderRadius.circular(24),
+                              border: Border.all(
+                                color: isDark
+                                    ? theme.colorScheme.primary.withValues(
+                                        alpha: 0.2,
+                                      )
+                                    : theme.colorScheme.outline.withValues(
+                                        alpha: 0.15,
+                                      ),
+                                width: 1.5,
                               ),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 24.0,
-                                  vertical: 36.0,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(
+                                    alpha: isDark ? 0.25 : 0.06,
+                                  ),
+                                  blurRadius: 24,
+                                  offset: const Offset(0, 8),
                                 ),
-                                decoration: BoxDecoration(
-                                  color: isDark
-                                      ? Colors.white.withValues(alpha: 0.03)
-                                      : Colors.black.withValues(alpha: 0.015),
-                                  borderRadius: BorderRadius.circular(28),
-                                  border: Border.all(
-                                    color:
-                                        (isDark ? Colors.white : Colors.black)
-                                            .withValues(
-                                              alpha: isDark ? 0.08 : 0.06,
+                              ],
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // Glow Icon Container
+                                Center(
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Container(
+                                        width: 120,
+                                        height: 120,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: theme.colorScheme.secondary
+                                              .withValues(
+                                                alpha: isDark ? 0.10 : 0.06,
+                                              ),
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 96,
+                                        height: 96,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: theme.colorScheme.secondary
+                                              .withValues(
+                                                alpha: isDark ? 0.18 : 0.12,
+                                              ),
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 72,
+                                        height: 72,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                            colors: [
+                                              theme.colorScheme.secondary,
+                                              theme.colorScheme.secondary
+                                                  .withValues(alpha: 0.85),
+                                            ],
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: theme.colorScheme.secondary
+                                                  .withValues(alpha: 0.3),
+                                              blurRadius: 12,
+                                              offset: const Offset(0, 4),
                                             ),
-                                    width: 1.5,
+                                          ],
+                                        ),
+                                        child: const Icon(
+                                          Icons.construction_rounded,
+                                          size: 36,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    // Glow Icon Container
-                                    Center(
-                                      child: Stack(
-                                        alignment: Alignment.center,
-                                        children: [
-                                          Container(
-                                            width: 120,
-                                            height: 120,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: theme.colorScheme.secondary
-                                                  .withValues(
-                                                    alpha: isDark ? 0.10 : 0.06,
-                                                  ),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 96,
-                                            height: 96,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: theme.colorScheme.secondary
-                                                  .withValues(
-                                                    alpha: isDark ? 0.18 : 0.12,
-                                                  ),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 72,
-                                            height: 72,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              gradient: LinearGradient(
-                                                begin: Alignment.topLeft,
-                                                end: Alignment.bottomRight,
-                                                colors: [
-                                                  theme.colorScheme.secondary,
-                                                  theme.colorScheme.secondary
-                                                      .withValues(alpha: 0.85),
-                                                ],
-                                              ),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: theme
-                                                      .colorScheme
-                                                      .secondary
-                                                      .withValues(alpha: 0.3),
-                                                  blurRadius: 12,
-                                                  offset: const Offset(0, 4),
-                                                ),
-                                              ],
-                                            ),
-                                            child: const Icon(
-                                              Icons.construction_rounded,
-                                              size: 36,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
 
-                                    const SizedBox(height: 28),
+                                const SizedBox(height: 28),
 
-                                    // Main Title (English & Hindi)
-                                    Text(
-                                      "App Under Maintenance",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.w800,
-                                        color: theme.colorScheme.onSurface,
-                                        letterSpacing: 0.3,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      "ऐप अभी बंद है (रखरखाव)",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                        color: theme.colorScheme.onSurface
-                                            .withValues(alpha: 0.8),
-                                      ),
-                                    ),
-
-                                    const SizedBox(height: 20),
-
-                                    // Custom Divider
-                                    Container(
-                                      width: 60,
-                                      height: 3,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: theme.colorScheme.secondary
-                                            .withValues(alpha: 0.4),
-                                      ),
-                                    ),
-
-                                    const SizedBox(height: 20),
-
-                                    // Subtitle / Description (English & Hindi)
-                                    Text(
-                                      "We are updating the app to make it better. Please try again after some time.",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: theme.colorScheme.onSurface
-                                            .withValues(alpha: 0.7),
-                                        height: 1.4,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 12),
-                                    Text(
-                                      "हम ऐप को बेहतर बनाने के लिए काम कर रहे हैं। कृपया कुछ समय बाद दोबारा प्रयास करें।",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        color: theme.colorScheme.onSurface
-                                            .withValues(alpha: 0.55),
-                                        height: 1.4,
-                                      ),
-                                    ),
-                                  ],
+                                // Main Title (English & Hindi)
+                                Text(
+                                  "App Under Maintenance",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w800,
+                                    color: theme.colorScheme.onSurface,
+                                    letterSpacing: 0.3,
+                                  ),
                                 ),
-                              ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  "ऐप अभी बंद है (रखरखाव)",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.8),
+                                  ),
+                                ),
+
+                                const SizedBox(height: 20),
+
+                                // Custom Divider
+                                Container(
+                                  width: 60,
+                                  height: 3,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: theme.colorScheme.secondary
+                                        .withValues(alpha: 0.4),
+                                  ),
+                                ),
+
+                                const SizedBox(height: 20),
+
+                                // Subtitle / Description (English & Hindi)
+                                Text(
+                                  "We are updating the app to make it better. Please try again after some time.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.7),
+                                    height: 1.4,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  "हम ऐप को बेहतर बनाने के लिए काम कर रहे हैं। कृपया कुछ समय बाद दोबारा प्रयास करें।",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.55),
+                                    height: 1.4,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -343,79 +326,50 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                         FadeInUp(
                           delay: const Duration(milliseconds: 300),
                           duration: const Duration(milliseconds: 600),
-                          child: InkWell(
-                            onTap: _isChecking ? null : _checkStatus,
-                            borderRadius: BorderRadius.circular(16),
-                            child: Ink(
-                              width: double.infinity,
-                              height: 56,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                gradient: LinearGradient(
-                                  colors: _isChecking
-                                      ? [
-                                          theme.colorScheme.primary.withValues(
-                                            alpha: 0.6,
-                                          ),
-                                          theme.colorScheme.primary.withValues(
-                                            alpha: 0.4,
-                                          ),
-                                        ]
-                                      : [
-                                          theme.colorScheme.primary,
-                                          theme.colorScheme.primary.withRed(
-                                            (theme.colorScheme.primary.red + 30)
-                                                .clamp(0, 255),
-                                          ),
-                                        ],
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 56,
+                            child: ElevatedButton(
+                              onPressed: _isChecking ? null : _checkStatus,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: theme.colorScheme.primary,
+                                foregroundColor: theme.colorScheme.onPrimary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
                                 ),
-                                boxShadow: [
-                                  if (!_isChecking)
-                                    BoxShadow(
-                                      color: theme.colorScheme.primary
-                                          .withValues(
-                                            alpha: isDark ? 0.35 : 0.25,
-                                          ),
-                                      blurRadius: 16,
-                                      offset: const Offset(0, 6),
-                                    ),
-                                ],
+                                elevation: 0,
                               ),
-                              child: Center(
-                                child: _isChecking
-                                    ? const SizedBox(
-                                        height: 24,
-                                        width: 24,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2.5,
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                Colors.white,
-                                              ),
-                                        ),
-                                      )
-                                    : Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: const [
-                                          Text(
-                                            "Check Again / दोबारा जांचें",
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                              letterSpacing: 0.2,
+                              child: _isChecking
+                                  ? SizedBox(
+                                      height: 24,
+                                      width: 24,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2.5,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                              theme.colorScheme.onPrimary,
                                             ),
-                                          ),
-                                          SizedBox(width: 8),
-                                          Icon(
-                                            Icons.refresh_rounded,
-                                            size: 20,
-                                            color: Colors.white,
-                                          ),
-                                        ],
                                       ),
-                              ),
+                                    )
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Check Again / दोबारा जांचें",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: theme.colorScheme.onPrimary,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        const Icon(
+                                          Icons.refresh_rounded,
+                                          size: 20,
+                                        ),
+                                      ],
+                                    ),
                             ),
                           ),
                         ),
