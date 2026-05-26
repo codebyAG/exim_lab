@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:exim_lab/core/functions/whatsapp_utils.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/module_manager/presentation/providers/module_provider.dart';
 import 'package:exim_lab/features/dashboard/presentation/screens/dashboard.dart';
@@ -87,6 +88,16 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
         });
       }
     }
+  }
+
+  void _contactSupport() {
+    WhatsAppUtils.launch(
+      message: _getText(
+        context,
+        "I need help, app is under maintenance.",
+        "मुझे सहायता चाहिए, ऐप काम नहीं कर रहा है।",
+      ),
+    );
   }
 
   @override
@@ -325,51 +336,95 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                         FadeInUp(
                           delay: const Duration(milliseconds: 300),
                           duration: const Duration(milliseconds: 600),
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 56,
-                            child: ElevatedButton(
-                              onPressed: _isChecking ? null : _checkStatus,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: theme.colorScheme.primary,
-                                foregroundColor: theme.colorScheme.onPrimary,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                elevation: 0,
-                              ),
-                              child: _isChecking
-                                  ? SizedBox(
-                                      height: 24,
-                                      width: 24,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2.5,
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                              theme.colorScheme.onPrimary,
-                                            ),
-                                      ),
-                                    )
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "Check Again / दोबारा जांचें",
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: theme.colorScheme.onPrimary,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        const Icon(
-                                          Icons.refresh_rounded,
-                                          size: 20,
-                                        ),
-                                      ],
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                width: double.infinity,
+                                height: 56,
+                                child: ElevatedButton(
+                                  onPressed: _isChecking ? null : _checkStatus,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: theme.colorScheme.primary,
+                                    foregroundColor:
+                                        theme.colorScheme.onPrimary,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
                                     ),
-                            ),
+                                    elevation: 0,
+                                  ),
+                                  child: _isChecking
+                                      ? SizedBox(
+                                          height: 24,
+                                          width: 24,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2.5,
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                  theme.colorScheme.onPrimary,
+                                                ),
+                                          ),
+                                        )
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Check Again / दोबारा जांचें",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color:
+                                                    theme.colorScheme.onPrimary,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            const Icon(
+                                              Icons.refresh_rounded,
+                                              size: 20,
+                                            ),
+                                          ],
+                                        ),
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              SizedBox(
+                                width: double.infinity,
+                                height: 56,
+                                child: OutlinedButton(
+                                  onPressed: _contactSupport,
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor:
+                                        theme.colorScheme.onSurface,
+                                    side: BorderSide(
+                                      color: theme.colorScheme.outline
+                                          .withValues(alpha: 0.5),
+                                      width: 1.5,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const [
+                                      Icon(
+                                        Icons.support_agent_rounded,
+                                        size: 22,
+                                      ),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        "Contact Support / सहायता लें",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
