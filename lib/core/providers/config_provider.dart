@@ -9,10 +9,25 @@ class ConfigProvider extends ChangeNotifier {
   SocialLinks? _links;
   LiveEventConfig? _liveEvent;
   bool _isLoading = false;
+  bool _isMaintenance = false;
 
   SocialLinks? get links => _links;
   LiveEventConfig? get liveEvent => _liveEvent;
   bool get isLoading => _isLoading;
+  bool get isMaintenance => _isMaintenance;
+
+  Future<bool> checkMaintenanceStatus() async {
+    try {
+      _isMaintenance = await _service.fetchMaintenanceStatus();
+      notifyListeners();
+      return _isMaintenance;
+    } catch (e) {
+      developer.log("⚠️ Error checking maintenance status: $e", name: "CONFIG");
+      _isMaintenance = false;
+      notifyListeners();
+      return false;
+    }
+  }
 
   // Fallback links if API fails
   SocialLinks get effectiveLinks => _links ?? SocialLinks(

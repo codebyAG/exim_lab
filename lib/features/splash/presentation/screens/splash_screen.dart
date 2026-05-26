@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
+import 'package:exim_lab/core/providers/config_provider.dart';
 import 'package:exim_lab/features/dashboard/presentation/screens/dashboard.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:exim_lab/features/welcome/presentation/screens/welcome_screen.dart';
+import 'package:exim_lab/features/maintenance/presentation/screens/maintenance_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:provider/provider.dart';
@@ -72,6 +74,21 @@ class _SplashScreenState extends State<SplashScreen> {
     } catch (e) {
       // Log error but allow navigation to proceed (will use defaults/cache)
       // log("Error fetching modules on splash: $e");
+    }
+
+    // 2. CHECK MAINTENANCE STATUS
+    try {
+      final configProvider = context.read<ConfigProvider>();
+      final isMaintenance = await configProvider.checkMaintenanceStatus();
+      if (isMaintenance && mounted) {
+        await minDelayFuture;
+        if (mounted) {
+          AppNavigator.replace(context, const MaintenanceScreen());
+          return;
+        }
+      }
+    } catch (_) {
+      // Allow navigation to proceed on error checking maintenance
     }
 
     // Wait for the minimum splash delay to finish
