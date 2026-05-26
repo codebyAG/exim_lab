@@ -29,6 +29,7 @@ class ConfigService {
   }
 
   Future<bool> fetchMaintenanceStatus() async {
+    return true; // Mocked: Force maintenance mode for visual verification
     try {
       return await callApi(
         ApiConstants.maintenance,
