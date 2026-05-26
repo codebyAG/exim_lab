@@ -44,7 +44,8 @@ class ConfigService {
             }
             // Check inside 'data' if present
             final data = json['data'];
-            if (data is Map<String, dynamic> && data.containsKey('maintenance')) {
+            if (data is Map<String, dynamic> &&
+                data.containsKey('maintenance')) {
               final val = data['maintenance'];
               if (val is bool) return val;
               if (val is String) return val.toLowerCase() == 'true';

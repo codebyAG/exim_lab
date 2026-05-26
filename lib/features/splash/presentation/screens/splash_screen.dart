@@ -76,6 +76,8 @@ class _SplashScreenState extends State<SplashScreen> {
       // log("Error fetching modules on splash: $e");
     }
 
+    if (!mounted) return;
+
     // 2. CHECK MAINTENANCE STATUS
     try {
       final configProvider = context.read<ConfigProvider>();
