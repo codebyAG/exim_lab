@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Meta (Facebook) App Ads — install/event tracking -->
+    <string name="facebook_app_id">5195070997385340</string>
+    <string name="facebook_client_token">3f143dfc36dcf1e22fa6fa96deeded59</string>
+</resources>

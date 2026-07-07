@@ -61,4 +61,7 @@ flutter {
 dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
     implementation("com.google.firebase:firebase-analytics")
+
+    // Meta (Facebook) App Ads — install/activate event tracking (auto-logged)
+    implementation("com.facebook.android:facebook-core:18.2.3")
 }
