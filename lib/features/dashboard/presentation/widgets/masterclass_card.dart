@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:exim_lab/features/dashboard/presentation/painters/dashboard_icons_painter.dart';
 import 'package:exim_lab/core/functions/whatsapp_utils.dart';
+import 'package:exim_lab/core/providers/config_provider.dart';
+import 'package:provider/provider.dart';
 
 class MasterclassCard extends StatelessWidget {
   const MasterclassCard({super.key});
@@ -131,6 +133,10 @@ class MasterclassCard extends StatelessWidget {
                         flex: 3,
                         child: InkWell(
                           onTap: () => WhatsAppUtils.launch(
+                            number: context
+                                .read<ConfigProvider>()
+                                .effectiveLinks
+                                .masterclassWhatsappNumber,
                             message:
                                 "Hi, I want to enroll in the Master Import-Export Business class.",
                           ),

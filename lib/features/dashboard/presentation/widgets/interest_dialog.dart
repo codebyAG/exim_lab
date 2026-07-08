@@ -1,4 +1,5 @@
 import 'package:exim_lab/core/functions/whatsapp_utils.dart';
+import 'package:exim_lab/core/providers/config_provider.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -90,11 +91,14 @@ class _InterestCaptureDialogState extends State<InterestCaptureDialog> {
         "💡 *Main Need:* $_selectedRequirement";
 
     if (mounted) {
+      // Capture number before popping (context gets deactivated after pop)
+      final interestNumber =
+          context.read<ConfigProvider>().effectiveLinks.interestWhatsappNumber;
       setState(() => _isSubmitting = false);
       Navigator.pop(context);
 
       // 3. Redirect to WhatsApp
-      WhatsAppUtils.launch(message: message);
+      WhatsAppUtils.launch(number: interestNumber, message: message);
     }
   }
 

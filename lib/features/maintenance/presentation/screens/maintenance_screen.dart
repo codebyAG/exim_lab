@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:exim_lab/core/functions/whatsapp_utils.dart';
+import 'package:exim_lab/core/providers/config_provider.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/module_manager/presentation/providers/module_provider.dart';
 import 'package:exim_lab/features/dashboard/presentation/screens/dashboard.dart';
@@ -91,7 +92,9 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
   }
 
   void _contactSupport() {
+    final config = context.read<ConfigProvider>();
     WhatsAppUtils.launch(
+      number: config.effectiveLinks.maintenanceWhatsappNumber,
       message: _getText(
         context,
         "I need help, app is under maintenance.",

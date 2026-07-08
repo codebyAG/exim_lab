@@ -184,11 +184,15 @@ class AchieveLiveCard extends StatelessWidget {
                                   webinar.meetingUrl != null) {
                                 // Launch Meeting URL via WhatsApp message for now
                                 WhatsAppUtils.launch(
+                                  number: configProvider
+                                      .effectiveLinks.liveWhatsappNumber,
                                   message:
                                       "Hi, I want to join the LIVE session: ${webinar.meetingUrl}",
                                 );
                               } else {
                                 WhatsAppUtils.launch(
+                                  number: configProvider
+                                      .effectiveLinks.liveWhatsappNumber,
                                   message: webinar.whatsappMessage,
                                 );
                               }

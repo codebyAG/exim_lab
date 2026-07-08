@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:exim_lab/core/functions/whatsapp_utils.dart';
+import 'package:exim_lab/core/providers/config_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/dots_iniidcator.dart';
 import 'masterclass_card.dart';
 
@@ -178,6 +180,10 @@ class HandholdingMasterclassCard extends StatelessWidget {
                   SizedBox(height: 1.h),
                   InkWell(
                     onTap: () => WhatsAppUtils.launch(
+                      number: context
+                          .read<ConfigProvider>()
+                          .effectiveLinks
+                          .handholdingWhatsappNumber,
                       message:
                           "Hi, I am interested in the Handholding Masterclass for expert guidance.",
                     ),

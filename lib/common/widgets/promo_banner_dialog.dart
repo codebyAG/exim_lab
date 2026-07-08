@@ -1,5 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:exim_lab/core/functions/whatsapp_utils.dart';
+import 'package:exim_lab/core/providers/config_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sizer/sizer.dart';
@@ -71,6 +73,10 @@ class PromoBannerDialog extends StatelessWidget {
                   duration: const Duration(milliseconds: 600),
                   child: ElevatedButton.icon(
                     onPressed: () => WhatsAppUtils.launch(
+                      number: context
+                          .read<ConfigProvider>()
+                          .effectiveLinks
+                          .promoWhatsappNumber,
                       message:
                           "Hi, I saw your special offer and want to connect!",
                     ),
