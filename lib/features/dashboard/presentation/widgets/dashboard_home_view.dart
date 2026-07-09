@@ -25,6 +25,11 @@ import 'package:exim_lab/features/tools/presentation/screens/gst_calculator.dart
 import 'package:exim_lab/features/tools/presentation/screens/incoterms_screen.dart';
 import 'package:exim_lab/features/tools/presentation/screens/forex_converter_screen.dart';
 import 'package:exim_lab/features/tools/presentation/screens/hsn_finder_screen.dart';
+import 'package:exim_lab/features/tools/presentation/screens/import_calculator_screen.dart';
+import 'package:exim_lab/features/tools/presentation/screens/cbm_calculator.dart';
+import 'package:exim_lab/features/tools/presentation/screens/product_cert_screen.dart';
+import 'package:exim_lab/features/tools/presentation/screens/gov_benefits_screen.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/premium_unlock_dialog.dart';
 import 'package:exim_lab/features/gallery/presentation/screens/gallery_screen.dart';
 import 'package:exim_lab/features/chat/presentation/screens/community_chat_screen.dart';
 import 'package:exim_lab/features/journey/presentation/screens/import_journey_screen.dart';
@@ -54,56 +59,51 @@ class DashboardHomeView extends StatelessWidget {
         padding: EdgeInsets.zero,
         physics: const AlwaysScrollableScrollPhysics(),
         children: [
-          // ── NAVY TOP (app-bar area): greeting + masterclass + dots ──
+          // 💹 LIVE FOREX MARQUEE TICKER — its navy color covers the
+          // status-bar area edge-to-edge (no SafeArea).
           Container(
-            color: AppColors.navyDark,
-            child: Column(
-              children: [
-                const _Header(),
-                SizedBox(height: 1.6.h),
-                const _MasterclassCard(),
-                SizedBox(height: 1.2.h),
-                const _CarouselDots(),
-                SizedBox(height: 2.4.h),
-              ],
-            ),
+            color: const Color(0xFF01081C),
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            child: const ExchangeRateTicker(),
           ),
-          // ── WHITE SHEET with rounded top corners ──
-          Transform.translate(
-            offset: const Offset(0, -22),
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-              ),
-              padding: EdgeInsets.only(top: 2.6.h),
-              child: Column(
+          // ── WHITE APP-BAR AREA: greeting + masterclass card + dots ──
+          const _Header(),
+          SizedBox(height: 1.2.h),
+          const _MasterclassCard(),
+          SizedBox(height: 1.2.h),
+          const _CarouselDots(),
+          SizedBox(height: 2.h),
+          // ── CONTENT (same white background) ──
+          Column(
                 children: [
-                  const ExchangeRateTicker(),
-                  SizedBox(height: 2.h),
+                  // Main-branch order below the approved top block
                   const _LiveBanner(),
                   SizedBox(height: 2.2.h),
-                  const _ContinueLearning(),
+                  const _AboutCard(),
                   SizedBox(height: 2.2.h),
                   const _ProgressCard(),
-                  SizedBox(height: 2.2.h),
-                  const _TopTools(),
-                  SizedBox(height: 2.2.h),
-                  const _QuizBanner(),
-                  SizedBox(height: 2.2.h),
-                  const _ShortsForYou(),
-                  SizedBox(height: 2.2.h),
-                  const _QuickAccess(),
-                  SizedBox(height: 2.2.h),
-                  const _CertificatesRow(),
                   SizedBox(height: 2.2.h),
                   const _ExploreGrid(),
                   SizedBox(height: 2.2.h),
                   const GalleryMarquee(),
                   SizedBox(height: 2.2.h),
-                  const _AboutCard(),
+                  const _TopTools(),
+                  SizedBox(height: 2.2.h),
+                  const _QuizBanner(),
+                  SizedBox(height: 2.2.h),
+                  const _CertificatesRow(),
+                  SizedBox(height: 2.2.h),
+                  const _MasterclassSection(),
+                  SizedBox(height: 2.2.h),
+                  const _FreeVideos(),
+                  SizedBox(height: 2.2.h),
+                  const _ShortsForYou(),
+                  SizedBox(height: 2.2.h),
+                  const _ContinueLearning(),
                   SizedBox(height: 2.2.h),
                   const _FreePdfCard(),
+                  SizedBox(height: 2.2.h),
+                  const _QuickAccess(),
                   SizedBox(height: 2.2.h),
                   _CourseRow(
                     title: "Popular Courses",
@@ -120,8 +120,6 @@ class DashboardHomeView extends StatelessWidget {
                     selector: (d) => d.allCourseSection,
                   ),
                   SizedBox(height: 2.2.h),
-                  const _FreeVideos(),
-                  SizedBox(height: 2.2.h),
                   Consumer<DashboardProvider>(
                     builder: (context, d, _) => d.inlineBanners.isEmpty
                         ? const SizedBox.shrink()
@@ -135,8 +133,6 @@ class DashboardHomeView extends StatelessWidget {
                   SizedBox(height: 3.h),
                 ],
               ),
-            ),
-          ),
         ],
       ),
     );
@@ -159,7 +155,9 @@ class _CarouselDots extends StatelessWidget {
           width: active ? 16 : 6,
           height: 6,
           decoration: BoxDecoration(
-            color: active ? AppColors.gold : Colors.white.withValues(alpha: 0.3),
+            color: active
+                ? AppColors.blue
+                : AppColors.slate.withValues(alpha: 0.4),
             borderRadius: BorderRadius.circular(3),
           ),
         );
@@ -189,7 +187,7 @@ class _SectionHead extends StatelessWidget {
             title,
             style: TextStyle(
               color: AppColors.navy,
-              fontSize: 17.sp,
+              fontSize: 19.sp,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -200,7 +198,7 @@ class _SectionHead extends StatelessWidget {
                 actionLabel,
                 style: TextStyle(
                   color: AppColors.blue,
-                  fontSize: 12.sp,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -228,13 +226,8 @@ class _Header extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.fromLTRB(
-        2.w,
-        MediaQuery.of(context).padding.top + 1.2.h,
-        3.w,
-        1.4.h,
-      ),
-      decoration: const BoxDecoration(color: AppColors.navyDark),
+      padding: EdgeInsets.fromLTRB(2.w, 1.2.h, 3.w, 1.4.h),
+      color: Colors.white,
       child: Row(
         children: [
           _circleIcon(
@@ -249,8 +242,8 @@ class _Header extends StatelessWidget {
                 Text(
                   "Hi, ${name ?? 'Explorer'} 👋",
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18.sp,
+                    color: AppColors.navy,
+                    fontSize: 20.sp,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -258,8 +251,8 @@ class _Header extends StatelessWidget {
                 Text(
                   "Ready to build your Import Export Business?",
                   style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.75),
-                    fontSize: 11.sp,
+                    color: AppColors.slateText,
+                    fontSize: 13.sp,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -295,7 +288,7 @@ class _Header extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: AppColors.red,
                         shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.navyDark, width: 2),
+                        border: Border.all(color: Colors.white, width: 2),
                       ),
                       child: Center(
                         child: Text(
@@ -325,7 +318,7 @@ class _Header extends StatelessWidget {
         width: 42,
         height: 42,
         alignment: Alignment.center,
-        child: Icon(icon, color: Colors.white, size: 26),
+        child: Icon(icon, color: AppColors.navy, size: 26),
       ),
     );
   }
@@ -399,7 +392,7 @@ class _MasterclassCard extends StatelessWidget {
                     "PREMIUM MASTERCLASS",
                     style: TextStyle(
                       color: AppColors.gold,
-                      fontSize: 11.sp,
+                      fontSize: 13.sp,
                       fontWeight: FontWeight.w900,
                       letterSpacing: 1,
                     ),
@@ -411,7 +404,7 @@ class _MasterclassCard extends StatelessWidget {
                       "Start Your Import Export Business from Zero",
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 17.sp,
+                        fontSize: 19.sp,
                         fontWeight: FontWeight.w900,
                         height: 1.2,
                       ),
@@ -422,7 +415,7 @@ class _MasterclassCard extends StatelessWidget {
                     "By Mr. Harsh Dhawan",
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.8),
-                      fontSize: 12.sp,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -447,7 +440,7 @@ class _MasterclassCard extends StatelessWidget {
                         Text(
                           "Watch Now",
                           style: TextStyle(
-                            fontSize: 12.sp,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
@@ -461,6 +454,188 @@ class _MasterclassCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Masterclass section — Handholding + Enroll cards (main-branch
+// features in clean theme)
+// ─────────────────────────────────────────────────────────────
+class _MasterclassSection extends StatelessWidget {
+  const _MasterclassSection();
+
+  void _whatsapp(BuildContext context, String number, String message) {
+    WhatsAppUtils.launch(number: number, message: message);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final links = context.read<ConfigProvider>().effectiveLinks;
+
+    return Column(
+      children: [
+        const _SectionHead("Masterclass"),
+        SizedBox(height: 1.4.h),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          padding: EdgeInsets.symmetric(horizontal: 4.w),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 🤝 Handholding Masterclass
+              _mcCard(
+                context,
+                width: 66.w,
+                badge: "🤝 24/7 SUPPORT",
+                badgeColor: AppColors.green,
+                title: "Handholding Masterclass",
+                features: const [
+                  "Problem-solving support 24 x 7",
+                  "Expert guidance at every step",
+                  "Cultural & language support",
+                ],
+                buttonLabel: "Get Expert Support →",
+                buttonColor: AppColors.green,
+                onTap: () => _whatsapp(
+                  context,
+                  links.handholdingWhatsappNumber,
+                  "Hi, I am interested in the Handholding Masterclass for expert guidance.",
+                ),
+              ),
+              SizedBox(width: 3.w),
+              // 🎓 Master Import-Export Business
+              _mcCard(
+                context,
+                width: 66.w,
+                badge: "🎓 CERTIFIED CLASS",
+                badgeColor: AppColors.blue,
+                title: "Master Import-Export Business",
+                features: const [
+                  "Complete business roadmap",
+                  "Live doubt-clearing sessions",
+                  "Certificate on completion",
+                ],
+                buttonLabel: "Enroll Now →",
+                buttonColor: AppColors.blue,
+                onTap: () => _whatsapp(
+                  context,
+                  links.masterclassWhatsappNumber,
+                  "Hi, I want to enroll in the Master Import-Export Business class.",
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _mcCard(
+    BuildContext context, {
+    required double width,
+    required String badge,
+    required Color badgeColor,
+    required String title,
+    required List<String> features,
+    required String buttonLabel,
+    required Color buttonColor,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      width: width,
+      padding: EdgeInsets.all(4.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: badgeColor.withValues(alpha: 0.25)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.07),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: badgeColor.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              badge,
+              style: TextStyle(
+                color: badgeColor,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 0.4,
+              ),
+            ),
+          ),
+          SizedBox(height: 1.2.h),
+          Text(
+            title,
+            style: TextStyle(
+              color: AppColors.navy,
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w900,
+              height: 1.2,
+            ),
+          ),
+          SizedBox(height: 1.2.h),
+          for (final f in features)
+            Padding(
+              padding: EdgeInsets.only(bottom: 0.8.h),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.check_circle_rounded,
+                      color: badgeColor, size: 16),
+                  SizedBox(width: 2.w),
+                  Expanded(
+                    child: Text(
+                      f,
+                      style: TextStyle(
+                        color: AppColors.slateText,
+                        fontSize: 12.5.sp,
+                        fontWeight: FontWeight.w500,
+                        height: 1.3,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          SizedBox(height: 1.h),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: onTap,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: buttonColor,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                padding: EdgeInsets.symmetric(vertical: 1.2.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(
+                buttonLabel,
+                style: TextStyle(
+                  fontSize: 13.5.sp,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -490,9 +665,9 @@ class _LiveBanner extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(3.5.w),
         decoration: BoxDecoration(
-          color: const Color(0xFFFDF1F1),
+          color: const Color(0xFFEBF2FF),
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: AppColors.red.withValues(alpha: 0.25)),
+          border: Border.all(color: AppColors.blue.withValues(alpha: 0.25)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -505,8 +680,8 @@ class _LiveBanner extends StatelessWidget {
                     vertical: 3,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.red,
-                    borderRadius: BorderRadius.circular(6),
+                    color: AppColors.blue,
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -521,7 +696,7 @@ class _LiveBanner extends StatelessWidget {
                         "LIVE",
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 10.5.sp,
+                          fontSize: 12.5.sp,
                           fontWeight: FontWeight.w900,
                         ),
                       ),
@@ -532,8 +707,8 @@ class _LiveBanner extends StatelessWidget {
                 Text(
                   "LIVE Session Today",
                   style: TextStyle(
-                    color: AppColors.red,
-                    fontSize: 12.sp,
+                    color: AppColors.blue,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
@@ -551,7 +726,7 @@ class _LiveBanner extends StatelessWidget {
                         webinar.title ?? "Export Documentation Made Easy",
                         style: TextStyle(
                           color: AppColors.navy,
-                          fontSize: 12.5.sp,
+                          fontSize: 14.5.sp,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -568,7 +743,7 @@ class _LiveBanner extends StatelessWidget {
                             "${webinar.time} IST",
                             style: TextStyle(
                               color: AppColors.slateText,
-                              fontSize: 12.sp,
+                              fontSize: 14.sp,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -580,7 +755,7 @@ class _LiveBanner extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () => _join(context),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.red,
+                    backgroundColor: AppColors.blue,
                     foregroundColor: Colors.white,
                     elevation: 0,
                     padding: EdgeInsets.symmetric(
@@ -599,7 +774,7 @@ class _LiveBanner extends StatelessWidget {
                       Text(
                         "Join Live",
                         style: TextStyle(
-                          fontSize: 12.sp,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
@@ -675,7 +850,7 @@ class _ContinueLearning extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 color: AppColors.navy,
-                                fontSize: 12.5.sp,
+                                fontSize: 14.5.sp,
                                 fontWeight: FontWeight.w800,
                                 height: 1.2,
                               ),
@@ -698,7 +873,7 @@ class _ContinueLearning extends StatelessWidget {
                               "$pct% Completed",
                               style: TextStyle(
                                 color: AppColors.slateText,
-                                fontSize: 11.sp,
+                                fontSize: 13.sp,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -767,17 +942,30 @@ class _TopTools extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isPremium = context.watch<AuthProvider>().user?.isPremium ?? false;
     final tools = <_ToolItem>[
       _ToolItem("Price Calculator", Icons.calculate_outlined, AppColors.blue,
-          const ExportPriceCalculatorScreen()),
+          const ExportPriceCalculatorScreen(), locked: !isPremium),
+      _ToolItem("Import Calculator", Icons.request_quote_outlined,
+          AppColors.red, const ImportCalculatorScreen(), locked: !isPremium),
       _ToolItem("GST Calculator", Icons.receipt_long_outlined,
-          const Color(0xFFF57C00), const GstCalculatorScreen()),
+          const Color(0xFFF57C00), const GstCalculatorScreen(),
+          locked: !isPremium),
       _ToolItem("Incoterms", Icons.hexagon_outlined, AppColors.green,
-          const IncotermsScreen()),
+          const IncotermsScreen(), locked: !isPremium),
       _ToolItem("Currency Rates", Icons.currency_exchange_rounded,
-          const Color(0xFF7C4DFF), const ForexConverterScreen()),
-      _ToolItem("HS Code Finder", Icons.widgets_outlined, AppColors.blue,
-          const HsnFinderScreen()),
+          const Color(0xFF7C4DFF), const ForexConverterScreen(),
+          locked: !isPremium),
+      _ToolItem("HS Code Finder", Icons.manage_search_rounded, AppColors.blue,
+          const HsnFinderScreen(), locked: !isPremium),
+      _ToolItem("CBM Calculator", Icons.view_in_ar_outlined,
+          const Color(0xFF00B0FF), const CbmCalculatorScreen()),
+      _ToolItem("Product Cert", Icons.verified_outlined,
+          const Color(0xFF283593), const ProductCertScreen(),
+          locked: !isPremium),
+      _ToolItem("Govt Benefits", Icons.account_balance_outlined,
+          const Color(0xFF7B1FA2), const GovBenefitsScreen(),
+          locked: !isPremium),
     ];
 
     return Column(
@@ -808,7 +996,16 @@ class _TopTools extends StatelessWidget {
   Widget _toolCard(BuildContext context, _ToolItem tool) {
     return InkWell(
       borderRadius: BorderRadius.circular(16),
-      onTap: () => AppNavigator.push(context, tool.screen),
+      onTap: () {
+        if (tool.locked) {
+          showDialog(
+            context: context,
+            builder: (_) => const PremiumUnlockDialog(),
+          );
+        } else {
+          AppNavigator.push(context, tool.screen);
+        }
+      },
       child: Container(
         width: 24.w,
         padding: EdgeInsets.symmetric(vertical: 1.6.h, horizontal: 1.w),
@@ -827,14 +1024,36 @@ class _TopTools extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 46,
-              height: 46,
-              decoration: BoxDecoration(
-                color: tool.color.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: Icon(tool.icon, color: tool.color, size: 24),
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  width: 46,
+                  height: 46,
+                  decoration: BoxDecoration(
+                    color: tool.color.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Icon(tool.icon, color: tool.color, size: 24),
+                ),
+                if (tool.locked)
+                  Positioned(
+                    top: -4,
+                    right: -4,
+                    child: Container(
+                      padding: const EdgeInsets.all(3),
+                      decoration: const BoxDecoration(
+                        color: AppColors.gold,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.lock_rounded,
+                        size: 11,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+              ],
             ),
             SizedBox(height: 1.h),
             Text(
@@ -844,7 +1063,7 @@ class _TopTools extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: AppColors.navy,
-                fontSize: 11.sp,
+                fontSize: 13.sp,
                 fontWeight: FontWeight.w700,
                 height: 1.1,
               ),
@@ -861,7 +1080,9 @@ class _ToolItem {
   final IconData icon;
   final Color color;
   final Widget screen;
-  _ToolItem(this.label, this.icon, this.color, this.screen);
+  final bool locked;
+  _ToolItem(this.label, this.icon, this.color, this.screen,
+      {this.locked = false});
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -986,7 +1207,7 @@ class _ShortsForYou extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 11.sp,
+                                fontSize: 13.sp,
                                 fontWeight: FontWeight.w700,
                                 height: 1.15,
                               ),
@@ -1058,7 +1279,7 @@ class _QuickAccess extends StatelessWidget {
             "Quick Access",
             style: TextStyle(
               color: AppColors.navy,
-              fontSize: 17.sp,
+              fontSize: 19.sp,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -1116,7 +1337,7 @@ class _QuickAccess extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: AppColors.navy,
-                fontSize: 11.sp,
+                fontSize: 13.sp,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -1126,7 +1347,7 @@ class _QuickAccess extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: AppColors.slateText,
-                fontSize: 10.sp,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -1208,7 +1429,7 @@ class _ExploreGrid extends StatelessWidget {
             "Explore",
             style: TextStyle(
               color: AppColors.navy,
-              fontSize: 17.sp,
+              fontSize: 19.sp,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -1275,7 +1496,7 @@ class _ExploreGrid extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: AppColors.navy,
-                      fontSize: 11.sp,
+                      fontSize: 13.sp,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
@@ -1285,7 +1506,7 @@ class _ExploreGrid extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: AppColors.slateText,
-                      fontSize: 10.sp,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -1424,7 +1645,7 @@ class _FreeVideos extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 color: AppColors.navy,
-                                fontSize: 12.sp,
+                                fontSize: 14.sp,
                                 fontWeight: FontWeight.w800,
                                 height: 1.2,
                               ),
@@ -1472,22 +1693,53 @@ class _SocialFooter extends StatelessWidget {
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 4.w),
-      padding: EdgeInsets.symmetric(vertical: 2.5.h, horizontal: 4.w),
+      padding: EdgeInsets.symmetric(vertical: 3.h, horizontal: 4.w),
       decoration: BoxDecoration(
-        color: AppColors.navy.withValues(alpha: 0.04),
-        borderRadius: BorderRadius.circular(18),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.navy, AppColors.navyDark],
+        ),
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.navy.withValues(alpha: 0.3),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
       child: Column(
         children: [
-          Text(
-            "Connect with us",
-            style: TextStyle(
-              color: AppColors.navy,
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w800,
+          // Gold accent chip
+          Container(
+            width: 44,
+            height: 4,
+            decoration: BoxDecoration(
+              color: AppColors.gold,
+              borderRadius: BorderRadius.circular(4),
             ),
           ),
           SizedBox(height: 1.6.h),
+          Text(
+            "Connect with us",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 17.sp,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 0.2,
+            ),
+          ),
+          SizedBox(height: 0.6.h),
+          Text(
+            "Learn. Build. Export to the World.",
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.65),
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: 2.2.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -1496,33 +1748,54 @@ class _SocialFooter extends StatelessWidget {
                   onTap: () => _open(s.url),
                   borderRadius: BorderRadius.circular(30),
                   child: Container(
-                    width: 46,
-                    height: 46,
-                    margin: const EdgeInsets.symmetric(horizontal: 6),
+                    width: 50,
+                    height: 50,
+                    margin: const EdgeInsets.symmetric(horizontal: 7),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
+                      border: Border.all(
+                        color: s.color.withValues(alpha: 0.35),
+                        width: 1.5,
+                      ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.07),
-                          blurRadius: 8,
-                          offset: const Offset(0, 3),
+                          color: s.color.withValues(alpha: 0.45),
+                          blurRadius: 14,
+                          offset: const Offset(0, 4),
                         ),
                       ],
                     ),
-                    child: Icon(s.icon, color: s.color, size: 24),
+                    child: Icon(s.icon, color: s.color, size: 26),
                   ),
                 ),
             ],
           ),
+          SizedBox(height: 2.2.h),
+          Container(
+            height: 1,
+            margin: EdgeInsets.symmetric(horizontal: 6.w),
+            color: Colors.white.withValues(alpha: 0.12),
+          ),
           SizedBox(height: 1.6.h),
-          Text(
-            links.supportEmail,
-            style: TextStyle(
-              color: AppColors.slateText,
-              fontSize: 11.sp,
-              fontWeight: FontWeight.w500,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.mail_outline_rounded,
+                color: AppColors.gold,
+                size: 16,
+              ),
+              SizedBox(width: 2.w),
+              Text(
+                links.supportEmail,
+                style: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.85),
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -1576,7 +1849,7 @@ class _AboutCard extends StatelessWidget {
                   "About SIIEA",
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 14.sp,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
@@ -1589,7 +1862,7 @@ class _AboutCard extends StatelessWidget {
               "learners worldwide.",
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.8),
-                fontSize: 11.sp,
+                fontSize: 13.sp,
                 height: 1.45,
               ),
             ),
@@ -1639,7 +1912,7 @@ class _ProgressCard extends StatelessWidget {
                   "📘 Your Progress",
                   style: TextStyle(
                     color: AppColors.navy,
-                    fontSize: 13.sp,
+                    fontSize: 15.sp,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
@@ -1647,7 +1920,7 @@ class _ProgressCard extends StatelessWidget {
                   "${(pct * 100).toInt()}%",
                   style: TextStyle(
                     color: AppColors.blue,
-                    fontSize: 15.sp,
+                    fontSize: 17.sp,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
@@ -1669,7 +1942,7 @@ class _ProgressCard extends StatelessWidget {
               "$done of $total lessons complete",
               style: TextStyle(
                 color: AppColors.slateText,
-                fontSize: 10.5.sp,
+                fontSize: 12.5.sp,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -1721,7 +1994,7 @@ class _QuizBanner extends StatelessWidget {
                       "Test Your Knowledge",
                       style: TextStyle(
                         color: AppColors.navy,
-                        fontSize: 13.sp,
+                        fontSize: 15.sp,
                         fontWeight: FontWeight.w900,
                       ),
                     ),
@@ -1730,7 +2003,7 @@ class _QuizBanner extends StatelessWidget {
                       "Take daily quizzes & boost your trade skills",
                       style: TextStyle(
                         color: AppColors.slateText,
-                        fontSize: 10.sp,
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -1804,7 +2077,7 @@ class _CertificatesRow extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: AppColors.navy,
-                          fontSize: 11.sp,
+                          fontSize: 13.sp,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
@@ -1812,7 +2085,7 @@ class _CertificatesRow extends StatelessWidget {
                         c.level,
                         style: TextStyle(
                           color: c.color,
-                          fontSize: 9.5.sp,
+                          fontSize: 12.sp,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -1882,7 +2155,7 @@ class _FreePdfCard extends StatelessWidget {
                       "Free Export Starter Guide",
                       style: TextStyle(
                         color: AppColors.navy,
-                        fontSize: 13.sp,
+                        fontSize: 15.sp,
                         fontWeight: FontWeight.w900,
                       ),
                     ),
@@ -1891,7 +2164,7 @@ class _FreePdfCard extends StatelessWidget {
                       "Download the complete PDF — free",
                       style: TextStyle(
                         color: AppColors.slateText,
-                        fontSize: 10.sp,
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -1997,7 +2270,7 @@ class _CourseRow extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     color: AppColors.navy,
-                                    fontSize: 12.sp,
+                                    fontSize: 14.sp,
                                     fontWeight: FontWeight.w800,
                                     height: 1.2,
                                   ),
@@ -2015,7 +2288,7 @@ class _CourseRow extends StatelessWidget {
                                       "${course.rating ?? 4.8}",
                                       style: TextStyle(
                                         color: AppColors.slateText,
-                                        fontSize: 10.5.sp,
+                                        fontSize: 12.5.sp,
                                         fontWeight: FontWeight.w700,
                                       ),
                                     ),
@@ -2026,7 +2299,7 @@ class _CourseRow extends StatelessWidget {
                                           : "₹${course.basePrice.toStringAsFixed(0)}",
                                       style: TextStyle(
                                         color: AppColors.blue,
-                                        fontSize: 11.sp,
+                                        fontSize: 13.sp,
                                         fontWeight: FontWeight.w900,
                                       ),
                                     ),

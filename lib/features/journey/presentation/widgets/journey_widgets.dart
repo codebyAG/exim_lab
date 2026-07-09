@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:provider/provider.dart';
 import '../../data/models/journey_model.dart';
+import '../providers/journey_provider.dart';
 
 class JourneyHeader extends StatelessWidget {
   final String title;
@@ -345,32 +347,51 @@ class JourneyStepCard extends StatelessWidget {
   Widget _buildStartButton(ColorScheme cs) {
     return Padding(
       padding: EdgeInsets.only(top: 2.h),
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [cs.primary, cs.secondary]),
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: cs.primary.withValues(alpha: 0.3),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
+      child: Consumer<JourneyProvider>(
+        builder: (context, journey, _) {
+          final busy = journey.isSyncing;
+          return Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [cs.primary, cs.secondary]),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: cs.primary.withValues(alpha: 0.3),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
-          ],
-        ),
-        child: ElevatedButton.icon(
-          onPressed: onTap,
-          icon: const Icon(Icons.play_arrow_rounded, color: Colors.white),
-          label: Text(
-            'Start',
-            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
-          ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.transparent,
-            shadowColor: Colors.transparent,
-            padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.2.h),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          ),
-        ),
+            child: ElevatedButton.icon(
+              onPressed: busy ? null : onTap,
+              icon: busy
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : const Icon(Icons.play_arrow_rounded, color: Colors.white),
+              label: Text(
+                busy ? 'Saving...' : 'Start',
+                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                disabledBackgroundColor: Colors.transparent,
+                disabledForegroundColor: Colors.white70,
+                shadowColor: Colors.transparent,
+                padding:
+                    EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.2.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

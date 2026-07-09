@@ -50,32 +50,31 @@ class _GalleryMarqueeState extends State<GalleryMarquee> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.5.h),
+          padding: EdgeInsets.fromLTRB(4.w, 0, 4.w, 1.4.h),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 "Success Stories",
                 style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
-                  fontFamily: 'Plus Jakarta Sans',
+                  fontSize: 19.sp,
+                  fontWeight: FontWeight.w800,
+                  color: const Color(0xFF0A2066),
                 ),
               ),
-              TextButton(
-                onPressed: () {
+              GestureDetector(
+                onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (_) => const GalleryScreen()),
                   );
                 },
                 child: Text(
-                  "See All →",
+                  "See All",
                   style: TextStyle(
-                    color: const Color(0xFFFFD000),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12.sp,
+                    color: const Color(0xFF1E5FFF),
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14.sp,
                   ),
                 ),
               ),

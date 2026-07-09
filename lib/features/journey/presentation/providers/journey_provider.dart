@@ -10,11 +10,13 @@ class JourneyProvider with ChangeNotifier {
   List<JourneyStep> _exportSteps = [];
   
   bool _isLoading = false;
+  bool _isSyncing = false;
   String? _error;
 
   List<JourneyStep> get importSteps => _importSteps;
   List<JourneyStep> get exportSteps => _exportSteps;
   bool get isLoading => _isLoading;
+  bool get isSyncing => _isSyncing;
   String? get error => _error;
 
   Future<void> fetchJourney(String type) async {
@@ -58,6 +60,9 @@ class JourneyProvider with ChangeNotifier {
   }
 
   Future<void> markStepCompleted(String type, int stepId, {Map<String, dynamic>? result}) async {
+    if (_isSyncing) return; // 🛡️ Block duplicate API calls from rapid taps
+    _isSyncing = true;
+    notifyListeners();
     try {
       final steps = type == 'import' ? _importSteps : _exportSteps;
       final completedIds = steps
@@ -83,6 +88,9 @@ class JourneyProvider with ChangeNotifier {
       await fetchJourney(type);
     } catch (e) {
       developer.log("⚠️ Failed to sync step $stepId: $e", name: "JOURNEY");
+    } finally {
+      _isSyncing = false;
+      notifyListeners();
     }
   }
 }

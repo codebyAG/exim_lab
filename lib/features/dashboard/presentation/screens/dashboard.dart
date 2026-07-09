@@ -77,7 +77,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final dashboardProvider = context.read<DashboardProvider>();
     final user = context.read<AuthProvider>().user;
 
-    final hasNoInterest = user?.interestedIn == null ||
+    final hasNoInterest =
+        user?.interestedIn == null ||
         user!.interestedIn!.isEmpty ||
         user.interestedIn == '';
 

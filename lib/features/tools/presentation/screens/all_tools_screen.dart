@@ -10,7 +10,6 @@ import 'package:exim_lab/features/tools/presentation/screens/hsn_finder_screen.d
 import 'package:exim_lab/features/tools/presentation/screens/import_calculator_screen.dart';
 import 'package:exim_lab/features/tools/presentation/screens/incoterms_screen.dart';
 import 'package:exim_lab/features/tools/presentation/screens/product_cert_screen.dart';
-import 'package:exim_lab/features/dashboard/presentation/painters/dashboard_icons_painter.dart';
 import 'package:exim_lab/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +39,7 @@ class AllToolsScreen extends StatelessWidget {
       {
         'title': t.translate('tool_export_calc'),
         'subtitle': t.translate('tool_export_calc_sub'),
-        'painter': ExportPriceIconPainter(),
+        'icon': Icons.calculate_outlined,
         'screen': const ExportPriceCalculatorScreen(),
         'color': const Color(0xFF0D47A1),
         'isLocked': !isPremium,
@@ -48,7 +47,7 @@ class AllToolsScreen extends StatelessWidget {
       {
         'title': t.translate('tool_import_calc'),
         'subtitle': t.translate('tool_import_calc_sub'),
-        'painter': ImportCalcIconPainter(),
+        'icon': Icons.request_quote_outlined,
         'screen': const ImportCalculatorScreen(),
         'color': const Color(0xFFD32F2F),
         'isLocked': !isPremium,
@@ -56,7 +55,7 @@ class AllToolsScreen extends StatelessWidget {
       {
         'title': t.translate('tool_hsn_finder'),
         'subtitle': t.translate('tool_hsn_finder_sub'),
-        'painter': HsnFinderPainter(),
+        'icon': Icons.manage_search_rounded,
         'screen': const HsnFinderScreen(),
         'color': const Color(0xFF00C853),
         'isLocked': !isPremium,
@@ -64,7 +63,7 @@ class AllToolsScreen extends StatelessWidget {
       {
         'title': t.translate('tool_cbm_calc'),
         'subtitle': t.translate('tool_cbm_calc_sub'),
-        'painter': CbmCalculatorPainter(),
+        'icon': Icons.view_in_ar_outlined,
         'screen': const CbmCalculatorScreen(),
         'color': const Color(0xFF00B0FF),
         'isLocked': !isPremium, // Now Paid Only
@@ -72,7 +71,7 @@ class AllToolsScreen extends StatelessWidget {
       {
         'title': t.translate('tool_gst_calc'),
         'subtitle': t.translate('tool_gst_calc_sub'),
-        'painter': GstCalculatorPainter(),
+        'icon': Icons.receipt_long_outlined,
         'screen': const GstCalculatorScreen(),
         'color': const Color(0xFFFF6D00),
         'isLocked': !isPremium,
@@ -80,7 +79,7 @@ class AllToolsScreen extends StatelessWidget {
       {
         'title': t.translate('tool_prod_cert'),
         'subtitle': t.translate('tool_prod_cert_sub'),
-        'painter': ProductCertPainter(),
+        'icon': Icons.verified_outlined,
         'screen': const ProductCertScreen(),
         'color': const Color(0xFF283593),
         'isLocked': !isPremium,
@@ -88,7 +87,7 @@ class AllToolsScreen extends StatelessWidget {
       {
         'title': t.translate('tool_forex'),
         'subtitle': t.translate('tool_forex_sub'),
-        'painter': ForexConverterPainter(),
+        'icon': Icons.currency_exchange_rounded,
         'screen': const ForexConverterScreen(),
         'color': const Color(0xFF2E7D32),
         'isLocked': !isPremium,
@@ -96,7 +95,7 @@ class AllToolsScreen extends StatelessWidget {
       {
         'title': t.translate('tool_gov_benefits'),
         'subtitle': t.translate('tool_gov_benefits_sub'),
-        'painter': GovBenefitsPainter(),
+        'icon': Icons.account_balance_outlined,
         'screen': const GovBenefitsScreen(),
         'color': const Color(0xFF7B1FA2),
         'isLocked': !isPremium,
@@ -104,7 +103,7 @@ class AllToolsScreen extends StatelessWidget {
       {
         'title': t.translate('tool_incoterms_2026'),
         'subtitle': t.translate('tool_incoterms_sub'),
-        'painter': IncotermsPainter(),
+        'icon': Icons.hexagon_outlined,
         'screen': const IncotermsScreen(),
         'color': const Color(0xFF455A64),
         'isLocked': !isPremium,
@@ -159,7 +158,7 @@ class AllToolsScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           final tool = tools[index];
           return ToolCard(
-            painter: tool['painter'],
+            icon: tool['icon'],
             title: tool['title'],
             subtitle: tool['subtitle'],
             buttonLabel: "Open >",

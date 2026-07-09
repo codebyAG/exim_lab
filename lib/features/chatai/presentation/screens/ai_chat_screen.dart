@@ -41,6 +41,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
 
   Future<void> _sendMessage(String text) async {
     if (text.trim().isEmpty) return;
+    if (_isTyping) return; // 🛡️ Block duplicate API calls while replying
     final t = AppLocalizations.of(context);
 
     setState(() {
@@ -179,10 +180,22 @@ class _AiChatScreenState extends State<AiChatScreen> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                IconButton(
-                  onPressed: () => _sendMessage(_controller.text),
-                  icon: Icon(Icons.send, color: cs.primary),
-                ),
+                _isTyping
+                    ? Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.4,
+                            color: cs.primary,
+                          ),
+                        ),
+                      )
+                    : IconButton(
+                        onPressed: () => _sendMessage(_controller.text),
+                        icon: Icon(Icons.send, color: cs.primary),
+                      ),
               ],
             ),
           ),
