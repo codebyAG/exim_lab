@@ -42,6 +42,7 @@ import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart'
 import 'package:exim_lab/features/freevideos/data/models/free_videos_model.dart';
 import 'package:exim_lab/features/freevideos/presentation/screens/free_videos_details_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/exchange_rate_ticker.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/gallery_marquee.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/inline_banner.dart';
@@ -1684,11 +1685,41 @@ class _SocialFooter extends StatelessWidget {
     final links = context.watch<ConfigProvider>().effectiveLinks;
     final items = <_SocialItem>[
       _SocialItem(
-          Icons.play_circle_fill_rounded, const Color(0xFFFF0000), links.youtubeUrl),
+          const FaIcon(FontAwesomeIcons.whatsapp,
+              color: Color(0xFF25D366), size: 24),
+          const Color(0xFF25D366),
+          "https://wa.me/${links.whatsappNumber}"),
       _SocialItem(
-          Icons.camera_alt_rounded, const Color(0xFFE1306C), links.instagramUrl),
-      _SocialItem(Icons.facebook_rounded, const Color(0xFF1877F2), links.facebookUrl),
-      _SocialItem(Icons.language_rounded, AppColors.blue, links.websiteUrl),
+          Image.asset('assets/icons/youtube.png', width: 28, height: 28),
+          const Color(0xFFFF0000),
+          links.youtubeUrl),
+      _SocialItem(
+          Image.asset('assets/icons/instagram.png', width: 28, height: 28),
+          const Color(0xFFE1306C),
+          links.instagramUrl),
+      _SocialItem(
+          Image.asset('assets/icons/facebook.png', width: 28, height: 28),
+          const Color(0xFF1877F2),
+          links.facebookUrl),
+      _SocialItem(
+          Image.asset('assets/icons/twitter.png', width: 28, height: 28),
+          const Color(0xFF111111),
+          links.twitterUrl),
+      _SocialItem(
+          const FaIcon(FontAwesomeIcons.linkedinIn,
+              color: Color(0xFF0A66C2), size: 24),
+          const Color(0xFF0A66C2),
+          links.linkedinUrl),
+      _SocialItem(
+          const FaIcon(FontAwesomeIcons.telegram,
+              color: Color(0xFF229ED9), size: 24),
+          const Color(0xFF229ED9),
+          links.telegramUrl),
+      _SocialItem(
+          const Icon(Icons.language_rounded,
+              color: AppColors.blue, size: 26),
+          AppColors.blue,
+          links.websiteUrl),
     ].where((e) => e.url.isNotEmpty).toList();
 
     return Container(
@@ -1740,8 +1771,10 @@ class _SocialFooter extends StatelessWidget {
             ),
           ),
           SizedBox(height: 2.2.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 14,
+            runSpacing: 14,
             children: [
               for (final s in items)
                 InkWell(
@@ -1750,7 +1783,6 @@ class _SocialFooter extends StatelessWidget {
                   child: Container(
                     width: 50,
                     height: 50,
-                    margin: const EdgeInsets.symmetric(horizontal: 7),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
@@ -1766,7 +1798,7 @@ class _SocialFooter extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: Icon(s.icon, color: s.color, size: 26),
+                    child: Center(child: s.icon),
                   ),
                 ),
             ],
@@ -1804,7 +1836,7 @@ class _SocialFooter extends StatelessWidget {
 }
 
 class _SocialItem {
-  final IconData icon;
+  final Widget icon;
   final Color color;
   final String url;
   _SocialItem(this.icon, this.color, this.url);
