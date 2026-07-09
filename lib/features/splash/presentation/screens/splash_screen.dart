@@ -216,75 +216,115 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFF0A2066),
-      body: Container(
+      backgroundColor: const Color(0xFF020C28),
+      body: SizedBox(
         width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF0A2066), Color(0xFF061544)],
-          ),
-        ),
         child: SafeArea(
-          child: Column(
-            children: [
-              const Spacer(flex: 3),
-              FadeInDown(
-                duration: const Duration(milliseconds: 1200),
-                child: Image.asset(
-                  'assets/app_logo.png',
-                  width: 140,
-                  height: 140,
-                ),
-              ),
-              const SizedBox(height: 28),
-              FadeInUp(
-                delay: const Duration(milliseconds: 300),
-                duration: const Duration(milliseconds: 800),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 36),
-                  child: Column(
-                    children: [
-                      Text(
-                        t.translate('splash_tagline'),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800,
-                          height: 1.25,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        t.translate('splash_subtitle'),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.7),
-                          fontSize: 13.5,
-                          height: 1.4,
-                          fontWeight: FontWeight.w500,
-                        ),
+          child: FadeIn(
+            duration: const Duration(milliseconds: 600),
+            child: Column(
+              children: [
+                const Spacer(flex: 3),
+
+                // Logo tile - white rounded card with soft blue glow
+                Container(
+                  width: 132,
+                  height: 132,
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(32),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF1E5FFF).withValues(alpha: 0.35),
+                        blurRadius: 46,
+                        spreadRadius: 2,
                       ),
                     ],
                   ),
+                  child: Image.asset('assets/app_logo.png'),
                 ),
-              ),
-              const Spacer(flex: 3),
-              const SizedBox(
-                width: 26,
-                height: 26,
-                child: CircularProgressIndicator(
-                  color: Color(0xFFFFD000),
-                  strokeWidth: 2.5,
+
+                const SizedBox(height: 30),
+
+                // Brand name
+                const Text(
+                  "Start Import Export",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 26,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.5,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 44),
-            ],
+
+                const SizedBox(height: 10),
+
+                // Gold tagline
+                Text(
+                  t.translate('splash_tagline'),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Color(0xFFFFD000),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.2,
+                  ),
+                ),
+
+                const SizedBox(height: 14),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 44),
+                  child: Text(
+                    t.translate('splash_subtitle'),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.6),
+                      fontSize: 13,
+                      height: 1.45,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+
+                const Spacer(flex: 3),
+
+                // Thin gold progress line
+                SizedBox(
+                  width: 120,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: LinearProgressIndicator(
+                      minHeight: 4,
+                      backgroundColor: Colors.white.withValues(alpha: 0.10),
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                        Color(0xFFFFD000),
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 18),
+
+                Text(
+                  "Powered by SIIEA",
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.45),
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.6,
+                  ),
+                ),
+
+                const SizedBox(height: 36),
+              ],
+            ),
           ),
         ),
       ),

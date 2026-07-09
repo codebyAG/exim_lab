@@ -69,7 +69,10 @@ class _LoginScreenState extends State<LoginScreen> {
               hasScrollBody: false,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
+                // Single subtle page fade — no per-widget animations
+                child: FadeIn(
+                  duration: const Duration(milliseconds: 400),
+                  child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // BACK
@@ -82,151 +85,127 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 20),
 
                     // BRAND MARK
-                    FadeInDown(
-                      duration: const Duration(milliseconds: 600),
-                      child: Container(
-                        width: 52,
-                        height: 52,
-                        decoration: BoxDecoration(
-                          color: cs.primary.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        child: Icon(
-                          Icons.public_rounded,
-                          color: cs.primary,
-                          size: 28,
-                        ),
+                    Container(
+                      width: 52,
+                      height: 52,
+                      decoration: BoxDecoration(
+                        color: cs.primary.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Icon(
+                        Icons.public_rounded,
+                        color: cs.primary,
+                        size: 28,
                       ),
                     ),
 
                     const SizedBox(height: 20),
 
                     // HEADER — "Welcome to" + brand name
-                    FadeInDown(
-                      delay: const Duration(milliseconds: 100),
-                      duration: const Duration(milliseconds: 600),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            t.translate('welcome_to'),
-                            style: theme.textTheme.bodyLarge?.copyWith(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                              color: cs.onSurface.withValues(alpha: 0.65),
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            t.translate('app_name'),
-                            style: theme.textTheme.headlineMedium?.copyWith(
-                              fontSize: 30,
-                              fontWeight: FontWeight.w800,
-                              height: 1.1,
-                              color: cs.primary,
-                            ),
-                          ),
-                        ],
+                    Text(
+                      t.translate('welcome_to'),
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: cs.onSurface.withValues(alpha: 0.65),
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      t.translate('app_name'),
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w800,
+                        height: 1.1,
+                        color: cs.primary,
                       ),
                     ),
 
                     const SizedBox(height: 8),
 
-                    FadeInDown(
-                      delay: const Duration(milliseconds: 200),
-                      duration: const Duration(milliseconds: 600),
-                      child: Text(
-                        t.translate('login_subtitle'),
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: cs.onSurface.withValues(alpha: 0.55),
-                        ),
+                    Text(
+                      t.translate('login_subtitle'),
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        color: cs.onSurface.withValues(alpha: 0.55),
                       ),
                     ),
 
                     const SizedBox(height: 40),
 
                     // PHONE LABEL
-                    FadeInLeft(
-                      delay: const Duration(milliseconds: 350),
-                      duration: const Duration(milliseconds: 500),
-                      child: Text(
-                        t.translate('phone_hint'),
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: cs.onSurface,
-                        ),
+                    Text(
+                      t.translate('phone_hint'),
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: cs.onSurface,
                       ),
                     ),
 
                     const SizedBox(height: 10),
 
                     // PHONE INPUT — filled rounded
-                    FadeInLeft(
-                      delay: const Duration(milliseconds: 450),
-                      duration: const Duration(milliseconds: 500),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: cs.onSurface.withValues(alpha: 0.05),
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(
-                            color: cs.outline.withValues(alpha: 0.6),
-                          ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: cs.onSurface.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                          color: cs.outline.withValues(alpha: 0.6),
                         ),
-                        child: Row(
-                          children: [
-                            // Country code pill
-                            Container(
-                              margin: const EdgeInsets.all(6),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                color: cs.primary.withValues(alpha: 0.10),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Text(
-                                '🇮🇳  +91',
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: cs.onSurface,
-                                  fontSize: 15,
-                                ),
+                      ),
+                      child: Row(
+                        children: [
+                          // Country code pill
+                          Container(
+                            margin: const EdgeInsets.all(6),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              color: cs.primary.withValues(alpha: 0.10),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              '🇮🇳  +91',
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: cs.onSurface,
+                                fontSize: 15,
                               ),
                             ),
-                            // Text field
-                            Expanded(
-                              child: TextField(
-                                controller: _phoneController,
-                                keyboardType: TextInputType.phone,
-                                style: theme.textTheme.bodyLarge?.copyWith(
+                          ),
+                          // Text field
+                          Expanded(
+                            child: TextField(
+                              controller: _phoneController,
+                              keyboardType: TextInputType.phone,
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1.5,
+                              ),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                LengthLimitingTextInputFormatter(10),
+                              ],
+                              decoration: InputDecoration(
+                                hintText: '00000 00000',
+                                hintStyle: theme.textTheme.bodyLarge?.copyWith(
+                                  color: cs.onSurface.withValues(alpha: 0.3),
                                   fontSize: 17,
-                                  fontWeight: FontWeight.w600,
                                   letterSpacing: 1.5,
                                 ),
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                  LengthLimitingTextInputFormatter(10),
-                                ],
-                                decoration: InputDecoration(
-                                  hintText: '00000 00000',
-                                  hintStyle: theme.textTheme.bodyLarge?.copyWith(
-                                    color: cs.onSurface.withValues(alpha: 0.3),
-                                    fontSize: 17,
-                                    letterSpacing: 1.5,
-                                  ),
-                                  border: InputBorder.none,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 16,
-                                    horizontal: 4,
-                                  ),
+                                border: InputBorder.none,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                  horizontal: 4,
                                 ),
-                                onSubmitted: (_) => _handleContinue(),
                               ),
+                              onSubmitted: (_) => _handleContinue(),
                             ),
-                            const SizedBox(width: 12),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(width: 12),
+                        ],
                       ),
                     ),
 
@@ -235,41 +214,36 @@ class _LoginScreenState extends State<LoginScreen> {
                     // SEND OTP BUTTON
                     Consumer<AuthProvider>(
                       builder: (context, provider, child) {
-                        return FadeInUp(
-                          delay: const Duration(milliseconds: 650),
-                          duration: const Duration(milliseconds: 500),
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 56,
-                            child: ElevatedButton(
-                              onPressed: provider.isLoading
-                                  ? null
-                                  : _handleContinue,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: cs.primary,
-                                foregroundColor: cs.onPrimary,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                elevation: 0,
+                        return SizedBox(
+                          width: double.infinity,
+                          height: 56,
+                          child: ElevatedButton(
+                            onPressed:
+                                provider.isLoading ? null : _handleContinue,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: cs.primary,
+                              foregroundColor: cs.onPrimary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
                               ),
-                              child: provider.isLoading
-                                  ? SizedBox(
-                                      width: 22,
-                                      height: 22,
-                                      child: CircularProgressIndicator(
-                                        color: cs.onPrimary,
-                                        strokeWidth: 2.5,
-                                      ),
-                                    )
-                                  : Text(
-                                      t.translate('send_otp'),
-                                      style: const TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
+                              elevation: 0,
                             ),
+                            child: provider.isLoading
+                                ? SizedBox(
+                                    width: 22,
+                                    height: 22,
+                                    child: CircularProgressIndicator(
+                                      color: cs.onPrimary,
+                                      strokeWidth: 2.5,
+                                    ),
+                                  )
+                                : Text(
+                                    t.translate('send_otp'),
+                                    style: const TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
                           ),
                         );
                       },
@@ -278,17 +252,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 14),
 
                     // OTP HELPER (centered under button)
-                    FadeInUp(
-                      delay: const Duration(milliseconds: 750),
-                      duration: const Duration(milliseconds: 500),
-                      child: Center(
-                        child: Text(
-                          t.translate('otp_helper'),
-                          textAlign: TextAlign.center,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: cs.onSurface.withValues(alpha: 0.5),
-                            height: 1.4,
-                          ),
+                    Center(
+                      child: Text(
+                        t.translate('otp_helper'),
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: cs.onSurface.withValues(alpha: 0.5),
+                          height: 1.4,
                         ),
                       ),
                     ),
@@ -296,40 +266,36 @@ class _LoginScreenState extends State<LoginScreen> {
                     const Spacer(),
 
                     // TRUST BADGES
-                    FadeInUp(
-                      delay: const Duration(milliseconds: 850),
-                      duration: const Duration(milliseconds: 500),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        decoration: BoxDecoration(
-                          color: cs.primary.withValues(alpha: 0.04),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: cs.outline.withValues(alpha: 0.4),
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      decoration: BoxDecoration(
+                        color: cs.primary.withValues(alpha: 0.04),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: cs.outline.withValues(alpha: 0.4),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _TrustBadge(
+                            icon: Icons.verified_user_rounded,
+                            label: t.translate('trusted_learners'),
+                            color: cs.primary,
                           ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            _TrustBadge(
-                              icon: Icons.verified_user_rounded,
-                              label: t.translate('trusted_learners'),
-                              color: cs.primary,
-                            ),
-                            _TrustDivider(color: cs.outline),
-                            _TrustBadge(
-                              icon: Icons.school_rounded,
-                              label: t.translate('trusted_mentors'),
-                              color: cs.primary,
-                            ),
-                            _TrustDivider(color: cs.outline),
-                            _TrustBadge(
-                              icon: Icons.menu_book_rounded,
-                              label: t.translate('trusted_courses'),
-                              color: cs.primary,
-                            ),
-                          ],
-                        ),
+                          _TrustDivider(color: cs.outline),
+                          _TrustBadge(
+                            icon: Icons.school_rounded,
+                            label: t.translate('trusted_mentors'),
+                            color: cs.primary,
+                          ),
+                          _TrustDivider(color: cs.outline),
+                          _TrustBadge(
+                            icon: Icons.menu_book_rounded,
+                            label: t.translate('trusted_courses'),
+                            color: cs.primary,
+                          ),
+                        ],
                       ),
                     ),
 
@@ -337,21 +303,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     // FOOTER
                     Center(
-                      child: FadeInUp(
-                        delay: const Duration(milliseconds: 950),
-                        duration: const Duration(milliseconds: 500),
-                        child: Text(
-                          t.translate('terms_privacy'),
-                          textAlign: TextAlign.center,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: cs.onSurface.withValues(alpha: 0.4),
-                          ),
+                      child: Text(
+                        t.translate('terms_privacy'),
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: cs.onSurface.withValues(alpha: 0.4),
                         ),
                       ),
                     ),
 
                     const SizedBox(height: 20),
                   ],
+                  ),
                 ),
               ),
             ),
