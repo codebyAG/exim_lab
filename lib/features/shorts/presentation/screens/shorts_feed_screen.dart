@@ -1,5 +1,6 @@
 import 'package:exim_lab/features/shorts/presentation/providers/shorts_provider.dart';
 import 'package:exim_lab/features/shorts/presentation/widgets/shorts_player_item.dart';
+import 'package:exim_lab/common/widgets/category_chips.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exim_lab/localization/app_localization.dart';
@@ -60,6 +61,12 @@ class _ShortsFeedScreenState extends State<ShortsFeedScreen> {
         title: Text(
           AppLocalizations.of(context).translate('shorts'),
           style: const TextStyle(color: Colors.white),
+        ),
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(48),
+          child: CategoryChips(
+            categories: ["All", "Business Tips", "Export Guide", "Logistics"],
+          ),
         ),
       ),
       body: Consumer<ShortsProvider>(

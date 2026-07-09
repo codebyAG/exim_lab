@@ -13,6 +13,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:exim_lab/features/courses/presentation/widgets/courses_shimmer.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/premium_unlock_dialog.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class CoursesListScreen extends StatefulWidget {
   const CoursesListScreen({super.key});
@@ -163,6 +164,7 @@ class _CoursesListScreenState extends State<CoursesListScreen>
                 title: course.title,
                 subtitle: course.description,
                 courseId: course.id,
+                imageUrl: course.imageUrl,
                 isLocked: isLocked,
               ),
             );
@@ -214,12 +216,14 @@ class _CourseTile extends StatelessWidget {
   final String title;
   final String subtitle;
   final String courseId;
+  final String? imageUrl;
   final bool isLocked;
 
   const _CourseTile({
     required this.title,
     required this.subtitle,
     required this.courseId,
+    this.imageUrl,
     this.isLocked = false,
   });
 
@@ -275,16 +279,50 @@ class _CourseTile extends StatelessWidget {
             Container(
               height: 84,
               width: 84,
+              clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
                 color: theme.colorScheme.primaryContainer.withValues(
                   alpha: 0.4,
                 ),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Icon(
-                isLocked ? Icons.lock_rounded : Icons.play_circle_rounded,
-                size: 32,
-                color: theme.colorScheme.primary,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  if (imageUrl != null && imageUrl!.isNotEmpty)
+                    CachedNetworkImage(
+                      imageUrl: imageUrl!,
+                      fit: BoxFit.cover,
+                      errorWidget: (context, url, error) => Icon(
+                        Icons.play_circle_rounded,
+                        size: 32,
+                        color: theme.colorScheme.primary,
+                      ),
+                      placeholder: (context, url) => Icon(
+                        Icons.play_circle_rounded,
+                        size: 32,
+                        color: theme.colorScheme.primary,
+                      ),
+                    )
+                  else
+                    Icon(
+                      isLocked
+                          ? Icons.lock_rounded
+                          : Icons.play_circle_rounded,
+                      size: 32,
+                      color: theme.colorScheme.primary,
+                    ),
+                  // Lock overlay on image
+                  if (isLocked && imageUrl != null && imageUrl!.isNotEmpty)
+                    Container(
+                      color: Colors.black.withValues(alpha: 0.35),
+                      child: const Icon(
+                        Icons.lock_rounded,
+                        color: Colors.white,
+                        size: 26,
+                      ),
+                    ),
+                ],
               ),
             ),
 

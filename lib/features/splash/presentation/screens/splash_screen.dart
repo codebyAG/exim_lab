@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:provider/provider.dart';
 import 'package:exim_lab/features/module_manager/presentation/providers/module_provider.dart';
+import 'package:exim_lab/localization/app_localization.dart';
 import 'package:animate_do/animate_do.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -216,16 +217,74 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: Center(
-        child: FadeInDown(
-          // Wrap with FadeInDown
-          duration: const Duration(milliseconds: 1200),
-          child: Image.asset(
-            'assets/app_logo.png', // Ensure you have this logo
-            width: 150,
-            height: 150,
+      backgroundColor: const Color(0xFF0A2066),
+      body: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF0A2066), Color(0xFF061544)],
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              const Spacer(flex: 3),
+              FadeInDown(
+                duration: const Duration(milliseconds: 1200),
+                child: Image.asset(
+                  'assets/app_logo.png',
+                  width: 140,
+                  height: 140,
+                ),
+              ),
+              const SizedBox(height: 28),
+              FadeInUp(
+                delay: const Duration(milliseconds: 300),
+                duration: const Duration(milliseconds: 800),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 36),
+                  child: Column(
+                    children: [
+                      Text(
+                        t.translate('splash_tagline'),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                          height: 1.25,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        t.translate('splash_subtitle'),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.7),
+                          fontSize: 13.5,
+                          height: 1.4,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const Spacer(flex: 3),
+              const SizedBox(
+                width: 26,
+                height: 26,
+                child: CircularProgressIndicator(
+                  color: Color(0xFFFFD000),
+                  strokeWidth: 2.5,
+                ),
+              ),
+              const SizedBox(height: 44),
+            ],
           ),
         ),
       ),

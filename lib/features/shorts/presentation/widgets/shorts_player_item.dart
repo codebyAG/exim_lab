@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ShortsPlayerItem extends StatefulWidget {
   final ShortModel short;
@@ -23,6 +24,8 @@ class _ShortsPlayerItemState extends State<ShortsPlayerItem> {
   bool _initialized = false;
 
   bool _isPlaying = true;
+  bool _isLiked = false;
+  bool _isSaved = false;
 
   @override
   void initState() {
@@ -173,9 +176,104 @@ class _ShortsPlayerItemState extends State<ShortsPlayerItem> {
                 ],
               ),
             ),
+
+            // Right-side action bar (like / comment / share / save)
+            Positioned(
+              right: 3.w,
+              bottom: 5.h,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _actionButton(
+                    icon: _isLiked
+                        ? Icons.favorite_rounded
+                        : Icons.favorite_border_rounded,
+                    color: _isLiked ? const Color(0xFFFF3B5C) : Colors.white,
+                    label: _formatCount(
+                      widget.short.likeCount + (_isLiked ? 1 : 0),
+                    ),
+                    onTap: () => setState(() => _isLiked = !_isLiked),
+                  ),
+                  SizedBox(height: 2.2.h),
+                  _actionButton(
+                    icon: Icons.mode_comment_outlined,
+                    color: Colors.white,
+                    label: _formatCount(
+                      (widget.short.viewCount * 0.03).round(),
+                    ),
+                    onTap: () {},
+                  ),
+                  SizedBox(height: 2.2.h),
+                  _actionButton(
+                    icon: Icons.reply_rounded,
+                    color: Colors.white,
+                    label: 'Share',
+                    onTap: _shareShort,
+                  ),
+                  SizedBox(height: 2.2.h),
+                  _actionButton(
+                    icon: _isSaved
+                        ? Icons.bookmark_rounded
+                        : Icons.bookmark_border_rounded,
+                    color: _isSaved ? const Color(0xFFFFD000) : Colors.white,
+                    label: 'Save',
+                    onTap: () => setState(() => _isSaved = !_isSaved),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Widget _actionButton({
+    required IconData icon,
+    required Color color,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            color: color,
+            size: 30,
+            shadows: const [Shadow(blurRadius: 8, color: Colors.black54)],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              shadows: [Shadow(blurRadius: 6, color: Colors.black54)],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatCount(int count) {
+    if (count >= 1000000) {
+      return '${(count / 1000000).toStringAsFixed(1)}M';
+    } else if (count >= 1000) {
+      return '${(count / 1000).toStringAsFixed(1)}K';
+    }
+    return '$count';
+  }
+
+  Future<void> _shareShort() async {
+    final uri = Uri.tryParse(widget.short.videoUrl);
+    if (uri != null && await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 }

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:exim_lab/common/widgets/category_chips.dart';
 
 import 'package:exim_lab/localization/app_localization.dart';
 
@@ -42,7 +43,7 @@ class _NewsListScreenState extends State<NewsListScreen> {
         elevation: 0,
         automaticallyImplyLeading: widget.showBackButton,
         title: Text(
-          t.translate('news'),
+          t.translate('trade_updates'),
           style: theme.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.w600,
           ),
@@ -154,22 +155,36 @@ class _NewsListScreenState extends State<NewsListScreen> {
           }
 
           // NEWS LIST
-          return RefreshIndicator(
-            color: cs.primary,
-            onRefresh: () => newsProvider.fetchNews(),
-            child: ListView.separated(
-              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
-              itemCount: newsProvider.newsList.length,
-              separatorBuilder: (context, index) => SizedBox(height: 2.h),
-              itemBuilder: (context, index) {
-                final news = newsProvider.newsList[index];
-                return FadeInUp(
-                  duration: const Duration(milliseconds: 400),
-                  delay: Duration(milliseconds: (index < 6 ? index : 5) * 70),
-                  child: _NewsCard(news: news),
-                );
-              },
-            ),
+          return Column(
+            children: [
+              const CategoryChips(
+                categories: ["All", "News", "Policies", "Market Insights"],
+              ),
+              Expanded(
+                child: RefreshIndicator(
+                  color: cs.primary,
+                  onRefresh: () => newsProvider.fetchNews(),
+                  child: ListView.separated(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 4.w,
+                      vertical: 2.h,
+                    ),
+                    itemCount: newsProvider.newsList.length,
+                    separatorBuilder: (context, index) => SizedBox(height: 2.h),
+                    itemBuilder: (context, index) {
+                      final news = newsProvider.newsList[index];
+                      return FadeInUp(
+                        duration: const Duration(milliseconds: 400),
+                        delay: Duration(
+                          milliseconds: (index < 6 ? index : 5) * 70,
+                        ),
+                        child: _NewsCard(news: news),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
           );
         },
       ),

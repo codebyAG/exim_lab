@@ -8,6 +8,7 @@ import 'package:exim_lab/localization/app_localization.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:exim_lab/features/courses/presentation/widgets/course_details_shimmer.dart';
+import 'package:exim_lab/core/theme/app_colors.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
   final String courseId;
@@ -121,26 +122,54 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                         ],
                       ),
                       clipBehavior: Clip.antiAlias,
-                      child:
-                          course.imageUrl != null && course.imageUrl!.isNotEmpty
-                          ? CachedNetworkImage(
-                              // 🔹 CACHED IMAGE
-                              imageUrl: course.imageUrl!,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                              errorWidget: (context, error, stackTrace) {
-                                return Image.asset(
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          course.imageUrl != null &&
+                                  course.imageUrl!.isNotEmpty
+                              ? CachedNetworkImage(
+                                  // 🔹 CACHED IMAGE
+                                  imageUrl: course.imageUrl!,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, error, stackTrace) {
+                                    return Image.asset(
+                                      'assets/course1.png',
+                                      fit: BoxFit.cover,
+                                    );
+                                  },
+                                  placeholder: (context, url) => Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                )
+                              : Image.asset(
                                   'assets/course1.png',
                                   fit: BoxFit.cover,
-                                );
-                              },
-                              placeholder: (context, url) =>
-                                  Center(child: CircularProgressIndicator()),
-                            )
-                          : Image.asset(
-                              'assets/course1.png',
-                              fit: BoxFit.cover,
+                                ),
+                          // ▶️ Play overlay
+                          Center(
+                            child: Container(
+                              width: 58,
+                              height: 58,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.92),
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.25),
+                                    blurRadius: 16,
+                                  ),
+                                ],
+                              ),
+                              child: Icon(
+                                Icons.play_arrow_rounded,
+                                color: cs.primary,
+                                size: 34,
+                              ),
                             ),
+                          ),
+                        ],
+                      ),
                     ),
 
                     const SizedBox(height: 20),
@@ -188,9 +217,70 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
               ),
             ), // 🔹 END HERO ANIMATION
 
+            // ================= WHAT YOU'LL LEARN =================
+            Builder(
+              builder: (context) {
+                final chapters = <String>[];
+                for (final l in course.lessons) {
+                  if (l.chapterTitle.trim().isNotEmpty &&
+                      !chapters.contains(l.chapterTitle)) {
+                    chapters.add(l.chapterTitle);
+                  }
+                }
+                final learnItems = chapters.take(6).toList();
+                if (learnItems.isEmpty) return const SizedBox.shrink();
+
+                return FadeInUp(
+                  duration: const Duration(milliseconds: 800),
+                  delay: const Duration(milliseconds: 200),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 28),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          t.translate('what_you_learn'),
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            color: cs.onSurface,
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                        ...learnItems.map(
+                          (item) => Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Icon(
+                                  Icons.check_circle_rounded,
+                                  color: AppColors.green,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    item,
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      color: cs.onSurface.withValues(alpha: 0.8),
+                                      height: 1.4,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+
             const SizedBox(height: 32),
 
-            // ================= CTA =================
             // ================= CTA =================
             FadeInUp(
               // 🔹 CONTENT ANIMATION

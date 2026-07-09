@@ -1,6 +1,7 @@
 import 'package:exim_lab/common/widgets/premium_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:exim_lab/core/theme/app_colors.dart';
 
 class ToolCard extends StatelessWidget {
   final dynamic icon;
@@ -11,6 +12,7 @@ class ToolCard extends StatelessWidget {
   final VoidCallback onTap;
   final bool isLocked;
   final Color themeColor;
+  final bool isLight;
 
   const ToolCard({
     super.key,
@@ -22,10 +24,26 @@ class ToolCard extends StatelessWidget {
     required this.onTap,
     this.isLocked = false,
     this.themeColor = const Color(0xFF0D47A1),
+    this.isLight = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    // Light/dark aware colors (dashboard uses dark, Tools screen uses light)
+    final Color cardColor =
+        isLight ? Colors.white : const Color(0xFF030E30);
+    final Color titleColor = isLight ? AppColors.navy : Colors.white;
+    final Color subtitleColor = isLight
+        ? Colors.black.withValues(alpha: 0.5)
+        : Colors.white.withValues(alpha: 0.5);
+    final Color borderColor = isLight
+        ? themeColor.withValues(alpha: 0.30)
+        : Colors.white.withValues(alpha: 0.1);
+    final Color pillBg = isLight
+        ? themeColor.withValues(alpha: 0.12)
+        : Colors.white.withValues(alpha: 0.1);
+    final Color pillText = isLight ? themeColor : Colors.white;
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(24),
@@ -34,16 +52,18 @@ class ToolCard extends StatelessWidget {
         height: 28.h,
         margin: EdgeInsets.only(right: 4.w),
         decoration: BoxDecoration(
-          color: const Color(0xFF030E30), // Deep Premium Navy
+          color: cardColor,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: Colors.white.withValues(alpha: 0.1),
-            width: 1.2,
+            color: borderColor,
+            width: isLight ? 1.5 : 1.2,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
-              blurRadius: 15,
+              color: isLight
+                  ? themeColor.withValues(alpha: 0.12)
+                  : Colors.black.withValues(alpha: 0.3),
+              blurRadius: isLight ? 18 : 15,
               offset: const Offset(0, 8),
             ),
           ],
@@ -78,7 +98,7 @@ class ToolCard extends StatelessWidget {
                           title,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Colors.white,
+                            color: titleColor,
                             fontWeight: FontWeight.w900,
                             fontSize: 14.sp,
                             fontFamily: 'Plus Jakarta Sans',
@@ -92,7 +112,7 @@ class ToolCard extends StatelessWidget {
                           subtitle,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.5),
+                            color: subtitleColor,
                             fontWeight: FontWeight.w500,
                             fontSize: 10.sp,
                           ),
@@ -147,10 +167,12 @@ class ToolCard extends StatelessWidget {
                         vertical: 0.8.h,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.1),
+                        color: pillBg,
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.15),
+                          color: isLight
+                              ? themeColor.withValues(alpha: 0.2)
+                              : Colors.white.withValues(alpha: 0.15),
                         ),
                       ),
                       child: Row(
@@ -160,7 +182,7 @@ class ToolCard extends StatelessWidget {
                             child: Text(
                               buttonLabel,
                               style: TextStyle(
-                                color: Colors.white,
+                                color: pillText,
                                 fontWeight: FontWeight.w800,
                                 fontSize: 11.sp,
                               ),

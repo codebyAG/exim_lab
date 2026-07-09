@@ -101,21 +101,36 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     const SizedBox(height: 20),
 
-                    // HEADER
+                    // HEADER — "Welcome to" + brand name
                     FadeInDown(
                       delay: const Duration(milliseconds: 100),
                       duration: const Duration(milliseconds: 600),
-                      child: Text(
-                        t.translate('welcome_back'),
-                        style: theme.textTheme.headlineMedium?.copyWith(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w800,
-                          height: 1.1,
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            t.translate('welcome_to'),
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: cs.onSurface.withValues(alpha: 0.65),
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            t.translate('app_name'),
+                            style: theme.textTheme.headlineMedium?.copyWith(
+                              fontSize: 30,
+                              fontWeight: FontWeight.w800,
+                              height: 1.1,
+                              color: cs.primary,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
 
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 8),
 
                     FadeInDown(
                       delay: const Duration(milliseconds: 200),
@@ -215,35 +230,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
 
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 28),
 
-                    // HELPER TEXT
-                    FadeInLeft(
-                      delay: const Duration(milliseconds: 550),
-                      duration: const Duration(milliseconds: 500),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.info_outline_rounded,
-                            size: 13,
-                            color: cs.onSurface.withValues(alpha: 0.4),
-                          ),
-                          const SizedBox(width: 6),
-                          Flexible(
-                            child: Text(
-                              t.translate('otp_info'),
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: cs.onSurface.withValues(alpha: 0.45),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 32),
-
-                    // CONTINUE BUTTON
+                    // SEND OTP BUTTON
                     Consumer<AuthProvider>(
                       builder: (context, provider, child) {
                         return FadeInUp(
@@ -274,7 +263,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     )
                                   : Text(
-                                      t.translate('continue'),
+                                      t.translate('send_otp'),
                                       style: const TextStyle(
                                         fontSize: 17,
                                         fontWeight: FontWeight.w700,
@@ -286,13 +275,70 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                     ),
 
-                    // Spacer replaced with fixed gap to prevent 1px overflow on small screens
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 14),
+
+                    // OTP HELPER (centered under button)
+                    FadeInUp(
+                      delay: const Duration(milliseconds: 750),
+                      duration: const Duration(milliseconds: 500),
+                      child: Center(
+                        child: Text(
+                          t.translate('otp_helper'),
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: cs.onSurface.withValues(alpha: 0.5),
+                            height: 1.4,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const Spacer(),
+
+                    // TRUST BADGES
+                    FadeInUp(
+                      delay: const Duration(milliseconds: 850),
+                      duration: const Duration(milliseconds: 500),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        decoration: BoxDecoration(
+                          color: cs.primary.withValues(alpha: 0.04),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: cs.outline.withValues(alpha: 0.4),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            _TrustBadge(
+                              icon: Icons.verified_user_rounded,
+                              label: t.translate('trusted_learners'),
+                              color: cs.primary,
+                            ),
+                            _TrustDivider(color: cs.outline),
+                            _TrustBadge(
+                              icon: Icons.school_rounded,
+                              label: t.translate('trusted_mentors'),
+                              color: cs.primary,
+                            ),
+                            _TrustDivider(color: cs.outline),
+                            _TrustBadge(
+                              icon: Icons.menu_book_rounded,
+                              label: t.translate('trusted_courses'),
+                              color: cs.primary,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
 
                     // FOOTER
                     Center(
                       child: FadeInUp(
-                        delay: const Duration(milliseconds: 800),
+                        delay: const Duration(milliseconds: 950),
                         duration: const Duration(milliseconds: 500),
                         child: Text(
                           t.translate('terms_privacy'),
@@ -312,6 +358,58 @@ class _LoginScreenState extends State<LoginScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Trust badge (icon + label) used in the login footer
+// ─────────────────────────────────────────────────────────────
+class _TrustBadge extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+
+  const _TrustBadge({
+    required this.icon,
+    required this.label,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: color, size: 22),
+          const SizedBox(height: 6),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 11.5,
+              fontWeight: FontWeight.w700,
+              color: color,
+              height: 1.2,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TrustDivider extends StatelessWidget {
+  final Color color;
+  const _TrustDivider({required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 1,
+      height: 34,
+      color: color.withValues(alpha: 0.35),
     );
   }
 }

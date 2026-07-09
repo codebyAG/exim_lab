@@ -11,6 +11,7 @@ import 'package:exim_lab/features/tools/presentation/screens/import_calculator_s
 import 'package:exim_lab/features/tools/presentation/screens/incoterms_screen.dart';
 import 'package:exim_lab/features/tools/presentation/screens/product_cert_screen.dart';
 import 'package:exim_lab/features/dashboard/presentation/painters/dashboard_icons_painter.dart';
+import 'package:exim_lab/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -111,16 +112,38 @@ class AllToolsScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFF020C28),
+      backgroundColor: const Color(0xFFEEF2F8),
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xFFEEF2F8),
         elevation: 0,
-        title: Text(
-          t.translate('tools_section_title'),
-          style: const TextStyle(fontWeight: FontWeight.w900, color: Colors.white),
+        titleSpacing: 0,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              t.translate('tools_section_title'),
+              style: const TextStyle(
+                fontWeight: FontWeight.w900,
+                color: AppColors.navy,
+                fontSize: 20,
+              ),
+            ),
+            Text(
+              t.translate('tools_smart_subtitle'),
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.black.withValues(alpha: 0.5),
+                fontSize: 12,
+              ),
+            ),
+          ],
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: AppColors.navy,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -142,6 +165,7 @@ class AllToolsScreen extends StatelessWidget {
             buttonLabel: "Open >",
             themeColor: tool['color'],
             isLocked: tool['isLocked'],
+            isLight: true,
             onTap: () => _onToolTap(
               context,
               tool['screen'],

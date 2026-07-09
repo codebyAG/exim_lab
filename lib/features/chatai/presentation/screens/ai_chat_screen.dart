@@ -79,9 +79,46 @@ class _AiChatScreenState extends State<AiChatScreen> {
       appBar: AppBar(
         backgroundColor: cs.surface,
         elevation: 0,
-        title: Text(
-          t.translate('ai_title'),
-          style: TextStyle(color: cs.onSurface, fontWeight: FontWeight.w600),
+        titleSpacing: 0,
+        title: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: cs.primary.withValues(alpha: 0.12),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.smart_toy_rounded,
+                color: cs.primary,
+                size: 22,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  t.translate('ai_title'),
+                  style: TextStyle(
+                    color: cs.onSurface,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16,
+                  ),
+                ),
+                Text(
+                  t.translate('ai_subtitle'),
+                  style: TextStyle(
+                    color: cs.onSurface.withValues(alpha: 0.5),
+                    fontWeight: FontWeight.w500,
+                    fontSize: 11.5,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
       body: Column(
@@ -183,11 +220,19 @@ class _ChatBubble extends StatelessWidget {
         padding: const EdgeInsets.all(14),
         constraints: const BoxConstraints(maxWidth: 320),
         decoration: BoxDecoration(
-          color: message.isUser ? cs.primary : cs.surface,
-          borderRadius: BorderRadius.circular(18),
+          color: message.isUser ? cs.primary : Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(18),
+            topRight: const Radius.circular(18),
+            bottomLeft: Radius.circular(message.isUser ? 18 : 4),
+            bottomRight: Radius.circular(message.isUser ? 4 : 18),
+          ),
+          border: message.isUser
+              ? null
+              : Border.all(color: cs.outline.withValues(alpha: 0.4)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
+              color: Colors.black.withValues(alpha: 0.06),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),

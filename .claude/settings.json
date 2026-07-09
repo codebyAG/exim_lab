@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/login/presentations/screens/login_screen.dart)",
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/journey/presentation/widgets/journey_widgets.dart lib/features/journey/presentation/screens/import_journey_screen.dart lib/features/journey/presentation/screens/export_journey_screen.dart)",
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/shorts/presentation/widgets/shorts_player_item.dart lib/features/shorts/presentation/screens/shorts_feed_screen.dart)",
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/dashboard/presentation/widgets/tool_card.dart lib/features/tools/presentation/screens/all_tools_screen.dart)",
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/splash/presentation/screens/splash_screen.dart)",
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/chatai/presentation/screens/ai_chat_screen.dart)",
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/courses/presentation/screens/courses_details_screen.dart)",
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/courses/presentation/screens/courses_list_screen.dart lib/features/news/presentation/screens/news_list_screen.dart)",
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/dashboard/presentation/screens/dashboard.dart lib/features/dashboard/presentation/widgets/section_title.dart lib/features/dashboard/presentation/widgets/quiz_banner_card.dart lib/features/dashboard/presentation/widgets/certificates_row.dart)",
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/dashboard/presentation/screens/dashboard.dart lib/features/dashboard/presentation/widgets/dashboard_tools_scroll.dart lib/features/dashboard/presentation/widgets/quiz_banner_card.dart lib/features/dashboard/presentation/widgets/certificates_row.dart lib/features/dashboard/presentation/widgets/section_title.dart)",
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/dashboard/presentation/screens/dashboard.dart)",
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/quiz/presentation/screens/quiz_question_screen.dart)",
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/common/widgets/category_chips.dart lib/features/news/presentation/screens/news_list_screen.dart lib/features/shorts/presentation/screens/shorts_feed_screen.dart)",
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/core/theme/app_colors.dart lib/features/dashboard/presentation/widgets/section_title.dart lib/features/quiz/presentation/screens/quiz_question_screen.dart lib/features/dashboard/presentation/widgets/tool_card.dart lib/features/tools/presentation/screens/all_tools_screen.dart lib/features/courses/presentation/screens/courses_details_screen.dart lib/common/widgets/category_chips.dart)",
+      "Bash(rm -rf windows linux macos)",
+      "Bash(ls -d scratch)",
+      "Bash(ls scratch *)",
+      "Bash(rm -rf scratch)",
+      "Bash(ls -d windows linux macos scratch)",
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/dashboard/presentation/screens/dashboard.dart lib/features/dashboard/presentation/widgets/dashboard_home_view.dart)",
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib 2>&1)"
+    ]
+  }
+}

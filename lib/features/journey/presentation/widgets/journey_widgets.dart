@@ -229,10 +229,16 @@ class JourneyStepCard extends StatelessWidget {
         isActive ? Flash(infinite: true, duration: const Duration(seconds: 3), child: dot) : dot,
         if (!isLast)
           Expanded(
-            child: CustomPaint(
-              size: const Size(2, double.infinity),
-              painter: DashedLinePainter(
-                color: isCompleted ? Colors.green : cs.outlineVariant,
+            child: Container(
+              width: 3,
+              margin: const EdgeInsets.symmetric(vertical: 4),
+              decoration: BoxDecoration(
+                color: isCompleted
+                    ? Colors.green
+                    : (isActive
+                        ? cs.primary.withValues(alpha: 0.4)
+                        : cs.outlineVariant),
+                borderRadius: BorderRadius.circular(4),
               ),
             ),
           ),
@@ -284,6 +290,9 @@ class JourneyStepCard extends StatelessWidget {
                       height: 1.3,
                     ),
                   ),
+                  if (isCompleted) _buildStatusChip(cs, isCompleted: true),
+                  if (isActive && !isPremiumLocked)
+                    _buildStatusChip(cs, isCompleted: false),
                   if (isActive) _buildStartButton(cs),
                   if (isLocked || isPremiumLocked) _buildLockedBadge(cs),
                 ],
@@ -291,6 +300,42 @@ class JourneyStepCard extends StatelessWidget {
             ),
             SizedBox(width: 4.w),
             _buildIllustration(cs, isActive, isCompleted),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusChip(ColorScheme cs, {required bool isCompleted}) {
+    final Color color = isCompleted ? Colors.green : cs.primary;
+    return Padding(
+      padding: EdgeInsets.only(top: 1.2.h),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.6.h),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              isCompleted
+                  ? Icons.check_circle_rounded
+                  : Icons.autorenew_rounded,
+              size: 14,
+              color: color,
+            ),
+            SizedBox(width: 1.5.w),
+            Text(
+              isCompleted ? 'Completed' : 'In Progress',
+              style: TextStyle(
+                fontSize: 10.sp,
+                color: color,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 0.3,
+              ),
+            ),
           ],
         ),
       ),
@@ -391,26 +436,6 @@ class JourneyStepCard extends StatelessWidget {
       ? Pulse(infinite: true, duration: const Duration(seconds: 2), child: illustration) 
       : illustration;
   }
-}
-
-class DashedLinePainter extends CustomPainter {
-  final Color color;
-  DashedLinePainter({required this.color});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    double dashHeight = 5, dashSpace = 3, startY = 0;
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = 2;
-    while (startY < size.height) {
-      canvas.drawLine(Offset(size.width / 2, startY), Offset(size.width / 2, startY + dashHeight), paint);
-      startY += dashHeight + dashSpace;
-    }
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
 class JourneyQuestionDialog extends StatefulWidget {
