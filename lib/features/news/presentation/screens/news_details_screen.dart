@@ -1,18 +1,127 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:exim_lab/features/news/data/models/news_model.dart';
+import 'package:exim_lab/features/news/data/services/news_service.dart';
 import 'package:sizer/sizer.dart';
 
-class NewsDetailScreen extends StatelessWidget {
-  final NewsModel news;
+/// News details.
+///
+/// Open with a full [news] object (from the news list), or with only a
+/// [newsId] (from a notification tap) — in that case the item is fetched
+/// from the API with a loader.
+class NewsDetailScreen extends StatefulWidget {
+  final NewsModel? news;
+  final String? newsId;
 
-  const NewsDetailScreen({super.key, required this.news});
+  const NewsDetailScreen({super.key, this.news, this.newsId})
+      : assert(news != null || newsId != null,
+            'Provide either a news object or a newsId');
+
+  @override
+  State<NewsDetailScreen> createState() => _NewsDetailScreenState();
+}
+
+class _NewsDetailScreenState extends State<NewsDetailScreen> {
+  NewsModel? _news;
+  bool _loading = false;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.news != null) {
+      _news = widget.news;
+    } else {
+      _fetchById();
+    }
+  }
+
+  Future<void> _fetchById() async {
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+
+    final fetched = await NewsService().fetchNewsById(widget.newsId!);
+
+    if (!mounted) return;
+    setState(() {
+      _loading = false;
+      if (fetched != null) {
+        _news = fetched;
+      } else {
+        _error = "Couldn't load this news. Please try again.";
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
-    // final t = AppLocalizations.of(context); // Unused
+
+    // ── LOADING (opened via notification, fetching by id) ──
+    if (_loading) {
+      return Scaffold(
+        backgroundColor: cs.surface,
+        appBar: AppBar(
+          backgroundColor: cs.surface,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_rounded, color: cs.onSurface),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+        body: Center(child: CircularProgressIndicator(color: cs.primary)),
+      );
+    }
+
+    // ── ERROR ──
+    if (_news == null) {
+      return Scaffold(
+        backgroundColor: cs.surface,
+        appBar: AppBar(
+          backgroundColor: cs.surface,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_rounded, color: cs.onSurface),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+        body: Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.w),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.newspaper_outlined,
+                  size: 56,
+                  color: cs.onSurfaceVariant.withValues(alpha: 0.4),
+                ),
+                SizedBox(height: 2.h),
+                Text(
+                  _error ?? "News not found",
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: cs.onSurfaceVariant,
+                  ),
+                ),
+                SizedBox(height: 2.5.h),
+                FilledButton.icon(
+                  onPressed: _fetchById,
+                  icon: const Icon(Icons.refresh_rounded),
+                  label: const Text("Retry"),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    // ── CONTENT ──
+    final news = _news!;
     final dateStr =
         "${news.createdAt.day}/${news.createdAt.month}/${news.createdAt.year}";
 

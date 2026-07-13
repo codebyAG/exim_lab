@@ -1,5 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:exim_lab/core/services/firebase_messaging_service.dart';
+import 'package:exim_lab/core/services/notification_router.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -80,6 +81,11 @@ void main() async {
     ],
   );
 
+  // 🔔 Notification tap → in-app routing (e.g. news details)
+  AwesomeNotifications().setListeners(
+    onActionReceivedMethod: NotificationRouter.onActionReceived,
+  );
+
   // 📨 Firebase Messaging Setup
   FirebaseMessagingService firebaseMessagingService =
       FirebaseMessagingService();
@@ -94,6 +100,7 @@ void main() async {
   // if (fcmToken != null) { ... }  <-- Removed sync logic, now just saves locally
 
   await firebaseMessagingService.subsScribetoAlltopic();
+  await firebaseMessagingService.setupInteractedMessage();
 
   // 🔒 LOCK ORIENTATION (PORTRAIT ONLY)
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -154,6 +161,7 @@ class EximLabApp extends StatelessWidget {
       builder: (context, orientation, deviceType) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
+          navigatorKey: NotificationRouter.navigatorKey,
           title: 'Import Export',
           // 🌗 THEME
           theme: lightTheme,

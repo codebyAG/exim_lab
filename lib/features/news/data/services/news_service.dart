@@ -21,4 +21,22 @@ class NewsService {
       throw Exception('Failed to fetch news: $e');
     }
   }
+
+  /// Fetch a single news item by id — used when opening news details
+  /// from a notification (only the id is available in the payload).
+  Future<NewsModel?> fetchNewsById(String id) async {
+    try {
+      return await callApi<NewsModel?>(
+        '${ApiConstants.news}/$id',
+        methodType: MethodType.get,
+        parser: (json) {
+          final data = json is Map ? json['data'] : null;
+          if (data != null) return NewsModel.fromJson(data);
+          return null;
+        },
+      );
+    } catch (e) {
+      return null;
+    }
+  }
 }

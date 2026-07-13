@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:exim_lab/core/services/shared_pref_service.dart';
+import 'package:exim_lab/core/services/notification_router.dart';
 
 class FirebaseMessagingService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -41,11 +42,30 @@ class FirebaseMessagingService {
     }
   }
 
+  /// Wire notification-tap navigation (call once after runApp).
+  ///
+  /// - System-tray FCM tap while app in background → onMessageOpenedApp
+  /// - App launched from a terminated state via FCM tap → getInitialMessage
+  ///   (routed after a delay so Splash finishes its own navigation first)
+  Future<void> setupInteractedMessage() async {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      NotificationRouter.routeFromData(message.data);
+    });
+
+    final RemoteMessage? initial = await _firebaseMessaging.getInitialMessage();
+    if (initial != null && initial.data.isNotEmpty) {
+      // Splash takes ~2s + navigation; route on top of the landing screen.
+      Future.delayed(const Duration(seconds: 4), () {
+        NotificationRouter.routeFromData(initial.data);
+      });
+    }
+  }
+
   Future<void> initPushNotifications() async {
     await _firebaseMessaging.getInitialMessage();
 
     FirebaseMessaging.onBackgroundMessage(firebaseBackgroundMessage);
-    
+
     // 🔔 FOREGROUND HANDLING (ADD THIS)
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       firebaseBackgroundMessage(message);
@@ -56,6 +76,12 @@ class FirebaseMessagingService {
     String title = message.notification?.title ?? message.data["title"] ?? "";
     String body = message.notification?.body ?? message.data["body"] ?? "";
     String? image = message.data["image"];
+
+    // Carry the FCM data into the local notification so a tap can route
+    // (e.g. type=news + newsId → news details screen).
+    final Map<String, String?> payload = message.data.map(
+      (key, value) => MapEntry(key, value?.toString()),
+    );
 
     // Notification handling logic...
     if (title.isNotEmpty) {
@@ -70,6 +96,7 @@ class FirebaseMessagingService {
             notificationLayout: NotificationLayout.BigPicture,
             fullScreenIntent: true,
             wakeUpScreen: true,
+            payload: payload,
           ),
         );
       } else {
@@ -81,6 +108,7 @@ class FirebaseMessagingService {
             body: body,
             fullScreenIntent: true,
             wakeUpScreen: true,
+            payload: payload,
           ),
         );
       }

@@ -5,6 +5,8 @@ import 'package:exim_lab/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
+import 'package:exim_lab/core/services/notification_router.dart';
+import 'package:exim_lab/features/news/presentation/screens/news_details_screen.dart';
 import 'package:sizer/sizer.dart';
 import 'package:intl/intl.dart';
 
@@ -179,6 +181,18 @@ class _NotificationTile extends StatelessWidget {
       onTap: () {
         if (!isRead) {
           context.read<NotificationsProvider>().markAsRead(notification.id);
+        }
+
+        // Deep link: linkUrl "news://<id>" → open news details
+        final newsId =
+            NotificationRouter.newsIdFromLink(notification.linkUrl);
+        if (newsId != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => NewsDetailScreen(newsId: newsId),
+            ),
+          );
         }
       },
       child: Container(
