@@ -1,5 +1,10 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:exim_lab/features/chatai/data/models/assistant_models.dart';
 import 'package:exim_lab/features/chatai/presentation/providers/assistant_provider.dart';
@@ -30,8 +35,17 @@ class _AssistantView extends StatefulWidget {
 class _AssistantViewState extends State<_AssistantView> {
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scroll = ScrollController();
+  final AudioPlayer _sound = AudioPlayer();
 
   static const int _maxLen = 4000;
+
+  Future<void> _playSendSound() async {
+    try {
+      await _sound.play(AssetSource('send_message.mp3'), volume: 0.5);
+    } catch (_) {
+      // Sound is best-effort only.
+    }
+  }
 
   @override
   void initState() {
@@ -45,6 +59,7 @@ class _AssistantViewState extends State<_AssistantView> {
   void dispose() {
     _controller.dispose();
     _scroll.dispose();
+    _sound.dispose();
     super.dispose();
   }
 
@@ -53,9 +68,15 @@ class _AssistantViewState extends State<_AssistantView> {
     if (text.trim().isEmpty || provider.sending) return;
 
     _controller.clear();
+    _playSendSound();
     context.read<AnalyticsService>().logAiChatMessageSent();
 
-    final error = await provider.send(text);
+    // provider.send adds the user's bubble synchronously before awaiting the
+    // API — scroll right away so the sent message is visible immediately,
+    // then again when the reply arrives.
+    final resultFuture = provider.send(text);
+    _scrollToBottom();
+    final error = await resultFuture;
     _scrollToBottom();
 
     if (error != null && mounted) {
@@ -429,23 +450,85 @@ class _MessagesList extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Container(
               margin: const EdgeInsets.symmetric(vertical: 6),
-              padding: const EdgeInsets.all(12),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(18),
                 border: Border.all(color: cs.outline.withValues(alpha: 0.4)),
               ),
-              child: Text(
-                'Typing…',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: cs.onSurface.withValues(alpha: 0.6),
-                ),
-              ),
+              child: _TypingDots(color: cs.primary),
             ),
           );
         }
-        return _Bubble(message: messages[index]);
+
+        // Subtle entrance animation — only the newest bubble animates
+        final bubble = _Bubble(message: messages[index]);
+        if (index == messages.length - 1) {
+          return FadeInUp(
+            duration: const Duration(milliseconds: 250),
+            from: 14,
+            child: bubble,
+          );
+        }
+        return bubble;
+      },
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Animated typing indicator — three softly bouncing dots
+// ─────────────────────────────────────────────────────────────
+class _TypingDots extends StatefulWidget {
+  final Color color;
+  const _TypingDots({required this.color});
+
+  @override
+  State<_TypingDots> createState() => _TypingDotsState();
+}
+
+class _TypingDotsState extends State<_TypingDots>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 900),
+  )..repeat();
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _c,
+      builder: (context, _) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: List.generate(3, (i) {
+            // Staggered bounce per dot
+            final phase = (_c.value + i * 0.2) % 1.0;
+            final dy = -3.5 * math.sin(math.pi * phase);
+            final opacity = 0.35 + 0.65 * math.sin(math.pi * phase).abs();
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2.5),
+              child: Transform.translate(
+                offset: Offset(0, dy),
+                child: Container(
+                  width: 7,
+                  height: 7,
+                  decoration: BoxDecoration(
+                    color: widget.color.withValues(alpha: opacity),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+            );
+          }),
+        );
       },
     );
   }
@@ -455,6 +538,20 @@ class _Bubble extends StatelessWidget {
   final AssistantMessage message;
   const _Bubble({required this.message});
 
+  void _copy(BuildContext context) {
+    Clipboard.setData(ClipboardData(text: message.content));
+    HapticFeedback.mediumImpact();
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        const SnackBar(
+          content: Text('Copied to clipboard'),
+          duration: Duration(seconds: 1),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -463,7 +560,9 @@ class _Bubble extends StatelessWidget {
 
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
+      child: GestureDetector(
+        onLongPress: () => _copy(context),
+        child: Container(
         margin: const EdgeInsets.symmetric(vertical: 6),
         padding: const EdgeInsets.all(14),
         constraints: const BoxConstraints(maxWidth: 320),
@@ -499,6 +598,7 @@ class _Bubble extends StatelessWidget {
             color: isUser ? cs.onPrimary : cs.onSurface,
             height: 1.45,
           ),
+        ),
         ),
       ),
     );

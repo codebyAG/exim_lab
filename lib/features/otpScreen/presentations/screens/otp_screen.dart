@@ -128,12 +128,15 @@ class _OtpScreenState extends State<OtpScreen> {
     final cs = theme.colorScheme;
     final t = AppLocalizations.of(context);
     final phone = context.read<AuthProvider>().currentMobile;
+    final isSubmitting = context.watch<AuthProvider>().isLoading;
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: cs.surface,
-      body: SafeArea(
-        child: CustomScrollView(
+      body: Stack(
+        children: [
+          SafeArea(
+            child: CustomScrollView(
           physics: const ClampingScrollPhysics(),
           slivers: [
             SliverFillRemaining(
@@ -362,7 +365,20 @@ class _OtpScreenState extends State<OtpScreen> {
               ),
             ),
           ],
-        ),
+            ),
+          ),
+
+          // 🔄 Full-screen blocking loader while verifying OTP
+          if (isSubmitting)
+            Positioned.fill(
+              child: Container(
+                color: Colors.black.withValues(alpha: 0.35),
+                child: const Center(
+                  child: CircularProgressIndicator(color: Colors.white),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

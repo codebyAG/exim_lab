@@ -58,11 +58,14 @@ class _LoginScreenState extends State<LoginScreen> {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final t = AppLocalizations.of(context);
+    final isSubmitting = context.watch<AuthProvider>().isLoading;
 
     return Scaffold(
       backgroundColor: cs.surface,
-      body: SafeArea(
-        child: CustomScrollView(
+      body: Stack(
+        children: [
+          SafeArea(
+            child: CustomScrollView(
           physics: const ClampingScrollPhysics(),
           slivers: [
             SliverFillRemaining(
@@ -310,7 +313,40 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ],
-        ),
+            ),
+          ),
+
+          // 🔄 Dialog-style blocking loader while sending OTP
+          if (isSubmitting)
+            Positioned.fill(
+              child: Container(
+                color: Colors.black.withValues(alpha: 0.3),
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: cs.surface,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.2),
+                          blurRadius: 24,
+                        ),
+                      ],
+                    ),
+                    child: SizedBox(
+                      width: 40,
+                      height: 40,
+                      child: CircularProgressIndicator(
+                        color: cs.primary,
+                        strokeWidth: 3,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
