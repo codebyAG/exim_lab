@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:exim_lab/core/services/no_glow_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -190,12 +191,12 @@ class _AssistantViewState extends State<_AssistantView> {
             child: provider.loadingThread
                 ? Center(child: CircularProgressIndicator(color: cs.primary))
                 : provider.isNewChat && !provider.sending
-                    ? _StartersView(onTap: _send)
-                    : _MessagesList(
-                        scroll: _scroll,
-                        messages: provider.messages,
-                        typing: provider.sending,
-                      ),
+                ? _StartersView(onTap: _send)
+                : _MessagesList(
+                    scroll: _scroll,
+                    messages: provider.messages,
+                    typing: provider.sending,
+                  ),
           ),
 
           // ── INPUT BAR ──
@@ -440,39 +441,44 @@ class _MessagesList extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
 
-    return ListView.builder(
-      controller: scroll,
-      padding: const EdgeInsets.all(16),
-      itemCount: messages.length + (typing ? 1 : 0),
-      itemBuilder: (context, index) {
-        if (typing && index == messages.length) {
-          return Align(
-            alignment: Alignment.centerLeft,
-            child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 6),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(18),
-                border: Border.all(color: cs.outline.withValues(alpha: 0.4)),
+    return ScrollConfiguration(
+      behavior: const NoGlowScrollBehavior(),
+      child: ListView.builder(
+        controller: scroll,
+        padding: const EdgeInsets.all(16),
+        itemCount: messages.length + (typing ? 1 : 0),
+        itemBuilder: (context, index) {
+          if (typing && index == messages.length) {
+            return Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                margin: const EdgeInsets.symmetric(vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: cs.outline.withValues(alpha: 0.4)),
+                ),
+                child: _TypingDots(color: cs.primary),
               ),
-              child: _TypingDots(color: cs.primary),
-            ),
-          );
-        }
+            );
+          }
 
-        // Subtle entrance animation — only the newest bubble animates
-        final bubble = _Bubble(message: messages[index]);
-        if (index == messages.length - 1) {
-          return FadeInUp(
-            duration: const Duration(milliseconds: 250),
-            from: 14,
-            child: bubble,
-          );
-        }
-        return bubble;
-      },
+          // Subtle entrance animation — only the newest bubble animates
+          final bubble = _Bubble(message: messages[index]);
+          if (index == messages.length - 1) {
+            return FadeInUp(
+              duration: const Duration(milliseconds: 250),
+              from: 14,
+              child: bubble,
+            );
+          }
+          return bubble;
+        },
+      ),
     );
   }
 }
@@ -563,42 +569,42 @@ class _Bubble extends StatelessWidget {
       child: GestureDetector(
         onLongPress: () => _copy(context),
         child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 6),
-        padding: const EdgeInsets.all(14),
-        constraints: const BoxConstraints(maxWidth: 320),
-        decoration: BoxDecoration(
-          color: isUser ? null : Colors.white,
-          gradient: isUser
-              ? LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [cs.primary, cs.primary.withValues(alpha: 0.8)],
-                )
-              : null,
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(18),
-            topRight: const Radius.circular(18),
-            bottomLeft: Radius.circular(isUser ? 18 : 4),
-            bottomRight: Radius.circular(isUser ? 4 : 18),
-          ),
-          border: isUser
-              ? null
-              : Border.all(color: cs.outline.withValues(alpha: 0.4)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 3),
+          margin: const EdgeInsets.symmetric(vertical: 6),
+          padding: const EdgeInsets.all(14),
+          constraints: const BoxConstraints(maxWidth: 320),
+          decoration: BoxDecoration(
+            color: isUser ? null : Colors.white,
+            gradient: isUser
+                ? LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [cs.primary, cs.primary.withValues(alpha: 0.8)],
+                  )
+                : null,
+            borderRadius: BorderRadius.only(
+              topLeft: const Radius.circular(18),
+              topRight: const Radius.circular(18),
+              bottomLeft: Radius.circular(isUser ? 18 : 4),
+              bottomRight: Radius.circular(isUser ? 4 : 18),
             ),
-          ],
-        ),
-        child: Text(
-          message.content,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: isUser ? cs.onPrimary : cs.onSurface,
-            height: 1.45,
+            border: isUser
+                ? null
+                : Border.all(color: cs.outline.withValues(alpha: 0.4)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 3),
+              ),
+            ],
           ),
-        ),
+          child: Text(
+            message.content,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: isUser ? cs.onPrimary : cs.onSurface,
+              height: 1.45,
+            ),
+          ),
         ),
       ),
     );
