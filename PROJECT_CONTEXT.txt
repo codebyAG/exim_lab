@@ -1,0 +1,406 @@
+================================================================================
+START IMPORT EXPORT — PROJECT + UI CONTEXT
+================================================================================
+
+A Flutter (Dart) mobile app for SIIEA (Startup India Import Export Academy) — an
+ed-tech + business-tools platform that teaches Indian entrepreneurs how to start
+and run an import-export (EXIM) business.
+
+  Package / applicationId : com.startimportexport.app
+  Launcher activity       : com.startimportexport.app.MainActivity
+  Platforms               : Android + iOS only (windows/linux/macos removed)
+  Backend API             : http://52.35.230.229:3006
+  Auth                    : phone + OTP -> JWT Bearer (attached automatically)
+
+
+================================================================================
+PART A — PROJECT CONTEXT
+================================================================================
+
+--------------------------------------------------------------------------------
+A1. TECH STACK
+--------------------------------------------------------------------------------
+  Framework         Flutter (Dart), Material widgets only — no HTML / WebView
+  State             provider (ChangeNotifier), registered in MultiProvider (main.dart)
+  Networking        dio, wrapped by callApi() in lib/core/functions/api_call.dart
+  Local storage     shared_preferences via SharedPrefService (token, user, FCM, flags)
+  Push              firebase_messaging + awesome_notifications (display + tap routing)
+  Analytics         Firebase Analytics via AnalyticsService
+  Responsive sizing sizer (.w = width%, .h = height%, .sp = font)
+  Media             cached_network_image, youtube_player_flutter, audioplayers
+  Ads attribution   Meta (Facebook) native SDK — auto-logs installs, no Dart code
+
+
+--------------------------------------------------------------------------------
+A2. ARCHITECTURE — feature-first
+--------------------------------------------------------------------------------
+  lib/features/<feature>/
+      data/
+          models/          fromJson models
+          services/        API calls (use callApi + ApiConstants)
+      presentation/
+          providers/       ChangeNotifier state
+          screens/         UI
+          widgets/         feature-specific widgets
+
+  Shared code — lib/core/
+      constants/api_constants.dart   ALL endpoints. Never hardcode a URL elsewhere.
+      functions/api_call.dart        callApi<T>() — Dio + Bearer + ApiException
+      services/                      SharedPref, Analytics, FirebaseMessaging,
+                                     NotificationRouter
+      theme/                         app_colors.dart, app_theme.dart, light/dark
+      providers/config_provider.dart Social links + live-event config (remote+fallback)
+      navigation/app_navigator.dart  AppNavigator.push / replace
+  lib/common/widgets/                Reusable UI (AsyncButton, CategoryChips, dialogs)
+
+
+--------------------------------------------------------------------------------
+A3. FEATURES (lib/features/)
+--------------------------------------------------------------------------------
+  splash          Branded splash, in-app update check, maintenance gate, auth routing
+  welcome         First-run intro
+  onboarding      Intro slides
+  login           Phone entry (AuthProvider)
+  otpScreen       OTP verify + SMS autofill
+  dashboard       Home (see UI section B4)
+  courses         List, details, lessons, video player
+  chatai          AI Assistant (see A6)
+  chat            Community chat rooms (premium-gated)
+  news            Trade updates list + details (see A5)
+  notifications   In-app notification list -> deep-links into news
+  quiz            Topics + question flow
+  journey         Import / Export step-by-step roadmaps
+  tools           9 calculators (export price, import, GST, HSN, CBM, incoterms,
+                  forex, product cert, govt benefits)
+  shorts          Vertical video feed
+  freevideos      Free video content
+  gallery         Success stories
+  profile         Profile, settings, help & support
+  module_manager  Remote feature flags — ModuleProvider.isEnabled('key') controls
+                  which tabs / sections are visible
+  maintenance     Shown when the 'isAppOnline' module flag is off
+
+  Premium gating: AuthProvider.user.isPremium — locked taps open PremiumUnlockDialog.
+
+
+--------------------------------------------------------------------------------
+A4. KEY PROVIDERS (main.dart MultiProvider)
+--------------------------------------------------------------------------------
+  ThemeProvider, LocaleProvider, AuthProvider, DashboardProvider, CoursesState,
+  CourseDetailsState, FreeVideosState, QuizProvider, ShortsProvider,
+  ExchangeRateProvider, JourneyProvider, ChatProvider, NewsProvider,
+  NotificationsProvider, ConfigProvider, ModuleProvider, AnalyticsService
+
+  AssistantProvider is created locally by AssistantScreen (fresh chat each open).
+
+
+--------------------------------------------------------------------------------
+A5. NEWS + NOTIFICATION DEEP-LINK FLOW
+--------------------------------------------------------------------------------
+News details are ALWAYS opened by id — the screen fetches fresh data itself, so
+the list can never be stale.
+
+      Push notification tap ──┐
+      In-app notification  ───┼──►  newsId  ──►  NewsDetailScreen(newsId:)
+      News list tap        ───┘                        │
+                                                       ▼
+                                        GET /api/news/:id
+                                        -> render  |  404 -> error + Retry
+
+  BACKEND PAYLOAD CONTRACT
+    FCM push:
+        notification: { title, body }          <- what the user sees in the tray
+        data:         { type: "news",
+                        newsId: "<mongo _id>" } <- used for routing (REQUIRED —
+                                                   tray text alone is not enough
+                                                   in background/killed state)
+    In-app notification item (GET /api/notifications):
+        data:    { type: "news", newsId: "<id>" }   (preferred)
+        linkUrl: "news://<id>"                      (fallback)
+        source:  "NEWS_AUTO"
+
+  WHERE IT'S WIRED
+    core/services/notification_router.dart
+        Global navigatorKey, routeFromData(), news:// parser,
+        AwesomeNotifications tap listener
+    core/services/firebase_messaging_service.dart
+        onMessage        -> foreground: build local notification (carries data)
+        onMessageOpenedApp -> background tap
+        getInitialMessage  -> killed-state tap (routed ~4s after splash)
+    main.dart
+        MaterialApp(navigatorKey: NotificationRouter.navigatorKey) + setListeners
+
+  News list uses SERVER-SIDE PAGINATION — next page loads at scroll-end
+  (NewsProvider.loadMore(), guarded against duplicate calls, bottom spinner).
+
+
+--------------------------------------------------------------------------------
+A6. AI ASSISTANT (lib/features/chatai) — base path /api/assistant
+--------------------------------------------------------------------------------
+  GET  /starters              Starter chips + hasOldChats flag
+  POST /chat                  Send message. OMIT conversationId on the FIRST send;
+                              include it on every message after that.
+  GET  /conversations         Old-chats list
+  GET  /conversations/:id     Full thread
+
+  RULES
+    - Always opens on a fresh "New chat" (never the last conversation)
+    - Starter chips show only while the thread is empty
+    - "Old chats" button appears only when hasOldChats == true
+    - Optimistic user bubble + animated typing dots
+    - Send disabled while sending (blocks duplicate API calls)
+    - Max message length 4000
+    - Errors: 503 = AI not configured, 502 = OpenAI failed -> snackbar + Retry
+    - Long-press any bubble to copy
+
+
+--------------------------------------------------------------------------------
+A7. META (FACEBOOK) ADS — native only, no Dart code
+--------------------------------------------------------------------------------
+  android/app/src/main/res/values/strings.xml   facebook_app_id, facebook_client_token
+  android/app/src/main/AndroidManifest.xml      com.facebook.sdk.ApplicationId / ClientToken
+  android/app/build.gradle.kts                  com.facebook.android:facebook-core
+
+  Meta dashboard needs: package com.startimportexport.app,
+  launcher com.startimportexport.app.MainActivity.
+  The app must be switched to LIVE MODE in Meta for real installs to attribute.
+
+
+--------------------------------------------------------------------------------
+A8. REMOTE CONFIG — GET /api/config/social-links
+--------------------------------------------------------------------------------
+  Exposed as ConfigProvider.effectiveLinks. EVERY value has a fallback, so a
+  missing key never breaks the app.
+
+  Per-section WhatsApp numbers (each falls back to whatsapp_number, then to a
+  hardcoded default):
+      maintenance_whatsapp_number    Maintenance screen "Contact Support"
+      live_whatsapp_number           LIVE session "Join Live"
+      handholding_whatsapp_number    Handholding Masterclass
+      masterclass_whatsapp_number    Masterclass enroll / Watch Now
+      interest_whatsapp_number       Interest lead form
+      promo_whatsapp_number          Promo banner
+
+  Social links (icon renders only if URL is non-empty):
+      youtube_url, instagram_url, facebook_url, twitter_url, linkedin_url,
+      telegram_url, website_url, support_email
+
+
+--------------------------------------------------------------------------------
+A9. CONVENTIONS (follow these)
+--------------------------------------------------------------------------------
+  - New endpoint?  Add it to ApiConstants, call it through callApi.
+  - New colour?    Add it to AppColors — do not scatter hex codes.
+  - Any API-triggering button MUST show a loader and be disabled while in flight
+    (prevents duplicate calls). Use AsyncButton, or the provider's
+    isLoading / sending / isSyncing flag.
+  - Localisation: every user-facing string goes in lib/localization/l10n/en.json
+    AND hi.json; read with AppLocalizations.of(context).translate('key').
+  - Timers/streams MUST stop in deactivate() / dispose() and when the app goes to
+    background. A running PageController.animateToPage on a deactivated widget
+    crashes the app (this happened with the masterclass carousel).
+  - Run `flutter analyze` before committing. The project is kept at ZERO issues.
+
+
+--------------------------------------------------------------------------------
+A10. LOCAL SETUP
+--------------------------------------------------------------------------------
+      flutter pub get
+      flutter run            (real device recommended — push needs Play Services)
+      flutter analyze lib    (must be clean)
+
+  Push notifications and native listeners register at STARTUP — hot reload is NOT
+  enough when testing notifications. Do a full run.
+
+
+
+================================================================================
+PART B — UI CONTEXT
+================================================================================
+
+--------------------------------------------------------------------------------
+B1. DESIGN PRINCIPLES (came directly from the client — follow strictly)
+--------------------------------------------------------------------------------
+  1. LIGHT THEME BY DEFAULT. Screens are white. The app is not a dark app.
+  2. CARDS MUST NOT BLEND INTO THE BACKGROUND. White cards on a white page are
+     fine ONLY with a soft shadow to lift them. "Halki shadow kaafi hai."
+  3. DARK ELEMENTS ON LIGHT BACKGROUND LOOK GOOD. Do not wash everything to white
+     — a dark premium card floating on a white page is the intended look.
+  4. NO FIXED HEIGHTS ON CARDS. A card takes only the space its content needs.
+     Horizontal lists use SingleChildScrollView + Row (not a fixed-height
+     ListView); media uses AspectRatio so height follows width.
+  5. LIMITED COLOUR PALETTE (see B2). No rainbow gradients. Tool/feature icons use
+     a tinted square + a single brand colour.
+  6. MATERIAL ICONS ONLY. The old custom CustomPainter icon set was removed.
+  7. MINIMAL ANIMATION. One subtle page fade per screen. No per-widget bounce
+     chains (login/OTP originally had 9 staggered animations — all removed).
+  8. TEXT MUST BE READABLE. Font sizes were raised twice on client feedback.
+     Current ladder is in B3.
+
+
+--------------------------------------------------------------------------------
+B2. COLOUR PALETTE — lib/core/theme/app_colors.dart  (USE THESE, NOT RAW HEX)
+--------------------------------------------------------------------------------
+  navy        #0A2066   Primary — headings, primary buttons, card titles
+  navyDark    #020C28   Darkest — forex ticker, premium dark cards, splash bg
+  gold        #FFD000   Accent — highlighted words, premium badges, carousel dot
+  red         #C8151B   Secondary — live badges, alerts, errors
+  blue        #1E5FFF   Links, active states, "See All", chips, send button
+  green       #1BA672   Success / completed
+  slate       #94A3B8   Muted — borders on light, inactive nav
+  slateText   #334155   Secondary body text
+  lightBg     #EEF2F8   Light page background (when a greyer page is wanted)
+
+  Accent colours used for tool/feature icons (tinted 12% background + solid icon):
+      blue, orange #F57C00, green, purple #7C4DFF, indigo #283593
+
+
+--------------------------------------------------------------------------------
+B3. TYPOGRAPHY (sizer .sp units)
+--------------------------------------------------------------------------------
+  19–20.sp   Greeting, hero titles, section headings ("Top Tools", "Explore")
+  15–17.sp   Card titles, masterclass title
+  12–14.sp   Body text, subtitles, tool labels, chips
+  Weights    w800/w900 for headings, w700 for card titles, w500/w600 for body
+
+
+--------------------------------------------------------------------------------
+B4. DASHBOARD LAYOUT (lib/features/dashboard/.../dashboard_home_view.dart)
+--------------------------------------------------------------------------------
+  Structure — a WHITE page, with a navy forex ticker bleeding edge-to-edge at the
+  very top (its colour covers the status bar; no SafeArea above it).
+
+      ┌──────────────────────────────┐
+      │ ███ FOREX MARQUEE (navy) ███ │  edge-to-edge, covers status bar
+      │ ☰   Hi, {Name} 👋    🔍  🔔³ │  WHITE app bar, navy text/icons
+      │     Ready to build your...    │
+      │ ┌──────────────────────────┐ │
+      │ │  NAVY MASTERCLASS CARD   │ │  dark card floating on white
+      │ │  gold "PREMIUM MASTERCLASS"│
+      │ │  [ Watch Now ▶ ]         │ │
+      │ └──────────────────────────┘ │
+      │            ▬ • •             │  blue active dot
+      │ ┌──────────────────────────┐ │
+      │ │ 🔵 LIVE Session Today    │ │  light-blue card, blue "Join Live"
+      │ └──────────────────────────┘ │
+      │  About SIIEA                 │
+      │  Your Progress               │
+      │  Explore  (2-col tiles)      │  Journey ×2, Quizzes, Gallery,
+      │  Success Stories (marquee)   │  Community, Market News
+      │  Top Tools  (9, h-scroll)    │  white cards + tinted Material icons,
+      │  Quiz banner                 │  gold lock badge on premium tools
+      │  Certificates                │
+      │  Masterclass (2 cards)       │  Handholding + Enroll -> WhatsApp
+      │  Free Videos   (h-scroll)    │
+      │  Shorts For You (h-scroll)   │
+      │  Continue Learning           │
+      │  Free PDF                    │
+      │  Quick Access (4 tiles)      │
+      │  Popular / Recommended / All │  course rows
+      │  Inline banners              │
+      │  Connect with us (socials)   │
+      ├──────────────────────────────┤
+      │ 🏠 Home  Courses  Shorts ... │  WHITE bottom nav, blue selected
+      └──────────────────────────────┘
+
+  FAB: AI Assistant (bottom-right).
+
+
+--------------------------------------------------------------------------------
+B5. SCREEN-BY-SCREEN UI NOTES
+--------------------------------------------------------------------------------
+  SPLASH
+      Flat navy (#020C28). White rounded logo tile with a blue glow.
+      "Start Import Export" bold, gold tagline, thin gold progress bar,
+      "Powered by SIIEA". ONE fade-in.
+
+  LOGIN
+      "Welcome to" + "Start Import Export" (navy). +91 pill + phone field.
+      "Send OTP" button. Trust badges at the bottom (50K+ Learners, 15+ Mentors,
+      100+ Courses). DIALOG-STYLE loader while the API runs (small white rounded
+      box with a spinner over a dimmed background — NOT a full-screen wash).
+
+  OTP
+      Same dialog-style loader. 4-box pin field, resend timer, SMS autofill.
+
+  DASHBOARD          see B4
+
+  AI ASSISTANT
+      New chat  : gradient robot avatar with glow, "How can I help you today?",
+                  starter chips (tinted card + chat icon + arrow).
+      Thread    : user bubbles = navy gradient with an asymmetric tail;
+                  assistant bubbles = white + border + soft shadow.
+                  Animated 3-dot typing indicator (bouncing, staggered).
+                  Newest bubble fades up (250 ms); older bubbles do not re-animate.
+      Input bar : rounded filled field + circular gradient send button with glow;
+                  becomes a spinner while sending.
+      Sound     : subtle send sound (assets/send_message.mp3, volume 0.5).
+      Copy      : long-press any bubble -> clipboard + haptic + "Copied" toast.
+      Scroll    : jumps to bottom immediately on send AND again when the reply lands.
+      History   : WhatsApp-style rows — robot avatar, title, preview, relative time.
+
+  NEWS LIST
+      Category chips, image-top cards with a date badge and "Read more".
+      Infinite scroll, bottom spinner. SafeArea at the bottom.
+
+  NEWS DETAILS
+      Collapsing SliverAppBar with the news image, floating back button,
+      date badge, title, gradient divider, full content, optional
+      "Read source" outlined button. SafeArea at the bottom.
+      Opened by id -> shows a loader, then content or a 404 state with Retry.
+
+  TOOLS
+      Light page. White cards with a coloured border + shadow, Material icon in a
+      tinted square. Header "Tools / Smart Tools for Smart Exporters".
+
+  QUIZ
+      White page. "Question X of Y" + progress bar, question card,
+      radio-style A/B/C/D options with green/red feedback, "Next Question" button.
+
+  COURSES
+      Tabs (All / My Courses / Popular). Tiles with real image thumbnails and a
+      lock overlay when premium-gated.
+
+  JOURNEY
+      Vertical timeline: numbered dots, a SOLID connector (green when completed),
+      status chips ("Completed" green / "In Progress" navy), Start button with a
+      spinner while syncing.
+
+  SHORTS
+      Full-screen vertical video feed. Right-side action bar
+      (like / comment / share / save). Category chips at the top.
+
+  PROFILE
+      Navy gradient header, avatar with a glow ring, "Premium Member" badge,
+      stats row, then a light menu list.
+
+
+--------------------------------------------------------------------------------
+B6. REUSABLE UI WIDGETS
+--------------------------------------------------------------------------------
+  common/widgets/async_button.dart     AsyncButton — runs an async onPressed,
+                                       shows a spinner, disables itself (blocks
+                                       duplicate API calls)
+  common/widgets/category_chips.dart   CategoryChips — horizontal filter chips
+                                       (white + shadow, blue when active)
+  dashboard/widgets/tool_card.dart     ToolCard — has an isLight flag
+                                       (dark variant for dark surfaces,
+                                        light variant for the light Tools page)
+  dashboard/widgets/premium_unlock_dialog.dart   Premium gate dialog
+
+
+--------------------------------------------------------------------------------
+B7. UI PITFALLS ALREADY HIT — DO NOT REPEAT
+--------------------------------------------------------------------------------
+  - White text left on a widget that later moved onto a white background became
+    invisible (this happened with the Gallery marquee heading). When you change a
+    surface from dark to light, flip EVERY text/icon colour inside it.
+  - A fixed-height horizontal ListView clipped card content. Use
+    SingleChildScrollView + Row so the height follows the tallest child.
+  - A Timer kept calling PageController.animateToPage after the widget was
+    deactivated -> "Looking up a deactivated widget's ancestor" crash. Stop timers
+    in deactivate() and on app background; mounted alone is NOT sufficient.
+  - Firebase shows nothing by itself in the FOREGROUND — you must build a local
+    notification from onMessage, or the user sees no notification while the app is
+    open.
+================================================================================
