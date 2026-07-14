@@ -48,6 +48,12 @@ class FirebaseMessagingService {
   /// - App launched from a terminated state via FCM tap → getInitialMessage
   ///   (routed after a delay so Splash finishes its own navigation first)
   Future<void> setupInteractedMessage() async {
+    // 🔔 FOREGROUND: FCM shows nothing by itself while the app is open —
+    // build a local notification (with data payload for tap-routing).
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      firebaseBackgroundMessage(message);
+    });
+
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       NotificationRouter.routeFromData(message.data);
     });

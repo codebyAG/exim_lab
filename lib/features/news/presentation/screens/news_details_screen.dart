@@ -118,7 +118,9 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
 
     return Scaffold(
       backgroundColor: cs.surface,
-      body: CustomScrollView(
+      body: SafeArea(
+        top: false, // SliverAppBar image stays edge-to-edge at the top
+        child: CustomScrollView(
         slivers: [
           // App Bar with Image
           SliverAppBar(
@@ -304,6 +306,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
             ),
           ),
         ],
+        ),
       ),
     );
   }

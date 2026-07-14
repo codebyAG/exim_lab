@@ -64,8 +64,10 @@ class _NewsListScreenState extends State<NewsListScreen> {
           ),
         ),
       ),
-      body: Consumer<NewsProvider>(
-        builder: (context, newsProvider, child) {
+      body: SafeArea(
+        top: false,
+        child: Consumer<NewsProvider>(
+          builder: (context, newsProvider, child) {
           // LOADING STATE
           if (newsProvider.isLoading) {
             return Center(
@@ -205,7 +207,8 @@ class _NewsListScreenState extends State<NewsListScreen> {
               },
             ),
           );
-        },
+          },
+        ),
       ),
     );
   }
