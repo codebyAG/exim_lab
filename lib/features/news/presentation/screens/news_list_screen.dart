@@ -20,12 +20,28 @@ class NewsListScreen extends StatefulWidget {
 }
 
 class _NewsListScreenState extends State<NewsListScreen> {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<NewsProvider>().fetchNews();
     });
+
+    // Infinite scroll — load the next server page near the bottom.
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 300) {
+        context.read<NewsProvider>().loadMore();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -153,15 +169,33 @@ class _NewsListScreenState extends State<NewsListScreen> {
             );
           }
 
-          // NEWS LIST
+          // NEWS LIST (server-side pagination: next page loads on scroll end)
           return RefreshIndicator(
             color: cs.primary,
-            onRefresh: () => newsProvider.fetchNews(),
+            onRefresh: () => newsProvider.fetchNews(refresh: true),
             child: ListView.separated(
+              controller: _scrollController,
               padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
-              itemCount: newsProvider.newsList.length,
+              itemCount: newsProvider.newsList.length +
+                  (newsProvider.isLoadingMore ? 1 : 0),
               separatorBuilder: (context, index) => SizedBox(height: 2.h),
               itemBuilder: (context, index) {
+                // Bottom loader while the next page loads
+                if (index == newsProvider.newsList.length) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 2.h),
+                    child: Center(
+                      child: SizedBox(
+                        width: 26,
+                        height: 26,
+                        child: CircularProgressIndicator(
+                          color: cs.primary,
+                          strokeWidth: 2.5,
+                        ),
+                      ),
+                    ),
+                  );
+                }
                 final news = newsProvider.newsList[index];
                 return FadeInUp(
                   duration: const Duration(milliseconds: 400),
@@ -197,7 +231,9 @@ class _NewsCard extends StatelessWidget {
         );
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => NewsDetailScreen(news: news)),
+          MaterialPageRoute(
+            builder: (_) => NewsDetailScreen(newsId: news.id),
+          ),
         );
       },
       child: Container(

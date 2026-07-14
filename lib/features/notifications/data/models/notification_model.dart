@@ -7,6 +7,7 @@ class NotificationModel {
   final bool read;
   final String? linkUrl;
   final String? imageUrl;
+  final Map<String, dynamic>? data; // e.g. { "type": "news", "newsId": "..." }
   final DateTime createdAt;
 
   NotificationModel({
@@ -18,6 +19,7 @@ class NotificationModel {
     required this.read,
     this.linkUrl,
     this.imageUrl,
+    this.data,
     required this.createdAt,
   });
 
@@ -31,6 +33,9 @@ class NotificationModel {
       read: json['read'] ?? false,
       linkUrl: json['linkUrl'],
       imageUrl: json['imageUrl'],
+      data: json['data'] is Map
+          ? Map<String, dynamic>.from(json['data'])
+          : null,
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'])
           : DateTime.now(),

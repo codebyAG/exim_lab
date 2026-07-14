@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -o /tmp/r5.json -w \"known API /api/config/social-links => HTTP %{http_code}\\\\n\" \"http://52.35.230.229:3006/api/config/social-links\" --max-time 15)",
+      "Read(//tmp/**)",
+      "Bash(curl -s -o /tmp/a1.json -w 'HTTP %{http_code}\\\\n' http://52.35.230.229:3004/api/assistant/starters --max-time 15)",
+      "Bash(curl -s -o /tmp/a2.json -w 'HTTP %{http_code}\\\\n' -X POST http://52.35.230.229:3004/api/assistant/chat -H 'Content-Type: application/json' -d '{\"message\":\"test\"}' --max-time 15)",
+      "Bash(curl -s -o /tmp/a3.json -w 'HTTP %{http_code}\\\\n' 'http://52.35.230.229:3004/api/assistant/conversations?page=1&limit=20' --max-time 15)",
+      "Bash(curl -s -o /tmp/a4.json -w 'HTTP %{http_code}\\\\n' http://52.35.230.229:3004/api/assistant/conversations/000000000000000000000000 --max-time 15)",
+      "Bash(curl -s -o /tmp/s1.json -w 'HTTP %{http_code}\\\\n' http://52.35.230.229:3006/api/assistant/starters --max-time 15)",
+      "Bash(curl -s -o /tmp/s2.json -w 'HTTP %{http_code}\\\\n' -X POST http://52.35.230.229:3006/api/assistant/chat -H 'Content-Type: application/json' -d '{\"message\":\"test\"}' --max-time 20)",
+      "Bash(curl -s -o /tmp/s3.json -w 'HTTP %{http_code}\\\\n' 'http://52.35.230.229:3006/api/assistant/conversations?page=1&limit=20' --max-time 15)",
+      "Bash(curl -s -o /tmp/s4.json -w 'HTTP %{http_code}\\\\n' http://52.35.230.229:3006/api/assistant/conversations/000000000000000000000000 --max-time 15)",
+      "Bash(curl -s -o /tmp/n1.json -w \"HTTP %{http_code}\\\\n\" \"http://52.35.230.229:3006/api/news/000000000000000000000000\" --max-time 15)"
+    ]
+  }
+}

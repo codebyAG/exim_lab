@@ -14,7 +14,8 @@ class MasterclassCarousel extends StatefulWidget {
   State<MasterclassCarousel> createState() => _MasterclassCarouselState();
 }
 
-class _MasterclassCarouselState extends State<MasterclassCarousel> {
+class _MasterclassCarouselState extends State<MasterclassCarousel>
+    with WidgetsBindingObserver {
   final PageController _controller = PageController(viewportFraction: 1.0);
   int _currentIndex = 0;
   Timer? _timer;
@@ -22,10 +23,12 @@ class _MasterclassCarouselState extends State<MasterclassCarousel> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _startAutoScroll();
   }
 
   void _startAutoScroll() {
+    _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       if (!mounted) return;
       _currentIndex = (_currentIndex + 1) % 2;
@@ -39,9 +42,39 @@ class _MasterclassCarouselState extends State<MasterclassCarousel> {
     });
   }
 
+  void _stopAutoScroll() {
+    _timer?.cancel();
+    _timer = null;
+  }
+
+  // Widget tree se temporarily hatne par (mounted true hone ke bawajood
+  // ancestor lookup unsafe hota hai) timer band — wapas aane par resume.
+  @override
+  void deactivate() {
+    _stopAutoScroll();
+    super.deactivate();
+  }
+
+  @override
+  void activate() {
+    super.activate();
+    _startAutoScroll();
+  }
+
+  // App background me jaaye to bhi timer band.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _startAutoScroll();
+    } else {
+      _stopAutoScroll();
+    }
+  }
+
   @override
   void dispose() {
-    _timer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    _stopAutoScroll();
     _controller.dispose();
     super.dispose();
   }

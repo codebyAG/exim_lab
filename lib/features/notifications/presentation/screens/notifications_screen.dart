@@ -183,14 +183,22 @@ class _NotificationTile extends StatelessWidget {
           context.read<NotificationsProvider>().markAsRead(notification.id);
         }
 
-        // Deep link: linkUrl "news://<id>" → open news details
-        final newsId =
-            NotificationRouter.newsIdFromLink(notification.linkUrl);
+        // Prefer data payload {type: news, newsId}; fallback to
+        // linkUrl "news://<id>" (per backend spec).
+        String? newsId;
+        final data = notification.data;
+        if (data != null && data['type']?.toString() == 'news') {
+          final id = data['newsId']?.toString();
+          if (id != null && id.isNotEmpty) newsId = id;
+        }
+        newsId ??= NotificationRouter.newsIdFromLink(notification.linkUrl);
+
         if (newsId != null) {
+          final id = newsId;
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => NewsDetailScreen(newsId: newsId),
+              builder: (_) => NewsDetailScreen(newsId: id),
             ),
           );
         }

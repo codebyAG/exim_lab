@@ -501,7 +501,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
               onPressed: () => _handlePremiumGatedTap(
                 context: context,
                 sectionName: 'Floating Action: AI Support',
-                action: () => AppNavigator.push(context, const AssistantScreen()),
+                action: () =>
+                    AppNavigator.push(context, const AssistantScreen()),
               ),
               child: Icon(Icons.support_agent, color: cs.onPrimary, size: 28),
             )

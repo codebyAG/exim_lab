@@ -3,19 +3,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:exim_lab/features/news/data/models/news_model.dart';
 import 'package:exim_lab/features/news/data/services/news_service.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-/// News details.
-///
-/// Open with a full [news] object (from the news list), or with only a
-/// [newsId] (from a notification tap) — in that case the item is fetched
-/// from the API with a loader.
+/// News details — always opened with a [newsId] (from the list or a
+/// notification tap) and fetched fresh from GET /api/news/:id.
 class NewsDetailScreen extends StatefulWidget {
-  final NewsModel? news;
-  final String? newsId;
+  final String newsId;
 
-  const NewsDetailScreen({super.key, this.news, this.newsId})
-      : assert(news != null || newsId != null,
-            'Provide either a news object or a newsId');
+  const NewsDetailScreen({super.key, required this.newsId});
 
   @override
   State<NewsDetailScreen> createState() => _NewsDetailScreenState();
@@ -29,11 +24,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.news != null) {
-      _news = widget.news;
-    } else {
-      _fetchById();
-    }
+    _fetchById();
   }
 
   Future<void> _fetchById() async {
@@ -42,7 +33,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
       _error = null;
     });
 
-    final fetched = await NewsService().fetchNewsById(widget.newsId!);
+    final fetched = await NewsService().fetchNewsById(widget.newsId);
 
     if (!mounted) return;
     setState(() {
@@ -275,6 +266,37 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                       letterSpacing: 0.1,
                     ),
                   ),
+
+                  // Read source (optional external link)
+                  if (news.linkUrl.trim().isNotEmpty) ...[
+                    SizedBox(height: 3.h),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: () async {
+                          final uri = Uri.tryParse(news.linkUrl.trim());
+                          if (uri != null && await canLaunchUrl(uri)) {
+                            await launchUrl(
+                              uri,
+                              mode: LaunchMode.externalApplication,
+                            );
+                          }
+                        },
+                        icon: const Icon(Icons.open_in_new_rounded, size: 18),
+                        label: const Text("Read source"),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: cs.primary,
+                          side: BorderSide(
+                            color: cs.primary.withValues(alpha: 0.4),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
 
                   SizedBox(height: 4.h),
                 ],
