@@ -13,7 +13,7 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/free_video_card
 import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_footer.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/notifications/presentation/providers/notifications_provider.dart';
-import 'package:exim_lab/features/chatai/presentation/screens/ai_chat_screen.dart';
+import 'package:exim_lab/features/chatai/presentation/screens/assistant_screen.dart';
 import 'package:exim_lab/features/courses/data/models/course_model.dart';
 import 'package:exim_lab/features/freevideos/data/models/free_videos_model.dart';
 import 'package:exim_lab/features/shorts/presentation/providers/shorts_provider.dart';
@@ -501,7 +501,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
               onPressed: () => _handlePremiumGatedTap(
                 context: context,
                 sectionName: 'Floating Action: AI Support',
-                action: () => AppNavigator.push(context, const AiChatScreen()),
+                action: () => AppNavigator.push(context, const AssistantScreen()),
               ),
               child: Icon(Icons.support_agent, color: cs.onPrimary, size: 28),
             )
@@ -1652,7 +1652,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                                         sectionName: 'Dashboard: AI Expert',
                                         action: () => AppNavigator.push(
                                           context,
-                                          const AiChatScreen(),
+                                          const AssistantScreen(),
                                         ),
                                       ),
                                     );
