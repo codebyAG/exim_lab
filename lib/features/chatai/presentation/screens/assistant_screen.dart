@@ -10,6 +10,9 @@ import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:exim_lab/features/chatai/data/models/assistant_models.dart';
 import 'package:exim_lab/features/chatai/presentation/providers/assistant_provider.dart';
 import 'package:exim_lab/features/chatai/presentation/screens/assistant_history_screen.dart';
+import 'package:exim_lab/features/chatai/presentation/screens/consultation_screen.dart';
+import 'package:exim_lab/features/chatai/presentation/screens/webinar_screen.dart';
+import 'package:exim_lab/core/navigation/app_navigator.dart';
 
 /// Import/Export AI Assistant — ChatGPT-style new chat with starter chips,
 /// threaded conversation, and WhatsApp-style history.
@@ -564,11 +567,9 @@ class _Bubble extends StatelessWidget {
     final cs = theme.colorScheme;
     final isUser = message.isUser;
 
-    return Align(
-      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-      child: GestureDetector(
-        onLongPress: () => _copy(context),
-        child: Container(
+    final bubble = GestureDetector(
+      onLongPress: () => _copy(context),
+      child: Container(
           margin: const EdgeInsets.symmetric(vertical: 6),
           padding: const EdgeInsets.all(14),
           constraints: const BoxConstraints(maxWidth: 320),
@@ -605,6 +606,98 @@ class _Bubble extends StatelessWidget {
               height: 1.45,
             ),
           ),
+        ),
+    );
+
+    // User bubble → right, no suggestions.
+    if (isUser) {
+      return Align(alignment: Alignment.centerRight, child: bubble);
+    }
+
+    // Assistant bubble → left, with 1:1 consultation + free webinar CTAs.
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          bubble,
+          const SizedBox(height: 8),
+          const _AnswerSuggestions(),
+        ],
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Hint chips shown under every assistant answer
+// ─────────────────────────────────────────────────────────────
+class _AnswerSuggestions extends StatelessWidget {
+  const _AnswerSuggestions();
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: [
+        _SuggestionChip(
+          icon: Icons.person_pin_rounded,
+          label: "1:1 Consultation",
+          color: Color(0xFF0A2066),
+          onTap: () =>
+              AppNavigator.push(context, const ConsultationScreen()),
+        ),
+        _SuggestionChip(
+          icon: Icons.sensors_rounded,
+          label: "Join Free Webinar",
+          color: Color(0xFFC8151B),
+          onTap: () => AppNavigator.push(context, const WebinarScreen()),
+        ),
+      ],
+    );
+  }
+}
+
+class _SuggestionChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _SuggestionChip({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(20),
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: color.withValues(alpha: 0.35)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 16, color: color),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: TextStyle(
+                color: color,
+                fontSize: 12.5,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ],
         ),
       ),
     );
