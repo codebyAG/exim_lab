@@ -67,6 +67,13 @@ class ApiConstants {
   static String chatSendMessage(dynamic roomId) =>
       '$baseUrl/api/chat/rooms/$roomId/messages';
 
+  // 💎 PREMIUM FEATURES PAGE
+  static const String premiumFeaturesConfig =
+      '$baseUrl/api/premium-features/config';
+
+  // 🤝 ONE-ON-ONE CLASSES PAGE
+  static const String oneOnOneConfig = '$baseUrl/api/one-on-one/config';
+
   // ⏱ TIMEOUTS
   static const int connectTimeout = 15000;
   static const int receiveTimeout = 15000;

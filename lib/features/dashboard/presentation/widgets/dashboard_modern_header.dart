@@ -6,6 +6,7 @@ import 'package:exim_lab/features/notifications/presentation/providers/notificat
 import 'package:exim_lab/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/profile/presentation/screens/profile_screen.dart';
+import 'package:exim_lab/features/one_on_one/presentation/screens/one_on_one_screen.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/search_assistant_dialog.dart';
 
 class DashboardModernHeader extends StatelessWidget {
@@ -25,7 +26,7 @@ class DashboardModernHeader extends StatelessWidget {
 
           // 2. MAIN CONTENT
           Padding(
-            padding: const EdgeInsets.fromLTRB(18, 14, 18, 14),
+            padding: const EdgeInsets.fromLTRB(18, 8, 18, 8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -37,14 +38,14 @@ class DashboardModernHeader extends StatelessWidget {
                     Row(
                       children: [
                         _buildGlobeBox(),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               "START UP INDIA",
                               style: TextStyle(
-                                fontSize: 7.sp,
+                                fontSize: 6.sp,
                                 fontWeight: FontWeight.w700,
                                 color: Colors.white.withValues(alpha: 0.6),
                                 letterSpacing: 1.5,
@@ -54,7 +55,7 @@ class DashboardModernHeader extends StatelessWidget {
                             RichText(
                               text: TextSpan(
                                 style: TextStyle(
-                                  fontSize: 16.sp,
+                                  fontSize: 13.sp,
                                   fontWeight: FontWeight.w900,
                                   letterSpacing: -0.5,
                                   height: 1.1,
@@ -72,19 +73,19 @@ class DashboardModernHeader extends StatelessWidget {
                             Text(
                               "ACADEMY",
                               style: TextStyle(
-                                fontSize: 13.sp,
+                                fontSize: 10.5.sp,
                                 fontWeight: FontWeight.w800,
                                 color: Colors.white,
                                 letterSpacing: 0.2,
                                 height: 1,
                               ),
                             ),
-                            const SizedBox(height: 6),
+                            const SizedBox(height: 4),
                             // 45 YEARS TAG
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 3,
+                                horizontal: 8,
+                                vertical: 2,
                               ),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFC8151B),
@@ -102,7 +103,7 @@ class DashboardModernHeader extends StatelessWidget {
                                 "50+ YEARS OF EXPERIENCE",
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 8.sp,
+                                  fontSize: 6.5.sp,
                                   fontWeight: FontWeight.w900,
                                   letterSpacing: 0.8,
                                 ),
@@ -119,7 +120,7 @@ class DashboardModernHeader extends StatelessWidget {
                   ],
                 ),
 
-                SizedBox(height: 1.h),
+                SizedBox(height: 0.6.h),
 
                 // --- WELCOME & SHIP ROW ---
                 Row(
@@ -141,11 +142,11 @@ class DashboardModernHeader extends StatelessWidget {
                                 "Welcome back,",
                                 style: TextStyle(
                                   color: Colors.white.withValues(alpha: 0.65),
-                                  fontSize: 16.sp,
+                                  fontSize: 12.sp,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              SizedBox(height: 0.5.h),
+                              SizedBox(height: 0.2.h),
 
                               SizedBox(
                                 width: 50.w,
@@ -156,7 +157,7 @@ class DashboardModernHeader extends StatelessWidget {
                                     name,
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 24.sp,
+                                      fontSize: 19.sp,
                                       fontWeight: FontWeight.w900,
                                       letterSpacing: -1.2,
                                       height: 1,
@@ -179,8 +180,8 @@ class DashboardModernHeader extends StatelessWidget {
                     ),
                     // 🚢 SHIP ILLUSTRATION (Custom Painter)
                     SizedBox(
-                      width: 30.w,
-                      height: 9.h,
+                      width: 24.w,
+                      height: 6.5.h,
                       child: CustomPaint(painter: ShipIllustrationPainter()),
                     ),
                   ],
@@ -195,8 +196,8 @@ class DashboardModernHeader extends StatelessWidget {
 
   Widget _buildGlobeBox() {
     return Container(
-      width: 58,
-      height: 58,
+      width: 48,
+      height: 48,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
@@ -213,7 +214,7 @@ class DashboardModernHeader extends StatelessWidget {
       ),
       child: Center(
         child: CustomPaint(
-          size: const Size(48, 48),
+          size: const Size(40, 40),
           painter: GlobeIconPainter(),
         ),
       ),
@@ -273,6 +274,12 @@ class HeaderActionButtons extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
+        // TEMP: testing-only entry point for the One-on-One page — remove
+        // once the real placement (dashboard tile) is decided and wired.
+        _buildActionBtn(Icons.diversity_1_rounded, () {
+          AppNavigator.push(context, const OneOnOneScreen());
+        }),
+        const SizedBox(width: 8),
         _buildActionBtn(Icons.person_outline_rounded, () {
           AppNavigator.push(context, const ProfileScreen());
         }),
@@ -285,8 +292,8 @@ class HeaderActionButtons extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(11),
       child: Container(
-        width: 40,
-        height: 40,
+        width: 36,
+        height: 36,
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(11),
@@ -302,7 +309,7 @@ class HeaderActionButtons extends StatelessWidget {
             ),
           ],
         ),
-        child: Icon(icon, color: Colors.white, size: 22),
+        child: Icon(icon, color: Colors.white, size: 19),
       ),
     );
   }
@@ -412,6 +419,19 @@ class GlobeIconPainter extends CustomPainter {
 class ShipIllustrationPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
+    // Drawn against a fixed 110x72 design box, then scaled to fit.
+    const designW = 110.0;
+    const designH = 72.0;
+    final scale = (size.width / designW) < (size.height / designH)
+        ? size.width / designW
+        : size.height / designH;
+    canvas.translate(
+      (size.width - designW * scale) / 2,
+      (size.height - designH * scale) / 2,
+    );
+    canvas.scale(scale);
+    size = const Size(designW, designH);
+
     final center = size.width / 2;
 
     // --- Hull (Blocky white layers) ---

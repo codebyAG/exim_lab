@@ -1,6 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:exim_lab/features/news/presentation/screens/news_details_screen.dart';
+import 'package:exim_lab/features/premium/presentation/screens/premium_features_screen.dart';
 
 /// Routes notification taps (FCM / local / in-app list) to the right screen.
 ///
@@ -24,6 +25,8 @@ class NotificationRouter {
       if (id != null && id.isNotEmpty) {
         openNewsDetails(id);
       }
+    } else if (type == 'premium') {
+      openPremiumFeatures();
     }
   }
 
@@ -37,11 +40,21 @@ class NotificationRouter {
     return null;
   }
 
+  /// `linkUrl` for a premium-features deep link, e.g. `premium://premium-features`.
+  static bool isPremiumLink(String? linkUrl) =>
+      linkUrl != null && linkUrl.startsWith('premium://');
+
   static void openNewsDetails(String newsId) {
     navigatorKey.currentState?.push(
       MaterialPageRoute(
         builder: (_) => NewsDetailScreen(newsId: newsId),
       ),
+    );
+  }
+
+  static void openPremiumFeatures() {
+    navigatorKey.currentState?.push(
+      MaterialPageRoute(builder: (_) => const PremiumFeaturesScreen()),
     );
   }
 

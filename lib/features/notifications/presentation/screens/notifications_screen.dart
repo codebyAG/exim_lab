@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:exim_lab/core/services/notification_router.dart';
+import 'package:exim_lab/features/premium/presentation/screens/premium_features_screen.dart';
 import 'package:exim_lab/features/news/presentation/screens/news_details_screen.dart';
 import 'package:sizer/sizer.dart';
 import 'package:intl/intl.dart';
@@ -185,10 +186,21 @@ class _NotificationTile extends StatelessWidget {
 
         // Prefer data payload {type: news, newsId}; fallback to
         // linkUrl "news://<id>" (per backend spec).
-        String? newsId;
         final data = notification.data;
-        if (data != null && data['type']?.toString() == 'news') {
-          final id = data['newsId']?.toString();
+        final type = data?['type']?.toString();
+
+        if (type == 'premium' ||
+            NotificationRouter.isPremiumLink(notification.linkUrl)) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const PremiumFeaturesScreen()),
+          );
+          return;
+        }
+
+        String? newsId;
+        if (type == 'news') {
+          final id = data?['newsId']?.toString();
           if (id != null && id.isNotEmpty) newsId = id;
         }
         newsId ??= NotificationRouter.newsIdFromLink(notification.linkUrl);

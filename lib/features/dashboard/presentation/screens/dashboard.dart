@@ -7,6 +7,8 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/certificate_min
 import 'package:exim_lab/features/dashboard/presentation/providers/exchange_rate_provider.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/exchange_rate_ticker.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/achieve_live_card.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/cta_carasoul.dart';
+import 'package:exim_lab/features/premium/presentation/screens/premium_features_screen.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/masterclass_carousel.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/popular_course_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/free_video_card.dart';
@@ -474,6 +476,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
               return const NewsListScreen(showBackButton: false);
             case 'community':
               return const CommunityChatScreen(showBackButton: false);
+            case 'premium':
+              return const PremiumFeaturesScreen(showBackButton: false);
             case 'profile':
               return const ProfileScreen(showBackButton: false);
             default:
@@ -488,6 +492,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
         backgroundColor: const Color(0xFF030E30),
         selectedItemColor: const Color(0xFFFFD000),
         unselectedItemColor: Colors.white54,
+        // Compact so six tabs fit without crowding.
+        iconSize: 21,
+        selectedFontSize: 10,
+        unselectedFontSize: 9,
         onTap: (index) => _handleNavigationTap(index, navConfig),
       ),
       floatingActionButton: moduleProvider.isEnabled('aiChat')
@@ -553,6 +561,18 @@ class _DashboardBodyState extends State<_DashboardBody> {
                     );
                   },
                 ),
+              ),
+
+              // 🎞️ CTA BANNER CAROUSEL
+              Consumer<DashboardProvider>(
+                builder: (context, dashboard, _) {
+                  final banners = dashboard.data?.addons.carousel ?? const [];
+                  if (banners.isEmpty) return const SizedBox.shrink();
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 1.h),
+                    child: CtaCarousel(banners: banners),
+                  );
+                },
               ),
 
               // 1.5 ABOUT US SECTION
@@ -1802,6 +1822,29 @@ class _DashboardBodyState extends State<_DashboardBody> {
     );
   }
 
+  /// Gold dot on the Premium tab so it reads as the highlighted destination.
+  Widget _wrapPremiumBadge(Widget icon, bool show) {
+    if (!show) return icon;
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        icon,
+        Positioned(
+          top: -2,
+          right: -3,
+          child: Container(
+            width: 8,
+            height: 8,
+            decoration: const BoxDecoration(
+              color: Color(0xFFFFD000),
+              shape: BoxShape.circle,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   _NavigationConfig _buildNavigationConfig(
     BuildContext context,
     AppLocalizations t,
@@ -1818,10 +1861,11 @@ class _DashboardBodyState extends State<_DashboardBody> {
     List<VoidCallback?> navActions = [];
 
     for (var item in schema) {
+      final isPremiumTab = item.identifier == 'premium';
       navItems.add(
         BottomNavigationBarItem(
-          icon: Icon(item.icon),
-          activeIcon: Icon(item.activeIcon),
+          icon: _wrapPremiumBadge(Icon(item.icon), isPremiumTab),
+          activeIcon: _wrapPremiumBadge(Icon(item.activeIcon), isPremiumTab),
           label: t.translate(item.labelKey),
         ),
       );
@@ -1848,6 +1892,11 @@ class _DashboardBodyState extends State<_DashboardBody> {
         case 'community':
           navActions.add(
             () => AppNavigator.push(context, const CommunityChatScreen()),
+          );
+          break;
+        case 'premium':
+          navActions.add(
+            () => AppNavigator.push(context, const PremiumFeaturesScreen()),
           );
           break;
         case 'profile':

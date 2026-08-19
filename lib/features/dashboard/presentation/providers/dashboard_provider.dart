@@ -216,6 +216,16 @@ class DashboardProvider extends ChangeNotifier {
       ),
     );
 
+    // 💎 Premium features page — always present, badge-highlighted in the bar.
+    items.add(
+      DashboardNavItem(
+        labelKey: 'premium',
+        icon: Icons.workspace_premium_outlined,
+        activeIcon: Icons.workspace_premium_rounded,
+        identifier: 'premium',
+      ),
+    );
+
     items.add(
       DashboardNavItem(
         labelKey: 'profile',
