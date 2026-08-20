@@ -8,21 +8,66 @@ import 'package:exim_lab/core/widgets/youtube_video_dialog.dart';
 import 'package:exim_lab/features/one_on_one/data/models/one_on_one_config_model.dart';
 import 'package:exim_lab/features/one_on_one/presentation/providers/one_on_one_provider.dart';
 
-/// Dark navy/violet theme — matches the approved "Option 2" reference design,
-/// deliberately distinct from Premium's lighter violet look and the app's
-/// default light theme.
+/// Light page, dark purple "elements/sections" floating on top — matches
+/// the Premium page's palette exactly (both pulled from the same hero art:
+/// assets/premium_bg_purple.png + premium_hero_container.png), gold as the
+/// shared accent.
 class _C {
-  static const bg = Color(0xFF0E1233);
-  static const bgDeep = Color(0xFF171049);
-  static const violet = Color(0xFF7C3AED);
-  static const violetDeep = Color(0xFF5B21B6);
-  static const green = Color(0xFF16A34A);
-  static const greenDeep = Color(0xFF0F7A38);
-  static const gold = Color(0xFFF5B400);
-  static const ink = Color(0xFF17123A);
-  static const body = Color(0xFF8A87B0);
-  static const cardText = Color(0xFF1E1B4B);
+  static const pageBgLight = Color(0xFFFFFFFF);
+  static const pageBgTint = Color(0xFFEEF2F8); // dashboard's lightBg
+
+  static const navyDeep = Color(0xFF200058); // solid dark card background
+  static const navy = Color(0xFF5008A8); // bright purple accent
+
+  static const cardBg = navy;
+  static final cardBorder = const Color(0xFFFFD000).withValues(alpha: 0.18);
+
+  static const gold = Color(0xFFFFD000);
+  static const goldDeep = Color(0xFFCC9E00);
+  static const ink = navyDeep;
+
+  // Text sitting on light page background (outside dark cards).
+  static const headingOnLight = navyDeep;
+
+  // Text sitting inside dark purple cards.
+  static const textPrimary = Color(0xFFFFFFFF);
+  static const textMuted = Color(0xFF94A3B8); // dashboard's slate
+  static const originalPrice = Color(0xFF64748B);
+  static const urgency = Color(0xFFFDE68A);
+  static const checkGreen = Color(0xFF1BA672); // dashboard's success green
+
+  // The "brighter purple gradient area" — bright → mid → dark, sampled from
+  // the hero art (identical to the Premium page's pricing gradient).
+  static const panelGradient = LinearGradient(
+    colors: [Color(0xFF5008A8), Color(0xFF380888), Color(0xFF180050)],
+    stops: [0, 0.55, 1],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const pageBackground = LinearGradient(
+    colors: [pageBgLight, pageBgTint],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
 }
+
+/// Decorative rotating icon-circle palette (pastel bg + saturated icon) —
+/// identical rotation to the Premium page's, kept as decorative variety.
+class _IconDuo {
+  final Color bg;
+  final Color fg;
+  const _IconDuo(this.bg, this.fg);
+}
+
+const List<_IconDuo> _iconDuos = [
+  _IconDuo(Color(0xFFEDE9FE), Color(0xFF7C3AED)),
+  _IconDuo(Color(0xFFD1FAE5), Color(0xFF059669)),
+  _IconDuo(Color(0xFFFFEDD5), Color(0xFFEA580C)),
+  _IconDuo(Color(0xFFDBEAFE), Color(0xFF2563EB)),
+  _IconDuo(Color(0xFFFCE7F3), Color(0xFFDB2777)),
+  _IconDuo(Color(0xFFCCFBF1), Color(0xFF0D9488)),
+];
 
 class OneOnOneScreen extends StatefulWidget {
   final bool showBackButton;
@@ -55,46 +100,72 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
     final config = provider.config;
 
     return Scaffold(
-      backgroundColor: _C.bg,
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            _buildTopBar(context),
-            Expanded(
-              child: config == null
-                  ? _buildPlaceholder(provider)
-                  : RefreshIndicator(
-                      color: _C.violet,
-                      onRefresh: () =>
-                          context.read<OneOnOneProvider>().load(force: true),
-                      child: _buildContent(context, config),
-                    ),
-            ),
-          ],
+      body: Container(
+        decoration: const BoxDecoration(gradient: _C.pageBackground),
+        // top: false — the hero image bleeds behind the status bar; the
+        // top bar row applies its own SafeArea inside the hero Stack.
+        child: SafeArea(
+          top: false,
+          bottom: false,
+          child: config == null
+              ? _buildPlaceholder(provider)
+              : RefreshIndicator(
+                  color: _C.gold,
+                  backgroundColor: _C.cardBg,
+                  onRefresh: () =>
+                      context.read<OneOnOneProvider>().load(force: true),
+                  child: _buildContent(context, config),
+                ),
         ),
       ),
     );
   }
 
-  Widget _buildTopBar(BuildContext context) {
+  // Back button + PREMIUM badge — floats directly over the hero image (not
+  // on a separate white strip above it).
+  Widget _buildTopBar() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(4, 4, 16, 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           if (widget.showBackButton)
-            IconButton(
-              onPressed: () => Navigator.maybePop(context),
-              icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+            InkWell(
+              onTap: () => Navigator.maybePop(context),
+              borderRadius: BorderRadius.circular(20),
+              child: Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: _C.cardBg,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: _C.cardBorder),
+                ),
+                child: const Icon(
+                  Icons.arrow_back_rounded,
+                  color: _C.gold,
+                  size: 20,
+                ),
+              ),
             )
           else
             const SizedBox(width: 12),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: _C.gold,
+              gradient: const LinearGradient(
+                colors: [_C.gold, _C.goldDeep],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
               borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: _C.gold.withValues(alpha: 0.45),
+                  blurRadius: 14,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -109,7 +180,7 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
                   "PREMIUM",
                   style: TextStyle(
                     color: _C.ink,
-                    fontSize: 9.5.sp,
+                    fontSize: 11.sp,
                     fontWeight: FontWeight.w900,
                     letterSpacing: 0.8,
                   ),
@@ -124,7 +195,7 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
 
   Widget _buildPlaceholder(OneOnOneProvider provider) {
     if (provider.isLoading) {
-      return const Center(child: CircularProgressIndicator(color: _C.violet));
+      return const Center(child: CircularProgressIndicator(color: _C.gold));
     }
     return Center(
       child: Padding(
@@ -132,22 +203,22 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.wifi_off_rounded, color: _C.violet, size: 44),
+            const Icon(Icons.wifi_off_rounded, color: _C.navy, size: 44),
             SizedBox(height: 2.h),
             Text(
               "Couldn't load session details",
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.white,
-                fontSize: 15.sp,
+                color: _C.headingOnLight,
+                fontSize: 17.sp,
                 fontWeight: FontWeight.w800,
               ),
             ),
             SizedBox(height: 2.h),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: _C.violet,
-                foregroundColor: Colors.white,
+                backgroundColor: _C.gold,
+                foregroundColor: _C.ink,
               ),
               onPressed: () =>
                   context.read<OneOnOneProvider>().load(force: true),
@@ -161,118 +232,171 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
 
   Widget _buildContent(BuildContext context, OneOnOneConfig config) {
     return ListView(
-      padding: EdgeInsets.fromLTRB(5.w, 0, 5.w, 4.h),
+      padding: EdgeInsets.zero,
       children: [
-        _buildHeroText(config),
-        if (config.heroVideo != null) ...[
-          SizedBox(height: 2.h),
-          _buildHeroVideo(config.heroVideo!),
-        ],
-
-        if (config.benefits.isNotEmpty) ...[
-          SizedBox(height: 3.5.h),
-          const _SectionTitle("WHAT YOU GET"),
-          SizedBox(height: 1.8.h),
-          _buildWhiteGrid(config.benefits, crossAxisCount: 2, aspectRatio: 1.5),
-        ],
-
-        if (config.journeySteps.isNotEmpty) ...[
-          SizedBox(height: 3.5.h),
-          const _SectionTitle("OUR HAND-HOLDING PROCESS"),
-          SizedBox(height: 1.8.h),
-          _buildJourneySteps(config.journeySteps),
-        ],
-
-        if (config.uniquePoints.isNotEmpty) ...[
-          SizedBox(height: 3.5.h),
-          const _SectionTitle("WHY 1-ON-1 IS UNIQUE"),
-          SizedBox(height: 1.8.h),
-          _buildWhiteGrid(
-            config.uniquePoints,
-            crossAxisCount: 2,
-            aspectRatio: 1.5,
-          ),
-        ],
-
-        if (config.highlightBanner != null) ...[
-          SizedBox(height: 3.5.h),
-          _buildHighlightBanner(config.highlightBanner!),
-        ],
-
-        if (config.experienceVideos.isNotEmpty) ...[
-          SizedBox(height: 3.5.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            _buildHeroStack(config),
+            if (config.benefits.isNotEmpty)
+              Positioned(
+                left: 5.w,
+                right: 5.w,
+                bottom: -30,
+                child: _buildBenefitsRow(config.benefits),
+              ),
+          ],
+        ),
+        SizedBox(height: config.benefits.isNotEmpty ? 5.5.h : 2.h),
+        Padding(
+          padding: EdgeInsets.fromLTRB(5.w, 0, 5.w, 4.h),
+          child: Column(
             children: [
-              Text(
-                "REAL EXPERIENCES",
-                style: TextStyle(
-                  color: _C.gold,
-                  fontSize: 11.sp,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 1.1,
-                ),
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    "View All",
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.6),
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.w700,
+              if (config.heroVideo != null) _buildHeroVideo(config.heroVideo!),
+
+              if (config.journeySteps.isNotEmpty) ...[
+                SizedBox(height: 3.h),
+                const _SectionTitle("YOUR JOURNEY"),
+                SizedBox(height: 1.6.h),
+                _buildJourneySteps(config.journeySteps),
+              ],
+
+              if (config.uniquePoints.isNotEmpty) ...[
+                SizedBox(height: 3.h),
+                const _SectionTitle("WHY 1-ON-1 IS UNIQUE"),
+                SizedBox(height: 1.6.h),
+                _buildWhiteGrid(config.uniquePoints, crossAxisCount: 3),
+              ],
+
+              if (config.highlightBanner != null) ...[
+                SizedBox(height: 3.h),
+                _buildHighlightBanner(config.highlightBanner!),
+              ],
+
+              if (config.experienceVideos.isNotEmpty) ...[
+                SizedBox(height: 3.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "REAL EXPERIENCES",
+                      style: TextStyle(
+                        color: _C.headingOnLight,
+                        fontSize: 12.5.sp,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 0.8,
+                      ),
                     ),
-                  ),
-                  const Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    color: Colors.white54,
-                    size: 11,
-                  ),
-                ],
-              ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "View All",
+                          style: TextStyle(
+                            color: _C.navy,
+                            fontSize: 11.5.sp,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          color: _C.navy,
+                          size: 11,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 1.6.h),
+                _buildVideos(config.experienceVideos),
+              ],
+
+              if (config.trustBadges.isNotEmpty) ...[
+                SizedBox(height: 3.h),
+                _buildTrustBadges(config.trustBadges),
+              ],
+
+              if (config.pricing != null) ...[
+                SizedBox(height: 3.h),
+                _buildPricingCard(context, config.pricing!),
+              ],
             ],
           ),
-          SizedBox(height: 1.8.h),
-          _buildVideos(config.experienceVideos),
-        ],
-
-        if (config.trustBadges.isNotEmpty) ...[
-          SizedBox(height: 3.h),
-          _buildTrustBadges(config.trustBadges),
-        ],
-
-        if (config.pricing != null) ...[
-          SizedBox(height: 3.h),
-          _buildPricingCard(context, config.pricing!),
-        ],
+        ),
       ],
     );
   }
 
-  // ---------------------------------------------------------------- HERO
+  // Back button, PREMIUM badge, heading and subtitle all overlaid directly
+  // on the hero image — one continuous background, no scrim needed since
+  // the illustration's own light sky area keeps the dark text readable.
+  // The benefits row (see _buildBenefitsRow) floats over its bottom edge.
+  Widget _buildHeroStack(OneOnOneConfig config) {
+    final hero = config.heroVideo;
+    return GestureDetector(
+      onTap: (hero == null || hero.videoUrl.isEmpty)
+          ? null
+          : () => showYoutubeVideoDialog(context, hero.videoUrl),
+      child: SizedBox(
+        width: double.infinity,
+        height: 58.h,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            const _HeroFallback(),
+            SafeArea(
+              bottom: false,
+              child: Column(
+                children: [
+                  _buildTopBar(),
+                  SizedBox(height: 1.5.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 6.w),
+                    child: _buildHeroText(config),
+                  ),
+                ],
+              ),
+            ),
+            if (hero != null && hero.videoUrl.isNotEmpty)
+              const Center(child: _PlayBadge(size: 58, iconSize: 30)),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildHeroText(OneOnOneConfig config) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           config.heading,
+          textAlign: TextAlign.center,
           style: TextStyle(
-            color: Colors.white,
-            fontSize: 21.sp,
-            height: 1.15,
+            color: _C.headingOnLight,
+            fontSize: 20.sp,
+            height: 1.2,
             fontWeight: FontWeight.w900,
           ),
         ),
         if (config.subheading.isNotEmpty) ...[
-          SizedBox(height: 1.h),
-          Text(
-            config.subheading,
-            style: TextStyle(
-              color: _C.body,
-              fontSize: 12.5.sp,
-              height: 1.4,
-              fontWeight: FontWeight.w600,
+          SizedBox(height: 1.4.h),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            decoration: BoxDecoration(
+              color: _C.cardBg,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: _C.cardBorder),
+            ),
+            child: Text(
+              config.subheading,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: _C.gold,
+                fontSize: 13.sp,
+                height: 1.4,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
         ],
@@ -283,33 +407,6 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
   Widget _buildHeroVideo(OneOnOneHeroVideo hero) {
     return Column(
       children: [
-        GestureDetector(
-          onTap: hero.videoUrl.isEmpty
-              ? null
-              : () => showYoutubeVideoDialog(context, hero.videoUrl),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: AspectRatio(
-              aspectRatio: 16 / 10,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  if (hero.thumbnailUrl.isNotEmpty)
-                    CachedNetworkImage(
-                      imageUrl: hero.thumbnailUrl,
-                      fit: BoxFit.cover,
-                      errorWidget: (_, _, _) => const _HeroFallback(),
-                      placeholder: (_, _) => const _HeroFallback(),
-                    )
-                  else
-                    const _HeroFallback(),
-                  if (hero.videoUrl.isNotEmpty)
-                    const Center(child: _PlayBadge(size: 58, iconSize: 30)),
-                ],
-              ),
-            ),
-          ),
-        ),
         if (hero.videoUrl.isNotEmpty && hero.ctaText.isNotEmpty) ...[
           SizedBox(height: 1.5.h),
           GestureDetector(
@@ -318,25 +415,32 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
               width: double.infinity,
               padding: EdgeInsets.symmetric(vertical: 1.6.h),
               decoration: BoxDecoration(
-                color: _C.violet,
+                gradient: const LinearGradient(
+                  colors: [_C.gold, _C.goldDeep],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    hero.ctaText,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12.5.sp,
-                      fontWeight: FontWeight.w800,
+                  Flexible(
+                    child: Text(
+                      hero.ctaText,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: _C.ink,
+                        fontSize: 14.5.sp,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 6),
                   const Icon(
                     Icons.play_circle_fill_rounded,
-                    color: Colors.white,
+                    color: _C.ink,
                     size: 18,
                   ),
                 ],
@@ -348,28 +452,81 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
     );
   }
 
-  // ------------------------------------------------------- WHITE ITEM GRID
-  // Shared by "What You Get" and "Why 1-on-1 Is Unique" — white floating
-  // cards on the dark background, matching the reference design.
-  static const List<Color> _itemColors = [
-    _C.violet,
-    Color(0xFF2563EB),
-    Color(0xFF16A34A),
-    Color(0xFFF59E0B),
-    Color(0xFFE0457B),
-    Color(0xFF0EA5E9),
-  ];
+  // ----------------------------------------------------------- BENEFITS ROW
+  // Light floating card that pokes up over the hero image's bottom edge —
+  // one row, pastel icon circles, dark labels (matches the reference).
+  Widget _buildBenefitsRow(List<OneOnOneItem> items) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: _C.navyDeep.withValues(alpha: 0.18),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          for (var i = 0; i < items.length; i++) ...[
+            if (i > 0) const SizedBox(width: 4),
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: _iconDuos[i % _iconDuos.length].bg,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: FaIcon(
+                        IconMapper.resolve(items[i].icon, fallbackIndex: i),
+                        color: _iconDuos[i % _iconDuos.length].fg,
+                        size: 17,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    items[i].title,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: _C.headingOnLight,
+                      fontSize: 10.sp,
+                      height: 1.15,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
 
+  // ------------------------------------------------------- WHITE ITEM GRID
+  // Shared by "What You Get" and "Why 1-on-1 Is Unique" — raised dark cards
+  // with pastel icon circles.
   Widget _buildWhiteGrid(
     List<OneOnOneItem> items, {
     required int crossAxisCount,
-    required double aspectRatio,
   }) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        color: _C.cardBg,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: _C.cardBorder),
       ),
       child: GridView.builder(
         shrinkWrap: true,
@@ -377,57 +534,45 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
         itemCount: items.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: crossAxisCount,
-          childAspectRatio: aspectRatio,
-          mainAxisSpacing: 6,
-          crossAxisSpacing: 6,
+          childAspectRatio: crossAxisCount == 2 ? 1.7 : 0.95,
+          mainAxisSpacing: 14,
+          crossAxisSpacing: 10,
         ),
         itemBuilder: (_, i) {
           final item = items[i];
-          final color = _itemColors[i % _itemColors.length];
+          final duo = _iconDuos[i % _iconDuos.length];
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 40,
-                height: 40,
+                width: 46,
+                height: 46,
                 decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.circular(12),
+                  color: duo.bg,
+                  shape: BoxShape.circle,
                 ),
                 child: Center(
                   child: FaIcon(
                     IconMapper.resolve(item.icon, fallbackIndex: i),
-                    color: Colors.white,
-                    size: 17,
+                    color: duo.fg,
+                    size: 20,
                   ),
                 ),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 8),
               Text(
                 item.title,
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: _C.cardText,
-                  fontSize: 10.5.sp,
+                  color: _C.textPrimary,
+                  fontSize: 12.sp,
                   height: 1.2,
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              if (item.description.isNotEmpty)
-                Text(
-                  item.description,
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: _C.body,
-                    fontSize: 8.5.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
             ],
           );
         },
@@ -436,69 +581,111 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
   }
 
   // -------------------------------------------------------------- JOURNEY
+  // Premium vertical timeline — a gold gradient number badge per step,
+  // connected by a fading gold line, each step's copy sitting on its own
+  // purple gradient panel (matches the pricing/banner "premium" cards).
   Widget _buildJourneySteps(List<OneOnOneItem> steps) {
     return Column(
       children: [
         for (var i = 0; i < steps.length; i++)
-          Padding(
-            padding: EdgeInsets.only(bottom: i == steps.length - 1 ? 0 : 10),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: _itemColors[i % _itemColors.length],
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: Text(
-                        '${i + 1}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 13,
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  children: [
+                    Container(
+                      width: 38,
+                      height: 38,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [_C.gold, _C.goldDeep],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: _C.gold.withValues(alpha: 0.45),
+                            blurRadius: 10,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: Text(
+                          '0${i + 1}',
+                          style: const TextStyle(
+                            color: _C.ink,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 14,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          steps[i].title,
-                          style: TextStyle(
-                            color: _C.cardText,
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w800,
+                    if (i != steps.length - 1)
+                      Expanded(
+                        child: Container(
+                          width: 2.5,
+                          margin: const EdgeInsets.symmetric(vertical: 4),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                _C.gold.withValues(alpha: 0.6),
+                                _C.gold.withValues(alpha: 0.08),
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                            ),
+                            borderRadius: BorderRadius.circular(2),
                           ),
                         ),
-                        if (steps[i].description.isNotEmpty) ...[
-                          const SizedBox(height: 2),
+                      ),
+                  ],
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      bottom: i == steps.length - 1 ? 0 : 16,
+                    ),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        gradient: _C.panelGradient,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: _C.cardBorder),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Text(
-                            steps[i].description,
+                            steps[i].title,
                             style: TextStyle(
-                              color: _C.body,
-                              fontSize: 10.sp,
-                              height: 1.3,
-                              fontWeight: FontWeight.w500,
+                              color: _C.textPrimary,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w800,
                             ),
                           ),
+                          if (steps[i].description.isNotEmpty) ...[
+                            const SizedBox(height: 4),
+                            Text(
+                              steps[i].description,
+                              style: TextStyle(
+                                color: _C.textMuted,
+                                fontSize: 11.5.sp,
+                                height: 1.3,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
       ],
@@ -512,11 +699,8 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        gradient: const LinearGradient(
-          colors: [_C.violetDeep, _C.violet],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        gradient: _C.panelGradient,
+        border: Border.all(color: _C.cardBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -525,8 +709,8 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
             Text(
               banner.heading,
               style: TextStyle(
-                color: Colors.white,
-                fontSize: 14.sp,
+                color: _C.textPrimary,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.w900,
               ),
             ),
@@ -536,7 +720,7 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
               banner.subheading,
               style: TextStyle(
                 color: _C.gold,
-                fontSize: 13.sp,
+                fontSize: 15.sp,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -544,30 +728,33 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
           if (banner.items.isNotEmpty) ...[
             SizedBox(height: 2.h),
             Row(
-              children: banner.items
-                  .map(
-                    (item) => Expanded(
-                      child: Column(
-                        children: [
-                          Text(
-                            item.icon.isNotEmpty ? item.icon : '⭐',
-                            style: TextStyle(fontSize: 15.sp),
+              children: [
+                for (var i = 0; i < banner.items.length; i++)
+                  Expanded(
+                    child: Column(
+                      children: [
+                        FaIcon(
+                          IconMapper.resolve(
+                            banner.items[i].icon,
+                            fallbackIndex: i,
                           ),
-                          const SizedBox(height: 6),
-                          Text(
-                            item.label,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 9.sp,
-                              fontWeight: FontWeight.w700,
-                            ),
+                          color: _C.gold,
+                          size: 20,
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          banner.items[i].label,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: _C.textPrimary,
+                            fontSize: 10.5.sp,
+                            fontWeight: FontWeight.w700,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  )
-                  .toList(),
+                  ),
+              ],
             ),
           ],
         ],
@@ -600,15 +787,15 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
               children: [
                 const Icon(
                   Icons.check_circle_rounded,
-                  color: _C.green,
+                  color: _C.checkGreen,
                   size: 14,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   b.label,
                   style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 9.5.sp,
+                    color: _C.textMuted,
+                    fontSize: 11.sp,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -627,11 +814,8 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(22),
-        gradient: const LinearGradient(
-          colors: [_C.greenDeep, _C.green],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        gradient: _C.panelGradient,
+        border: Border.all(color: _C.cardBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -639,8 +823,8 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
           Text(
             pricing.heading,
             style: TextStyle(
-              color: Colors.white,
-              fontSize: 15.sp,
+              color: _C.textPrimary,
+              fontSize: 17.sp,
               height: 1.25,
               fontWeight: FontWeight.w900,
             ),
@@ -650,19 +834,19 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
             Text(
               pricing.description,
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.85),
-                fontSize: 11.sp,
+                color: _C.textMuted,
+                fontSize: 12.5.sp,
                 fontWeight: FontWeight.w600,
               ),
             ),
           ],
-          SizedBox(height: 1.8.h),
+          SizedBox(height: 1.6.h),
           if (pricing.priceNote.isNotEmpty)
             Text(
               pricing.priceNote,
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.8),
-                fontSize: 10.sp,
+                color: _C.textMuted,
+                fontSize: 11.5.sp,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -674,8 +858,8 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
                   pricing.discountedPrice,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 26.sp,
+                    color: _C.gold,
+                    fontSize: 30.sp,
                     height: 1,
                     fontWeight: FontWeight.w900,
                   ),
@@ -689,11 +873,11 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
                     pricing.originalPrice,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.6),
-                      fontSize: 14.sp,
+                      color: _C.originalPrice,
+                      fontSize: 15.sp,
                       fontWeight: FontWeight.w700,
                       decoration: TextDecoration.lineThrough,
-                      decorationColor: Colors.white70,
+                      decorationColor: _C.originalPrice,
                     ),
                   ),
                 ),
@@ -701,12 +885,23 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
             ],
           ),
           SizedBox(height: 1.8.h),
-          SizedBox(
+          Container(
             width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              boxShadow: [
+                BoxShadow(
+                  color: _C.gold.withValues(alpha: 0.5),
+                  blurRadius: 18,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: _C.gold,
                 foregroundColor: _C.ink,
+                elevation: 0,
                 padding: EdgeInsets.symmetric(vertical: 1.7.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
@@ -720,7 +915,7 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
                     child: Text(
                       pricing.ctaText,
                       style: TextStyle(
-                        fontSize: 13.sp,
+                        fontSize: 15.sp,
                         fontWeight: FontWeight.w900,
                       ),
                     ),
@@ -738,8 +933,8 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
                 urgency,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 10.5.sp,
+                  color: _C.urgency,
+                  fontSize: 12.sp,
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -752,8 +947,8 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
                 pricing.disclaimerText,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.55),
-                  fontSize: 8.5.sp,
+                  color: _C.textMuted,
+                  fontSize: 10.sp,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -773,11 +968,12 @@ class _SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
+      textAlign: TextAlign.center,
       style: TextStyle(
-        color: _C.gold,
-        fontSize: 11.sp,
+        color: _C.headingOnLight,
+        fontSize: 12.5.sp,
         fontWeight: FontWeight.w900,
-        letterSpacing: 1.1,
+        letterSpacing: 0.8,
       ),
     );
   }
@@ -796,26 +992,27 @@ class _PlayBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.92),
         shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.25),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Icon(Icons.play_arrow_rounded, color: _C.ink, size: iconSize),
     );
   }
 }
 
+/// Shown whenever the admin hasn't set a video/experience thumbnail — the
+/// bundled handshake hero art instead of a plain gradient block.
 class _HeroFallback extends StatelessWidget {
   const _HeroFallback();
 
   @override
   Widget build(BuildContext context) {
-    return const DecoratedBox(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [_C.bgDeep, _C.violetDeep],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
-    );
+    return Image.asset('assets/one_on_one_hero.png', fit: BoxFit.cover);
   }
 }
 
@@ -848,7 +1045,7 @@ class _VideoTile extends StatelessWidget {
               const DecoratedBox(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Colors.transparent, Colors.black87],
+                    colors: [Colors.transparent, Colors.black54],
                     begin: Alignment.center,
                     end: Alignment.bottomCenter,
                   ),
@@ -866,7 +1063,7 @@ class _VideoTile extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 9.5.sp,
+                      fontSize: 11.sp,
                       height: 1.2,
                       fontWeight: FontWeight.w800,
                     ),

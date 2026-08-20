@@ -147,24 +147,23 @@ class PremiumStat {
   );
 }
 
+/// A teacher photo card. `imageUrl` and `name` are each independently
+/// optional — a card can have just an image, just a name, or both.
 class PremiumInstructor {
   final String id;
-  final String videoUrl;
-  final String thumbnailUrl;
+  final String imageUrl;
   final String name;
 
   const PremiumInstructor({
     required this.id,
-    required this.videoUrl,
-    required this.thumbnailUrl,
+    required this.imageUrl,
     required this.name,
   });
 
   factory PremiumInstructor.fromJson(Map<String, dynamic> json) =>
       PremiumInstructor(
         id: json['id']?.toString() ?? '',
-        videoUrl: json['videoUrl']?.toString() ?? '',
-        thumbnailUrl: json['thumbnailUrl']?.toString() ?? '',
+        imageUrl: json['imageUrl']?.toString() ?? '',
         name: json['name']?.toString() ?? '',
       );
 }
@@ -275,6 +274,26 @@ class PremiumPricing {
     discountedPrice: json['discountedPrice']?.toString() ?? '',
     priceNote: json['priceNote']?.toString() ?? '',
   );
+
+  /// Parses the leading digits out of a display price like "₹999" or
+  /// "2,999/-"; returns null when it isn't a plain number underneath.
+  static num? _numeric(String raw) {
+    final digits = raw.replaceAll(RegExp(r'[^0-9.]'), '');
+    return digits.isEmpty ? null : num.tryParse(digits);
+  }
+
+  /// "You save ₹2,000 (67% OFF)" line, computed from the two price strings.
+  /// Null when either price isn't parseable as a plain number.
+  String? get savingsLabel {
+    final original = _numeric(originalPrice);
+    final discounted = _numeric(discountedPrice);
+    if (original == null || discounted == null || original <= discounted) {
+      return null;
+    }
+    final saved = original - discounted;
+    final percent = ((saved / original) * 100).round();
+    return "You Save ₹${saved.toStringAsFixed(0)} ($percent% OFF)";
+  }
 }
 
 /// Fixed banner slots in the premium page layout.
