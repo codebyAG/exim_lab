@@ -26,7 +26,7 @@ class DashboardModernHeader extends StatelessWidget {
 
           // 2. MAIN CONTENT
           Padding(
-            padding: const EdgeInsets.fromLTRB(18, 8, 18, 8),
+            padding: const EdgeInsets.fromLTRB(16, 6, 16, 6),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -38,14 +38,14 @@ class DashboardModernHeader extends StatelessWidget {
                     Row(
                       children: [
                         _buildGlobeBox(),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 8),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               "START UP INDIA",
                               style: TextStyle(
-                                fontSize: 6.sp,
+                                fontSize: 5.5.sp,
                                 fontWeight: FontWeight.w700,
                                 color: Colors.white.withValues(alpha: 0.6),
                                 letterSpacing: 1.5,
@@ -55,7 +55,7 @@ class DashboardModernHeader extends StatelessWidget {
                             RichText(
                               text: TextSpan(
                                 style: TextStyle(
-                                  fontSize: 13.sp,
+                                  fontSize: 11.5.sp,
                                   fontWeight: FontWeight.w900,
                                   letterSpacing: -0.5,
                                   height: 1.1,
@@ -73,40 +73,11 @@ class DashboardModernHeader extends StatelessWidget {
                             Text(
                               "ACADEMY",
                               style: TextStyle(
-                                fontSize: 10.5.sp,
+                                fontSize: 9.sp,
                                 fontWeight: FontWeight.w800,
                                 color: Colors.white,
                                 letterSpacing: 0.2,
                                 height: 1,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            // 45 YEARS TAG
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFC8151B),
-                                borderRadius: BorderRadius.circular(5),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color(
-                                      0xFFC8151B,
-                                    ).withValues(alpha: 0.5),
-                                    blurRadius: 10,
-                                  ),
-                                ],
-                              ),
-                              child: Text(
-                                "50+ YEARS OF EXPERIENCE",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 6.5.sp,
-                                  fontWeight: FontWeight.w900,
-                                  letterSpacing: 0.8,
-                                ),
                               ),
                             ),
                           ],
@@ -120,7 +91,7 @@ class DashboardModernHeader extends StatelessWidget {
                   ],
                 ),
 
-                SizedBox(height: 0.6.h),
+                SizedBox(height: 0.4.h),
 
                 // --- WELCOME & SHIP ROW ---
                 Row(
@@ -128,7 +99,7 @@ class DashboardModernHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 4),
+                      padding: const EdgeInsets.only(bottom: 2),
                       child: Consumer<AuthProvider>(
                         builder: (context, auth, _) {
                           final name = (auth.user?.name ?? "Explorer")
@@ -142,12 +113,10 @@ class DashboardModernHeader extends StatelessWidget {
                                 "Welcome back,",
                                 style: TextStyle(
                                   color: Colors.white.withValues(alpha: 0.65),
-                                  fontSize: 12.sp,
+                                  fontSize: 10.5.sp,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              SizedBox(height: 0.2.h),
-
                               SizedBox(
                                 width: 50.w,
                                 child: FittedBox(
@@ -157,7 +126,7 @@ class DashboardModernHeader extends StatelessWidget {
                                     name,
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 19.sp,
+                                      fontSize: 16.sp,
                                       fontWeight: FontWeight.w900,
                                       letterSpacing: -1.2,
                                       height: 1,
@@ -180,8 +149,8 @@ class DashboardModernHeader extends StatelessWidget {
                     ),
                     // 🚢 SHIP ILLUSTRATION (Custom Painter)
                     SizedBox(
-                      width: 24.w,
-                      height: 6.5.h,
+                      width: 20.w,
+                      height: 5.h,
                       child: CustomPaint(painter: ShipIllustrationPainter()),
                     ),
                   ],
@@ -196,11 +165,11 @@ class DashboardModernHeader extends StatelessWidget {
 
   Widget _buildGlobeBox() {
     return Container(
-      width: 48,
-      height: 48,
+      width: 40,
+      height: 40,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: Colors.white.withValues(alpha: 0.3),
           width: 2,
@@ -208,13 +177,13 @@ class DashboardModernHeader extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: const Color(0xFF1E5FFF).withValues(alpha: 0.3),
-            blurRadius: 24,
+            blurRadius: 20,
           ),
         ],
       ),
       child: Center(
         child: CustomPaint(
-          size: const Size(40, 40),
+          size: const Size(32, 32),
           painter: GlobeIconPainter(),
         ),
       ),
@@ -290,13 +259,13 @@ class HeaderActionButtons extends StatelessWidget {
   Widget _buildActionBtn(IconData icon, [VoidCallback? onTap]) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(11),
+      borderRadius: BorderRadius.circular(10),
       child: Container(
-        width: 36,
-        height: 36,
+        width: 32,
+        height: 32,
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(11),
+          borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: Colors.white.withValues(alpha: 0.18),
             width: 1,
@@ -309,7 +278,7 @@ class HeaderActionButtons extends StatelessWidget {
             ),
           ],
         ),
-        child: Icon(icon, color: Colors.white, size: 19),
+        child: Icon(icon, color: Colors.white, size: 17),
       ),
     );
   }

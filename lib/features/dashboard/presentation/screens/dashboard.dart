@@ -47,6 +47,7 @@ import 'package:exim_lab/features/tools/presentation/screens/all_tools_screen.da
 import 'package:exim_lab/features/journey/presentation/screens/import_journey_screen.dart';
 import 'package:exim_lab/features/journey/presentation/screens/export_journey_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show SystemNavigator;
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_shimmer.dart';
@@ -458,64 +459,111 @@ class _DashboardBodyState extends State<_DashboardBody> {
     // Build Navigation schema
     final navConfig = _buildNavigationConfig(context, t, moduleProvider);
 
-    return Scaffold(
-      backgroundColor: const Color(0xFF020C28),
-      body: PageView(
-        controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(), // Managed via BottomBar
-        onPageChanged: (index) => setState(() => _currentIndex = index),
-        children: navConfig.schema.map((item) {
-          switch (item.identifier) {
-            case 'home':
-              return _buildHomeBody(t, theme, cs, moduleProvider);
-            case 'shorts':
-              return const ShortsFeedScreen(showBackButton: false);
-            case 'courses':
-              return const CoursesListScreen();
-            case 'news':
-              return const NewsListScreen(showBackButton: false);
-            case 'community':
-              return const CommunityChatScreen(showBackButton: false);
-            case 'premium':
-              return const PremiumFeaturesScreen(showBackButton: false);
-            case 'profile':
-              return const ProfileScreen(showBackButton: false);
-            default:
-              return const SizedBox();
-          }
-        }).toList(),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) =>
+          _handleBackPress(context, didPop),
+      child: Scaffold(
+        backgroundColor: const Color(0xFF020C28),
+        body: PageView(
+          controller: _pageController,
+          physics:
+              const NeverScrollableScrollPhysics(), // Managed via BottomBar
+          onPageChanged: (index) => setState(() => _currentIndex = index),
+          children: navConfig.schema.map((item) {
+            switch (item.identifier) {
+              case 'home':
+                return _buildHomeBody(t, theme, cs, moduleProvider);
+              case 'shorts':
+                return const ShortsFeedScreen(showBackButton: false);
+              case 'courses':
+                return const CoursesListScreen();
+              case 'news':
+                return const NewsListScreen(showBackButton: false);
+              case 'community':
+                return const CommunityChatScreen(showBackButton: false);
+              case 'premium':
+                return const PremiumFeaturesScreen(showBackButton: false);
+              case 'profile':
+                return const ProfileScreen(showBackButton: false);
+              default:
+                return const SizedBox();
+            }
+          }).toList(),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: navConfig.items,
+          currentIndex: _currentIndex,
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: const Color(0xFF030E30),
+          selectedItemColor: const Color(0xFFFFD000),
+          unselectedItemColor: Colors.white54,
+          // Compact so six tabs fit without crowding.
+          iconSize: 21,
+          selectedFontSize: 10,
+          unselectedFontSize: 9,
+          onTap: (index) => _handleNavigationTap(index, navConfig),
+        ),
+        floatingActionButton: moduleProvider.isEnabled('aiChat')
+            ? FloatingActionButton(
+                backgroundColor: cs.primary,
+                tooltip: t.translate('ai_support'),
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                onPressed: () => _handlePremiumGatedTap(
+                  context: context,
+                  sectionName: 'Floating Action: AI Support',
+                  action: () =>
+                      AppNavigator.push(context, const AssistantScreen()),
+                ),
+                child: Icon(
+                  Icons.support_agent,
+                  color: cs.onPrimary,
+                  size: 28,
+                ),
+              )
+            : null,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: navConfig.items,
-        currentIndex: _currentIndex,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: const Color(0xFF030E30),
-        selectedItemColor: const Color(0xFFFFD000),
-        unselectedItemColor: Colors.white54,
-        // Compact so six tabs fit without crowding.
-        iconSize: 21,
-        selectedFontSize: 10,
-        unselectedFontSize: 9,
-        onTap: (index) => _handleNavigationTap(index, navConfig),
-      ),
-      floatingActionButton: moduleProvider.isEnabled('aiChat')
-          ? FloatingActionButton(
-              backgroundColor: cs.primary,
-              tooltip: t.translate('ai_support'),
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              onPressed: () => _handlePremiumGatedTap(
-                context: context,
-                sectionName: 'Floating Action: AI Support',
-                action: () =>
-                    AppNavigator.push(context, const AssistantScreen()),
-              ),
-              child: Icon(Icons.support_agent, color: cs.onPrimary, size: 28),
-            )
-          : null,
     );
+  }
+
+  // Back navigates tabs → home first, then asks for exit confirmation only
+  // once already on the home tab — mirrors the platform "press back again
+  // to exit" pattern instead of closing the app on the very first press.
+  Future<void> _handleBackPress(BuildContext context, bool didPop) async {
+    if (didPop) return;
+    if (_currentIndex != 0) {
+      _pageController.animateToPage(
+        0,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOutQuart,
+      );
+      setState(() => _currentIndex = 0);
+      return;
+    }
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text('Exit App?'),
+        content: const Text('Are you sure you want to exit the app?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Exit'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true) {
+      SystemNavigator.pop();
+    }
   }
 
   Widget _buildHomeBody(

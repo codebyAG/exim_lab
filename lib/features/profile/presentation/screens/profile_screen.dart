@@ -460,28 +460,100 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _handleLogout(BuildContext context) {
     final t = AppLocalizations.of(context);
+    final cs = Theme.of(context).colorScheme;
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(t.translate('logout_confirm_title')),
-        content: Text(t.translate('logout_confirm_msg')),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(t.translate('cancel')),
+      builder: (ctx) => Dialog(
+        backgroundColor: cs.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: cs.error.withValues(alpha: 0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.logout_rounded, color: cs.error, size: 28),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                t.translate('logout_confirm_title'),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
+                  color: cs.onSurface,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                t.translate('logout_confirm_msg'),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: cs.onSurface.withValues(alpha: 0.65),
+                  height: 1.35,
+                ),
+              ),
+              const SizedBox(height: 22),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: cs.onSurface,
+                        side: BorderSide(
+                          color: cs.onSurface.withValues(alpha: 0.2),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 13),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                      child: Text(
+                        t.translate('cancel'),
+                        style: const TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        Navigator.pop(ctx);
+                        await context.read<AuthProvider>().logout();
+                        if (context.mounted) {
+                          AppNavigator.clearAndGo(
+                            context,
+                            const WelcomeScreen(),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: cs.error,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(vertical: 13),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                      child: Text(
+                        t.translate('menu_logout'),
+                        style: const TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(ctx);
-              await context.read<AuthProvider>().logout();
-              if (context.mounted) {
-                AppNavigator.clearAndGo(context, const WelcomeScreen());
-              }
-            },
-            child: Text(t.translate('menu_logout'),
-                style: const TextStyle(color: Colors.red)),
-          ),
-        ],
+        ),
       ),
     );
   }
