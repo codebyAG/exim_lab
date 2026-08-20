@@ -192,7 +192,10 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
   }
 
   Widget _buildPlaceholder(OneOnOneProvider provider) {
-    if (provider.isLoading) {
+    // Also covers the first frame, before initState's deferred load() call
+    // has actually fired — isLoading is still false then, but there's no
+    // error yet either, so it isn't the "couldn't load" case.
+    if (provider.isLoading || provider.error == null) {
       return const Center(child: CircularProgressIndicator(color: _C.gold));
     }
     return Center(
