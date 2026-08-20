@@ -69,7 +69,7 @@ class FreeVideoCard extends StatelessWidget {
                   ),
                   child: Center(
                     child: CustomPaint(
-                      size: Size(160 * 0.4, 90 * 0.4), // Scale down based on reference
+                      size: Size(160 * 0.7, 90 * 0.7), // Bigger, clearly tappable
                       painter: VideoPlayPainter(),
                     ),
                   ),
@@ -79,7 +79,7 @@ class FreeVideoCard extends StatelessWidget {
                   top: 1.5.h,
                   left: 3.w,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.6.h),
+                    padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.8.h),
                     decoration: BoxDecoration(
                       color: const Color(0xFF1ED760), // Spotify-ish Vibrant Green
                       borderRadius: BorderRadius.circular(8),
@@ -94,7 +94,7 @@ class FreeVideoCard extends StatelessWidget {
                       "FREE",
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 9.sp,
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.w900,
                       ),
                     ),
@@ -105,20 +105,20 @@ class FreeVideoCard extends StatelessWidget {
                   bottom: 1.5.h,
                   right: 3.w,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.6.h),
+                    padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.8.h),
                     decoration: BoxDecoration(
                       color: Colors.black.withValues(alpha: 0.7),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.timer_outlined, size: 10.sp, color: Colors.white70),
+                        Icon(Icons.timer_outlined, size: 13.sp, color: Colors.white70),
                         SizedBox(width: 1.w),
                         Text(
                           _formatDuration(durationSeconds),
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 9.sp,
+                            fontSize: 11.sp,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
@@ -140,7 +140,7 @@ class FreeVideoCard extends StatelessWidget {
                     style: TextStyle(
                       color: Colors.white,
                       fontFamily: 'Plus Jakarta Sans',
-                      fontSize: 12.5.sp,
+                      fontSize: 14.5.sp,
                       fontWeight: FontWeight.w800,
                       height: 1.3,
                     ),
@@ -150,13 +150,13 @@ class FreeVideoCard extends StatelessWidget {
                   SizedBox(height: 1.2.h),
                   Row(
                     children: [
-                      Icon(Icons.remove_red_eye_outlined, size: 11.sp, color: Colors.white54),
+                      Icon(Icons.remove_red_eye_outlined, size: 13.sp, color: Colors.white54),
                       SizedBox(width: 1.5.w),
                       Text(
                         "$views · $timeAgo",
                         style: TextStyle(
                           color: Colors.white54,
-                          fontSize: 10.sp,
+                          fontSize: 12.sp,
                           fontWeight: FontWeight.w600,
                         ),
                       ),

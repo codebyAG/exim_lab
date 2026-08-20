@@ -8,9 +8,6 @@ class FreePdfPromoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
-
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
       child: Container(
@@ -18,7 +15,7 @@ class FreePdfPromoCard extends StatelessWidget {
           color: const Color(0xFF030E30), // Deep Premium Navy
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: Colors.white.withValues(alpha: 0.1),
+            color: const Color(0xFFFFD000).withValues(alpha: 0.22),
             width: 1.2,
           ),
           boxShadow: [
@@ -31,116 +28,182 @@ class FreePdfPromoCard extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(24),
-          child: Stack(
-            children: [
-              // 🌊 DECORATIVE ELEMENTS
-              Positioned(
-                right: -10.w,
-                bottom: -5.h,
-                child: Opacity(
-                  opacity: 0.1,
-                  child: Icon(Icons.menu_book_rounded, size: 200, color: cs.primary),
-                ),
-              ),
-
-              // 📦 CONTENT
-              InkWell(
-                onTap: () => _showPdfSelectionDialog(context),
-                child: Padding(
-                  padding: EdgeInsets.all(5.w),
-                  child: Row(
-                    children: [
-                      // 🎨 ARTISTIC ICON
-                      Container(
-                        width: 50.sp,
-                        height: 50.sp,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white.withValues(alpha: 0.05),
-                          border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-                        ),
-                        child: Center(
-                          child: SizedBox(
-                            width: 35.sp,
-                            height: 35.sp,
-                            child: CustomPaint(painter: GuideBookPainter()),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 5.w),
-
-                      // 📝 TEXT INFO
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Free Import Export Guide",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w900,
-                                fontSize: 18,
-                                color: Colors.white,
-                                letterSpacing: -0.5,
-                                fontFamily: 'Plus Jakarta Sans',
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              "Complete beginner guide to start your global business journey",
-                              style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.7),
-                                fontSize: 13,
-                                height: 1.3,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            SizedBox(height: 1.5.h),
-
-                            // 🔘 GLASS CTA BUTTON
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 5.w,
-                                vertical: 1.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: Colors.white.withValues(alpha: 0.2),
+          child: InkWell(
+            onTap: () => _showPdfSelectionDialog(context),
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // 📝 LEFT — CONTENT
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(5.w, 4.w, 4.w, 4.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 3,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: const Color(
+                                    0xFFFFD000,
+                                  ).withValues(alpha: 0.16),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: const Text(
+                                  "FREE",
+                                  style: TextStyle(
+                                    color: Color(0xFFFFD000),
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: 0.6,
+                                  ),
                                 ),
                               ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(
-                                    Icons.file_download_outlined,
-                                    color: Colors.white,
-                                    size: 18,
-                                  ),
-                                  SizedBox(width: 2.w),
-                                  Flexible(
-                                    child: Text(
-                                      "Download Guide >",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 13,
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
+                              const SizedBox(width: 6),
+                              Text(
+                                "2 Volumes",
+                                style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.45),
+                                  fontSize: 10.5,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            "Import Export\nStarter Guide",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 17,
+                              color: Colors.white,
+                              letterSpacing: -0.4,
+                              height: 1.15,
+                              fontFamily: 'Plus Jakarta Sans',
                             ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            "Start your global business journey",
+                            style: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.6),
+                              fontSize: 11.5,
+                              height: 1.3,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(height: 1.8.h),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 14,
+                                  vertical: 9,
+                                ),
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      Color(0xFFFFD000),
+                                      Color(0xFFCC9E00),
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color(
+                                        0xFFFFD000,
+                                      ).withValues(alpha: 0.35),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 5),
+                                    ),
+                                  ],
+                                ),
+                                child: const Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.file_download_outlined,
+                                      color: Color(0xFF200058),
+                                      size: 16,
+                                    ),
+                                    SizedBox(width: 6),
+                                    Text(
+                                      "Download",
+                                      style: TextStyle(
+                                        color: Color(0xFF200058),
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 12.5,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+
+                  // 🎨 RIGHT — GOLD GRAPHIC PANEL
+                  Container(
+                    width: 28.w,
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Color(0xFFFFD000), Color(0xFFB8860B)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Positioned(
+                          top: -14,
+                          right: -14,
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white.withValues(alpha: 0.12),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: -18,
+                          left: -18,
+                          child: Container(
+                            width: 70,
+                            height: 70,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: const Color(
+                                0xFF200058,
+                              ).withValues(alpha: 0.14),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: CustomPaint(painter: GuideBookPainter()),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

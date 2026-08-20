@@ -40,7 +40,7 @@ class ToolsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
     return SizedBox(
-      height: 20.h, // Adjusted to fit the new card height
+      height: 25.h, // Adjusted to fit the new card height
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),

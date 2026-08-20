@@ -461,8 +461,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
 
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, _) =>
-          _handleBackPress(context, didPop),
+      onPopInvokedWithResult: (didPop, _) => _handleBackPress(context, didPop),
       child: Scaffold(
         backgroundColor: const Color(0xFF020C28),
         body: PageView(
@@ -518,11 +517,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
                   action: () =>
                       AppNavigator.push(context, const AssistantScreen()),
                 ),
-                child: Icon(
-                  Icons.support_agent,
-                  color: cs.onPrimary,
-                  size: 28,
-                ),
+                child: Icon(Icons.support_agent, color: cs.onPrimary, size: 28),
               )
             : null,
       ),

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
+const _gold = Color(0xFFFFD000);
+const _goldDeep = Color(0xFFCC9E00);
+const _cardBg = Color(0xFF030E30);
+
 class PremiumActionCard extends StatelessWidget {
   final IconData? icon;
   final CustomPainter? painter;
@@ -23,183 +27,105 @@ class PremiumActionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(22),
       child: Container(
-        width: 15.h,
-        height: 15.h,
+        width: 17.h,
+        height: 17.h,
         margin: EdgeInsets.only(right: 4.w),
+        padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: const Color(0xFF030E30), // Matching Deep Navy
-          borderRadius: BorderRadius.circular(24),
+          color: _cardBg,
+          borderRadius: BorderRadius.circular(22),
           border: Border.all(
-            color: Colors.white.withValues(alpha: 0.1),
+            color: isLocked
+                ? Colors.white.withValues(alpha: 0.1)
+                : _gold.withValues(alpha: 0.22),
             width: 1.2,
           ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.25),
-              blurRadius: 15,
+              blurRadius: 16,
               offset: const Offset(0, 8),
             ),
           ],
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
-          child: Stack(
-            children: [
-              // 🌊 BOTTOM ACCENT WAVE
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                height: 10.h,
-                child: CustomPaint(painter: _CardWavePainter(color: color)),
-              ),
-
-              // 📦 DYNAMIC CONTENT COLUMN
-              Padding(
-                padding: EdgeInsets.fromLTRB(3.w, 1.5.h, 3.w, 1.h),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // 📝 TITLE
-                    Text(
-                      label,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14.sp,
-                        fontFamily: 'Plus Jakarta Sans',
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-
-                    // 🎨 ICON AREA
-                    Expanded(
-                      child: Center(
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Container(
-                              width: 15.sp,
-                              height: 15.sp,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: color.withValues(alpha: 0.2),
-                                    blurRadius: 20,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            if (painter != null)
-                              SizedBox(
-                                width: 35.sp,
-                                height: 35.sp,
-                                child: CustomPaint(painter: painter),
-                              )
-                            else if (icon != null)
-                              Icon(
-                                icon,
-                                size: 26.sp,
-                                color: color.withValues(alpha: 0.95),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    // 🔘 ACTION PILL
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 4.w,
-                        vertical: 0.7.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.15),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Flexible(
-                            child: Text(
-                              "Start >",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w800,
-                                fontSize: 11.sp,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // 🔒 LOCK OVERLAY
-              if (isLocked)
-                Positioned.fill(
-                  child: Container(
-                    color: Colors.black.withValues(alpha: 0.4),
-                    child: const Center(
-                      child: Icon(
-                        Icons.lock_rounded,
-                        color: Colors.white,
-                        size: 24,
-                      ),
-                    ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.18),
+                    shape: BoxShape.circle,
+                    border: Border.all(color: color.withValues(alpha: 0.35)),
+                  ),
+                  child: Center(
+                    child: painter != null
+                        ? SizedBox(
+                            width: 27,
+                            height: 27,
+                            child: CustomPaint(painter: painter),
+                          )
+                        : icon != null
+                        ? Icon(icon, size: 25, color: color)
+                        : null,
                   ),
                 ),
-            ],
-          ),
+                const Spacer(),
+                if (isLocked)
+                  Icon(
+                    Icons.lock_rounded,
+                    color: Colors.white.withValues(alpha: 0.4),
+                    size: 19,
+                  ),
+              ],
+            ),
+            const Spacer(),
+            Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
+                fontSize: 15.sp,
+                fontFamily: 'Plus Jakarta Sans',
+              ),
+            ),
+            SizedBox(height: 0.8.h),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              decoration: BoxDecoration(
+                gradient: isLocked
+                    ? null
+                    : const LinearGradient(
+                        colors: [_gold, _goldDeep],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                color: isLocked ? Colors.white.withValues(alpha: 0.08) : null,
+                borderRadius: BorderRadius.circular(13),
+              ),
+              child: Text(
+                isLocked ? "Locked" : "Start >",
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: isLocked ? Colors.white70 : const Color(0xFF200058),
+                  fontWeight: FontWeight.w800,
+                  fontSize: 12.sp,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
-}
-
-class _CardWavePainter extends CustomPainter {
-  final Color color;
-  _CardWavePainter({required this.color});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color.withValues(alpha: 0.4)
-      ..style = PaintingStyle.fill;
-
-    final path = Path();
-    path.moveTo(0, size.height * 0.4);
-    path.quadraticBezierTo(
-      size.width * 0.25,
-      size.height * 0.1,
-      size.width * 0.5,
-      size.height * 0.5,
-    );
-    path.quadraticBezierTo(
-      size.width * 0.75,
-      size.height * 0.9,
-      size.width,
-      size.height * 0.4,
-    );
-    path.lineTo(size.width, size.height);
-    path.lineTo(0, size.height);
-    path.close();
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

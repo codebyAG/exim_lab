@@ -87,7 +87,7 @@ class PremiumShortVideoCard extends StatelessWidget {
                   // Centered Play
                   Center(
                     child: CustomPaint(
-                      size: Size(32, 32),
+                      size: const Size(60, 60),
                       painter: ShortsPlayPainter(),
                     ),
                   ),
@@ -96,20 +96,20 @@ class PremiumShortVideoCard extends StatelessWidget {
                     top: 1.2.h,
                     left: 2.w,
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.4.h),
+                      padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.6.h),
                       decoration: BoxDecoration(
                         color: Colors.black.withValues(alpha: 0.4),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.remove_red_eye_rounded, size: 9.sp, color: Colors.white),
+                          Icon(Icons.remove_red_eye_rounded, size: 12.sp, color: Colors.white),
                           SizedBox(width: 1.w),
                           Text(
                             _formatViews(viewCount),
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 8.sp,
+                              fontSize: 11.sp,
                               fontWeight: FontWeight.w800,
                             ),
                           ),
@@ -122,7 +122,7 @@ class PremiumShortVideoCard extends StatelessWidget {
                     bottom: 1.2.h,
                     right: 2.w,
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.4.h),
+                      padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.6.h),
                       decoration: BoxDecoration(
                         color: Colors.black.withValues(alpha: 0.6),
                         borderRadius: BorderRadius.circular(6),
@@ -131,7 +131,7 @@ class PremiumShortVideoCard extends StatelessWidget {
                         _formatDuration(durationSeconds),
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 8.sp,
+                          fontSize: 11.sp,
                           fontWeight: FontWeight.w900,
                         ),
                       ),
@@ -146,7 +146,7 @@ class PremiumShortVideoCard extends StatelessWidget {
               title,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 10.sp,
+                fontSize: 12.5.sp,
                 fontWeight: FontWeight.w700,
                 height: 1.2,
               ),
