@@ -23,7 +23,18 @@
       "Bash(curl -s -m 10 \"http://52.35.230.229:3006/api/dashboard/banners\" -w \"\\\\nHTTP_STATUS:%{http_code}\\\\n\")",
       "Bash(curl -s -m 10 \"http://52.35.230.229:3006/api/dashboard/banners\" -H \"Accept: application/json\" -w \"\\\\nHTTP_STATUS:%{http_code}\\\\n\")",
       "Bash(curl -s -m 10 \"http://52.35.230.229:3006/api/dashboard/banners\" -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTcyOGM2OGM5NmI0MTE0YjE1YzkwZmYiLCJyb2xlIjoiVVNFUiIsIm9yZ2FuaXphdGlvbklkIjoiNjk3MjE4NGU0MjRlYTQ3NjFmZmY2NjU1IiwiaWF0IjoxNzg3MTQzMTQ1LCJleHAiOjE3ODk3MzUxNDV9.q4K3W61g7dFCDdi7bul_e8tvapZ6PiZNou4sUFdyt9E\" -w \"\\\\nHTTP_STATUS:%{http_code}\\\\n\")",
-      "Bash(curl -s -m 10 \"http://52.35.230.229:3006/api/dashboard/sections\" -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTcyOGM2OGM5NmI0MTE0YjE1YzkwZmYiLCJyb2xlIjoiVVNFUiIsIm9yZ2FuaXphdGlvbklkIjoiNjk3MjE4NGU0MjRlYTQ3NjFmZmY2NjU1IiwiaWF0IjoxNzg3MTQzMTQ1LCJleHAiOjE3ODk3MzUxNDV9.q4K3W61g7dFCDdi7bul_e8tvapZ6PiZNou4sUFdyt9E\" -w \"\\\\nHTTP_STATUS:%{http_code}\\\\n\")"
+      "Bash(curl -s -m 10 \"http://52.35.230.229:3006/api/dashboard/sections\" -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTcyOGM2OGM5NmI0MTE0YjE1YzkwZmYiLCJyb2xlIjoiVVNFUiIsIm9yZ2FuaXphdGlvbklkIjoiNjk3MjE4NGU0MjRlYTQ3NjFmZmY2NjU1IiwiaWF0IjoxNzg3MTQzMTQ1LCJleHAiOjE3ODk3MzUxNDV9.q4K3W61g7dFCDdi7bul_e8tvapZ6PiZNou4sUFdyt9E\" -w \"\\\\nHTTP_STATUS:%{http_code}\\\\n\")",
+      "Bash(curl -s -o /dev/null -w \"HTTP:%{http_code} TYPE:%{content_type} SIZE:%{size_download}\\\\n\" -m 10 \"https://i.ibb.co/fdKWTNN1/Webinar.png\")",
+      "Bash(curl -s -o /dev/null -w \"HTTP:%{http_code} TYPE:%{content_type} SIZE:%{size_download}\\\\n\" -m 10 \"https://amertranslogistics.com/wp-content/uploads/2022/06/Import-Logistics.jpeg\")",
+      "Bash(curl -s -o /dev/null -w \"HTTP:%{http_code} TYPE:%{content_type} SIZE:%{size_download}\\\\n\" -m 10 \"https://amertranslogistics.com/wp-content/uploads/2022/06/Import-Export-Logistics.jpeg\")",
+      "Read(//c/tmp/**)",
+      "Bash(curl -s -o webinar.png -m 10 \"https://i.ibb.co/fdKWTNN1/Webinar.png\")",
+      "Bash(python3 -c ' *)",
+      "Bash(command -v identify)",
+      "Bash(identify webinar.png)",
+      "Bash(curl -s -o /dev/null -w \"HTTP:%{http_code} TYPE:%{content_type} SIZE:%{size_download}\\\\n\" -m 10 \"https://ibb.co/k2fDwW0Q\")",
+      "Bash(curl -s -o /dev/null -w \"HTTP:%{http_code} TYPE:%{content_type} SIZE:%{size_download}\\\\n\" -m 10 \"https://i.ibb.co/m5gQjZsH/banner2.png\")",
+      "Bash(curl -s -o /dev/null -w \"HTTP:%{http_code} TYPE:%{content_type} SIZE:%{size_download}\\\\n\" -m 10 \"https://i.ibb.co/rKpD44zf/banner1.png\")"
     ]
   }
 }

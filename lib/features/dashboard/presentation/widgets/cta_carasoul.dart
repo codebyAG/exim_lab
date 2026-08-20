@@ -95,46 +95,53 @@ class CtaCarouselState extends State<CtaCarousel> {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(22),
-                      child: CachedNetworkImage(
-                        imageUrl: banner.imageUrl,
-                        fit: BoxFit.cover,
+                      child: Container(
                         width: double.infinity,
                         height: double.infinity,
-                        placeholder: (context, url) => Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                cs.primary.withValues(alpha: 0.1),
-                                cs.secondary.withValues(alpha: 0.1),
-                              ],
+                        // Solid backdrop shows behind the letterboxed edges
+                        // once the image is fit fully inside (no cropping).
+                        color: const Color(0xFF030E30),
+                        child: CachedNetworkImage(
+                          imageUrl: banner.imageUrl,
+                          fit: BoxFit.contain,
+                          width: double.infinity,
+                          height: double.infinity,
+                          placeholder: (context, url) => Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  cs.primary.withValues(alpha: 0.1),
+                                  cs.secondary.withValues(alpha: 0.1),
+                                ],
+                              ),
+                            ),
+                            child: Center(
+                              child: Icon(
+                                Icons.image_rounded,
+                                size: 40,
+                                color: cs.primary.withValues(alpha: 0.3),
+                              ),
                             ),
                           ),
-                          child: Center(
-                            child: Icon(
-                              Icons.image_rounded,
-                              size: 40,
-                              color: cs.primary.withValues(alpha: 0.3),
+                          errorWidget: (context, url, error) => Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  cs.primary.withValues(alpha: 0.15),
+                                  cs.secondary.withValues(alpha: 0.15),
+                                ],
+                              ),
                             ),
-                          ),
-                        ),
-                        errorWidget: (context, url, error) => Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                cs.primary.withValues(alpha: 0.15),
-                                cs.secondary.withValues(alpha: 0.15),
-                              ],
-                            ),
-                          ),
-                          child: Center(
-                            child: Icon(
-                              Icons.broken_image_rounded,
-                              size: 40,
-                              color: cs.primary.withValues(alpha: 0.4),
+                            child: Center(
+                              child: Icon(
+                                Icons.broken_image_rounded,
+                                size: 40,
+                                color: cs.primary.withValues(alpha: 0.4),
+                              ),
                             ),
                           ),
                         ),

@@ -315,6 +315,14 @@ class DashboardProvider extends ChangeNotifier {
   }
 
   /// Specialized fetch for Banners (updates carousel in addons + inline sections)
+  ///
+  /// GET /api/dashboard/sections already seeds `addons.carousel` (used for
+  /// the very first paint); this fetch is meant to refine it. The backend
+  /// has been observed returning an empty carousel here for orgs that do
+  /// have active banners per /sections — if we blindly overwrite with that,
+  /// a banner that was already showing flashes and then disappears. Only
+  /// overwrite when this fetch actually has banners, so a good result from
+  /// the skeleton is never wiped out by a later empty one.
   Future<void> _fetchBanners() async {
     try {
       final bannerMap = await _repository.getBanners();
@@ -322,9 +330,20 @@ class DashboardProvider extends ChangeNotifier {
 
       final carousel = bannerMap['carousel'] ?? [];
       final inline = bannerMap['inline'] ?? [];
+      if (carousel.isEmpty && data!.addons.carousel.isNotEmpty) {
+        developer.log(
+          "⚠️ /dashboard/banners returned an empty carousel while "
+          "/dashboard/sections had ${data!.addons.carousel.length} — "
+          "keeping the sections carousel instead of blanking it out.",
+          name: "API_SPLIT",
+        );
+      }
+      final effectiveCarousel = carousel.isNotEmpty
+          ? carousel
+          : data!.addons.carousel;
 
       // Update Carousel in Addons
-      final updatedAddons = data!.addons.copyWith(carousel: carousel);
+      final updatedAddons = data!.addons.copyWith(carousel: effectiveCarousel);
 
       // Update Inline Banner Sections
       final updatedSections = data!.sections.map((section) {
