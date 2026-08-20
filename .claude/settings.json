@@ -34,7 +34,8 @@
       "Bash(identify webinar.png)",
       "Bash(curl -s -o /dev/null -w \"HTTP:%{http_code} TYPE:%{content_type} SIZE:%{size_download}\\\\n\" -m 10 \"https://ibb.co/k2fDwW0Q\")",
       "Bash(curl -s -o /dev/null -w \"HTTP:%{http_code} TYPE:%{content_type} SIZE:%{size_download}\\\\n\" -m 10 \"https://i.ibb.co/m5gQjZsH/banner2.png\")",
-      "Bash(curl -s -o /dev/null -w \"HTTP:%{http_code} TYPE:%{content_type} SIZE:%{size_download}\\\\n\" -m 10 \"https://i.ibb.co/rKpD44zf/banner1.png\")"
+      "Bash(curl -s -o /dev/null -w \"HTTP:%{http_code} TYPE:%{content_type} SIZE:%{size_download}\\\\n\" -m 10 \"https://i.ibb.co/rKpD44zf/banner1.png\")",
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/core/functions)"
     ]
   }
 }
