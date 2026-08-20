@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
+import 'package:exim_lab/core/widgets/floating_help_button.dart';
 import 'package:exim_lab/features/dashboard/presentation/screens/dashboard.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:exim_lab/features/welcome/presentation/screens/welcome_screen.dart';
@@ -23,12 +24,19 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    FloatingHelpButton.visible.value = false;
     checkForUpdates();
 
     // 📊 CHECK FIRST OPEN
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<AnalyticsService>().checkFirstAppOpen();
     });
+  }
+
+  @override
+  void dispose() {
+    FloatingHelpButton.visible.value = true;
+    super.dispose();
   }
 
   Future<void> checkForUpdates() async {

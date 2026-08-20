@@ -18,7 +18,12 @@
       "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/one_on_one/presentation/screens/one_on_one_screen.dart)",
       "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/one_on_one)",
       "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/dashboard)",
-      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/profile)"
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/profile)",
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/premium)",
+      "Bash(curl -s -m 10 \"http://52.35.230.229:3006/api/dashboard/banners\" -w \"\\\\nHTTP_STATUS:%{http_code}\\\\n\")",
+      "Bash(curl -s -m 10 \"http://52.35.230.229:3006/api/dashboard/banners\" -H \"Accept: application/json\" -w \"\\\\nHTTP_STATUS:%{http_code}\\\\n\")",
+      "Bash(curl -s -m 10 \"http://52.35.230.229:3006/api/dashboard/banners\" -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTcyOGM2OGM5NmI0MTE0YjE1YzkwZmYiLCJyb2xlIjoiVVNFUiIsIm9yZ2FuaXphdGlvbklkIjoiNjk3MjE4NGU0MjRlYTQ3NjFmZmY2NjU1IiwiaWF0IjoxNzg3MTQzMTQ1LCJleHAiOjE3ODk3MzUxNDV9.q4K3W61g7dFCDdi7bul_e8tvapZ6PiZNou4sUFdyt9E\" -w \"\\\\nHTTP_STATUS:%{http_code}\\\\n\")",
+      "Bash(curl -s -m 10 \"http://52.35.230.229:3006/api/dashboard/sections\" -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTcyOGM2OGM5NmI0MTE0YjE1YzkwZmYiLCJyb2xlIjoiVVNFUiIsIm9yZ2FuaXphdGlvbklkIjoiNjk3MjE4NGU0MjRlYTQ3NjFmZmY2NjU1IiwiaWF0IjoxNzg3MTQzMTQ1LCJleHAiOjE3ODk3MzUxNDV9.q4K3W61g7dFCDdi7bul_e8tvapZ6PiZNou4sUFdyt9E\" -w \"\\\\nHTTP_STATUS:%{http_code}\\\\n\")"
     ]
   }
 }

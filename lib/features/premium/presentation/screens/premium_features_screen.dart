@@ -394,8 +394,14 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
                 CachedNetworkImage(
                   imageUrl: heroImage,
                   fit: BoxFit.cover,
+                  fadeInDuration: Duration.zero,
+                  fadeOutDuration: Duration.zero,
                   errorWidget: (_, _, _) => const _HeroFallback(),
-                  placeholder: (_, _) => const _HeroFallback(),
+                  // Only genuine failures fall back to the decorative hero
+                  // art — a plain loading tile while the real thumbnail
+                  // fetches, so admins don't see the hero art flash/fade
+                  // over their own configured thumbnail.
+                  placeholder: (_, _) => const ColoredBox(color: _P.navyDeep),
                 )
               else
                 const _HeroFallback(),

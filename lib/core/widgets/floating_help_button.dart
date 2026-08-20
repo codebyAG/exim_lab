@@ -11,6 +11,11 @@ class FloatingHelpButton extends StatefulWidget {
   final Widget child;
   const FloatingHelpButton({super.key, required this.child});
 
+  // Hidden on the splash screen — SplashScreen flips this in initState /
+  // dispose, since there's no logged-in/logged-out screen for it to help
+  // with yet at that point.
+  static final ValueNotifier<bool> visible = ValueNotifier(true);
+
   @override
   State<FloatingHelpButton> createState() => _FloatingHelpButtonState();
 }
@@ -94,49 +99,54 @@ class _FloatingHelpButtonState extends State<FloatingHelpButton> {
     return Stack(
       children: [
         widget.child,
-        ValueListenableBuilder<Offset>(
-          valueListenable: _pos,
-          builder: (context, pos, child) {
-            return Positioned(
-              left: pos.dx,
-              top: pos.dy,
-              // GestureDetector + notifiers instead of setState() — this
-              // button sits above the Navigator (MaterialApp.builder), so a
-              // setState() here previously forced Flutter to diff the
-              // *entire app's* element tree on every drag frame, which is
-              // what made dragging feel sluggish.
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: _openHelp,
-                onPanStart: (_) => _dragging.value = true,
-                onPanUpdate: (details) {
-                  final next = pos + details.delta;
-                  _position = Offset(
-                    next.dx.clamp(0.0, screen.width - _width),
-                    next.dy.clamp(
-                      padding.top,
-                      screen.height - padding.bottom - _height,
-                    ),
-                  );
-                  _pos.value = _position!;
-                },
-                onPanEnd: (_) => _snapToEdge(screen, padding),
-                onPanCancel: () => _snapToEdge(screen, padding),
+        ValueListenableBuilder<bool>(
+          valueListenable: FloatingHelpButton.visible,
+          builder: (context, isVisible, child) =>
+              isVisible ? child! : const SizedBox.shrink(),
+          child: ValueListenableBuilder<Offset>(
+            valueListenable: _pos,
+            builder: (context, pos, child) {
+              return Positioned(
+                left: pos.dx,
+                top: pos.dy,
+                // GestureDetector + notifiers instead of setState() — this
+                // button sits above the Navigator (MaterialApp.builder), so
+                // a setState() here previously forced Flutter to diff the
+                // *entire app's* element tree on every drag frame, which is
+                // what made dragging feel sluggish.
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: _openHelp,
+                  onPanStart: (_) => _dragging.value = true,
+                  onPanUpdate: (details) {
+                    final next = pos + details.delta;
+                    _position = Offset(
+                      next.dx.clamp(0.0, screen.width - _width),
+                      next.dy.clamp(
+                        padding.top,
+                        screen.height - padding.bottom - _height,
+                      ),
+                    );
+                    _pos.value = _position!;
+                  },
+                  onPanEnd: (_) => _snapToEdge(screen, padding),
+                  onPanCancel: () => _snapToEdge(screen, padding),
+                  child: child,
+                ),
+              );
+            },
+            // This button sits above the Navigator (via MaterialApp.builder),
+            // so it has no Scaffold/Material ancestor of its own — without
+            // this, Text/Icon fall back to a debug-only underline style.
+            child: ValueListenableBuilder<bool>(
+              valueListenable: _dragging,
+              builder: (context, dragging, child) => AnimatedScale(
+                scale: dragging ? 1.06 : 1.0,
+                duration: const Duration(milliseconds: 150),
                 child: child,
               ),
-            );
-          },
-          // This button sits above the Navigator (via MaterialApp.builder),
-          // so it has no Scaffold/Material ancestor of its own — without
-          // this, Text/Icon fall back to a debug-only underline style.
-          child: ValueListenableBuilder<bool>(
-            valueListenable: _dragging,
-            builder: (context, dragging, child) => AnimatedScale(
-              scale: dragging ? 1.06 : 1.0,
-              duration: const Duration(milliseconds: 150),
-              child: child,
+              child: _button,
             ),
-            child: _button,
           ),
         ),
       ],
