@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:exim_lab/core/services/notification_router.dart';
 import 'package:exim_lab/features/premium/presentation/screens/premium_features_screen.dart';
+import 'package:exim_lab/features/one_on_one/presentation/screens/one_on_one_screen.dart';
 import 'package:exim_lab/features/news/presentation/screens/news_details_screen.dart';
 import 'package:sizer/sizer.dart';
 import 'package:intl/intl.dart';
@@ -194,6 +195,15 @@ class _NotificationTile extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const PremiumFeaturesScreen()),
+          );
+          return;
+        }
+
+        if (type == 'one-on-one' ||
+            NotificationRouter.isOneOnOneLink(notification.linkUrl)) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const OneOnOneScreen()),
           );
           return;
         }

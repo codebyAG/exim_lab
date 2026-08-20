@@ -2,6 +2,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:exim_lab/features/news/presentation/screens/news_details_screen.dart';
 import 'package:exim_lab/features/premium/presentation/screens/premium_features_screen.dart';
+import 'package:exim_lab/features/one_on_one/presentation/screens/one_on_one_screen.dart';
 
 /// Routes notification taps (FCM / local / in-app list) to the right screen.
 ///
@@ -27,6 +28,8 @@ class NotificationRouter {
       }
     } else if (type == 'premium') {
       openPremiumFeatures();
+    } else if (type == 'one-on-one') {
+      openOneOnOne();
     }
   }
 
@@ -44,6 +47,10 @@ class NotificationRouter {
   static bool isPremiumLink(String? linkUrl) =>
       linkUrl != null && linkUrl.startsWith('premium://');
 
+  /// `linkUrl` for a one-on-one deep link, e.g. `one-on-one://one-on-one`.
+  static bool isOneOnOneLink(String? linkUrl) =>
+      linkUrl != null && linkUrl.startsWith('one-on-one://');
+
   static void openNewsDetails(String newsId) {
     navigatorKey.currentState?.push(
       MaterialPageRoute(
@@ -55,6 +62,12 @@ class NotificationRouter {
   static void openPremiumFeatures() {
     navigatorKey.currentState?.push(
       MaterialPageRoute(builder: (_) => const PremiumFeaturesScreen()),
+    );
+  }
+
+  static void openOneOnOne() {
+    navigatorKey.currentState?.push(
+      MaterialPageRoute(builder: (_) => const OneOnOneScreen()),
     );
   }
 

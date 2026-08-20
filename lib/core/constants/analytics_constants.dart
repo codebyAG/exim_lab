@@ -29,6 +29,12 @@ class AnalyticsConstants {
   static const String toolUse = 'tool_use';
   static const String profileView = 'profile_view';
 
+  // 🔹 PREMIUM FEATURES & ONE-ON-ONE (frontend handoff Phase 3A)
+  static const String premiumPageView = 'premium_page_view';
+  static const String premiumCtaClick = 'premium_cta_click';
+  static const String oneOnOnePageView = 'one_on_one_page_view';
+  static const String oneOnOneCtaClick = 'one_on_one_cta_click';
+
   // 🔹 PARAMETERS
   static const String method = 'method';
   static const String userId = 'user_id';

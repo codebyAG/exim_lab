@@ -442,4 +442,39 @@ class AnalyticsService {
   Future<void> logProfileView() async {
     await logEvent(AnalyticsConstants.profileView);
   }
+
+  // 🔹 PREMIUM FEATURES & ONE-ON-ONE (frontend handoff Phase 3A)
+  //
+  // These 4 events go straight to POST /api/analytics/log-event
+  // (immediate, fire-and-forget) rather than through the generic
+  // logEvent()'s 12-hour batched queue to /api/analytics/track — the
+  // handoff doc specifically calls out /log-event as "the existing
+  // endpoint" for this, and the admin dashboard's engagement stat cards
+  // read from it directly.
+  Future<void> _logImmediateEvent(String eventName) async {
+    try {
+      await callApi(
+        ApiConstants.logEventImmediate,
+        methodType: MethodType.post,
+        requestData: {'event_name': eventName},
+        parser: (json) => json,
+        logErrorEvent: false,
+      );
+      debugPrint('📊 Immediate Event Logged: $eventName');
+    } catch (e) {
+      debugPrint('⚠️ Immediate Event Log Failed: $eventName — $e');
+    }
+  }
+
+  Future<void> logPremiumPageView() =>
+      _logImmediateEvent(AnalyticsConstants.premiumPageView);
+
+  Future<void> logPremiumCtaClick() =>
+      _logImmediateEvent(AnalyticsConstants.premiumCtaClick);
+
+  Future<void> logOneOnOnePageView() =>
+      _logImmediateEvent(AnalyticsConstants.oneOnOnePageView);
+
+  Future<void> logOneOnOneCtaClick() =>
+      _logImmediateEvent(AnalyticsConstants.oneOnOneCtaClick);
 }

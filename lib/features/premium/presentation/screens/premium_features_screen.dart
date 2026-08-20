@@ -4,6 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:exim_lab/core/functions/whatsapp_utils.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:exim_lab/core/utils/icon_mapper.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
 import 'package:exim_lab/features/premium/data/models/premium_config_model.dart';
@@ -91,17 +93,26 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
   @override
   void initState() {
     super.initState();
+    context.read<AnalyticsService>().logPremiumPageView();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) context.read<PremiumProvider>().load();
     });
   }
 
-  // Phase 1: the CTA button renders but is not wired up yet — WhatsApp
-  // launch + analytics logging land in Phase 3. Still give the tap visible
-  // feedback so it doesn't look broken/unresponsive.
+  // Phase 3B: WhatsApp is the only CTA action — no in-app payment flow.
+  // If ctaWhatsappNumber is empty, do nothing but show a "coming soon"
+  // state instead of a dead tap.
   void _contactSales(BuildContext context, PremiumConfig config) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Enrollment opens soon — stay tuned!")),
+    context.read<AnalyticsService>().logPremiumCtaClick();
+    if (config.ctaWhatsappNumber.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Enrollment opens soon — stay tuned!")),
+      );
+      return;
+    }
+    WhatsAppUtils.launch(
+      number: config.ctaWhatsappNumber,
+      message: config.ctaWhatsappMessage,
     );
   }
 

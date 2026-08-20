@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:exim_lab/core/functions/whatsapp_utils.dart';
+import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:exim_lab/core/utils/icon_mapper.dart';
 import 'package:exim_lab/core/widgets/youtube_video_dialog.dart';
 import 'package:exim_lab/features/one_on_one/data/models/one_on_one_config_model.dart';
@@ -80,16 +82,26 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
   @override
   void initState() {
     super.initState();
+    context.read<AnalyticsService>().logOneOnOnePageView();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) context.read<OneOnOneProvider>().load();
     });
   }
 
-  // Phase 1: the CTA button renders but is not wired up yet — WhatsApp
-  // launch + analytics logging land in Phase 3.
+  // Phase 3B: WhatsApp is the only CTA action — no in-app payment flow.
+  // If ctaWhatsappNumber is empty, do nothing but show a "coming soon"
+  // state instead of a dead tap.
   void _bookNow(BuildContext context, OneOnOnePricing pricing) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Booking opens soon — stay tuned!")),
+    context.read<AnalyticsService>().logOneOnOneCtaClick();
+    if (pricing.ctaWhatsappNumber.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Booking opens soon — stay tuned!")),
+      );
+      return;
+    }
+    WhatsAppUtils.launch(
+      number: pricing.ctaWhatsappNumber,
+      message: pricing.ctaWhatsappMessage,
     );
   }
 

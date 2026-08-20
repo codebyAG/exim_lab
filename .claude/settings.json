@@ -35,7 +35,9 @@
       "Bash(curl -s -o /dev/null -w \"HTTP:%{http_code} TYPE:%{content_type} SIZE:%{size_download}\\\\n\" -m 10 \"https://ibb.co/k2fDwW0Q\")",
       "Bash(curl -s -o /dev/null -w \"HTTP:%{http_code} TYPE:%{content_type} SIZE:%{size_download}\\\\n\" -m 10 \"https://i.ibb.co/m5gQjZsH/banner2.png\")",
       "Bash(curl -s -o /dev/null -w \"HTTP:%{http_code} TYPE:%{content_type} SIZE:%{size_download}\\\\n\" -m 10 \"https://i.ibb.co/rKpD44zf/banner1.png\")",
-      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/core/functions)"
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/core/functions)",
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/core/services/notification_router.dart lib/features/notifications)",
+      "Bash(curl -s -m 10 -X POST \"http://52.35.230.229:3006/api/analytics/log-event\" -H \"Content-Type: application/json\" -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTcyOGM2OGM5NmI0MTE0YjE1YzkwZmYiLCJyb2xlIjoiVVNFUiIsIm9yZ2FuaXphdGlvbklkIjoiNjk3MjE4NGU0MjRlYTQ3NjFmZmY2NjU1IiwiaWF0IjoxNzg3MTQzMTQ1LCJleHAiOjE3ODk3MzUxNDV9.q4K3W61g7dFCDdi7bul_e8tvapZ6PiZNou4sUFdyt9E\" -d '{\"event_name\":\"premium_page_view\"}' -w \"\\\\nHTTP_STATUS:%{http_code}\\\\n\")"
     ]
   }
 }
