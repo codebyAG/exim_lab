@@ -15,7 +15,8 @@
       "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib 2>&1)",
       "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/premium 2>&1)",
       "Bash(grep -n \"BEST\\\\\\\\\\\\\\\\nVALUE\" -B 15 lib/features/premium/presentation/screens/premium_features_screen.dart)",
-      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/one_on_one/presentation/screens/one_on_one_screen.dart)"
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/one_on_one/presentation/screens/one_on_one_screen.dart)",
+      "PowerShell(& \"C:\\\\Users\\\\User\\\\Desktop\\\\flutter3382\\\\bin\\\\flutter.bat\" analyze lib/features/one_on_one)"
     ]
   }
 }

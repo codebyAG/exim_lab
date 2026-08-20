@@ -117,7 +117,6 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
       body: Container(
         decoration: const BoxDecoration(gradient: _P.pageBackground),
         child: SafeArea(
-          bottom: false,
           child: config == null
               ? _buildPlaceholder(provider)
               : RefreshIndicator(
@@ -206,7 +205,7 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
           child: _buildHeroText(config),
         ),
         Padding(
-          padding: EdgeInsets.fromLTRB(5.w, 2.h, 5.w, 4.h),
+          padding: EdgeInsets.fromLTRB(5.w, 1.4.h, 5.w, 2.h),
           child: Column(
             children: [
               _buildHeroArt(config),
@@ -214,48 +213,58 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
 
               // 3 — stats
               if (config.stats.isNotEmpty) ...[
-                SizedBox(height: 2.h),
+                SizedBox(height: 1.6.h),
                 _buildStatsCard(config.stats),
               ],
               ..._bannerSlot(config, PremiumBannerSlot.afterStats),
 
               // 4 — feature grid
               if (config.features.isNotEmpty) ...[
-                SizedBox(height: 3.h),
-                _SectionTitle(config.featuresHeading),
                 SizedBox(height: 2.h),
+                const _FancyDivider(),
+                SizedBox(height: 2.2.h),
+                _SectionTitle(config.featuresHeading),
+                SizedBox(height: 1.4.h),
                 _buildBenefitsGrid(config.features, config.gridColumns),
               ],
               ..._bannerSlot(config, PremiumBannerSlot.afterFeatures),
 
               // 5 — instructors (vertical stack of 16:9 photo cards)
               if (config.instructors.isNotEmpty) ...[
-                SizedBox(height: 3.h),
-                _SectionTitle(config.instructorsHeading),
                 SizedBox(height: 2.h),
+                const _FancyDivider(),
+                SizedBox(height: 2.2.h),
+                _SectionTitle(config.instructorsHeading),
+                SizedBox(height: 1.4.h),
                 _buildInstructors(config.instructors),
               ],
 
               // 6 — videos
               if (config.videos.isNotEmpty) ...[
-                SizedBox(height: 3.h),
-                _SectionTitle(config.videosHeading),
                 SizedBox(height: 2.h),
+                const _FancyDivider(),
+                SizedBox(height: 2.2.h),
+                _SectionTitle(config.videosHeading),
+                SizedBox(height: 1.4.h),
                 _buildVideos(config.videos),
               ],
               ..._bannerSlot(config, PremiumBannerSlot.afterVideos),
 
               // 7 — testimonials
               if (config.testimonials.isNotEmpty) ...[
-                SizedBox(height: 3.h),
-                _SectionTitle(config.testimonialsHeading),
                 SizedBox(height: 2.h),
+                const _FancyDivider(),
+                SizedBox(height: 2.2.h),
+                _SectionTitle(config.testimonialsHeading),
+                SizedBox(height: 1.4.h),
                 _buildTestimonials(config.testimonials),
               ],
               ..._bannerSlot(config, PremiumBannerSlot.afterTestimonials),
 
               // 8 — pricing / CTA (always last)
-              SizedBox(height: 3.h),
+              SizedBox(height: 2.h),
+              const _FancyDivider(),
+              SizedBox(height: 2.2.h),
               if (isPremium)
                 _buildMemberCard()
               else if (config.pricing != null)
@@ -429,7 +438,11 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
         border: Border.all(color: _P.cardBorder),
       ),
       child: Row(
-        children: List.generate(stats.length, (i) {
+        children: List.generate(stats.length * 2 - 1, (j) {
+          if (j.isOdd) {
+            return Container(width: 1, height: 40, color: _P.cardBorder);
+          }
+          final i = j ~/ 2;
           final s = stats[i];
           final duo = _iconDuos[i % _iconDuos.length];
           return Expanded(
@@ -570,7 +583,7 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
         for (var i = 0; i < instructors.length; i++)
           Padding(
             padding: EdgeInsets.only(
-              bottom: i == instructors.length - 1 ? 0 : 1.5.h,
+              bottom: i == instructors.length - 1 ? 0 : 1.2.h,
             ),
             child: _InstructorCard(instructor: instructors[i]),
           ),
@@ -584,10 +597,10 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
     return Column(
       children: [
         _VideoTile(item: videos.first, large: true),
-        if (rest.isNotEmpty) SizedBox(height: 1.5.h),
+        if (rest.isNotEmpty) SizedBox(height: 1.2.h),
         for (var i = 0; i < rest.length; i += 2)
           Padding(
-            padding: EdgeInsets.only(bottom: 1.5.h),
+            padding: EdgeInsets.only(bottom: 1.2.h),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -611,7 +624,7 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
       children: [
         for (final t in testimonials)
           Padding(
-            padding: EdgeInsets.only(bottom: 1.5.h),
+            padding: EdgeInsets.only(bottom: 1.2.h),
             child: _TestimonialCard(item: t),
           ),
       ],
@@ -619,6 +632,9 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
   }
 
   // ------------------------------------------------------------- PRICING
+  // Two-tier "ticket" card — a gradient header band (heading + offer chip)
+  // on top, a solid navy price panel below with checklist + CTA — same
+  // language as the One-on-One page's pricing card.
   Widget _buildPricingCard(
     BuildContext context,
     PremiumConfig config,
@@ -626,215 +642,272 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
     String ctaText,
   ) {
     final savings = pricing.savingsLabel;
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(24),
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: Image.asset(
-                  'assets/premium_bg_purple.png',
-                  fit: BoxFit.cover,
-                ),
+    return Container(
+      decoration: BoxDecoration(
+        color: _P.navyDeep,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: _P.cardBorder),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.22),
+            blurRadius: 22,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
+            decoration: BoxDecoration(
+              gradient: _P.pricingGradient,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(22),
               ),
-              Positioned.fill(
-                child: DecoratedBox(
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  width: 38,
+                  height: 38,
                   decoration: BoxDecoration(
-                    color: _P.navyDeep.withValues(alpha: 0.25),
-                    border: Border.all(color: _P.cardBorder),
-                    borderRadius: BorderRadius.circular(24),
+                    gradient: const LinearGradient(
+                      colors: [_P.gold, _P.goldDeep],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.workspace_premium_rounded,
+                    color: _P.ink,
+                    size: 19,
                   ),
                 ),
-              ),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.fromLTRB(
-                  20,
-                  pricing.offerBadgeText.isEmpty ? 20 : 34,
-                  20,
-                  20,
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        pricing.heading,
+                        style: TextStyle(
+                          color: _P.textPrimary,
+                          fontSize: 15.5.sp,
+                          height: 1.2,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      if (pricing.description.isNotEmpty) ...[
+                        const SizedBox(height: 3),
+                        Text(
+                          pricing.description,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: _P.textMuted,
+                            fontSize: 11.5.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      pricing.heading,
+              ],
+            ),
+          ),
+          if (pricing.offerBadgeText.isNotEmpty)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              color: _P.navyDeep,
+              child: Row(
+                children: [
+                  const Icon(Icons.bolt_rounded, color: _P.gold, size: 14),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      pricing.offerBadgeText,
                       style: TextStyle(
-                        color: _P.textPrimary,
-                        fontSize: 17.sp,
-                        fontWeight: FontWeight.w900,
+                        color: _P.gold,
+                        fontSize: 11.5.sp,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
-                    if (pricing.description.isNotEmpty) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        pricing.description,
+                  ),
+                ],
+              ),
+            ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (pricing.priceNote.isNotEmpty) ...[
+                  Text(
+                    pricing.priceNote,
+                    style: TextStyle(
+                      color: _P.textMuted,
+                      fontSize: 11.5.sp,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                ],
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        pricing.discountedPrice,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: _P.textMuted,
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w600,
+                          color: _P.gold,
+                          fontSize: 30.sp,
+                          height: 1,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                    if (pricing.originalPrice.isNotEmpty) ...[
+                      const SizedBox(width: 8),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: Text(
+                          pricing.originalPrice,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: _P.originalPrice,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w700,
+                            decoration: TextDecoration.lineThrough,
+                            decorationColor: _P.originalPrice,
+                          ),
                         ),
                       ),
                     ],
-                    SizedBox(height: 1.8.h),
-                    if (pricing.priceNote.isNotEmpty)
-                      Text(
-                        pricing.priceNote,
-                        style: TextStyle(
-                          color: _P.textMuted,
-                          fontSize: 12.5.sp,
-                          fontWeight: FontWeight.w700,
+                    if (savings != null) ...[
+                      const SizedBox(width: 10),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 3),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3,
+                          ),
+                          decoration: BoxDecoration(
+                            color: _P.checkGreen.withValues(alpha: 0.18),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            savings,
+                            style: TextStyle(
+                              color: _P.checkGreen,
+                              fontSize: 10.5.sp,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
                         ),
                       ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                    ],
+                  ],
+                ),
+                if (pricing.benefits.isNotEmpty) ...[
+                  SizedBox(height: 1.2.h),
+                  Divider(color: _P.cardBorder, height: 1),
+                  SizedBox(height: 1.2.h),
+                  for (var i = 0; i < pricing.benefits.length; i += 2)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        children: [
+                          Expanded(child: _CheckLine(pricing.benefits[i])),
+                          Expanded(
+                            child: i + 1 < pricing.benefits.length
+                                ? _CheckLine(pricing.benefits[i + 1])
+                                : const SizedBox(),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+                SizedBox(height: 0.8.h),
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(14),
+                    boxShadow: [
+                      BoxShadow(
+                        color: _P.gold.withValues(alpha: 0.5),
+                        blurRadius: 18,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _P.gold,
+                      foregroundColor: _P.ink,
+                      elevation: 0,
+                      padding: EdgeInsets.symmetric(vertical: 1.5.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    onPressed: () => _contactSales(context, config),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Flexible(
                           child: Text(
-                            pricing.discountedPrice,
+                            ctaText,
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              color: _P.gold,
-                              fontSize: 30.sp,
-                              height: 1,
+                              fontSize: 13.5.sp,
                               fontWeight: FontWeight.w900,
                             ),
                           ),
                         ),
-                        if (pricing.originalPrice.isNotEmpty) ...[
-                          const SizedBox(width: 10),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 5),
-                            child: Text(
-                              pricing.originalPrice,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: _P.originalPrice,
-                                fontSize: 17.sp,
-                                fontWeight: FontWeight.w700,
-                                decoration: TextDecoration.lineThrough,
-                                decorationColor: _P.originalPrice,
-                              ),
-                            ),
-                          ),
-                        ],
+                        const SizedBox(width: 8),
+                        const Icon(Icons.arrow_forward_rounded, size: 18),
                       ],
                     ),
-                    if (savings != null) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        savings,
-                        style: TextStyle(
-                          color: _P.gold,
-                          fontSize: 12.5.sp,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ],
-                    if (pricing.benefits.isNotEmpty) ...[
-                      SizedBox(height: 1.6.h),
-                      Divider(color: _P.cardBorder, height: 1),
-                      SizedBox(height: 1.6.h),
-                      for (var i = 0; i < pricing.benefits.length; i += 2)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: Row(
-                            children: [
-                              Expanded(child: _CheckLine(pricing.benefits[i])),
-                              Expanded(
-                                child: i + 1 < pricing.benefits.length
-                                    ? _CheckLine(pricing.benefits[i + 1])
-                                    : const SizedBox(),
-                              ),
-                            ],
-                          ),
-                        ),
-                    ],
-                    SizedBox(height: 1.h),
-                    Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
-                        boxShadow: [
-                          BoxShadow(
-                            color: _P.gold.withValues(alpha: 0.5),
-                            blurRadius: 18,
-                            offset: const Offset(0, 6),
-                          ),
-                        ],
-                      ),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: _P.gold,
-                          foregroundColor: _P.ink,
-                          elevation: 0,
-                          padding: EdgeInsets.symmetric(vertical: 1.8.h),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                        ),
-                        onPressed: () => _contactSales(context, config),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Flexible(
-                              child: Text(
-                                ctaText,
-                                textAlign: TextAlign.center,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 16.5.sp,
-                                  fontWeight: FontWeight.w900,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            const Icon(Icons.arrow_forward_rounded, size: 20),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
-        // "Limited Time Offer" pill, floating on the card's top-left edge.
-        if (pricing.offerBadgeText.isNotEmpty)
-          Positioned(
-            top: 0,
-            left: 20,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [_P.gold, _P.goldDeep],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                pricing.offerBadgeText,
-                style: TextStyle(
-                  color: _P.ink,
-                  fontSize: 11.5.sp,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
+              ],
             ),
           ),
-        // Decorative "BEST VALUE" seal — chrome, not admin-editable content.
-        Positioned(
-          top: -16,
-          right: 12,
-          child: Container(
-            width: 72,
-            height: 72,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMemberCard() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 26, 20, 20),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        gradient: _P.pricingGradient,
+        border: Border.all(color: _P.cardBorder),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.22),
+            blurRadius: 22,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Container(
+            width: 64,
+            height: 64,
             decoration: BoxDecoration(
               gradient: const LinearGradient(
                 colors: [_P.gold, _P.goldDeep],
@@ -845,42 +918,15 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
               border: Border.all(color: _P.navyDeep, width: 3),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.25),
-                  blurRadius: 10,
+                  color: _P.gold.withValues(alpha: 0.45),
+                  blurRadius: 16,
                   offset: const Offset(0, 4),
                 ),
               ],
             ),
-            child: Center(
-              child: Text(
-                "BEST\nVALUE",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: _P.ink,
-                  fontSize: 12.sp,
-                  height: 1.15,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-            ),
+            child: const Icon(Icons.verified_rounded, color: _P.ink, size: 34),
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMemberCard() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        gradient: _P.pricingGradient,
-        border: Border.all(color: _P.cardBorder),
-      ),
-      child: Column(
-        children: [
-          const Icon(Icons.verified_rounded, color: _P.gold, size: 39),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           Text(
             "You're a Premium Member",
             style: TextStyle(
@@ -890,6 +936,23 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
             ),
           ),
           const SizedBox(height: 6),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            decoration: BoxDecoration(
+              color: _P.checkGreen.withValues(alpha: 0.18),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              "ACTIVE",
+              style: TextStyle(
+                color: _P.checkGreen,
+                fontSize: 10.5.sp,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 1,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
           Text(
             "Every feature above is already unlocked for you.",
             textAlign: TextAlign.center,
@@ -997,6 +1060,54 @@ class _SectionTitle extends StatelessWidget {
         ),
         const SizedBox(width: 10),
         Container(width: 22, height: 2, color: _P.gold),
+      ],
+    );
+  }
+}
+
+// Gold-diamond divider between major sections — a fading hairline on each
+// side with a small rotated square at the center.
+class _FancyDivider extends StatelessWidget {
+  const _FancyDivider();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            height: 1,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.transparent, _P.cardBorder],
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Transform.rotate(
+            angle: 0.785398, // 45°
+            child: Container(
+              width: 7,
+              height: 7,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(colors: [_P.gold, _P.goldDeep]),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            height: 1,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [_P.cardBorder, Colors.transparent],
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }

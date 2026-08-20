@@ -33,7 +33,6 @@ class _C {
   static const textPrimary = Color(0xFFFFFFFF);
   static const textMuted = Color(0xFF94A3B8); // dashboard's slate
   static const originalPrice = Color(0xFF64748B);
-  static const urgency = Color(0xFFFDE68A);
   static const checkGreen = Color(0xFF1BA672); // dashboard's success green
 
   // The "brighter purple gradient area" — bright → mid → dark, sampled from
@@ -106,7 +105,6 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
         // top bar row applies its own SafeArea inside the hero Stack.
         child: SafeArea(
           top: false,
-          bottom: false,
           child: config == null
               ? _buildPlaceholder(provider)
               : RefreshIndicator(
@@ -247,77 +245,60 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
               ),
           ],
         ),
-        SizedBox(height: config.benefits.isNotEmpty ? 5.5.h : 2.h),
+        SizedBox(height: config.benefits.isNotEmpty ? 4.8.h : 1.5.h),
         Padding(
-          padding: EdgeInsets.fromLTRB(5.w, 0, 5.w, 4.h),
+          padding: EdgeInsets.fromLTRB(5.w, 0, 5.w, 1.4.h),
           child: Column(
             children: [
               if (config.heroVideo != null) _buildHeroVideo(config.heroVideo!),
 
               if (config.journeySteps.isNotEmpty) ...[
-                SizedBox(height: 3.h),
-                const _SectionTitle("YOUR JOURNEY"),
+                SizedBox(height: 1.8.h),
+                const _FancyDivider(),
                 SizedBox(height: 1.6.h),
+                const _SectionTitle("YOUR JOURNEY"),
+                SizedBox(height: 0.9.h),
                 _buildJourneySteps(config.journeySteps),
               ],
 
               if (config.uniquePoints.isNotEmpty) ...[
-                SizedBox(height: 3.h),
-                const _SectionTitle("WHY 1-ON-1 IS UNIQUE"),
+                SizedBox(height: 1.8.h),
+                const _FancyDivider(),
                 SizedBox(height: 1.6.h),
-                _buildWhiteGrid(config.uniquePoints, crossAxisCount: 3),
+                const _SectionTitle("WHY 1-ON-1 IS UNIQUE"),
+                SizedBox(height: 0.9.h),
+                _buildUniqueGrid(config.uniquePoints),
               ],
 
               if (config.highlightBanner != null) ...[
-                SizedBox(height: 3.h),
+                SizedBox(height: 1.8.h),
+                const _FancyDivider(),
+                SizedBox(height: 1.6.h),
                 _buildHighlightBanner(config.highlightBanner!),
               ],
 
               if (config.experienceVideos.isNotEmpty) ...[
-                SizedBox(height: 3.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "REAL EXPERIENCES",
-                      style: TextStyle(
-                        color: _C.headingOnLight,
-                        fontSize: 12.5.sp,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 0.8,
-                      ),
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "View All",
-                          style: TextStyle(
-                            color: _C.navy,
-                            fontSize: 11.5.sp,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        const Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color: _C.navy,
-                          size: 11,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                SizedBox(height: 1.8.h),
+                const _FancyDivider(),
                 SizedBox(height: 1.6.h),
+                const _SectionTitle("REAL EXPERIENCES"),
+                SizedBox(height: 0.9.h),
                 _buildVideos(config.experienceVideos),
               ],
 
               if (config.trustBadges.isNotEmpty) ...[
-                SizedBox(height: 3.h),
+                SizedBox(height: 1.8.h),
+                const _FancyDivider(),
+                SizedBox(height: 1.6.h),
+                const _SectionTitle("WHY LEARNERS TRUST US"),
+                SizedBox(height: 0.9.h),
                 _buildTrustBadges(config.trustBadges),
               ],
 
               if (config.pricing != null) ...[
-                SizedBox(height: 3.h),
+                SizedBox(height: 1.8.h),
+                const _FancyDivider(),
+                SizedBox(height: 1.6.h),
                 _buildPricingCard(context, config.pricing!),
               ],
             ],
@@ -349,7 +330,7 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
               child: Column(
                 children: [
                   _buildTopBar(),
-                  SizedBox(height: 1.5.h),
+                  SizedBox(height: 0.6.h),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 6.w),
                     child: _buildHeroText(config),
@@ -380,9 +361,9 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
           ),
         ),
         if (config.subheading.isNotEmpty) ...[
-          SizedBox(height: 1.4.h),
+          SizedBox(height: 0.7.h),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             decoration: BoxDecoration(
               color: _C.cardBg,
               borderRadius: BorderRadius.circular(12),
@@ -408,7 +389,6 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
     return Column(
       children: [
         if (hero.videoUrl.isNotEmpty && hero.ctaText.isNotEmpty) ...[
-          SizedBox(height: 1.5.h),
           GestureDetector(
             onTap: () => showYoutubeVideoDialog(context, hero.videoUrl),
             child: Container(
@@ -457,7 +437,7 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
   // one row, pastel icon circles, dark labels (matches the reference).
   Widget _buildBenefitsRow(List<OneOnOneItem> items) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
@@ -514,69 +494,84 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
     );
   }
 
-  // ------------------------------------------------------- WHITE ITEM GRID
-  // Shared by "What You Get" and "Why 1-on-1 Is Unique" — raised dark cards
-  // with pastel icon circles.
-  Widget _buildWhiteGrid(
-    List<OneOnOneItem> items, {
-    required int crossAxisCount,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: _C.cardBg,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: _C.cardBorder),
+  // ------------------------------------------------------ UNIQUE POINT GRID
+  // Individual "premium" cards (not one shared grid panel) — gold gradient
+  // icon badge, title + description, gradient panel background matching
+  // the journey/banner/pricing cards, so this section reads as a step up
+  // rather than the same plain icon+label grid used elsewhere.
+  Widget _buildUniqueGrid(List<OneOnOneItem> items) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: items.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 1.05,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
       ),
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: items.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: crossAxisCount,
-          childAspectRatio: crossAxisCount == 2 ? 1.7 : 0.95,
-          mainAxisSpacing: 14,
-          crossAxisSpacing: 10,
-        ),
-        itemBuilder: (_, i) {
-          final item = items[i];
-          final duo = _iconDuos[i % _iconDuos.length];
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+      itemBuilder: (_, i) {
+        final item = items[i];
+        return Container(
+          padding: const EdgeInsets.all(13),
+          decoration: BoxDecoration(
+            gradient: _C.panelGradient,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: _C.cardBorder),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 46,
-                height: 46,
+                width: 44,
+                height: 44,
                 decoration: BoxDecoration(
-                  color: duo.bg,
+                  gradient: const LinearGradient(
+                    colors: [_C.gold, _C.goldDeep],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                   shape: BoxShape.circle,
                 ),
                 child: Center(
                   child: FaIcon(
                     IconMapper.resolve(item.icon, fallbackIndex: i),
-                    color: duo.fg,
-                    size: 20,
+                    color: _C.ink,
+                    size: 21,
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 9),
               Text(
                 item.title,
-                textAlign: TextAlign.center,
-                maxLines: 2,
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: _C.textPrimary,
-                  fontSize: 12.sp,
-                  height: 1.2,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 15.sp,
+                  height: 1.15,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
+              if (item.description.isNotEmpty) ...[
+                const SizedBox(height: 4),
+                Text(
+                  item.description,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: _C.textMuted,
+                    fontSize: 12.sp,
+                    height: 1.2,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -647,11 +642,11 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.only(
-                      bottom: i == steps.length - 1 ? 0 : 16,
+                      bottom: i == steps.length - 1 ? 0 : 12,
                     ),
                     child: Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(14),
+                      padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         gradient: _C.panelGradient,
                         borderRadius: BorderRadius.circular(16),
@@ -726,7 +721,7 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
             ),
           ],
           if (banner.items.isNotEmpty) ...[
-            SizedBox(height: 2.h),
+            SizedBox(height: 1.4.h),
             Row(
               children: [
                 for (var i = 0; i < banner.items.length; i++)
@@ -775,185 +770,309 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
   }
 
   // --------------------------------------------------------- TRUST BADGES
+  // One checklist card (not a grid of chips) — green check-in-circle rows
+  // separated by hairline dividers, matching the journey timeline's card
+  // language for a more premium, list-like read.
   Widget _buildTrustBadges(List<OneOnOneItem> badges) {
-    return Wrap(
-      alignment: WrapAlignment.center,
-      spacing: 18,
-      runSpacing: 10,
-      children: badges
-          .map(
-            (b) => Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.check_circle_rounded,
-                  color: _C.checkGreen,
-                  size: 14,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  b.label,
-                  style: TextStyle(
-                    color: _C.textMuted,
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.w700,
+    return Container(
+      decoration: BoxDecoration(
+        color: _C.cardBg,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: _C.cardBorder),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Column(
+        children: [
+          for (var i = 0; i < badges.length; i++) ...[
+            if (i > 0) Divider(height: 1, color: _C.cardBorder),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 11,
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color: _C.checkGreen.withValues(alpha: 0.18),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.check_rounded,
+                      color: _C.checkGreen,
+                      size: 17,
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      badges[i].label,
+                      style: TextStyle(
+                        color: _C.textPrimary,
+                        fontSize: 13.sp,
+                        height: 1.25,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          )
-          .toList(),
+          ],
+        ],
+      ),
     );
   }
 
   // ------------------------------------------------------------- PRICING
+  // Two-tier "ticket" card — a gradient header band (heading + urgency
+  // chip) on top, a solid navy price panel below with a green savings
+  // pill and the CTA, separated by a notched dashed divider.
   Widget _buildPricingCard(BuildContext context, OneOnOnePricing pricing) {
     final urgency = pricing.effectiveUrgencyText;
+    final savings = pricing.savingsLabel;
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
+        color: _C.navyDeep,
         borderRadius: BorderRadius.circular(22),
-        gradient: _C.panelGradient,
         border: Border.all(color: _C.cardBorder),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.22),
+            blurRadius: 22,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            pricing.heading,
-            style: TextStyle(
-              color: _C.textPrimary,
-              fontSize: 17.sp,
-              height: 1.25,
-              fontWeight: FontWeight.w900,
-            ),
-          ),
-          if (pricing.description.isNotEmpty) ...[
-            const SizedBox(height: 4),
-            Text(
-              pricing.description,
-              style: TextStyle(
-                color: _C.textMuted,
-                fontSize: 12.5.sp,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-          SizedBox(height: 1.6.h),
-          if (pricing.priceNote.isNotEmpty)
-            Text(
-              pricing.priceNote,
-              style: TextStyle(
-                color: _C.textMuted,
-                fontSize: 11.5.sp,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Flexible(
-                child: Text(
-                  pricing.discountedPrice,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: _C.gold,
-                    fontSize: 30.sp,
-                    height: 1,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ),
-              if (pricing.originalPrice.isNotEmpty) ...[
-                const SizedBox(width: 8),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 5),
-                  child: Text(
-                    pricing.originalPrice,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: _C.originalPrice,
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w700,
-                      decoration: TextDecoration.lineThrough,
-                      decorationColor: _C.originalPrice,
-                    ),
-                  ),
-                ),
-              ],
-            ],
-          ),
-          SizedBox(height: 1.8.h),
           Container(
             width: double.infinity,
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              boxShadow: [
-                BoxShadow(
-                  color: _C.gold.withValues(alpha: 0.5),
-                  blurRadius: 18,
-                  offset: const Offset(0, 6),
+              gradient: _C.panelGradient,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(22),
+              ),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  width: 38,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [_C.gold, _C.goldDeep],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.handshake_rounded,
+                    color: _C.ink,
+                    size: 19,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        pricing.heading,
+                        style: TextStyle(
+                          color: _C.textPrimary,
+                          fontSize: 15.5.sp,
+                          height: 1.2,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      if (pricing.description.isNotEmpty) ...[
+                        const SizedBox(height: 3),
+                        Text(
+                          pricing.description,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: _C.textMuted,
+                            fontSize: 11.5.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
                 ),
               ],
             ),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: _C.gold,
-                foregroundColor: _C.ink,
-                elevation: 0,
-                padding: EdgeInsets.symmetric(vertical: 1.7.h),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
-              onPressed: () => _bookNow(context, pricing),
+          ),
+          if (urgency.isNotEmpty)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              color: _C.navyDeep,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Flexible(
+                  const Icon(
+                    Icons.bolt_rounded,
+                    color: _C.gold,
+                    size: 14,
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
                     child: Text(
-                      pricing.ctaText,
+                      urgency,
                       style: TextStyle(
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w900,
+                        color: _C.gold,
+                        fontSize: 11.5.sp,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  const Icon(Icons.arrow_forward_rounded, size: 18),
                 ],
               ),
             ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (pricing.priceNote.isNotEmpty) ...[
+                  Text(
+                    pricing.priceNote,
+                    style: TextStyle(
+                      color: _C.textMuted,
+                      fontSize: 11.5.sp,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                ],
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        pricing.discountedPrice,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: _C.gold,
+                          fontSize: 30.sp,
+                          height: 1,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                    if (pricing.originalPrice.isNotEmpty) ...[
+                      const SizedBox(width: 8),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: Text(
+                          pricing.originalPrice,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: _C.originalPrice,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w700,
+                            decoration: TextDecoration.lineThrough,
+                            decorationColor: _C.originalPrice,
+                          ),
+                        ),
+                      ),
+                    ],
+                    if (savings != null) ...[
+                      const SizedBox(width: 10),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 3),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3,
+                          ),
+                          decoration: BoxDecoration(
+                            color: _C.checkGreen.withValues(alpha: 0.18),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            savings,
+                            style: TextStyle(
+                              color: _C.checkGreen,
+                              fontSize: 10.5.sp,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+                SizedBox(height: 1.4.h),
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(14),
+                    boxShadow: [
+                      BoxShadow(
+                        color: _C.gold.withValues(alpha: 0.5),
+                        blurRadius: 18,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _C.gold,
+                      foregroundColor: _C.ink,
+                      elevation: 0,
+                      padding: EdgeInsets.symmetric(vertical: 1.4.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    onPressed: () => _bookNow(context, pricing),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            pricing.ctaText,
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 13.5.sp,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Icon(Icons.arrow_forward_rounded, size: 18),
+                      ],
+                    ),
+                  ),
+                ),
+                if (pricing.disclaimerText.isNotEmpty) ...[
+                  const SizedBox(height: 6),
+                  Center(
+                    child: Text(
+                      pricing.disclaimerText,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: _C.textMuted,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
           ),
-          if (urgency.isNotEmpty) ...[
-            const SizedBox(height: 10),
-            Center(
-              child: Text(
-                urgency,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: _C.urgency,
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ),
-          ],
-          if (pricing.disclaimerText.isNotEmpty) ...[
-            const SizedBox(height: 6),
-            Center(
-              child: Text(
-                pricing.disclaimerText,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: _C.textMuted,
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
         ],
       ),
     );
@@ -975,6 +1094,56 @@ class _SectionTitle extends StatelessWidget {
         fontWeight: FontWeight.w900,
         letterSpacing: 0.8,
       ),
+    );
+  }
+}
+
+// Gold-diamond divider between major sections — a fading hairline on each
+// side with a small rotated square at the center.
+class _FancyDivider extends StatelessWidget {
+  const _FancyDivider();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            height: 1,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.transparent, _C.cardBorder],
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Transform.rotate(
+            angle: 0.785398, // 45°
+            child: Container(
+              width: 7,
+              height: 7,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [_C.gold, _C.goldDeep],
+                ),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            height: 1,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [_C.cardBorder, Colors.transparent],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -205,4 +205,22 @@ class OneOnOnePricing {
     if (slotsLeft > 0) return "Only $slotsLeft seats left";
     return '';
   }
+
+  static num? _numeric(String raw) {
+    final digits = raw.replaceAll(RegExp(r'[^0-9.]'), '');
+    return digits.isEmpty ? null : num.tryParse(digits);
+  }
+
+  /// "You Save ₹2,000 (67% OFF)" line, computed from the two price strings.
+  /// Null when either price isn't parseable as a plain number.
+  String? get savingsLabel {
+    final original = _numeric(originalPrice);
+    final discounted = _numeric(discountedPrice);
+    if (original == null || discounted == null || original <= discounted) {
+      return null;
+    }
+    final saved = original - discounted;
+    final percent = ((saved / original) * 100).round();
+    return "You Save ₹${saved.toStringAsFixed(0)} ($percent% OFF)";
+  }
 }
