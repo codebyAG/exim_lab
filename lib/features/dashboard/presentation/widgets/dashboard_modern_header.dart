@@ -45,7 +45,7 @@ class DashboardModernHeader extends StatelessWidget {
                             Text(
                               "START UP INDIA",
                               style: TextStyle(
-                                fontSize: 5.5.sp,
+                                fontSize: 6.5.sp,
                                 fontWeight: FontWeight.w700,
                                 color: Colors.white.withValues(alpha: 0.6),
                                 letterSpacing: 1.5,
@@ -55,7 +55,7 @@ class DashboardModernHeader extends StatelessWidget {
                             RichText(
                               text: TextSpan(
                                 style: TextStyle(
-                                  fontSize: 11.5.sp,
+                                  fontSize: 13.sp,
                                   fontWeight: FontWeight.w900,
                                   letterSpacing: -0.5,
                                   height: 1.1,
@@ -73,7 +73,7 @@ class DashboardModernHeader extends StatelessWidget {
                             Text(
                               "ACADEMY",
                               style: TextStyle(
-                                fontSize: 9.sp,
+                                fontSize: 10.5.sp,
                                 fontWeight: FontWeight.w800,
                                 color: Colors.white,
                                 letterSpacing: 0.2,
@@ -113,7 +113,7 @@ class DashboardModernHeader extends StatelessWidget {
                                 "Welcome back,",
                                 style: TextStyle(
                                   color: Colors.white.withValues(alpha: 0.65),
-                                  fontSize: 10.5.sp,
+                                  fontSize: 12.sp,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -126,7 +126,7 @@ class DashboardModernHeader extends StatelessWidget {
                                     name,
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 16.sp,
+                                      fontSize: 19.sp,
                                       fontWeight: FontWeight.w900,
                                       letterSpacing: -1.2,
                                       height: 1,
@@ -259,10 +259,10 @@ class HeaderActionButtons extends StatelessWidget {
   Widget _buildActionBtn(IconData icon, [VoidCallback? onTap]) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(11),
       child: Container(
-        width: 32,
-        height: 32,
+        width: 36,
+        height: 36,
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(10),
@@ -278,7 +278,7 @@ class HeaderActionButtons extends StatelessWidget {
             ),
           ],
         ),
-        child: Icon(icon, color: Colors.white, size: 17),
+        child: Icon(icon, color: Colors.white, size: 19),
       ),
     );
   }

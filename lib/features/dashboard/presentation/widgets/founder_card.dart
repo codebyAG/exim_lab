@@ -341,7 +341,7 @@ class FounderCard extends StatelessWidget {
         text,
         style: TextStyle(
           color: isGold ? const Color(0xFFFFD000) : Colors.white,
-          fontSize: 9.sp,
+          fontSize: 11.5.sp,
           fontWeight: FontWeight.w800,
           letterSpacing: 0.06,
         ),
