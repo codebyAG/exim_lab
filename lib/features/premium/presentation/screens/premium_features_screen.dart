@@ -677,9 +677,11 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // HEADER — single consistent 18px padding, icon vertically
+          // centered against the heading (not the whole text block).
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
+            padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
               gradient: _P.pricingGradient,
               borderRadius: const BorderRadius.vertical(
@@ -690,8 +692,8 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  width: 38,
-                  height: 38,
+                  width: 42,
+                  height: 42,
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
                       colors: [_P.gold, _P.goldDeep],
@@ -703,10 +705,10 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
                   child: const Icon(
                     Icons.workspace_premium_rounded,
                     color: _P.ink,
-                    size: 19,
+                    size: 20,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 14),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -721,7 +723,7 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
                         ),
                       ),
                       if (pricing.description.isNotEmpty) ...[
-                        const SizedBox(height: 3),
+                        const SizedBox(height: 4),
                         Text(
                           pricing.description,
                           style: TextStyle(
@@ -737,33 +739,49 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
               ],
             ),
           ),
-          if (pricing.offerBadgeText.isNotEmpty)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              color: _P.navyDeep,
-              child: Row(
-                children: [
-                  const Icon(Icons.bolt_rounded, color: _P.gold, size: 14),
-                  const SizedBox(width: 6),
-                  Expanded(
-                    child: Text(
-                      pricing.offerBadgeText,
-                      style: TextStyle(
-                        color: _P.gold,
-                        fontSize: 11.5.sp,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+
+          // BODY — one consistent 18px padding on every side; the offer
+          // badge and savings are chips, not baseline-hacked inline text.
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
+            padding: const EdgeInsets.all(18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (pricing.offerBadgeText.isNotEmpty) ...[
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 7,
+                    ),
+                    decoration: BoxDecoration(
+                      color: _P.gold.withValues(alpha: 0.14),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: _P.gold.withValues(alpha: 0.35),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.bolt_rounded,
+                          color: _P.gold,
+                          size: 14,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          pricing.offerBadgeText,
+                          style: TextStyle(
+                            color: _P.gold,
+                            fontSize: 11.5.sp,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 1.6.h),
+                ],
                 if (pricing.priceNote.isNotEmpty) ...[
                   Text(
                     pricing.priceNote,
@@ -773,86 +791,68 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 4),
                 ],
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    // FittedBox instead of ellipsis — the price shrinks to
-                    // fit the space it's given rather than getting cut off
-                    // with "...".
-                    Flexible(
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          pricing.discountedPrice,
-                          style: TextStyle(
-                            color: _P.gold,
-                            fontSize: 30.sp,
-                            height: 1,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                      ),
+                // Price on its own line — no more cramming the strikethrough
+                // price and savings badge onto the same baseline as a 30sp
+                // numeral, which never aligned cleanly.
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    pricing.discountedPrice,
+                    style: TextStyle(
+                      color: _P.gold,
+                      fontSize: 32.sp,
+                      height: 1,
+                      fontWeight: FontWeight.w900,
                     ),
-                    if (pricing.originalPrice.isNotEmpty) ...[
-                      const SizedBox(width: 8),
-                      Flexible(
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 5),
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              pricing.originalPrice,
-                              style: TextStyle(
-                                color: _P.originalPrice,
-                                fontSize: 15.sp,
-                                fontWeight: FontWeight.w700,
-                                decoration: TextDecoration.lineThrough,
-                                decorationColor: _P.originalPrice,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                    if (savings != null) ...[
-                      const SizedBox(width: 10),
-                      Flexible(
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 3),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 3,
-                            ),
-                            decoration: BoxDecoration(
-                              color: _P.checkGreen.withValues(alpha: 0.18),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                savings,
-                                style: TextStyle(
-                                  color: _P.checkGreen,
-                                  fontSize: 10.5.sp,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ],
+                  ),
                 ),
+                if (pricing.originalPrice.isNotEmpty || savings != null) ...[
+                  SizedBox(height: 0.8.h),
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 10,
+                    runSpacing: 6,
+                    children: [
+                      if (pricing.originalPrice.isNotEmpty)
+                        Text(
+                          pricing.originalPrice,
+                          style: TextStyle(
+                            color: _P.originalPrice,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w700,
+                            decoration: TextDecoration.lineThrough,
+                            decorationColor: _P.originalPrice,
+                          ),
+                        ),
+                      if (savings != null)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3,
+                          ),
+                          decoration: BoxDecoration(
+                            color: _P.checkGreen.withValues(alpha: 0.18),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            savings,
+                            style: TextStyle(
+                              color: _P.checkGreen,
+                              fontSize: 10.5.sp,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
                 if (pricing.benefits.isNotEmpty) ...[
-                  SizedBox(height: 1.2.h),
+                  SizedBox(height: 1.6.h),
                   Divider(color: _P.cardBorder, height: 1),
-                  SizedBox(height: 1.2.h),
+                  SizedBox(height: 1.4.h),
                   for (var i = 0; i < pricing.benefits.length; i += 2)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8),
@@ -868,7 +868,7 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
                       ),
                     ),
                 ],
-                SizedBox(height: 0.8.h),
+                SizedBox(height: 1.h),
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(

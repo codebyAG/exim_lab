@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -511,17 +512,18 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
   // icon badge, title + description, gradient panel background matching
   // the journey/banner/pricing cards, so this section reads as a step up
   // rather than the same plain icon+label grid used elsewhere.
+  //
+  // Staggered/masonry, not a fixed-aspect-ratio GridView — each card sizes
+  // to its own content (title/description length varies a lot per item),
+  // instead of every cell being forced to match the tallest one's height.
   Widget _buildUniqueGrid(List<OneOnOneItem> items) {
-    return GridView.builder(
+    return MasonryGridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
+      crossAxisCount: 2,
+      mainAxisSpacing: 10,
+      crossAxisSpacing: 10,
       itemCount: items.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.88,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
-      ),
       itemBuilder: (_, i) {
         final item = items[i];
         return Container(
@@ -786,56 +788,53 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
   // One checklist card (not a grid of chips) — green check-in-circle rows
   // separated by hairline dividers, matching the journey timeline's card
   // language for a more premium, list-like read.
+  // "Trust wall" — gold-bordered gradient pill chips that wrap naturally,
+  // read more like certification badges than a plain checklist. Wrap
+  // (not a grid) so it never fights fixed-cell sizing regardless of how
+  // many badges or how long each label is.
   Widget _buildTrustBadges(List<OneOnOneItem> badges) {
-    return Container(
-      decoration: BoxDecoration(
-        color: _C.cardBg,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: _C.cardBorder),
-      ),
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Column(
-        children: [
-          for (var i = 0; i < badges.length; i++) ...[
-            if (i > 0) Divider(height: 1, color: _C.cardBorder),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 14,
-                vertical: 11,
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      color: _C.checkGreen.withValues(alpha: 0.18),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.check_rounded,
-                      color: _C.checkGreen,
-                      size: 17,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      badges[i].label,
-                      style: TextStyle(
-                        color: _C.textPrimary,
-                        fontSize: 13.sp,
-                        height: 1.25,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 10,
+      runSpacing: 10,
+      children: [
+        for (final badge in badges)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            decoration: BoxDecoration(
+              gradient: _C.panelGradient,
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(color: _C.cardBorder),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.15),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
-          ],
-        ],
-      ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.verified_rounded,
+                  color: _C.gold,
+                  size: 16,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  badge.label,
+                  style: TextStyle(
+                    color: _C.textPrimary,
+                    fontSize: 12.5.sp,
+                    height: 1.2,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
     );
   }
 
@@ -862,9 +861,11 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // HEADER — single consistent 18px padding, icon vertically
+          // centered against the heading (not the whole text block).
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
+            padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
               gradient: _C.panelGradient,
               borderRadius: const BorderRadius.vertical(
@@ -875,8 +876,8 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  width: 38,
-                  height: 38,
+                  width: 42,
+                  height: 42,
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
                       colors: [_C.gold, _C.goldDeep],
@@ -888,10 +889,10 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
                   child: const Icon(
                     Icons.handshake_rounded,
                     color: _C.ink,
-                    size: 19,
+                    size: 20,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 14),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -906,7 +907,7 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
                         ),
                       ),
                       if (pricing.description.isNotEmpty) ...[
-                        const SizedBox(height: 3),
+                        const SizedBox(height: 4),
                         Text(
                           pricing.description,
                           style: TextStyle(
@@ -922,37 +923,50 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
               ],
             ),
           ),
-          if (urgency.isNotEmpty)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              color: _C.navyDeep,
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.bolt_rounded,
-                    color: _C.gold,
-                    size: 14,
-                  ),
-                  const SizedBox(width: 6),
-                  Expanded(
-                    child: Text(
-                      urgency,
-                      style: TextStyle(
-                        color: _C.gold,
-                        fontSize: 11.5.sp,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+
+          // BODY — one consistent 18px padding on every side; urgency and
+          // savings are chips, not baseline-hacked inline text, so nothing
+          // needs manual bottom-padding nudges to look aligned.
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
+            padding: const EdgeInsets.all(18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (urgency.isNotEmpty) ...[
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 7,
+                    ),
+                    decoration: BoxDecoration(
+                      color: _C.gold.withValues(alpha: 0.14),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: _C.gold.withValues(alpha: 0.35),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.bolt_rounded,
+                          color: _C.gold,
+                          size: 14,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          urgency,
+                          style: TextStyle(
+                            color: _C.gold,
+                            fontSize: 11.5.sp,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 1.6.h),
+                ],
                 if (pricing.priceNote.isNotEmpty) ...[
                   Text(
                     pricing.priceNote,
@@ -962,83 +976,65 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 4),
                 ],
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    // FittedBox instead of ellipsis — the price shrinks to
-                    // fit the space it's given rather than getting cut off
-                    // with "...".
-                    Flexible(
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          pricing.discountedPrice,
-                          style: TextStyle(
-                            color: _C.gold,
-                            fontSize: 30.sp,
-                            height: 1,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                      ),
+                // Price on its own line — no more cramming the strikethrough
+                // price and savings badge onto the same baseline as a 30sp
+                // numeral, which never aligned cleanly.
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    pricing.discountedPrice,
+                    style: TextStyle(
+                      color: _C.gold,
+                      fontSize: 32.sp,
+                      height: 1,
+                      fontWeight: FontWeight.w900,
                     ),
-                    if (pricing.originalPrice.isNotEmpty) ...[
-                      const SizedBox(width: 8),
-                      Flexible(
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 5),
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              pricing.originalPrice,
-                              style: TextStyle(
-                                color: _C.originalPrice,
-                                fontSize: 15.sp,
-                                fontWeight: FontWeight.w700,
-                                decoration: TextDecoration.lineThrough,
-                                decorationColor: _C.originalPrice,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                    if (savings != null) ...[
-                      const SizedBox(width: 10),
-                      Flexible(
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 3),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 3,
-                            ),
-                            decoration: BoxDecoration(
-                              color: _C.checkGreen.withValues(alpha: 0.18),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                savings,
-                                style: TextStyle(
-                                  color: _C.checkGreen,
-                                  fontSize: 10.5.sp,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ],
+                  ),
                 ),
-                SizedBox(height: 1.4.h),
+                if (pricing.originalPrice.isNotEmpty || savings != null) ...[
+                  SizedBox(height: 0.8.h),
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 10,
+                    runSpacing: 6,
+                    children: [
+                      if (pricing.originalPrice.isNotEmpty)
+                        Text(
+                          pricing.originalPrice,
+                          style: TextStyle(
+                            color: _C.originalPrice,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w700,
+                            decoration: TextDecoration.lineThrough,
+                            decorationColor: _C.originalPrice,
+                          ),
+                        ),
+                      if (savings != null)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3,
+                          ),
+                          decoration: BoxDecoration(
+                            color: _C.checkGreen.withValues(alpha: 0.18),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            savings,
+                            style: TextStyle(
+                              color: _C.checkGreen,
+                              fontSize: 10.5.sp,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+                SizedBox(height: 2.h),
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
@@ -1083,7 +1079,7 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
                   ),
                 ),
                 if (pricing.disclaimerText.isNotEmpty) ...[
-                  const SizedBox(height: 6),
+                  SizedBox(height: 0.8.h),
                   Center(
                     child: Text(
                       pricing.disclaimerText,

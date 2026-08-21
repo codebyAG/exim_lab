@@ -6,7 +6,6 @@ import 'package:exim_lab/features/notifications/presentation/providers/notificat
 import 'package:exim_lab/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:exim_lab/core/navigation/app_navigator.dart';
 import 'package:exim_lab/features/profile/presentation/screens/profile_screen.dart';
-import 'package:exim_lab/features/one_on_one/presentation/screens/one_on_one_screen.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/search_assistant_dialog.dart';
 
 class DashboardModernHeader extends StatelessWidget {
@@ -242,12 +241,6 @@ class HeaderActionButtons extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(width: 8),
-        // TEMP: testing-only entry point for the One-on-One page — remove
-        // once the real placement (dashboard tile) is decided and wired.
-        _buildActionBtn(Icons.diversity_1_rounded, () {
-          AppNavigator.push(context, const OneOnOneScreen());
-        }),
         const SizedBox(width: 8),
         _buildActionBtn(Icons.person_outline_rounded, () {
           AppNavigator.push(context, const ProfileScreen());

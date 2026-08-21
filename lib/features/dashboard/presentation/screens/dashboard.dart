@@ -65,6 +65,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/tutorial_step_content.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/search_assistant_dialog.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/gallery_marquee.dart';
+import 'package:exim_lab/features/dashboard/presentation/widgets/one_on_one_promo_banner.dart';
 import 'package:animate_do/animate_do.dart';
 import 'dart:async';
 
@@ -1274,6 +1275,10 @@ class _DashboardBodyState extends State<_DashboardBody> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      SizedBox(height: 2.h),
+                      // 🤝 ONE-ON-ONE ENTRY POINT (real placement — replaces
+                      // the temp header icon)
+                      const OneOnOnePromoBanner(),
                       if (freeVideoSection != null &&
                           freeVideoSection.data.isNotEmpty) ...[
                         SizedBox(height: 2.5.h),
