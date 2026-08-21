@@ -424,7 +424,6 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
                     child: Text(
                       hero.ctaText,
                       textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: _C.ink,
                         fontSize: 14.5.sp,
@@ -491,8 +490,6 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
                   Text(
                     items[i].title,
                     textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: _C.headingOnLight,
                       fontSize: 10.sp,
@@ -521,7 +518,7 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
       itemCount: items.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 1.05,
+        childAspectRatio: 0.88,
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
       ),
@@ -558,13 +555,15 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
                 ),
               ),
               const SizedBox(height: 9),
+              // Full title wraps to 2 lines instead of cutting off with "…"
+              // — these are short phrases, not long enough to justify
+              // losing the tail end.
               Text(
                 item.title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
                 style: TextStyle(
                   color: _C.textPrimary,
-                  fontSize: 15.sp,
+                  fontSize: 14.sp,
                   height: 1.15,
                   fontWeight: FontWeight.w800,
                 ),
@@ -574,7 +573,6 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
                 Text(
                   item.description,
                   maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: _C.textMuted,
                     fontSize: 12.sp,
@@ -911,8 +909,6 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
                         const SizedBox(height: 3),
                         Text(
                           pricing.description,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             color: _C.textMuted,
                             fontSize: 11.5.sp,
@@ -971,54 +967,70 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
+                    // FittedBox instead of ellipsis — the price shrinks to
+                    // fit the space it's given rather than getting cut off
+                    // with "...".
                     Flexible(
-                      child: Text(
-                        pricing.discountedPrice,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: _C.gold,
-                          fontSize: 30.sp,
-                          height: 1,
-                          fontWeight: FontWeight.w900,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          pricing.discountedPrice,
+                          style: TextStyle(
+                            color: _C.gold,
+                            fontSize: 30.sp,
+                            height: 1,
+                            fontWeight: FontWeight.w900,
+                          ),
                         ),
                       ),
                     ),
                     if (pricing.originalPrice.isNotEmpty) ...[
                       const SizedBox(width: 8),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: Text(
-                          pricing.originalPrice,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: _C.originalPrice,
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.w700,
-                            decoration: TextDecoration.lineThrough,
-                            decorationColor: _C.originalPrice,
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 5),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              pricing.originalPrice,
+                              style: TextStyle(
+                                color: _C.originalPrice,
+                                fontSize: 15.sp,
+                                fontWeight: FontWeight.w700,
+                                decoration: TextDecoration.lineThrough,
+                                decorationColor: _C.originalPrice,
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ],
                     if (savings != null) ...[
                       const SizedBox(width: 10),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 3),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 3,
-                          ),
-                          decoration: BoxDecoration(
-                            color: _C.checkGreen.withValues(alpha: 0.18),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            savings,
-                            style: TextStyle(
-                              color: _C.checkGreen,
-                              fontSize: 10.5.sp,
-                              fontWeight: FontWeight.w800,
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 3),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              color: _C.checkGreen.withValues(alpha: 0.18),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                savings,
+                                style: TextStyle(
+                                  color: _C.checkGreen,
+                                  fontSize: 10.5.sp,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -1057,8 +1069,7 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
                           child: Text(
                             pricing.ctaText,
                             textAlign: TextAlign.center,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
                             style: TextStyle(
                               fontSize: 13.5.sp,
                               fontWeight: FontWeight.w900,
@@ -1244,7 +1255,6 @@ class _VideoTile extends StatelessWidget {
                   child: Text(
                     item.title,
                     maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 11.sp,

@@ -429,8 +429,7 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
                   child: Text(
                     caption,
                     textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                    maxLines: 3,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 14.sp,
@@ -519,7 +518,9 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
       itemCount: features.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 2.4,
+        // Shorter than 2.4 — gives title+description room to wrap to 2
+        // lines each instead of getting cut off with an ellipsis.
+        childAspectRatio: 1.7,
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
       ),
@@ -562,8 +563,7 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
               children: [
                 Text(
                   f.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
                   style: TextStyle(
                     color: _P.textPrimary,
                     fontSize: 12.sp,
@@ -573,8 +573,7 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
                 if (f.description.isNotEmpty)
                   Text(
                     f.description,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
                     style: TextStyle(
                       color: _P.textMuted,
                       fontSize: 10.sp,
@@ -725,8 +724,6 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
                         const SizedBox(height: 3),
                         Text(
                           pricing.description,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             color: _P.textMuted,
                             fontSize: 11.5.sp,
@@ -781,54 +778,70 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
+                    // FittedBox instead of ellipsis — the price shrinks to
+                    // fit the space it's given rather than getting cut off
+                    // with "...".
                     Flexible(
-                      child: Text(
-                        pricing.discountedPrice,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: _P.gold,
-                          fontSize: 30.sp,
-                          height: 1,
-                          fontWeight: FontWeight.w900,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          pricing.discountedPrice,
+                          style: TextStyle(
+                            color: _P.gold,
+                            fontSize: 30.sp,
+                            height: 1,
+                            fontWeight: FontWeight.w900,
+                          ),
                         ),
                       ),
                     ),
                     if (pricing.originalPrice.isNotEmpty) ...[
                       const SizedBox(width: 8),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: Text(
-                          pricing.originalPrice,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: _P.originalPrice,
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.w700,
-                            decoration: TextDecoration.lineThrough,
-                            decorationColor: _P.originalPrice,
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 5),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              pricing.originalPrice,
+                              style: TextStyle(
+                                color: _P.originalPrice,
+                                fontSize: 15.sp,
+                                fontWeight: FontWeight.w700,
+                                decoration: TextDecoration.lineThrough,
+                                decorationColor: _P.originalPrice,
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ],
                     if (savings != null) ...[
                       const SizedBox(width: 10),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 3),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 3,
-                          ),
-                          decoration: BoxDecoration(
-                            color: _P.checkGreen.withValues(alpha: 0.18),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            savings,
-                            style: TextStyle(
-                              color: _P.checkGreen,
-                              fontSize: 10.5.sp,
-                              fontWeight: FontWeight.w800,
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 3),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              color: _P.checkGreen.withValues(alpha: 0.18),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                savings,
+                                style: TextStyle(
+                                  color: _P.checkGreen,
+                                  fontSize: 10.5.sp,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -886,8 +899,7 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
                           child: Text(
                             ctaText,
                             textAlign: TextAlign.center,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
                             style: TextStyle(
                               fontSize: 13.5.sp,
                               fontWeight: FontWeight.w900,
@@ -1146,8 +1158,6 @@ class _CheckLine extends StatelessWidget {
         Expanded(
           child: Text(
             text,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: _P.textPrimary,
               fontSize: 12.5.sp,
@@ -1244,8 +1254,6 @@ class _InstructorCard extends StatelessWidget {
             Text(
               instructor.name,
               textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: _P.textPrimary,
                 fontSize: 15.sp,
@@ -1350,7 +1358,6 @@ class _VideoTile extends StatelessWidget {
                   child: Text(
                     item.title,
                     maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: large ? 11.sp : 9.5.sp,
@@ -1485,8 +1492,7 @@ class _BannerCard extends StatelessWidget {
                         ),
                         child: Text(
                           banner.text,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 14.sp,
