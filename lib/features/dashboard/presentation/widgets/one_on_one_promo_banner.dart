@@ -73,18 +73,21 @@ class OneOnOnePromoBanner extends StatelessWidget {
                               ),
                               const SizedBox(width: 6),
                               Text(
-                                "Live Mentorship",
+                                "LIVE MENTORSHIP",
                                 style: TextStyle(
                                   color: Colors.white.withValues(alpha: 0.45),
-                                  fontSize: 10.5,
-                                  fontWeight: FontWeight.w600,
+                                  fontSize: 9.5,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 0.4,
                                 ),
                               ),
                             ],
                           ),
                           const SizedBox(height: 8),
+                          // Hook — leads with the reader's problem, not a
+                          // feature description, so it earns the tap.
                           const Text(
-                            "Master Import-Export\nBusiness Handling",
+                            "Stuck Scaling Your\nExport Business?",
                             style: TextStyle(
                               fontWeight: FontWeight.w900,
                               fontSize: 17,
@@ -96,7 +99,7 @@ class OneOnOnePromoBanner extends StatelessWidget {
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            "1-on-1 sessions with a dedicated mentor",
+                            "Talk 1-on-1 with a real Import-Export expert",
                             style: TextStyle(
                               color: Colors.white.withValues(alpha: 0.7),
                               fontSize: 12.5,
@@ -131,7 +134,7 @@ class OneOnOnePromoBanner extends StatelessWidget {
                                 SizedBox(width: 2.w),
                                 const Flexible(
                                   child: Text(
-                                    "Book a Session >",
+                                    "Talk to a Mentor >",
                                     style: TextStyle(
                                       color: _navy,
                                       fontWeight: FontWeight.w800,

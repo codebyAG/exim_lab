@@ -1256,11 +1256,6 @@ class _DashboardBodyState extends State<_DashboardBody> {
                   ),
                 ),
               ),
-              SizedBox(height: 2.h),
-
-              SizedBox(height: 1.h),
-
-              SizedBox(height: 1.h),
               Consumer<DashboardProvider>(
                 builder: (context, dashboard, _) {
                   if (dashboard.isLoading) return const DashboardShimmer();
@@ -1275,7 +1270,6 @@ class _DashboardBodyState extends State<_DashboardBody> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 2.h),
                       // 🤝 ONE-ON-ONE ENTRY POINT (real placement — replaces
                       // the temp header icon)
                       const OneOnOnePromoBanner(),
