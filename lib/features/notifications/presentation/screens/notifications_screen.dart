@@ -8,6 +8,7 @@ import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:exim_lab/core/services/notification_router.dart';
 import 'package:exim_lab/features/premium/presentation/screens/premium_features_screen.dart';
 import 'package:exim_lab/features/one_on_one/presentation/screens/one_on_one_screen.dart';
+import 'package:exim_lab/features/seminar/presentation/screens/webinar_detail_screen.dart';
 import 'package:exim_lab/features/news/presentation/screens/news_details_screen.dart';
 import 'package:sizer/sizer.dart';
 import 'package:intl/intl.dart';
@@ -204,6 +205,26 @@ class _NotificationTile extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const OneOnOneScreen()),
+          );
+          return;
+        }
+
+        // Prefer data.seminarId — linkUrl (webinar://<id>) isn't itself
+        // openable, it's just the generic scheme.
+        String? seminarId;
+        if (type == 'webinar') {
+          final id = data?['seminarId']?.toString();
+          if (id != null && id.isNotEmpty) seminarId = id;
+        }
+        seminarId ??= NotificationRouter.seminarIdFromLink(
+          notification.linkUrl,
+        );
+        if (seminarId != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => WebinarDetailScreen(seminarId: seminarId!),
+            ),
           );
           return;
         }

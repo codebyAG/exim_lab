@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:exim_lab/features/news/presentation/screens/news_details_screen.dart';
 import 'package:exim_lab/features/premium/presentation/screens/premium_features_screen.dart';
 import 'package:exim_lab/features/one_on_one/presentation/screens/one_on_one_screen.dart';
+import 'package:exim_lab/features/seminar/presentation/screens/webinar_detail_screen.dart';
 
 /// Routes notification taps (FCM / local / in-app list) to the right screen.
 ///
@@ -30,6 +31,11 @@ class NotificationRouter {
       openPremiumFeatures();
     } else if (type == 'one-on-one') {
       openOneOnOne();
+    } else if (type == 'webinar') {
+      final id = data['seminarId']?.toString();
+      if (id != null && id.isNotEmpty) {
+        openWebinarDetail(id);
+      }
     }
   }
 
@@ -51,6 +57,18 @@ class NotificationRouter {
   static bool isOneOnOneLink(String? linkUrl) =>
       linkUrl != null && linkUrl.startsWith('one-on-one://');
 
+  /// Extract a seminar id from an in-app notification linkUrl
+  /// (`webinar://<seminarId>`) — fallback only; prefer `data.seminarId`
+  /// directly when available, since this scheme isn't itself openable.
+  static String? seminarIdFromLink(String? linkUrl) {
+    if (linkUrl == null) return null;
+    if (linkUrl.startsWith('webinar://')) {
+      final id = linkUrl.substring('webinar://'.length).trim();
+      return id.isEmpty ? null : id;
+    }
+    return null;
+  }
+
   static void openNewsDetails(String newsId) {
     navigatorKey.currentState?.push(
       MaterialPageRoute(
@@ -68,6 +86,14 @@ class NotificationRouter {
   static void openOneOnOne() {
     navigatorKey.currentState?.push(
       MaterialPageRoute(builder: (_) => const OneOnOneScreen()),
+    );
+  }
+
+  static void openWebinarDetail(String seminarId) {
+    navigatorKey.currentState?.push(
+      MaterialPageRoute(
+        builder: (_) => WebinarDetailScreen(seminarId: seminarId),
+      ),
     );
   }
 

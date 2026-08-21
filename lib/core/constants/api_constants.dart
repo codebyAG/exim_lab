@@ -43,6 +43,7 @@ class ApiConstants {
   static const String checkMembership = '$baseUrl/api/subscriptions/me/status';
   static const String socialLinks = '$baseUrl/api/config/social-links';
   static const String seminarHome = '$baseUrl/api/seminars/home';
+  static const String seminarDetail = '$baseUrl/api/seminars';
 
   // 🤖 AI ASSISTANT
   static const String assistantStarters = '$baseUrl/api/assistant/starters';
