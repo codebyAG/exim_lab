@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'dart:io';
 
 import 'package:exim_lab/core/navigation/app_navigator.dart';
@@ -35,7 +36,14 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void dispose() {
-    FloatingHelpButton.visible.value = true;
+    // Deferred — dispose() runs while the element tree is locked during
+    // unmounting, and setting this ValueNotifier synchronously notifies
+    // its ValueListenableBuilder, which tries to rebuild immediately and
+    // crashes ("widget tree was locked"). A post-frame callback runs once
+    // the tree is unlocked again.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FloatingHelpButton.visible.value = true;
+    });
     super.dispose();
   }
 
@@ -47,6 +55,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
     try {
       final updateInfo = await InAppUpdate.checkForUpdate();
+      developer.log(
+        "availability=${updateInfo.updateAvailability}, "
+        "immediateAllowed=${updateInfo.immediateUpdateAllowed}, "
+        "flexibleAllowed=${updateInfo.flexibleUpdateAllowed}, "
+        "availableVersionCode=${updateInfo.availableVersionCode}",
+        name: "IN_APP_UPDATE",
+      );
       if (!mounted) return;
 
       if ((updateInfo.updateAvailability ==
@@ -59,7 +74,17 @@ class _SplashScreenState extends State<SplashScreen> {
       } else {
         initializeAndNavigate();
       }
-    } catch (_) {
+    } catch (e, st) {
+      // Most common cause here: the app wasn't installed via the Play
+      // Store (sideloaded/adb/flutter install) — Play Core throws
+      // ERROR_APP_NOT_OWNED in that case. Logged instead of swallowed so
+      // "update not working" is actually diagnosable next run.
+      developer.log(
+        "checkForUpdate failed: $e",
+        name: "IN_APP_UPDATE",
+        error: e,
+        stackTrace: st,
+      );
       if (!mounted) return;
       initializeAndNavigate();
     }
@@ -119,90 +144,124 @@ class _SplashScreenState extends State<SplashScreen> {
       context: context,
       isDismissible: false,
       enableDrag: false,
+      isScrollControlled: false,
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (_) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 🔔 Icon + Title
-              Center(
-                child: Column(
-                  children: const [
-                    Icon(
-                      Icons.system_update_alt,
-                      size: 50,
-                      color: Colors.orange,
-                    ),
-                    SizedBox(height: 12),
-                    Text(
-                      "Update Required",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+      builder: (sheetContext) {
+        // canPop: false — isDismissible/enableDrag only stop tap-outside
+        // and swipe-to-dismiss; without this the Android hardware back
+        // button still closes the sheet, defeating the whole point of a
+        // forced update.
+        return PopScope(
+          canPop: false,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 🔔 Icon + Title
+                Center(
+                  child: Column(
+                    children: const [
+                      Icon(
+                        Icons.system_update_alt,
+                        size: 50,
+                        color: Colors.orange,
+                      ),
+                      SizedBox(height: 12),
+                      Text(
+                        "Update Required",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // 📝 Description
+                const Text(
+                  "A new version of the app is available. "
+                  "This update is required to continue using the application.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 14, color: Colors.black87),
+                ),
+
+                const SizedBox(height: 20),
+
+                // ✅ Benefits list
+                _updatePoint("Improved app performance and stability"),
+                _updatePoint("Latest market features and updates"),
+                _updatePoint("Important security and bug fixes"),
+                _updatePoint("Better and smoother user experience"),
+
+                const SizedBox(height: 24),
+
+                // 🔥 Update button
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange.shade800,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // 📝 Description
-              const Text(
-                "A new version of the app is available. "
-                "This update is required to continue using the application.",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: Colors.black87),
-              ),
-
-              const SizedBox(height: 20),
-
-              // ✅ Benefits list
-              _updatePoint("Improved app performance and stability"),
-              _updatePoint("Latest market features and updates"),
-              _updatePoint("Important security and bug fixes"),
-              _updatePoint("Better and smoother user experience"),
-
-              const SizedBox(height: 24),
-
-              // 🔥 Update button
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange.shade800,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                    onPressed: () async {
+                      // Don't pop first — Play Core's own full-screen
+                      // update UI opens on top regardless. If the user
+                      // backs out of THAT (or it fails), the sheet stays
+                      // up and we re-check rather than letting them
+                      // through unupdated.
+                      AppUpdateResult result;
+                      try {
+                        result = await InAppUpdate.performImmediateUpdate();
+                      } catch (e) {
+                        developer.log(
+                          "performImmediateUpdate failed: $e",
+                          name: "IN_APP_UPDATE",
+                        );
+                        return;
+                      }
+                      if (result == AppUpdateResult.success) {
+                        // Play Core restarts the app itself on success —
+                        // nothing left to do here.
+                        return;
+                      }
+                      developer.log(
+                        "performImmediateUpdate result: $result — re-checking",
+                        name: "IN_APP_UPDATE",
+                      );
+                      if (sheetContext.mounted) {
+                        Navigator.pop(sheetContext);
+                      }
+                      if (mounted) checkForUpdates();
+                    },
+                    child: const Text(
+                      "Update Now",
+                      style: TextStyle(fontSize: 16, color: Colors.white),
                     ),
                   ),
-                  onPressed: () async {
-                    Navigator.pop(context);
-                    await InAppUpdate.performImmediateUpdate();
-                  },
-                  child: const Text(
-                    "Update Now",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
+
+                const SizedBox(height: 10),
+
+                // ℹ️ Footer note
+                const Center(
+                  child: Text(
+                    "Updating ensures you get the best experience.",
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                 ),
-              ),
-
-              const SizedBox(height: 10),
-
-              // ℹ️ Footer note
-              const Center(
-                child: Text(
-                  "Updating ensures you get the best experience.",
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
