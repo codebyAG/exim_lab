@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:exim_lab/core/functions/whatsapp_utils.dart';
+import 'package:exim_lab/core/providers/config_provider.dart';
 import 'package:exim_lab/core/services/notification_router.dart';
 
 /// Global draggable help button.
@@ -103,49 +105,63 @@ class _FloatingHelpButtonState extends State<FloatingHelpButton> {
           valueListenable: FloatingHelpButton.visible,
           builder: (context, isVisible, child) =>
               isVisible ? child! : const SizedBox.shrink(),
-          child: ValueListenableBuilder<Offset>(
-            valueListenable: _pos,
-            builder: (context, pos, child) {
-              return Positioned(
-                left: pos.dx,
-                top: pos.dy,
-                // GestureDetector + notifiers instead of setState() — this
-                // button sits above the Navigator (MaterialApp.builder), so
-                // a setState() here previously forced Flutter to diff the
-                // *entire app's* element tree on every drag frame, which is
-                // what made dragging feel sluggish.
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: _openHelp,
-                  onPanStart: (_) => _dragging.value = true,
-                  onPanUpdate: (details) {
-                    final next = pos + details.delta;
-                    _position = Offset(
-                      next.dx.clamp(0.0, screen.width - _width),
-                      next.dy.clamp(
-                        padding.top,
-                        screen.height - padding.bottom - _height,
-                      ),
-                    );
-                    _pos.value = _position!;
-                  },
-                  onPanEnd: (_) => _snapToEdge(screen, padding),
-                  onPanCancel: () => _snapToEdge(screen, padding),
+          // Hidden until ConfigProvider.loadConfig() has finished — its
+          // WhatsApp number should come from the API, not the hardcoded
+          // fallback, and showing the button before that resolves risks
+          // it firing with a stale/default number if tapped immediately.
+          // Gates on isLoading (not on links != null) so a failed load
+          // still reveals the button (with its fallback number) instead
+          // of hiding help forever.
+          child: Selector<ConfigProvider, bool>(
+            selector: (_, config) => !config.isLoading,
+            builder: (context, configReady, child) =>
+                configReady ? child! : const SizedBox.shrink(),
+            child: ValueListenableBuilder<Offset>(
+              valueListenable: _pos,
+              builder: (context, pos, child) {
+                return Positioned(
+                  left: pos.dx,
+                  top: pos.dy,
+                  // GestureDetector + notifiers instead of setState() —
+                  // this button sits above the Navigator (MaterialApp
+                  // .builder), so a setState() here previously forced
+                  // Flutter to diff the *entire app's* element tree on
+                  // every drag frame, which is what made dragging feel
+                  // sluggish.
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: _openHelp,
+                    onPanStart: (_) => _dragging.value = true,
+                    onPanUpdate: (details) {
+                      final next = pos + details.delta;
+                      _position = Offset(
+                        next.dx.clamp(0.0, screen.width - _width),
+                        next.dy.clamp(
+                          padding.top,
+                          screen.height - padding.bottom - _height,
+                        ),
+                      );
+                      _pos.value = _position!;
+                    },
+                    onPanEnd: (_) => _snapToEdge(screen, padding),
+                    onPanCancel: () => _snapToEdge(screen, padding),
+                    child: child,
+                  ),
+                );
+              },
+              // This button sits above the Navigator (via MaterialApp
+              // .builder), so it has no Scaffold/Material ancestor of its
+              // own — without this, Text/Icon fall back to a debug-only
+              // underline style.
+              child: ValueListenableBuilder<bool>(
+                valueListenable: _dragging,
+                builder: (context, dragging, child) => AnimatedScale(
+                  scale: dragging ? 1.06 : 1.0,
+                  duration: const Duration(milliseconds: 150),
                   child: child,
                 ),
-              );
-            },
-            // This button sits above the Navigator (via MaterialApp.builder),
-            // so it has no Scaffold/Material ancestor of its own — without
-            // this, Text/Icon fall back to a debug-only underline style.
-            child: ValueListenableBuilder<bool>(
-              valueListenable: _dragging,
-              builder: (context, dragging, child) => AnimatedScale(
-                scale: dragging ? 1.06 : 1.0,
-                duration: const Duration(milliseconds: 150),
-                child: child,
+                child: _button,
               ),
-              child: _button,
             ),
           ),
         ),
@@ -255,8 +271,13 @@ class _HelpSheet extends StatelessWidget {
               "Chat on WhatsApp",
               const Color(0xFF25D366),
               () {
+                final number = context
+                    .read<ConfigProvider>()
+                    .effectiveLinks
+                    .whatsappNumber;
                 Navigator.pop(context);
                 WhatsAppUtils.launch(
+                  number: number,
                   message:
                       "Hi, I need help with the Import Export Academy app.",
                 );
