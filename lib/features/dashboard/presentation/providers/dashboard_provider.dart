@@ -248,7 +248,13 @@ class DashboardProvider extends ChangeNotifier {
     try {
       // 1. Fetch Skeleton (Sections + Popup)
       final skeleton = await _repository.getSections();
-      data = skeleton;
+      // /sections also carries an addons.carousel field, but the carousel
+      // is only ever meant to come from /api/dashboard/banners (below) —
+      // blanked out here so stale data from /sections never flashes on
+      // screen even momentarily before that fetch resolves.
+      data = skeleton.copyWith(
+        addons: skeleton.addons.copyWith(carousel: const []),
+      );
       notifyListeners();
 
       // 2. Fetch Founder, Banners and content sections in parallel
@@ -314,15 +320,11 @@ class DashboardProvider extends ChangeNotifier {
     }
   }
 
-  /// Specialized fetch for Banners (updates carousel in addons + inline sections)
-  ///
-  /// GET /api/dashboard/sections already seeds `addons.carousel` (used for
-  /// the very first paint); this fetch is meant to refine it. The backend
-  /// has been observed returning an empty carousel here for orgs that do
-  /// have active banners per /sections — if we blindly overwrite with that,
-  /// a banner that was already showing flashes and then disappears. Only
-  /// overwrite when this fetch actually has banners, so a good result from
-  /// the skeleton is never wiped out by a later empty one.
+  /// Specialized fetch for Banners (updates carousel in addons + inline
+  /// sections). This is the *sole* source of truth for the carousel —
+  /// /api/dashboard/sections also carries an addons.carousel field, but
+  /// that's ignored for display purposes; this fetch always overwrites it,
+  /// even with an empty list, once it resolves.
   Future<void> _fetchBanners() async {
     try {
       final bannerMap = await _repository.getBanners();
@@ -330,20 +332,9 @@ class DashboardProvider extends ChangeNotifier {
 
       final carousel = bannerMap['carousel'] ?? [];
       final inline = bannerMap['inline'] ?? [];
-      if (carousel.isEmpty && data!.addons.carousel.isNotEmpty) {
-        developer.log(
-          "⚠️ /dashboard/banners returned an empty carousel while "
-          "/dashboard/sections had ${data!.addons.carousel.length} — "
-          "keeping the sections carousel instead of blanking it out.",
-          name: "API_SPLIT",
-        );
-      }
-      final effectiveCarousel = carousel.isNotEmpty
-          ? carousel
-          : data!.addons.carousel;
 
       // Update Carousel in Addons
-      final updatedAddons = data!.addons.copyWith(carousel: effectiveCarousel);
+      final updatedAddons = data!.addons.copyWith(carousel: carousel);
 
       // Update Inline Banner Sections
       final updatedSections = data!.sections.map((section) {
