@@ -23,8 +23,8 @@ class FloatingHelpButton extends StatefulWidget {
 }
 
 class _FloatingHelpButtonState extends State<FloatingHelpButton> {
-  static const double _width = 116;
-  static const double _height = 46;
+  static const double _width = 52;
+  static const double _height = 52;
   static const double _margin = 12;
 
   // Kept static so the button holds its position across screen changes.
@@ -178,11 +178,8 @@ class _ButtonFace extends StatelessWidget {
     return Container(
       width: _FloatingHelpButtonState._width,
       height: _FloatingHelpButtonState._height,
-      padding: const EdgeInsets.symmetric(horizontal: 14),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(
-          _FloatingHelpButtonState._height / 2,
-        ),
+        shape: BoxShape.circle,
         // WhatsApp green — deliberately distinct from the blue
         // "AI Support" FAB so the two are never confused.
         gradient: const LinearGradient(
@@ -202,22 +199,7 @@ class _ButtonFace extends StatelessWidget {
           ),
         ],
       ),
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.headset_mic_rounded, color: Colors.white, size: 20),
-          SizedBox(width: 8),
-          Text(
-            "Help",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-        ],
-      ),
+      child: const Icon(Icons.headset_mic_rounded, color: Colors.white, size: 24),
     );
   }
 }
