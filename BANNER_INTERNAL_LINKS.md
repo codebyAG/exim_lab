@@ -1,21 +1,51 @@
-# Banner Internal Links — Backend/Admin Reference
+# Dashboard Banner — Internal Navigation Reference
 
-Dashboard banners (both the carousel and inline banners) can redirect a user
-**inside the app** instead of opening an external URL. To do this, set the
-banner's `linkUrl` (a.k.a. `ctaUrl`) field to one of the exact values below.
+**Audience:** Backend / Admin panel team
+**Client status:** Implemented and live — no client release is required to start using this.
 
-Tapping a banner checks this value against the list first. If it matches, the
-app navigates to that screen. If it doesn't match anything here, the app
-falls back to opening it as a normal external URL in the browser — so
-existing banners with real URLs (`https://...`) keep working exactly as
-before. No other backend change is needed; this is purely a value in the
-same `linkUrl` field that already exists.
+---
 
-**Matching is exact** — case-sensitive, no extra spaces, no trailing slash.
+## 1. Overview
 
-## Supported values
+Dashboard banners (the home-screen carousel and the inline banners) currently
+only support opening an external URL when tapped. This adds a second option:
+a banner can instead navigate the user **directly to a screen inside the
+app**.
 
-| `linkUrl` value | Opens |
+No new field, no schema change. This reuses the **existing** `linkUrl` /
+`ctaUrl` field that banners already send. The only change needed on your
+side is *what value* you put in it.
+
+## 2. How it works
+
+When a user taps a banner, the app checks the `linkUrl` value against a
+fixed list of recognized internal-page identifiers (Section 4).
+
+- **Match found** → the app opens that screen directly, in-app.
+- **No match** → the app falls back to its current behavior and opens the
+  value as a normal external URL in the browser.
+
+This means the change is fully backward compatible: every banner you've
+already configured with a real `https://...` URL keeps working exactly as
+it does today. You only need to use one of the values below for the banners
+where you specifically want an in-app redirect.
+
+## 3. Format requirements
+
+Matching is **exact**:
+
+- Case-sensitive
+- No leading/trailing whitespace
+- No trailing slash
+- Must match a value from the table in Section 4 character-for-character
+
+If a value doesn't match exactly, it is treated as an external URL (see
+Section 2) — it will not crash or error, but it also won't open the
+intended screen.
+
+## 4. Supported internal pages
+
+| `linkUrl` value | Destination screen |
 |---|---|
 | `premium://premium-features` | Premium Features page |
 | `one-on-one://one-on-one` | One-on-One Classes page |
@@ -41,22 +71,44 @@ same `linkUrl` field that already exists.
 | `tools://incoterms` | Incoterms Guide |
 | `tools://product-cert` | Product Certification |
 
-## Not supported (yet)
+### Example
 
-Pages that need a *specific item* selected — a particular news article,
-course, or webinar — aren't wired up yet. Their link shape would be
-`news://<newsId>`, `course://<courseId>`, `webinar://<seminarId>`, but the
-admin dashboard doesn't have an item-picker for banners to supply that ID.
-Until that exists, don't send these — they won't resolve to anything.
+To make a carousel banner open the Premium page on tap, set:
 
-## Where this lives in the app
+```json
+{
+  "imageUrl": "https://.../banner.png",
+  "linkUrl": "premium://premium-features",
+  "isActive": true
+}
+```
 
-- Client-side resolver: `lib/core/services/internal_link_router.dart`
-- Used by: `lib/features/dashboard/presentation/widgets/cta_carasoul.dart`
-  (carousel banners) and
-  `lib/features/dashboard/presentation/widgets/inline_banner.dart`
-  (inline banners)
-- Same `scheme://path` convention already used for push-notification
-  deep-links (`lib/core/services/notification_router.dart`) — `type: "premium"`,
-  `type: "one-on-one"`, etc. — kept consistent so the two systems don't
-  diverge.
+## 5. Not yet supported
+
+Deep-linking to a **specific item** — one particular news article, course,
+or webinar, rather than the general list — is not available yet. The
+client-side convention for that would look like:
+
+```
+news://<newsId>
+course://<courseId>
+webinar://<seminarId>
+```
+
+This requires the admin panel to let the person creating the banner pick
+the specific news article / course / webinar, so its ID can be embedded in
+the link. That picker UI doesn't exist yet, so please don't send these
+forms — they won't resolve to anything on the client until that's built.
+Let us know if/when this is prioritized and we'll confirm the client is
+ready to receive it.
+
+## 6. Reference — implementation location
+
+For context, this is handled entirely client-side:
+
+- Resolver: `lib/core/services/internal_link_router.dart`
+- Consumed by: `cta_carasoul.dart` (carousel banners) and
+  `inline_banner.dart` (inline banners)
+- Uses the same `scheme://path` convention already established for
+  push-notification deep-links (`notification_router.dart`, `type: "premium"`
+  / `type: "one-on-one"` / etc.), so the two systems stay consistent.
