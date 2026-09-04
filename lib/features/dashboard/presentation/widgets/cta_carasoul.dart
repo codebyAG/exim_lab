@@ -6,6 +6,7 @@ import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:provider/provider.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
+import 'package:exim_lab/core/services/internal_link_router.dart';
 
 class CtaCarousel extends StatefulWidget {
   final List<BannerModel> banners;
@@ -73,7 +74,10 @@ class CtaCarouselState extends State<CtaCarousel> {
                       ctaUrl: banner.ctaUrl,
                       imageUrl: banner.imageUrl,
                     );
-                    if (banner.ctaUrl.isNotEmpty) {
+                    if (banner.ctaUrl.isEmpty) return;
+                    // Internal page (e.g. premium://premium-features) —
+                    // falls back to launching externally for a plain URL.
+                    if (!InternalLinkRouter.tryOpen(context, banner.ctaUrl)) {
                       launchUrlString(banner.ctaUrl);
                     }
                   },

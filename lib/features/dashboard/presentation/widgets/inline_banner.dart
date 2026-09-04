@@ -3,6 +3,7 @@ import 'package:exim_lab/features/dashboard/data/models/dashboard_response.dart'
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:exim_lab/core/services/internal_link_router.dart';
 
 class InlineBanner extends StatefulWidget {
   final List<BannerModel> banners;
@@ -23,6 +24,18 @@ class _InlineBannerState extends State<InlineBanner> {
     }
   }
 
+  Future<void> _openCta() async {
+    final ctaUrl = _banner?.ctaUrl ?? '';
+    if (ctaUrl.isEmpty) return;
+    // Internal page (e.g. premium://premium-features) — falls back to
+    // launching externally for a plain URL.
+    if (InternalLinkRouter.tryOpen(context, ctaUrl)) return;
+    final uri = Uri.parse(ctaUrl);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_banner == null) return const SizedBox.shrink();
@@ -40,7 +53,11 @@ class _InlineBannerState extends State<InlineBanner> {
 
     return Padding(
       padding: EdgeInsets.only(bottom: 2.h, left: 5.w, right: 5.w),
-      child: AspectRatio(
+      child: GestureDetector(
+        // Whole card is tappable, not just the CTA button — matches the
+        // carousel banner's behavior.
+        onTap: _openCta,
+        child: AspectRatio(
         aspectRatio: 3 / 1,
         child: Container(
           width: double.infinity,
@@ -122,14 +139,7 @@ class _InlineBannerState extends State<InlineBanner> {
                           minimumSize: const Size(0, 32),
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
-                        onPressed: () async {
-                          if (_banner!.ctaUrl.isNotEmpty) {
-                            final uri = Uri.parse(_banner!.ctaUrl);
-                            if (await canLaunchUrl(uri)) {
-                              await launchUrl(uri);
-                            }
-                          }
-                        },
+                        onPressed: _openCta,
                         child: Text(
                           _banner!.ctaText,
                           style: TextStyle(
@@ -144,6 +154,7 @@ class _InlineBannerState extends State<InlineBanner> {
               ),
             ],
           ),
+        ),
         ),
       ),
     );
