@@ -244,6 +244,14 @@ class _NotificationTile extends StatelessWidget {
               builder: (_) => NewsDetailScreen(newsId: id),
             ),
           );
+          return;
+        }
+
+        // Remaining no-extra-data pages (courses, shorts, tools, etc.) —
+        // same set the dashboard banners support.
+        final builder = NotificationRouter.simplePageBuilder(type);
+        if (builder != null) {
+          Navigator.push(context, MaterialPageRoute(builder: builder));
         }
       },
       child: Container(
