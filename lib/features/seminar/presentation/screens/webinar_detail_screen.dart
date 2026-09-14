@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:exim_lab/features/seminar/data/models/webinar_detail_model.dart';
@@ -218,10 +219,49 @@ class _WebinarDetailScreenState extends State<WebinarDetailScreen> {
                   ),
                 ),
               ),
+              if (detail.meetingPasscode.isNotEmpty) ...[
+                SizedBox(height: 1.6.h),
+                _buildPasscodeRow(context, detail.meetingPasscode),
+              ],
             ],
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildPasscodeRow(BuildContext context, String passcode) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () {
+        Clipboard.setData(ClipboardData(text: passcode));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Passcode copied')),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF1F5F9),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.lock_outline_rounded, color: _navy, size: 16),
+            const SizedBox(width: 8),
+            Text(
+              "Passcode: $passcode",
+              style: TextStyle(
+                color: _navy,
+                fontSize: 13.sp,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const Spacer(),
+            const Icon(Icons.copy_rounded, color: Color(0xFF64748B), size: 16),
+          ],
+        ),
+      ),
     );
   }
 }

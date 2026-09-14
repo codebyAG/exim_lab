@@ -4,6 +4,7 @@ import 'package:exim_lab/core/functions/whatsapp_utils.dart';
 
 import 'package:provider/provider.dart';
 import 'package:exim_lab/core/providers/config_provider.dart';
+import 'package:exim_lab/features/seminar/presentation/screens/webinar_detail_screen.dart';
 
 class AchieveLiveCard extends StatelessWidget {
   const AchieveLiveCard({super.key});
@@ -14,6 +15,11 @@ class AchieveLiveCard extends StatelessWidget {
       builder: (context, configProvider, _) {
         final config = configProvider.effectiveLiveEvent;
         final webinar = config.webinar;
+
+        // No active seminar at all — nothing to show. Per
+        // SEMINARS_AND_WEBINAR_ALERTS.md §4, `upcoming` still has a next
+        // occurrence to display; only `none` renders nothing.
+        if (webinar.status == 'none') return const SizedBox.shrink();
 
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.5.h),
@@ -94,7 +100,7 @@ class AchieveLiveCard extends StatelessWidget {
                           // LIVE TAG
                           Row(
                             children: [
-                              if (webinar.isLive) _buildLiveDot(),
+                              if (webinar.status == 'live') _buildLiveDot(),
                               SizedBox(width: 2.w),
                               RichText(
                                 text: TextSpan(
@@ -106,12 +112,14 @@ class AchieveLiveCard extends StatelessWidget {
                                   ),
                                   children: [
                                     TextSpan(
-                                      text: webinar.isLive
+                                      text: webinar.status == 'live'
                                           ? "LIVE "
                                           : "Upcoming ",
                                     ),
                                     TextSpan(
-                                      text: webinar.isLive ? "NOW" : "LIVE",
+                                      text: webinar.status == 'live'
+                                          ? "NOW"
+                                          : "SESSION",
                                       style: TextStyle(
                                         color: const Color(0xFFFF4444),
                                       ),
@@ -135,24 +143,20 @@ class AchieveLiveCard extends StatelessWidget {
                             ),
                           SizedBox(height: 1.5.h),
 
-                          // DATE
+                          // HEADLINE — render as given by the server, don't
+                          // rebuild the copy from status client-side.
                           Text(
-                            webinar.day,
+                            webinar.headline.isNotEmpty
+                                ? webinar.headline
+                                : "${webinar.day} ${webinar.month}",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 24.sp,
+                              fontSize: 14.sp,
                               fontWeight: FontWeight.w900,
-                              height: 1,
+                              height: 1.2,
                             ),
-                          ),
-                          Text(
-                            webinar.month,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w800,
-                              height: 1,
-                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           SizedBox(height: 1.5.h),
 
@@ -177,17 +181,19 @@ class AchieveLiveCard extends StatelessWidget {
                           ),
                           const Spacer(),
 
-                          // 🔘 REGISTER / JOIN BUTTON
+                          // 🔘 CTA BUTTON — opens the seminar detail page
+                          // (webinar://<seminarId>) when we have an id;
+                          // otherwise falls back to the old WhatsApp flow.
                           InkWell(
                             onTap: () {
-                              if (webinar.isLive &&
-                                  webinar.meetingUrl != null) {
-                                // Launch Meeting URL via WhatsApp message for now
-                                WhatsAppUtils.launch(
-                                  number: configProvider
-                                      .effectiveLinks.liveWhatsappNumber,
-                                  message:
-                                      "Hi, I want to join the LIVE session: ${webinar.meetingUrl}",
+                              final id = webinar.seminarId;
+                              if (id != null && id.isNotEmpty) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        WebinarDetailScreen(seminarId: id),
+                                  ),
                                 );
                               } else {
                                 WhatsAppUtils.launch(
@@ -203,7 +209,7 @@ class AchieveLiveCard extends StatelessWidget {
                               padding: EdgeInsets.symmetric(vertical: 1.4.h),
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
-                                  colors: webinar.isLive
+                                  colors: webinar.status == 'live'
                                       ? [
                                           const Color(0xFFFF4444),
                                           const Color(0xFFC8151B),
@@ -217,7 +223,7 @@ class AchieveLiveCard extends StatelessWidget {
                                 boxShadow: [
                                   BoxShadow(
                                     color:
-                                        (webinar.isLive
+                                        (webinar.status == 'live'
                                                 ? const Color(0xFFFF4444)
                                                 : const Color(0xFF1E5FFF))
                                             .withValues(alpha: 0.4),
@@ -228,14 +234,15 @@ class AchieveLiveCard extends StatelessWidget {
                               ),
                               child: Center(
                                 child: Text(
-                                  webinar.isLive
-                                      ? "Join Now →"
-                                      : "Register Now →",
+                                  webinar.ctaLabel.isNotEmpty
+                                      ? webinar.ctaLabel
+                                      : "View details →",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 13.sp,
                                     fontWeight: FontWeight.w900,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ),

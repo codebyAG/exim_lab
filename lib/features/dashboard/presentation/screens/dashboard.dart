@@ -54,7 +54,8 @@ import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_shimm
 import 'package:showcaseview/showcaseview.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/premium_unlock_dialog.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_continue_hero.dart';
-import 'package:exim_lab/features/dashboard/presentation/widgets/dashboard_journey_bar.dart';
+import 'package:exim_lab/features/profile_questions/presentation/widgets/profile_questions_banner.dart';
+import 'package:exim_lab/features/profile_questions/presentation/providers/profile_questions_provider.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/interest_dialog.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/founder_card.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/premium_feature_card.dart';
@@ -187,6 +188,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
           context.read<ExchangeRateProvider>().fetchRates(),
           context.read<NotificationsProvider>().fetchUnreadCount(),
           context.read<AuthProvider>().refreshMembershipStatus(),
+          context.read<ProfileQuestionsProvider>().fetch(),
         ]);
 
         if (moduleProvider.isEnabled('shortVideos')) {
@@ -622,21 +624,8 @@ class _DashboardBodyState extends State<_DashboardBody> {
               // 1.5 ABOUT US SECTION
               const FounderCard(),
 
-              // 📊 YOUR PROGRESS (MOVED UP)
-              Consumer<DashboardProvider>(
-                builder: (context, dashboard, _) {
-                  return Consumer<AuthProvider>(
-                    builder: (context, auth, _) {
-                      return DashboardJourneyBar(
-                        completedCourses:
-                            auth.user?.stats?.completedCourses ?? 0,
-                        totalCourses: auth.user?.stats?.totalCourses ?? 10,
-                        streakDays: auth.user?.stats?.learningStreak ?? 0,
-                      );
-                    },
-                  );
-                },
-              ),
+              // ❓ PROFILE QUESTIONS BANNER (server-driven, replaces "Your Progress")
+              const ProfileQuestionsBanner(),
 
               // 🛠️ PREMIUM SEPARATOR
               Padding(

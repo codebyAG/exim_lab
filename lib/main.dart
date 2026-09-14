@@ -47,6 +47,7 @@ import 'dart:async';
 import 'package:exim_lab/core/widgets/floating_help_button.dart';
 import 'package:exim_lab/features/premium/presentation/providers/premium_provider.dart';
 import 'package:exim_lab/features/one_on_one/presentation/providers/one_on_one_provider.dart';
+import 'package:exim_lab/features/profile_questions/presentation/providers/profile_questions_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -145,6 +146,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => NotificationsProvider()),
         ChangeNotifierProvider(create: (_) => PremiumProvider()),
         ChangeNotifierProvider(create: (_) => OneOnOneProvider()),
+        ChangeNotifierProvider(create: (_) => ProfileQuestionsProvider()),
         ChangeNotifierProvider.value(value: configProvider),
         ChangeNotifierProvider.value(value: moduleProvider),
         Provider.value(value: analyticsService),

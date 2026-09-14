@@ -45,6 +45,11 @@ class ApiConstants {
   static const String seminarHome = '$baseUrl/api/seminars/home';
   static const String seminarDetail = '$baseUrl/api/seminars';
 
+  // ❓ PROFILE QUESTIONS (home banner + lead capture)
+  static const String profileQuestions = '$baseUrl/api/profile-questions';
+  static const String profileQuestionsAnswers =
+      '$baseUrl/api/profile-questions/answers';
+
   // 🤖 AI ASSISTANT
   static const String assistantStarters = '$baseUrl/api/assistant/starters';
   static const String assistantChat = '$baseUrl/api/assistant/chat';

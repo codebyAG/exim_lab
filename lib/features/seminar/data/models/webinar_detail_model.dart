@@ -4,6 +4,7 @@ class WebinarDetail {
   final String description;
   final String bannerImageUrl;
   final String meetingUrl;
+  final String meetingPasscode;
   final WebinarSchedule? schedule;
 
   const WebinarDetail({
@@ -11,6 +12,7 @@ class WebinarDetail {
     required this.description,
     required this.bannerImageUrl,
     required this.meetingUrl,
+    required this.meetingPasscode,
     required this.schedule,
   });
 
@@ -21,6 +23,7 @@ class WebinarDetail {
       description: json['description']?.toString() ?? '',
       bannerImageUrl: json['bannerImageUrl']?.toString() ?? '',
       meetingUrl: json['meetingUrl']?.toString() ?? '',
+      meetingPasscode: json['meetingPasscode']?.toString() ?? '',
       schedule: schedule is Map
           ? WebinarSchedule.fromJson(Map<String, dynamic>.from(schedule))
           : null,

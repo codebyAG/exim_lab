@@ -45,6 +45,13 @@ class WebinarConfig {
   final String? meetingUrl;
   final String? seminarId;
 
+  /// `none` · `upcoming` · `today` · `starting_soon` · `live` — the floating
+  /// strip should render nothing for `none`. See SEMINARS_AND_WEBINAR_ALERTS.md §3-4.
+  final String status;
+  final String headline;
+  final String ctaLabel;
+  final String meetingPasscode;
+
   WebinarConfig({
     required this.isLive,
     required this.day,
@@ -54,6 +61,10 @@ class WebinarConfig {
     this.title,
     this.meetingUrl,
     this.seminarId,
+    this.status = 'none',
+    this.headline = '',
+    this.ctaLabel = '',
+    this.meetingPasscode = '',
   });
 
   factory WebinarConfig.fromJson(Map<String, dynamic> json) {
@@ -67,6 +78,10 @@ class WebinarConfig {
       title: json['title'],
       meetingUrl: json['meetingUrl'],
       seminarId: json['seminarId'],
+      status: json['status']?.toString() ?? 'none',
+      headline: json['headline']?.toString() ?? '',
+      ctaLabel: json['ctaLabel']?.toString() ?? '',
+      meetingPasscode: json['meetingPasscode']?.toString() ?? '',
     );
   }
 
@@ -79,6 +94,7 @@ class WebinarConfig {
       whatsappMessage:
           "Hi, I want to register for the upcoming LIVE Import-Export Webinar.",
       title: "Weekly Import/Export Seminar",
+      status: 'none',
     );
   }
 }
