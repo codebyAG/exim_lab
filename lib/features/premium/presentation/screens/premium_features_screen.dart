@@ -8,6 +8,9 @@ import 'package:exim_lab/core/functions/whatsapp_utils.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:exim_lab/core/utils/icon_mapper.dart';
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
+import 'package:exim_lab/features/payments/presentation/widgets/whatsapp_fallback_button.dart';
+import 'package:exim_lab/features/payments/presentation/providers/payment_provider.dart';
+import 'package:exim_lab/features/payments/presentation/widgets/checkout_sheet.dart';
 import 'package:exim_lab/features/premium/data/models/premium_config_model.dart';
 import 'package:exim_lab/features/premium/presentation/providers/premium_provider.dart';
 import 'package:exim_lab/core/widgets/youtube_video_dialog.dart';
@@ -99,12 +102,26 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
     });
   }
 
-  // Phase 3B: WhatsApp is the only CTA action — no in-app payment flow.
+  // In-app checkout when the backend kill switch allows it; WhatsApp stays as
+  // the fallback (and the only path when payments are disabled).
   // If ctaWhatsappNumber is empty, do nothing but show a "coming soon"
   // state instead of a dead tap.
   void _contactSales(BuildContext context, PremiumConfig config) {
     context.read<AnalyticsService>().logPremiumCtaClick();
-    if (config.ctaWhatsappNumber.isEmpty) {
+    final hasWhatsapp = config.ctaWhatsappNumber.isNotEmpty;
+    if (context.read<PaymentProvider>().enabled) {
+      final price = config.pricing?.discountedPrice ?? '';
+      showCheckoutSheet(
+        context,
+        productType: 'premium',
+        title: config.pricing?.heading.isNotEmpty == true
+            ? config.pricing!.heading
+            : 'Premium Membership',
+        priceLabel: price.isEmpty ? null : price,
+      );
+      return;
+    }
+    if (!hasWhatsapp) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Enrollment opens soon — stay tuned!")),
       );
@@ -911,6 +928,11 @@ class _PremiumFeaturesScreenState extends State<PremiumFeaturesScreen> {
                       ],
                     ),
                   ),
+                ),
+                // Payment is the main action; WhatsApp sits below it.
+                WhatsAppFallbackButton(
+                  number: config.ctaWhatsappNumber,
+                  message: config.ctaWhatsappMessage,
                 ),
               ],
             ),

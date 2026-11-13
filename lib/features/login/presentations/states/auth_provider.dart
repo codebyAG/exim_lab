@@ -5,6 +5,7 @@ import 'package:exim_lab/features/login/data/models/user_model.dart';
 import 'package:exim_lab/core/services/shared_pref_service.dart';
 import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:exim_lab/core/constants/analytics_constants.dart';
+import 'package:exim_lab/features/payments/data/services/payment_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'dart:io';
@@ -226,10 +227,31 @@ class AuthProvider extends ChangeNotifier {
       if (_user == null) return;
       final response = await _dataSource.checkMembership();
       final isActive = response['active'] == true;
-      
-      developer.log('💎 Membership Check Result -> active: $isActive', name: 'AUTH');
 
-      if (response['active'] != null && _user != null) {
+      // A premium bought in-app lives in /payments/entitlements. Treat the
+      // user as premium if EITHER source says so, so a successful payment
+      // unlocks the app even if the subscription record lags behind.
+      bool? paidPremium;
+      try {
+        final ent = await PaymentService().fetchEntitlements();
+        paidPremium =
+            ent.isPremium &&
+            (ent.premiumUntil == null ||
+                ent.premiumUntil!.isAfter(DateTime.now()));
+      } catch (_) {
+        // Unknown (offline etc.): never downgrade a paying user on a failure.
+        paidPremium = null;
+      }
+      final premium =
+          isActive || (paidPremium ?? (_user?.isPremium ?? false));
+
+      developer.log(
+        'Membership Check Result -> active: $isActive, paid: $paidPremium',
+        name: 'AUTH',
+      );
+
+      if ((response['active'] != null || paidPremium != null) &&
+          _user != null) {
         final updatedUser = UserModel(
           id: _user!.id,
           name: _user!.name,
@@ -238,7 +260,7 @@ class AuthProvider extends ChangeNotifier {
           organizationId: _user!.organizationId,
           email: _user!.email,
           avatarUrl: _user!.avatarUrl,
-          isPremium: response['active'] == true,
+          isPremium: premium,
           stats: _user!.stats,
           interestedIn: _user!.interestedIn,
         );

@@ -2,16 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:exim_lab/core/providers/config_provider.dart';
 import 'package:exim_lab/core/functions/whatsapp_utils.dart';
 import 'package:provider/provider.dart';
+import 'package:exim_lab/features/payments/presentation/providers/payment_provider.dart';
+import 'package:exim_lab/features/payments/presentation/widgets/checkout_sheet.dart';
+import 'package:exim_lab/features/payments/presentation/widgets/whatsapp_fallback_button.dart';
+
 
 class PremiumUnlockDialog extends StatelessWidget {
   const PremiumUnlockDialog({super.key});
+
+  static const _waMessage = "Hi, I want to unlock Import Export Premium membership.";
 
   void _launchWhatsApp(BuildContext context) async {
     final config = context.read<ConfigProvider>();
     WhatsAppUtils.launch(
       number: config.effectiveLinks.whatsappNumber,
-      message: "Hi, I want to unlock Import Export Premium membership.",
+      message: _waMessage,
     );
+  }
+
+  // Pay in-app when the backend allows it; otherwise keep the old WhatsApp flow.
+  void _unlock(BuildContext context) {
+    if (context.read<PaymentProvider>().enabled) {
+      showCheckoutSheet(
+        context,
+        productType: 'premium',
+        title: 'Premium Membership',
+      );
+    } else {
+      _launchWhatsApp(context);
+    }
   }
 
   @override
@@ -146,7 +165,7 @@ class PremiumUnlockDialog extends StatelessWidget {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () => _launchWhatsApp(context),
+                            onPressed: () => _unlock(context),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: cs.secondary,
                               foregroundColor: Colors.white,
@@ -171,6 +190,13 @@ class PremiumUnlockDialog extends StatelessWidget {
                               ],
                             ),
                           ),
+                        ),
+                        WhatsAppFallbackButton(
+                          number: context
+                              .read<ConfigProvider>()
+                              .effectiveLinks
+                              .whatsappNumber,
+                          message: _waMessage,
                         ),
                         const SizedBox(height: 12),
                         // Maybe later

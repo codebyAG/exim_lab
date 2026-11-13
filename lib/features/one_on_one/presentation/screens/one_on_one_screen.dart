@@ -9,6 +9,9 @@ import 'package:exim_lab/core/services/analytics_service.dart';
 import 'package:exim_lab/core/utils/icon_mapper.dart';
 import 'package:exim_lab/core/widgets/youtube_video_dialog.dart';
 import 'package:exim_lab/features/one_on_one/data/models/one_on_one_config_model.dart';
+import 'package:exim_lab/features/payments/presentation/widgets/whatsapp_fallback_button.dart';
+import 'package:exim_lab/features/payments/presentation/providers/payment_provider.dart';
+import 'package:exim_lab/features/payments/presentation/widgets/checkout_sheet.dart';
 import 'package:exim_lab/features/one_on_one/presentation/providers/one_on_one_provider.dart';
 
 /// Light page, dark purple "elements/sections" floating on top — matches
@@ -89,12 +92,25 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
     });
   }
 
-  // Phase 3B: WhatsApp is the only CTA action — no in-app payment flow.
+  // In-app checkout when the backend kill switch allows it; WhatsApp stays as
+  // the fallback (and the only path when payments are disabled).
   // If ctaWhatsappNumber is empty, do nothing but show a "coming soon"
   // state instead of a dead tap.
   void _bookNow(BuildContext context, OneOnOnePricing pricing) {
     context.read<AnalyticsService>().logOneOnOneCtaClick();
-    if (pricing.ctaWhatsappNumber.isEmpty) {
+    final hasWhatsapp = pricing.ctaWhatsappNumber.isNotEmpty;
+    if (context.read<PaymentProvider>().enabled) {
+      showCheckoutSheet(
+        context,
+        productType: 'one_on_one',
+        title: pricing.heading.isNotEmpty ? pricing.heading : '1-on-1 Class',
+        priceLabel: pricing.discountedPrice.isEmpty
+            ? null
+            : pricing.discountedPrice,
+      );
+      return;
+    }
+    if (!hasWhatsapp) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Booking opens soon — stay tuned!")),
       );
@@ -1077,6 +1093,11 @@ class _OneOnOneScreenState extends State<OneOnOneScreen> {
                       ],
                     ),
                   ),
+                ),
+                // Payment is the main action; WhatsApp sits below it.
+                WhatsAppFallbackButton(
+                  number: pricing.ctaWhatsappNumber,
+                  message: pricing.ctaWhatsappMessage,
                 ),
                 if (pricing.disclaimerText.isNotEmpty) ...[
                   SizedBox(height: 0.8.h),

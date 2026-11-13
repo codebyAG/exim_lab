@@ -66,6 +66,9 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/tutorial_step_content.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/search_assistant_dialog.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/gallery_marquee.dart';
+import 'package:exim_lab/features/app_content/presentation/widgets/app_content_sections.dart';
+import 'package:exim_lab/features/payments/presentation/providers/payment_provider.dart';
+import 'package:exim_lab/core/constants/app_contants.dart';
 import 'package:exim_lab/features/dashboard/presentation/widgets/one_on_one_promo_banner.dart';
 import 'package:animate_do/animate_do.dart';
 import 'dart:async';
@@ -189,6 +192,7 @@ class _DashboardBodyState extends State<_DashboardBody> {
           context.read<NotificationsProvider>().fetchUnreadCount(),
           context.read<AuthProvider>().refreshMembershipStatus(),
           context.read<ProfileQuestionsProvider>().fetch(),
+          context.read<PaymentProvider>().refresh(),
         ]);
 
         if (moduleProvider.isEnabled('shortVideos')) {
@@ -506,7 +510,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
           unselectedFontSize: 9,
           onTap: (index) => _handleNavigationTap(index, navConfig),
         ),
-        floatingActionButton: moduleProvider.isEnabled('aiChat')
+        floatingActionButton:
+            (AppContants.showAiAssistantFab &&
+                moduleProvider.isEnabled('aiChat'))
             ? FloatingActionButton(
                 backgroundColor: cs.primary,
                 tooltip: t.translate('ai_support'),
@@ -589,6 +595,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
                 description: 'tut_header_desc',
                 child: const DashboardModernHeader(),
               ),
+
+              // 🎬 HERO VIDEO (manifest-driven, hidden when none)
+              const HeroMediaSection(),
 
               // 🔍 PREMIUM SEARCH BAR
               Padding(
@@ -754,6 +763,9 @@ class _DashboardBodyState extends State<_DashboardBody> {
 
               // 🌟 SUCCESS STORIES MARQUEE
               const GalleryMarquee(),
+
+              // 🎥 TESTIMONIAL VIDEOS (manifest-driven, hidden when none)
+              const TestimonialVideosSection(),
 
               SizedBox(height: 2.h),
 

@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:exim_lab/core/constants/gallery_constants.dart';
+import 'package:exim_lab/features/app_content/data/models/app_content_models.dart';
+import 'package:exim_lab/features/app_content/presentation/providers/app_content_provider.dart';
+import 'package:exim_lab/features/app_content/presentation/widgets/cached_video_view.dart';
+import 'package:provider/provider.dart';
 import 'package:exim_lab/features/gallery/presentation/screens/gallery_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
@@ -43,8 +47,16 @@ class _GalleryMarqueeState extends State<GalleryMarquee> {
 
   @override
   Widget build(BuildContext context) {
+    // Manifest-driven success stories (cached locally). Falls back to the
+    // bundled list until the backend has any uploaded.
+    final stories = context
+        .watch<AppContentProvider>()
+        .successStories
+        .where((i) => i.isImage)
+        .toList();
     final urls = GalleryConstants.galleryUrls;
-    if (urls.isEmpty) return const SizedBox.shrink();
+    final count = stories.isNotEmpty ? stories.length : urls.length;
+    if (count == 0) return const SizedBox.shrink();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,8 +102,12 @@ class _GalleryMarqueeState extends State<GalleryMarquee> {
             physics: const NeverScrollableScrollPhysics(),
             // Infinite loop using modulo
             itemBuilder: (context, index) {
-              final url = urls[index % urls.length];
-              return _buildGalleryCard(context, url);
+              final i = index % count;
+              return _buildGalleryCard(
+                context,
+                stories.isNotEmpty ? null : urls[i],
+                stories.isNotEmpty ? stories[i] : null,
+              );
             },
           ),
         ),
@@ -99,7 +115,7 @@ class _GalleryMarqueeState extends State<GalleryMarquee> {
     );
   }
 
-  Widget _buildGalleryCard(BuildContext context, String url) {
+  Widget _buildGalleryCard(BuildContext context, String? url, MediaItem? item) {
     return Container(
       width: 40.w,
       margin: EdgeInsets.only(right: 3.w, bottom: 1.h),
@@ -115,17 +131,19 @@ class _GalleryMarqueeState extends State<GalleryMarquee> {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: CachedNetworkImage(
-          imageUrl: url,
-          fit: BoxFit.cover,
-          placeholder: (context, url) => Container(
-            color: Colors.white.withValues(alpha: 0.05),
-            child: const Center(
-              child: CircularProgressIndicator(strokeWidth: 2),
-            ),
-          ),
-          errorWidget: (context, url, error) => const Icon(Icons.error),
-        ),
+        child: item != null
+            ? CachedMediaImage(item: item)
+            : CachedNetworkImage(
+                imageUrl: url!,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Container(
+                  color: Colors.white.withValues(alpha: 0.05),
+                  child: const Center(
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                ),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              ),
       ),
     );
   }

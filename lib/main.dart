@@ -40,6 +40,8 @@ import 'package:exim_lab/features/shorts/presentation/providers/shorts_provider.
 import 'package:exim_lab/features/chat/presentation/providers/chat_provider.dart';
 
 import 'package:exim_lab/features/dashboard/data/services/referrer_service.dart';
+import 'package:exim_lab/features/payments/presentation/providers/payment_provider.dart';
+import 'package:exim_lab/features/app_content/presentation/providers/app_content_provider.dart';
 
 import 'package:exim_lab/features/journey/presentation/providers/journey_provider.dart';
 import 'package:exim_lab/core/providers/config_provider.dart';
@@ -127,6 +129,17 @@ void main() async {
   final configProvider = ConfigProvider();
   unawaited(configProvider.loadConfig());
 
+  // Payments: config is public; entitlements + pending-order recovery run in
+  // the background here and again on every app resume.
+  final paymentProvider = PaymentProvider();
+  final authProvider = AuthProvider();
+  paymentProvider.onPremiumChanged = authProvider.refreshMembershipStatus;
+  unawaited(paymentProvider.refresh());
+
+  // Home media manifest: serves cached files instantly, syncs in background.
+  final appContentProvider = AppContentProvider();
+  unawaited(appContentProvider.load());
+
   runApp(
     MultiProvider(
       providers: [
@@ -136,7 +149,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => CourseDetailsState()),
         ChangeNotifierProvider(create: (_) => FreeVideosState()..load()),
         ChangeNotifierProvider(create: (_) => QuizProvider()),
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider.value(value: authProvider),
         ChangeNotifierProvider.value(value: shortsProvider),
         ChangeNotifierProvider(create: (_) => ExchangeRateProvider()),
         ChangeNotifierProvider(create: (_) => DashboardProvider()),
@@ -148,6 +161,8 @@ void main() async {
         ChangeNotifierProvider(create: (_) => OneOnOneProvider()),
         ChangeNotifierProvider(create: (_) => ProfileQuestionsProvider()),
         ChangeNotifierProvider.value(value: configProvider),
+        ChangeNotifierProvider.value(value: paymentProvider),
+        ChangeNotifierProvider.value(value: appContentProvider),
         ChangeNotifierProvider.value(value: moduleProvider),
         Provider.value(value: analyticsService),
       ],

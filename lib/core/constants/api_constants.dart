@@ -81,6 +81,19 @@ class ApiConstants {
   // 🤝 ONE-ON-ONE CLASSES PAGE
   static const String oneOnOneConfig = '$baseUrl/api/one-on-one/config';
 
+  // 💳 PAYMENTS (Razorpay)
+  static const String paymentsConfig = '$baseUrl/api/payments/config';
+  static const String paymentsOrder = '$baseUrl/api/payments/order';
+  static const String paymentsVerify = '$baseUrl/api/payments/verify';
+  static const String paymentsFailed = '$baseUrl/api/payments/failed';
+  static const String paymentsEntitlements =
+      '$baseUrl/api/payments/entitlements';
+  static String paymentsStatus(String orderId) =>
+      '$baseUrl/api/payments/status/$orderId';
+
+  // 🎞 APP CONTENT (hero / testimonials / success stories manifest)
+  static const String appContentManifest = '$baseUrl/api/app-content/manifest';
+
   // ⏱ TIMEOUTS
   static const int connectTimeout = 15000;
   static const int receiveTimeout = 15000;

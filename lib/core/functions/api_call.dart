@@ -83,6 +83,7 @@ Future<T> callApi<T>(
     log("------------------------------------------------------------------");
 
     String errorMessage = dioExceptionMessage(e.type);
+    String? errorCode;
 
     // 🔍 Extract server-provided error message if available (e.g. 400 Bad Request)
     if (e.response?.data != null && e.response?.data is Map) {
@@ -92,6 +93,8 @@ Future<T> callApi<T>(
       if (serverMsg != null && serverMsg is String) {
         errorMessage = serverMsg;
       }
+      final serverCode = resData['code'];
+      if (serverCode is String) errorCode = serverCode;
     }
 
     // 📊 LOG ERROR (if not suppressed)
@@ -102,6 +105,7 @@ Future<T> callApi<T>(
     throw ApiException(
       message: errorMessage,
       statusCode: e.response?.statusCode,
+      code: errorCode,
     );
   } catch (e) {
     log("❌ UNKNOWN ERROR: $e");
@@ -118,7 +122,10 @@ class ApiException implements Exception {
   final String message;
   final int? statusCode;
 
-  ApiException({required this.message, this.statusCode});
+  /// Machine-readable error code from the server body (e.g. `COUPON_EXPIRED`).
+  final String? code;
+
+  ApiException({required this.message, this.statusCode, this.code});
 
   @override
   String toString() => message;
