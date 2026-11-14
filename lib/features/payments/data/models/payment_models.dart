@@ -97,6 +97,7 @@ class PaymentResult {
   final bool accessGranted;
   final DateTime? accessEndsAt;
   final String via;
+  final int amount; // paise actually charged
 
   const PaymentResult({
     required this.status,
@@ -108,6 +109,7 @@ class PaymentResult {
     required this.accessGranted,
     required this.accessEndsAt,
     required this.via,
+    required this.amount,
   });
 
   bool get isPaid => status.toUpperCase() == 'PAID';
@@ -122,6 +124,7 @@ class PaymentResult {
     accessGranted: j['accessGranted'] == true,
     accessEndsAt: DateTime.tryParse(_str(j['accessEndsAt'])),
     via: _str(j['via']),
+    amount: _int(j['amount']),
   );
 }
 

@@ -1,7 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
 import 'dart:async';
 
 import 'package:exim_lab/features/login/presentations/states/auth_provider.dart';
+import 'package:exim_lab/features/premium/presentation/providers/premium_provider.dart';
+import 'package:exim_lab/core/services/notification_router.dart';
 import 'package:exim_lab/features/payments/presentation/providers/payment_provider.dart';
+import 'package:exim_lab/features/payments/presentation/widgets/payment_success_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -73,6 +77,8 @@ class _CheckoutSheetState extends State<_CheckoutSheet> {
     final auth = context.read<AuthProvider>();
     final messenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
+    final perks =
+        context.read<PremiumProvider>().config?.pricing?.benefits ?? const <String>[];
 
     setState(() {
       _busy = true;
@@ -89,10 +95,22 @@ class _CheckoutSheetState extends State<_CheckoutSheet> {
     switch (attempt.outcome) {
       case PaymentOutcome.success:
         unawaited(auth.refreshMembershipStatus());
-        messenger.showSnackBar(
-          const SnackBar(content: Text('Payment successful — access unlocked!')),
-        );
         navigator.pop(attempt.outcome);
+        // Celebration instead of a plain toast. Shown only after the backend
+        // verified the payment (PaymentOutcome.success).
+        final rootContext = NotificationRouter.navigatorKey.currentContext;
+        if (rootContext != null) {
+          unawaited(
+            // App-root context (not this sheet's), so it outlives the sheet.
+            showPaymentSuccessDialog(
+              rootContext,
+              productType: widget.productType,
+              validUntil: attempt.result?.accessEndsAt,
+              perks: perks,
+              amountPaise: attempt.result?.amount,
+            ),
+          );
+        }
         return;
       case PaymentOutcome.pending:
         unawaited(auth.refreshMembershipStatus());
